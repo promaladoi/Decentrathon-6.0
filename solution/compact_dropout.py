@@ -1,6 +1,6 @@
-"""Keep PyTorch's full-shape dropout RNG, apply its mask to real-token rows only.
+"""Keep PyTorch's public full-shape dropout operation and compact its backward.
 
-The padded dummy still draws exactly the same mask via aten.native_dropout.
+The padded ones tensor draws its mask via the same functional.dropout as the base.
 Only the useful rows are multiplied and saved through autograd. No custom RNG,
 changed dropout probability, cross-batch packing or skipped random draws.
 """
@@ -24,11 +24,15 @@ def compact_dropout_rows(X, MASK, ROWS, OUT, N, H: tl.constexpr,
 class _CompactDropout(torch.autograd.Function):
     @staticmethod
     def forward(ctx, x, rows, batch, seq_len, p):
-        # Values of the dummy are unused. native_dropout generates its mask
-        # independently of them, with the original full shape and dtype.
-        dummy = torch.empty((batch, seq_len, x.shape[-1]), device=x.device, dtype=x.dtype)
-        discarded, mask = torch.ops.aten.native_dropout(dummy, p, True)
-        del discarded, dummy
+        # native_dropout and functional.dropout consumed the same RNG offset on
+        # the challenge T4 but assigned random draws to elements differently.
+        # Use the original public operation, dtype and shape. Ones make its
+        # nonzero outputs an exact mask; discard their rounded half scale and
+        # apply the original fp32 scale in our elementwise kernel below.
+        dummy = torch.ones((batch, seq_len, x.shape[-1]), device=x.device, dtype=x.dtype)
+        dropped = torch.nn.functional.dropout(dummy, p=p, training=True)
+        mask = dropped.ne(0)
+        del dropped, dummy
         out = torch.empty_like(x)
         compact_dropout_rows[(triton.cdiv(x.numel(), 1024),)](
             x, mask, rows, out, x.numel(), x.shape[-1], 1.0 / (1.0 - p),
