@@ -24,7 +24,8 @@
 | Combined v14 | fd5e482 | 4 unit tests FAIL | — | — | — | Exact dropout mask mismatch; no benchmark; raw console log saved |
 | v14 repair | 3016d55 | Pending | — | — | — | Original dropout operator; 6 exact dropout tests before training |
 | Combined v15 | 389f037 | 6 unit tests FAIL | — | — | — | No training; downloaded source matches Git; row-stride bug identified |
-| Combined v16 | 4a5cfd2 | Pending | — | — | — | Contiguous row-index repair; 8 dropout / 115 kernel tests before benchmark |
+| Combined v16 | 4a5cfd2 | 10 PASS | 1.4082x | 2.5611x | +0.001% | Fully archived; 115 tests, own share 12.9%; 2 paired runs |
+| Combined v17 | 7c5f6d8 | Pending | — | — | — | 104 CPU layout cases; 23 new GPU cases, paired-byte decoder |
 | Анаис | әлі берілмеген | әлі берілмеген | жоқ | жоқ | жоқ | |
 | Владимир (user-reported) | main/d080f2b component | Full checks not supplied | 1.468x | 2.543x | -0.0% | User summary: 93.2 / 63.5 s, 14345 / 5641 MiB; not independently validated here |
 | Мерей | әлі берілмеген | әлі берілмеген | жоқ | жоқ | жоқ | |

@@ -1,20 +1,17 @@
 # IVNEX: Soup Kernel Challenge
 
-Latest completed Kaggle console result: [combined v13](CODEX_V13_RESULT.md),
-**1.398x speedup (28.5% less runtime)**, **59.8% less GPU memory**, **10/10 PASS**.
-Two paired runs: **88.5 → 63.3 s**, **14345 → 5761 MiB**, eval loss **2.04968 → 2.04966**.
-Code: `13eaa8a`. **106 kernel tests + 79 Soup tests**, own-kernel share **11.3%**.
-The participant supplied the final console output; the raw archive still needs
-local download/hash verification. [Reproduce v13](templates/codex_v13.ipynb).
+Latest fully collected and verified candidate: [v16 result](CODEX_V16_RESULT.md),
+**1.4082x speedup (29.0% less total runtime)**, **61.0% less GPU memory**, **10/10 PASS**.
+Two paired runs: **85.07 → 60.41 s**, **14345 → 5601 MiB**.
+Public eval loss **2.04966 → 2.04968 (+0.001%, passes 0.5% limit)**.
+Code: `4a5cfd2`. **115 kernel tests + 79 Soup tests**, own-kernel share **12.9%**.
+Exact source/report hashes and raw archive verified locally.
+[Reproduce v16](templates/codex_v16.ipynb) · [Pinned candidate](templates/codex_candidate.ipynb).
 
-The branch tip contains the **unverified v16 index-layout repair**.
-[Failure analysis and experiment](CODEX_V16_EXPERIMENT.md).
-v14 and v15 failed exact dropout tests and never trained. Their kernel read
-strided row-index views as dense arrays. v16 normalizes indices and preserves
-all strict value/gradient/RNG checks; its GPU result is pending.
-[Retry v16](templates/run_v16_cell.py) · [Fresh notebook](templates/codex_v16.ipynb) ·
+The branch tip contains [v17 paired-byte NF4 experiment](CODEX_V17_EXPERIMENT.md).
+Its 104 CPU layout cases pass; T4 parity, performance, quality and ten checks are pending.
 [Current status](CURRENT_STATUS.md) · [All variants](03_validation/VERSION_COMPARISON.md).
-The final team submission is not selected.
+The final team submission is not selected; no 70–90% time reduction or victory is claimed.
 
 ## Earlier v3 candidate (archive)
 
