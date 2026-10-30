@@ -78,6 +78,44 @@ def test_canonical_preserves_container_aliases_and_cycles():
     assert out['a'][1] is out
 
 
+def _recursive_reference(value, memo):
+    if type(value) not in (dict, list, tuple):
+        return value
+    if id(value) in memo:
+        return memo[id(value)]
+    if type(value) is dict:
+        out = {}; memo[id(value)] = out
+        out.update((k, _recursive_reference(value[k], memo)) for k in sorted(value))
+    elif type(value) is list:
+        out = []; memo[id(value)] = out
+        out.extend(_recursive_reference(v, memo) for v in value)
+    else:
+        out = tuple(_recursive_reference(v, memo) for v in value)
+        memo[id(value)] = out
+    return out
+
+
+@pytest.mark.parametrize('tuple_keys', [False, True])
+def test_large_immutable_map_retains_exact_reference_pickle_and_aliases(tuple_keys):
+    scalar = [None, b'bytes', True, 2, 3.25, 'text']
+    keys = [(i, i + 1) if tuple_keys else f'token-{i}' for i in range(4096)]
+    mapping = {k: scalar[i % len(scalar)] for i, k in reversed(list(enumerate(keys)))}
+    state = {'vocab': mapping, 'alias': mapping, 'other': ['nested', mapping]}
+    expected = _recursive_reference(state, {})
+    actual = canonical(state, {})
+    assert pickle.dumps(actual, protocol=4) == pickle.dumps(expected, protocol=4)
+    assert actual['vocab'] is actual['alias'] is actual['other'][1]
+    assert list(mapping) == list(reversed(keys))
+
+
+def test_large_map_with_container_value_keeps_recursive_cycle_fallback():
+    state = {str(i): i for i in range(1024)}
+    state['cycle'] = state
+    actual = canonical(state, {})
+    assert actual['cycle'] is actual
+    assert pickle.dumps(actual, protocol=4) == pickle.dumps(_recursive_reference(state, {}), protocol=4)
+
+
 def test_dataset_map_outputs_unchanged(tokenizer,patched):
     from datasets import Dataset
     rows=Dataset.from_list([{'text':'abc'},{'text':'ab'}])

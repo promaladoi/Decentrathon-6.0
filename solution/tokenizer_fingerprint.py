@@ -16,6 +16,7 @@ import sys
 
 HANDLER_SHA256='8e3ce3ee43fc57b1b02f203238679087d5405b3f99b16889f33c1580e5bad755'
 MODULE='datasets.utils._dill'
+_IMMUTABLE_LEAF_TYPES = {str, bytes, int, float, bool, type(None)}
 
 
 def canonical(value, memo):
@@ -26,6 +27,13 @@ def canonical(value, memo):
     if type(value) is dict:
         out={}
         memo[id(value)]=out
+        # Large tokenizer vocabulary/rank maps have immutable scalar values.
+        # Sorting/updating their items directly preserves precisely the old
+        # dictionary order and pickle bytes without one Python call per token.
+        # Container/custom-object maps keep recursive alias/cycle handling.
+        if len(value) >= 1024 and set(map(type, value.values())) <= _IMMUTABLE_LEAF_TYPES:
+            out.update(sorted(value.items()))
+            return out
         out.update((k,canonical(value[k],memo)) for k in sorted(value))
         return out
     if type(value) is list:
