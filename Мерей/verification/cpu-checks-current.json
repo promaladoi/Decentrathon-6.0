@@ -1,0 +1,59 @@
+{
+  "kind": "cpu_checks_not_kaggle_t4_metrics",
+  "python": "3.12.14 (main, Aug 25 2026, 14:01:42) [MSC v.1944 64 bit (AMD64)]",
+  "versions": {
+    "torch": "2.11.0+cpu",
+    "soup-cli": "0.77.0",
+    "transformers": "5.16.1",
+    "peft": "0.20.0",
+    "trl": "0.29.1",
+    "accelerate": "1.14.0",
+    "pytest": "8.4.2",
+    "datasets": "5.1.0"
+  },
+  "checks": [
+    {
+      "command": [
+        "python",
+        "-m",
+        "pytest",
+        "tests",
+        "-q",
+        "-p",
+        "no:cacheprovider"
+      ],
+      "environment_overrides": {
+        "SOUP_APPLY_SOLUTION": "1",
+        "PYTHONUTF8": "1",
+        "HF_HUB_OFFLINE": "1"
+      },
+      "exit_code": 0,
+      "elapsed_seconds": 82.42402549999997,
+      "log_path": "verification/cpu-tests-current.log",
+      "stdout_tail": "........................................................................ [ 91%]\n.......                                                                  [100%]\n79 passed in 58.55s\n",
+      "stderr_tail": ""
+    },
+    {
+      "command": [
+        "python",
+        "-m",
+        "pytest",
+        "solution",
+        "-q",
+        "-p",
+        "no:cacheprovider"
+      ],
+      "environment_overrides": {
+        "SOUP_APPLY_SOLUTION": "1",
+        "PYTHONUTF8": "1",
+        "HF_HUB_OFFLINE": "1"
+      },
+      "exit_code": 0,
+      "elapsed_seconds": 9.01125520000005,
+      "log_path": "verification/cpu-solution-current.log",
+      "stdout_tail": "....s.s.s.s..s.s.sssssssssssssssssssssssssssssssssssssssssssssssssssssss [ 82%]\nsssssssssssssss                                                          [100%]\n11 passed, 76 skipped in 7.54s\n",
+      "stderr_tail": ""
+    }
+  ],
+  "public_copy_note": "Machine-specific absolute paths normalized for the working repository; measured results unchanged."
+}

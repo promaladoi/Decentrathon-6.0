@@ -1,0 +1,40 @@
+{
+  "kind": "synthetic_microbenchmark_not_training_score",
+  "device": "Tesla T4",
+  "torch": "2.11.0+cu128",
+  "rows": 256,
+  "vocabulary": 151936,
+  "repeats": 20,
+  "timing": "CUDA events after 3 warmups; excludes compilation",
+  "memory": "extra PyTorch allocated peak, not official nvidia-smi peak",
+  "cross_entropy_forward_backward": {
+    "base": {
+      "median_ms": 5.713792085647583,
+      "peak_extra_allocated_mib": 445.1259765625
+    },
+    "solution": {
+      "median_ms": 2.3846720457077026,
+      "peak_extra_allocated_mib": 148.37841796875
+    }
+  },
+  "entropy": {
+    "base": {
+      "median_ms": 8.834080219268799,
+      "peak_extra_allocated_mib": 296.7509765625
+    },
+    "solution": {
+      "median_ms": 0.6981119811534882,
+      "peak_extra_allocated_mib": 0.1142578125
+    }
+  },
+  "rmsnorm_forward_backward": {
+    "base": {
+      "median_ms": 0.5236800014972687,
+      "peak_extra_allocated_mib": 9.0
+    },
+    "solution": {
+      "median_ms": 0.3490079939365387,
+      "peak_extra_allocated_mib": 3.0009765625
+    }
+  }
+}
