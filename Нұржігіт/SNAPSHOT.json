@@ -1,5 +1,5 @@
 {
-  "source_commit": "2c2baf4fedcaff288017955b26069d8947ca9b22",
+  "source_commit": "7c5f6d83a5499886d749128832925e27bf1533d8",
   "source_repo": "BAITC-Hacks/hack-a5a4072f-wither-ai",
   "files": [
     ".gitattributes",
@@ -12,6 +12,7 @@
     "03_validation/CHECKS.md",
     "03_validation/README.md",
     "03_validation/VERSION_COMPARISON.md",
+    "03_validation/benchmark_nf4_pair.py",
     "03_validation/compare_variants.py",
     "03_validation/reports/codex_v10/checks.json",
     "03_validation/reports/codex_v10/result.json",
@@ -22,6 +23,7 @@
     "03_validation/reports/codex_v15_failed/dropout_tests.log",
     "03_validation/reports/codex_v15_failed/experiment_outcome.json",
     "03_validation/reports/codex_v15_failed/participant_console_redacted.txt",
+    "03_validation/reports/codex_v17_cpu_layout/layout_report.json",
     "03_validation/reports/codex_v2/checks.json",
     "03_validation/reports/codex_v2/result.json",
     "03_validation/reports/codex_v3/checks.json",
@@ -40,6 +42,7 @@
     "03_validation/reports/codex_v9/result.json",
     "03_validation/reports/original_verify/checks.json",
     "03_validation/reports/original_verify/result.json",
+    "03_validation/verify_paired_nf4_layout.py",
     "04_submission/CODEX_PROGRESS.md",
     "04_submission/PLAN.md",
     "04_submission/README.md",
