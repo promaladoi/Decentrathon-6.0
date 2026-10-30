@@ -1,9 +1,7 @@
 {
   "version": "v47",
   "source_commit": "1b435d909695a400b9b19da0882369390c18a0e8",
-  "status": "GPU validation running; not selected",
-  "production": "verified v45 remains selected",
-  "target_seconds": 30,
-  "max_peak_mib": 7151,
-  "quality": "reported loss may not increase; all ten original checks required"
+  "status": "superseded_before_measurement",
+  "measured": false,
+  "reason": "Inherited v46 dropout cast; restored v45 arithmetic in v48 after stricter quality rejection"
 }
