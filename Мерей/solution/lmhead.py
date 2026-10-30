@@ -195,8 +195,17 @@ class LMHeadLoss(torch.autograd.Function):
         argmax = torch.empty(tokens, device=x.device, dtype=torch.int64)
         ce = torch.zeros(tokens, device=x.device, dtype=torch.float32)
         valid = targets != -100
-        labelled = valid.nonzero().squeeze(1)
-        prompt = (~valid).nonzero().squeeze(1)
+        prepared = stats.pop("_prepared_head_metadata", None)
+        indices = None
+        if prepared is not None:
+            from .batch_metadata import PreparedHeadMetadata
+            if type(prepared) is PreparedHeadMetadata:
+                indices = prepared.indices_for(targets)
+        if indices is None:
+            labelled = valid.nonzero().squeeze(1)
+            prompt = (~valid).nonzero().squeeze(1)
+        else:
+            labelled, prompt = indices
         chunks = []
         ctx.precomputed = expected is not None
         if ctx.precomputed:
@@ -262,14 +271,16 @@ class LMHeadLoss(torch.autograd.Function):
         return grad_x, None, None, None, None
 
 
-def lm_head_loss(x, weight, targets, num_items_in_batch):
+def lm_head_loss(x, weight, targets, num_items_in_batch, *, prepared=None):
     if num_items_in_batch is None:
         denom = (targets != -100).sum().float()
     elif torch.is_tensor(num_items_in_batch):
         denom = num_items_in_batch.to(x.device)
     else:
         denom = torch.tensor(num_items_in_batch, device=x.device)
-    stats = {}
+    # The custom autograd API keeps its original five arguments. This scratch
+    # key is consumed during forward and never reaches the returned statistics.
+    stats = {"_prepared_head_metadata": prepared} if prepared is not None else {}
     loss = LMHeadLoss.apply(x, weight, targets, denom, stats)
     return loss, stats
 
@@ -351,7 +362,7 @@ def make_row_losses(original):
             tokens = mask.sum(dim=1)
             totals = (token_ce * mask.to(token_ce.dtype)).sum(dim=1)
             means = totals / tokens.clamp(min=1).to(totals.dtype)
-        return [float(v) for v in means], [int(v) for v in tokens]
+        return means.tolist(), tokens.tolist()
 
     return row_losses
 
