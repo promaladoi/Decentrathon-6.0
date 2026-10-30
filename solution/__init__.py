@@ -33,3 +33,5 @@ def apply():
     patch_output_precision()
     from .frozen_head import patch_frozen_head
     patch_frozen_head()
+    from .sparse_mlp import patch_sparse_mlp
+    patch_sparse_mlp()
