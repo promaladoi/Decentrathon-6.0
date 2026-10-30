@@ -1,0 +1,8 @@
+{
+  "result_sha256": "b7d5b8303a117c936d993752731dd8b4a66eb5e10e9316e4e2015f4336e6d1b2",
+  "speedup": 1.369396697000337,
+  "time_reduction_pct": 26.975141521043568,
+  "memory_reduction_pct": 60.67619379574764,
+  "quality_delta_pct": -0.00048788817603728774,
+  "official_checks_passed": true
+}
