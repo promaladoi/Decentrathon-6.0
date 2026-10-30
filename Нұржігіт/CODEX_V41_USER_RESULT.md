@@ -23,3 +23,8 @@ not yet been downloaded and its complete source file set has not been verified
 locally. No original result.json, checks.json or collection_proof.json was
 manufactured from this console text. The next screen first verifies the original
 v41 ZIP against its exact Git revision and exports it alongside diagnostic logs.
+
+Update: the participant has now supplied that screen's output. It reports that
+all 53 exact source files and original report hashes were verified inside Kaggle.
+See `CODEX_V42_RESULT.md` for the reported hashes and evidence level. Original
+ZIP bytes remain uncollected locally.

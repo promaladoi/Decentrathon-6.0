@@ -1,0 +1,31 @@
+{
+  "evidence_kind": "participant-supplied pinned Kaggle screen console",
+  "raw_archives_collected_locally": false,
+  "screen_code_commit": "aea2dbb8076c0c3a1e1d4c6ea361abf2df5b01e7",
+  "version": "v42",
+  "status": "research_rejected",
+  "research_exit_code": 2,
+  "gpu": "Tesla T4",
+  "torch": "2.11.0+cu128",
+  "triton": "3.6.0",
+  "tensor_core_mma_found": false,
+  "numerical_sweep_run": false,
+  "microbenchmark_sweep_run": false,
+  "full_task_admission_run": false,
+  "production_solution_changed": false,
+  "target_30_seconds_claimed": false,
+  "reported_v41_verification": {
+    "source_commit": "db4908e8b486874fda8c6eacc230166116ccad01",
+    "source_files_verified_in_kaggle": 53,
+    "solution_sha256": "aaab004b2b594ccb0f664f44c1c7533cf365f8b05c7af761bbfb58dd305983e5",
+    "archive_sha256": "a454cfe36a816bfbe616cb4b5fb6fd297cbe01a25b529124e582da611c7ad5ee",
+    "checks_passed": 10,
+    "base_wall_s": 80.72,
+    "solution_wall_s": 44.61,
+    "solution_train_loop_s": 24.55,
+    "every_solution_peak_within_7151_mib": true,
+    "max_solution_peak_mib": 7011,
+    "reported_eval_loss_nonincreasing": true,
+    "target_30_seconds_met": false
+  }
+}

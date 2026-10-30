@@ -1,7 +1,7 @@
 {
   "source_commit": "db4908e8b486874fda8c6eacc230166116ccad01",
   "source_branch": "codex/kernel-v1",
-  "status": "participant-reported complete; original raw archive collection pending",
+  "status": "participant-reported archive verification completed in Kaggle; original bytes not collected locally",
   "max_memory_mib": 7151,
   "target_total_seconds": 30,
   "files": [
@@ -63,5 +63,7 @@
   "reported_wall_s": 44.61,
   "reported_peak_mib": 7011,
   "reported_checks_passed": 10,
-  "original_archive_collected_locally": false
+  "original_archive_collected_locally": false,
+  "source_files_verified_in_kaggle": 53,
+  "reported_archive_sha256": "a454cfe36a816bfbe616cb4b5fb6fd297cbe01a25b529124e582da611c7ad5ee"
 }
