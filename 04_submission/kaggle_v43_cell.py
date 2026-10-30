@@ -1,0 +1,46 @@
+"""Paste/run once in the current Kaggle session: bounded full v43 validation."""
+import importlib.util
+import json
+import os
+from pathlib import Path
+import subprocess
+import sys
+import uuid
+import zipfile
+
+from IPython.display import display, FileLink
+
+SOURCE = '458e7a1d7706737f8b3a32a8f795419c2e726f1a'
+working = Path('/kaggle/working')
+if os.name != 'posix' or not working.is_dir():
+    raise RuntimeError('Run in Kaggle with GPU T4 x2 and Internet on')
+control = working/('codex_v43_control_'+uuid.uuid4().hex[:8])
+subprocess.run(['git', 'clone', '-q', '--filter=blob:none', '--single-branch',
+                '--branch', 'codex/kernel-v1', '--no-checkout',
+                'https://github.com/promaladoi/Decentrathon-6.0.git', str(control)],
+               check=True, timeout=180)
+subprocess.run(['git', '-C', str(control), 'checkout', '-q', SOURCE], check=True)
+# Coordinator checks GPU idleness, creates an exact separate worker, prepares
+# the original fixed split if needed, and bounds the complete worker to 20 min.
+# It never changes the checkout of a running measured process.
+done = subprocess.run([sys.executable, '04_submission/coordinate_experiments.py',
+                       '--max-jobs', '1', '--idle-minutes', '0', '--max-minutes', '20'],
+                      cwd=control)
+print('V43 COORDINATOR EXIT:', done.returncode, flush=True)
+archive = working/'codex_v43.zip'
+if archive.is_file():
+    spec = importlib.util.spec_from_file_location('v43_artifact_collector',
+                                                 control/'03_validation/collect_artifact.py')
+    collector = importlib.util.module_from_spec(spec)
+    spec.loader.exec_module(collector)
+    proof = collector.collect(archive, SOURCE, 'v43', control)
+    print('V43 ORIGINAL ARCHIVE VERIFIED', json.dumps(proof), flush=True)
+    with zipfile.ZipFile(archive) as z:
+        if 'user_constraints.json' in z.namelist():
+            print('V43 USER CONSTRAINTS', z.read('user_constraints.json').decode(), flush=True)
+        else:
+            print('V43 STOPPED BEFORE FULL RESULT', z.read('experiment_outcome.json').decode(), flush=True)
+    os.chdir(working)
+    display(FileLink(archive.name))
+else:
+    print('No v43 archive: inspect the coordinator error above. No completed v43 result is claimed.', flush=True)
