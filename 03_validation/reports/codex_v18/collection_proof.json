@@ -1,0 +1,11 @@
+{
+  "version": "v18",
+  "source_commit": "d01b2d8c71738c6345cd704b369bd58027ac09c1",
+  "source_files_verified": 36,
+  "solution_sha256": "4fdef5d6fcae8efab93a8a6071e1dc6c9fccb83ddac898194a41d7f4d359dff8",
+  "status": "failed",
+  "checks_passed": null,
+  "accepted": false,
+  "summary": null,
+  "archive_sha256": "3883bf1b48dd20d4423e445cae0b74c274c0c58fc39b292be62f68165598494c"
+}

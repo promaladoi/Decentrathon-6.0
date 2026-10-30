@@ -29,6 +29,12 @@
 | Combined v18 | d01b2d8 | Pending | — | — | — | Lossless frozen storage; 15 CPU tests / 5 CUDA skips, 158 full GPU cases |
 | Combined v19 | 1e2fe4b | Not independently measured | — | — | — | Direct native mask intermediate; included in v20 |
 | Combined v20 | 22ff279 | Pending | — | — | — | Packed real-token mask; 124 CPU layout cases, 174 full GPU cases |
+| v17r1 | 7c5f6d8 | 10 PASS | 1.5553x | 2.5611x | -0.002% | Fully archived; 138 tests; 84.28 / 54.19 s |
+| v18r1 | d01b2d8 | 10 PASS | 1.4555x | 3.0515x | +0.000% | Fully archived; 158 tests; 80.94 / 55.61 s |
+| v20r1 | 22ff279 | 10 PASS | 1.4555x | 3.2113x | -0.000% | Fully archived; 174 tests; 81.23 / 55.81 s |
+| v21 | a67816b | 10 PASS (console) | ~1.457x | ~3.211x | -0.001% | Raw archive collection pending |
+| v22 | 7a8b38f | Running | — | — | — | CLI startup; 7 CPU parser contracts passed |
+| v23 | d8ac022 | Pending | — | — | — | Frozen weight reuse; 14 CPU contracts / 4 CUDA skips |
 | Анаис | әлі берілмеген | әлі берілмеген | жоқ | жоқ | жоқ | |
 | Владимир (user-reported) | main/d080f2b component | Full checks not supplied | 1.468x | 2.543x | -0.0% | User summary: 93.2 / 63.5 s, 14345 / 5641 MiB; not independently validated here |
 | Мерей | әлі берілмеген | әлі берілмеген | жоқ | жоқ | жоқ | |

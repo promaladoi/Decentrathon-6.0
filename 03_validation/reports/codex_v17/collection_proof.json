@@ -1,0 +1,11 @@
+{
+  "version": "v17",
+  "source_commit": "7c5f6d83a5499886d749128832925e27bf1533d8",
+  "source_files_verified": 33,
+  "solution_sha256": "15868b164bb82cee9c1534da349f1ad940c7dab41b0eaf407430dd4d51c9d593",
+  "status": "failed",
+  "checks_passed": null,
+  "accepted": false,
+  "summary": null,
+  "archive_sha256": "b51247cad2c34bdd7dacc106635b11bf73a9a38843082f7258684de01771cb76"
+}
