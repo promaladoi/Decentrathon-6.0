@@ -24,7 +24,9 @@ from torch.autograd.function import once_differentiable
 BLOCK = 1024
 
 
-@triton.jit
+# batch * seq_len changes every step: not specialized, so the warm-up's compiled variant is
+# the one every step launches (a value not divisible by 16 would otherwise compile a second one)
+@triton.jit(do_not_specialize=["N", "FULL_ROWS"])
 def real_dropout_gather_kernel(X, FullMask, Rows, Out, RealMask, N, FULL_ROWS,
                                WIDTH: tl.constexpr, SCALE: tl.constexpr,
                                BLOCK: tl.constexpr):
@@ -41,7 +43,7 @@ def real_dropout_gather_kernel(X, FullMask, Rows, Out, RealMask, N, FULL_ROWS,
     tl.store(RealMask + offset, kept, valid)
 
 
-@triton.jit
+@triton.jit(do_not_specialize=["N"])
 def real_dropout_backward_kernel(Grad, RealMask, DX, N, SCALE: tl.constexpr,
                                  BLOCK: tl.constexpr):
     offset = tl.program_id(0) * BLOCK + tl.arange(0, BLOCK)

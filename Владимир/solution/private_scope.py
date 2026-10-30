@@ -29,6 +29,11 @@ def expected_loss_scale():
     return None if scope is None else scope.loss_scale
 
 
+def active():
+    """True inside the strict private trainer scope, the training step's compute_loss."""
+    return _SCOPE.get() is not None
+
+
 def permits(model, input_ids, labels, attention_mask):
     scope = _SCOPE.get()
     return (scope is not None and scope.base is model

@@ -87,6 +87,33 @@ def _targets_in_bounds(targets, vocabulary):
     return ((targets == -100) | ((targets >= 0) & (targets < vocabulary))).all()
 
 
+_HALF_WEIGHT = {}
+
+
+def _half_weight(weight):
+    """The fp16 lm_head weight, converted once per run instead of once per step.
+
+    The frozen tied weight is 151,936 x 1,536 fp32: converting it reads 0.93 GB and writes
+    0.47 GB every step. The copy is kept only for the training step's private scope; it is
+    remade when the parameter object, its storage or its version counter changes. The step
+    already keeps this fp16 copy alive from forward to backward, through the memory peak, so
+    keeping it between steps does not raise the peak.
+    """
+    key = (weight.data_ptr(), weight._version, tuple(weight.shape), weight.device)
+    cached = _HALF_WEIGHT.get("entry")
+    if cached is not None and cached[0] is weight and cached[1] == key:
+        return cached[2]
+    half = weight.detach().to(torch.float16)
+    _HALF_WEIGHT["entry"] = (weight, key, half)
+    return half
+
+
+def _in_private_scope():
+    from . import private_scope
+    helper = getattr(private_scope, "active", None)
+    return bool(helper()) if helper is not None else False
+
+
 def _private_expected_loss_scale():
     # Resolve lazily: importing this module alone never activates a trainer
     # scope or depends on construction order during setup/warmup.
@@ -151,7 +178,7 @@ class LMHeadLoss(torch.autograd.Function):
                             "cross_entropy target out of bounds")
         tokens, hidden = x.shape
         x16 = x.to(torch.float16)
-        w16 = weight.to(torch.float16)
+        w16 = _half_weight(weight) if _in_private_scope() else weight.to(torch.float16)
         entropy = torch.empty(tokens, device=x.device, dtype=torch.float32)
         argmax = torch.empty(tokens, device=x.device, dtype=torch.int64)
         ce = torch.zeros(tokens, device=x.device, dtype=torch.float32)
