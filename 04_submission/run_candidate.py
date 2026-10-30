@@ -14,7 +14,7 @@ import zipfile
 
 def main():
     parser = argparse.ArgumentParser()
-    parser.add_argument('--version', default='v15')
+    parser.add_argument('--version', default='v16')
     parser.add_argument('--tests-only', action='store_true')
     args = parser.parse_args()
     if not args.version.replace('_', '').isalnum():
@@ -84,6 +84,8 @@ def main():
         else:
             rc = 0
     except Exception as exc:
+        outcome['failed_stage'] = outcome['status']
+        outcome['status'] = 'failed'
         outcome['error'] = str(exc)
         print(f'EXPERIMENT STOPPED: {exc}', flush=True)
     finally:
