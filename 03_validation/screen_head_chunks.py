@@ -41,16 +41,23 @@ def main():
             errors = {}
             for chunk in samples:
                 result = run(chunk)
+                qualified = True
                 for actual, expected in zip(result[:3], reference[:3]):
-                    torch.testing.assert_close(actual, expected, rtol=2e-3, atol=3e-5)
+                    try:
+                        torch.testing.assert_close(actual, expected, rtol=2e-3, atol=3e-5)
+                    except AssertionError:
+                        qualified = False
                 # Record argmax ties/differences rather than hide them.
-                errors[chunk] = {'loss_abs': abs(result[0].item() - reference[0].item()),
+                errors[chunk] = {'qualified': qualified,
+                                 'loss_abs': abs(result[0].item() - reference[0].item()),
                                  'gradient_max_abs': (result[1] - reference[1]).abs().max().item(),
                                  'argmax_differences': (result[3] != reference[3]).sum().item()}
                 del result
             for repeat in range(7):
                 order = (128, 256, 512) if repeat % 2 else (512, 256, 128)
                 for chunk in order:
+                    if not errors[chunk]['qualified']:
+                        continue
                     torch.cuda.synchronize()
                     torch.cuda.reset_peak_memory_stats()
                     baseline_bytes = torch.cuda.memory_allocated()
@@ -62,8 +69,8 @@ def main():
                     samples[chunk].append(begin.elapsed_time(end))
                     peaks[chunk].append((torch.cuda.max_memory_allocated() - baseline_bytes) / 2**20)
                     del result
-            case = {'rows': rows, 'median_ms': {k: statistics.median(v) for k, v in samples.items()},
-                    'extra_peak_mib': {k: max(v) for k, v in peaks.items()}, 'errors': errors}
+            case = {'rows': rows, 'median_ms': {k: statistics.median(v) if v else None for k, v in samples.items()},
+                    'extra_peak_mib': {k: max(v) if v else None for k, v in peaks.items()}, 'errors': errors}
             report['cases'].append(case)
             print(json.dumps(case), flush=True)
             del reference, x, targets, denominator
