@@ -9,7 +9,7 @@ def test_early_storage_ignores_unknown_model():
 
 
 @pytest.mark.skipif(not torch.cuda.is_available(), reason='requires CUDA model storage')
-@pytest.mark.parametrize('observed', [False, True])
+@pytest.mark.parametrize('observed', [False, 'head', 'model'])
 def test_early_storage_preserves_values_ties_and_observers(observed):
     from transformers import Qwen2Config
     from transformers.models.qwen2.modeling_qwen2 import Qwen2ForCausalLM
@@ -26,7 +26,8 @@ def test_early_storage_preserves_values_ties_and_observers(observed):
     values = torch.randn((3, 32), device='cuda')
     embedding_ref = model.model.embed_tokens(ids)
     head_ref = model.lm_head(values)
-    handle = model.lm_head.register_forward_pre_hook(lambda *args: None) if observed else None
+    observer = model if observed == 'model' else model.lm_head
+    handle = observer.register_forward_pre_hook(lambda *args: None) if observed else None
     try:
         state = prepare_trainer_storage(SimpleNamespace(model=model))
         if observed:

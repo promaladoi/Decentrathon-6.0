@@ -116,9 +116,11 @@ def prepare_trainer_storage(trainer):
     from peft import PeftModelForCausalLM
     from transformers.models.qwen2.modeling_qwen2 import Qwen2ForCausalLM
     model = getattr(trainer, 'model', None)
+    if not isinstance(model, nn.Module) or not _unobserved(model):
+        return None
     if type(model) is PeftModelForCausalLM:
         model = model.get_base_model()
-    if type(model) is not Qwen2ForCausalLM:
+    if type(model) is not Qwen2ForCausalLM or not _unobserved(model):
         return None
     embedding, head = model.model.embed_tokens, model.lm_head
     if not embedding.weight.is_cuda:
