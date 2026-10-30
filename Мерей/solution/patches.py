@@ -136,6 +136,8 @@ def patch_soup_setup():
         result = original(self, *args, **kwargs)
         if isinstance(getattr(self, "model", None), torch.nn.Module):
             install_model_patches()
+            from .half_loss import install
+            install(self.model)
         return result
 
     setup._soup_solution_patch = True

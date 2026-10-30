@@ -20,7 +20,7 @@ def vocabulary_partials_kernel(X, Partial, V: tl.constexpr, PARTS: tl.constexpr,
     row = tl.program_id(0)
     part = tl.program_id(1)
     col = part * BLOCK + tl.arange(0, BLOCK)
-    z = tl.load(X + row * V + col, col < V, other=-float("inf"))
+    z = tl.load(X + row * V + col, col < V, other=-float("inf")).to(tl.float32)
     m = tl.max(z, 0)
     # A completely masked (-inf) partition contributes zero mass to CE,
     # including when other partitions in the same row have finite values.
@@ -71,7 +71,7 @@ def vocabulary_gradient_kernel(X, Targets, Norm, DOut, Count, DX,
                                REDUCTION: tl.constexpr, BLOCK: tl.constexpr):
     row = tl.program_id(0)
     col = tl.program_id(1) * BLOCK + tl.arange(0, BLOCK)
-    z = tl.load(X + row * V + col, col < V, other=0.0)
+    z = tl.load(X + row * V + col, col < V, other=0.0).to(tl.float32)
     m = tl.load(Norm + 2 * row)
     mass = tl.load(Norm + 2 * row + 1)
     target = tl.load(Targets + row)
@@ -82,7 +82,18 @@ def vocabulary_gradient_kernel(X, Targets, Norm, DOut, Count, DX,
         if REDUCTION == 2:
             count = tl.load(Count).to(tl.float32)
             scale = scale / tl.maximum(count, 1.0)
-    gradient = (tl.exp(z - m) / mass - (col == target).to(tl.float32)) * scale
+    if X.dtype.element_ty == tl.float16:
+        if tl.abs(scale) == float("inf"):
+            # Native NLL -> log-softmax backward adds a sparse -scale to
+            # probability * scale. For infinite scale the target is NaN
+            # (-inf + inf), rather than the finite-path algebra's -inf.
+            probability = tl.exp(z - m) / mass
+            sparse_gradient = tl.where(col == target, -scale, 0.0)
+            gradient = sparse_gradient + probability * scale
+        else:
+            gradient = (tl.exp(z - m) / mass - (col == target).to(tl.float32)) * scale
+    else:
+        gradient = (tl.exp(z - m) / mass - (col == target).to(tl.float32)) * scale
     gradient = tl.where(target != IGNORE, gradient, 0.0)
     tl.store(DX + row * V + col, gradient, col < V)
 
@@ -154,3 +165,21 @@ def entropy_from_logits(logits):
     flat = logits.reshape(-1, logits.shape[-1])
     entropy, _ = _statistics(flat)
     return entropy.view(logits.shape[:-1])
+
+
+def _half_cross_entropy(logits, targets, ignore_index=-100, reduction="mean"):
+    """Internal half-input CE with float32 math and a half-input gradient.
+
+    Unsupported calls preserve HF's explicit float32-upcast behavior. Public
+    cross_entropy and entropy_from_logits keep their original float32 guards.
+    """
+    supported = (isinstance(logits, torch.Tensor) and logits.is_cuda
+                 and logits.dtype == torch.float16 and logits.ndim == 2
+                 and logits.numel() > 0 and logits.is_contiguous()
+                 and isinstance(targets, torch.Tensor)
+                 and targets.device == logits.device and targets.dtype == torch.int64
+                 and targets.ndim == 1 and targets.shape[0] == logits.shape[0]
+                 and targets.is_contiguous() and reduction in ("none", "sum", "mean"))
+    if not supported:
+        return cross_entropy(logits.float(), targets, ignore_index, reduction)
+    return _VocabularyCrossEntropy.apply(logits, targets, ignore_index, reduction)
