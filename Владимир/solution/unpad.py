@@ -1,0 +1,564 @@
+"""Training forward of Qwen2 + 4-bit LoRA on the real tokens only, with pad tokens removed.
+
+TRL pads the 4 rows of a batch on the right to the longest row. The rows average about 220 tokens
+and one row of 512 sets the length for all four, so a large share of every batch is padding, and
+transformers runs every projection, norm, MLP and the lm_head over it. Here the real tokens (the
+attention mask) are gathered into one (tokens, hidden) tensor right after the embedding, and every
+row-wise operation runs on that. Removing pad tokens inside a batch is allowed by the task; rows
+of different batches are never mixed.
+
+Attention is the one operation that needs the batch layout. One Triton kernel takes the q, k, v
+projections of each real token, adds the LoRA outputs, applies the rotary embedding (q, k), and
+writes them, cast to fp16 and with k and v repeated for the query heads (GQA), straight into
+zeroed (batch, heads, seq_len, head_dim) tensors. scaled_dot_product_attention then runs exactly
+as in transformers, with the same causal + padding mask, and a second kernel gathers each real
+token's output back. Backward is the same two kernels reversed. Pad positions never reach a real
+token (they are masked out of attention), and their gradients are zero in the base run as well.
+
+The arithmetic of every real token follows transformers + PEFT + bitsandbytes step by step:
+x is cast to fp16 for each 4-bit projection, bias added by the same matmul, LoRA computed by the
+same modules under the same autocast and added in fp32, RoPE in fp32 with PyTorch's rounding.
+LoRA dropout runs on the full (batch, seq_len, hidden) tensor, the shape it has in the base run,
+so the random number generator produces the same dropout masks in the same order.
+The model output goes through lmhead.py: no logits of the vocabulary size are materialized.
+
+Anything this file does not handle (inference, a cache, other attention implementations, DoRA,
+gradient checkpointing, hooks on the bypassed modules, ...) runs the original forward.
+Code written by us.
+"""
+
+import torch
+import triton
+import triton.language as tl
+
+from .lmhead import LazyLogits, lm_head_loss, patch_metric_readers
+from .mlp import MLP4bit, _compute_dtype
+from .nf4 import MatMulNF4, dequantize_nf4, supported as nf4_supported
+from .rmsnorm import add_rmsnorm, rmsnorm
+
+
+@triton.jit(do_not_specialize=["seq_len"])
+def rope_pad_fwd_kernel(Q, LQ, K, LK, V, LV, COS, SIN, ROWS, QP, KP, VP, sp_b, sp_h, sp_l,
+                        seq_len, HQ: tl.constexpr, HK: tl.constexpr, HALF: tl.constexpr,
+                        REP: tl.constexpr, BLOCK_HQ: tl.constexpr, BLOCK_HK: tl.constexpr,
+                        HAS_LQ: tl.constexpr, HAS_LK: tl.constexpr, HAS_LV: tl.constexpr):
+    t = tl.program_id(0).to(tl.int64)
+    r = tl.load(ROWS + t)  # b * seq_len + l in the padded batch
+    b = r // seq_len
+    l = r % seq_len
+    D = HALF * 2
+    cols = tl.arange(0, HALF)[None, :]
+    c1 = tl.load(COS + t * D + cols).to(tl.float32)
+    c2 = tl.load(COS + t * D + HALF + cols).to(tl.float32)
+    s1 = tl.load(SIN + t * D + cols).to(tl.float32)
+    s2 = tl.load(SIN + t * D + HALF + cols).to(tl.float32)
+    dt = QP.dtype.element_ty
+
+    # q: projection + LoRA in fp32, rotated, cast, into (b, h, l)
+    hq = tl.arange(0, BLOCK_HQ)[:, None]
+    mq = hq < HQ
+    src = t * (HQ * D) + hq * D + cols
+    x1 = tl.load(Q + src, mask=mq, other=0.0).to(tl.float32)
+    x2 = tl.load(Q + src + HALF, mask=mq, other=0.0).to(tl.float32)
+    if HAS_LQ:
+        x1 = x1 + tl.load(LQ + src, mask=mq, other=0.0).to(tl.float32)
+        x2 = x2 + tl.load(LQ + src + HALF, mask=mq, other=0.0).to(tl.float32)
+    dst = b * sp_b + hq * sp_h + l * sp_l + cols
+    tl.store(QP + dst, ((x1 * c1) - (x2 * s1)).to(dt), mask=mq)
+    tl.store(QP + dst + HALF, ((x2 * c2) + (x1 * s2)).to(dt), mask=mq)
+
+    # k: the same rotation, written to the REP query heads that share it
+    hk = tl.arange(0, BLOCK_HK)[:, None]
+    mk = hk < HK
+    srck = t * (HK * D) + hk * D + cols
+    k1 = tl.load(K + srck, mask=mk, other=0.0).to(tl.float32)
+    k2 = tl.load(K + srck + HALF, mask=mk, other=0.0).to(tl.float32)
+    if HAS_LK:
+        k1 = k1 + tl.load(LK + srck, mask=mk, other=0.0).to(tl.float32)
+        k2 = k2 + tl.load(LK + srck + HALF, mask=mk, other=0.0).to(tl.float32)
+    ko1 = ((k1 * c1) - (k2 * s1)).to(dt)
+    ko2 = ((k2 * c2) + (k1 * s2)).to(dt)
+    v1 = tl.load(V + srck, mask=mk, other=0.0).to(tl.float32)
+    v2 = tl.load(V + srck + HALF, mask=mk, other=0.0).to(tl.float32)
+    if HAS_LV:
+        v1 = v1 + tl.load(LV + srck, mask=mk, other=0.0).to(tl.float32)
+        v2 = v2 + tl.load(LV + srck + HALF, mask=mk, other=0.0).to(tl.float32)
+    vo1 = v1.to(dt)
+    vo2 = v2.to(dt)
+    for rep in tl.static_range(REP):
+        dstk = b * sp_b + (hk * REP + rep) * sp_h + l * sp_l + cols
+        tl.store(KP + dstk, ko1, mask=mk)
+        tl.store(KP + dstk + HALF, ko2, mask=mk)
+        tl.store(VP + dstk, vo1, mask=mk)
+        tl.store(VP + dstk + HALF, vo2, mask=mk)
+
+
+@triton.jit(do_not_specialize=["seq_len"])
+def rope_pad_bwd_kernel(DQP, DKP, DVP, COS, SIN, ROWS, DQ, DLQ, DK, DLK, DV, DLV, sq_b, sq_h,
+                        sq_l, sk_b, sk_h, sk_l, sv_b, sv_h, sv_l, seq_len, HQ: tl.constexpr,
+                        HK: tl.constexpr, HALF: tl.constexpr, REP: tl.constexpr,
+                        BLOCK_HQ: tl.constexpr, BLOCK_HK: tl.constexpr, HAS_LQ: tl.constexpr,
+                        HAS_LK: tl.constexpr, HAS_LV: tl.constexpr):
+    t = tl.program_id(0).to(tl.int64)
+    r = tl.load(ROWS + t)
+    b = r // seq_len
+    l = r % seq_len
+    D = HALF * 2
+    cols = tl.arange(0, HALF)[None, :]
+    c1 = tl.load(COS + t * D + cols).to(tl.float32)
+    c2 = tl.load(COS + t * D + HALF + cols).to(tl.float32)
+    s1 = tl.load(SIN + t * D + cols).to(tl.float32)
+    s2 = tl.load(SIN + t * D + HALF + cols).to(tl.float32)
+    dt = DQ.dtype.element_ty
+
+    # q: the transposed rotation of the attention gradient; the same gradient reaches the
+    # projection and its LoRA output (autograd's add backward)
+    hq = tl.arange(0, BLOCK_HQ)[:, None]
+    mq = hq < HQ
+    src = b * sq_b + hq * sq_h + l * sq_l + cols
+    g1 = tl.load(DQP + src, mask=mq, other=0.0).to(tl.float32)
+    g2 = tl.load(DQP + src + HALF, mask=mq, other=0.0).to(tl.float32)
+    d1 = ((g1 * c1) + (g2 * s2)).to(dt)
+    d2 = ((g2 * c2) - (g1 * s1)).to(dt)
+    dst = t * (HQ * D) + hq * D + cols
+    tl.store(DQ + dst, d1, mask=mq)
+    tl.store(DQ + dst + HALF, d2, mask=mq)
+    if HAS_LQ:
+        tl.store(DLQ + dst, d1, mask=mq)
+        tl.store(DLQ + dst + HALF, d2, mask=mq)
+
+    # k and v: the REP query heads' gradients summed in fp32 (repeat_kv's backward)
+    hk = tl.arange(0, BLOCK_HK)[:, None]
+    mk = hk < HK
+    gk1 = tl.zeros([BLOCK_HK, HALF], dtype=tl.float32)
+    gk2 = tl.zeros([BLOCK_HK, HALF], dtype=tl.float32)
+    gv1 = tl.zeros([BLOCK_HK, HALF], dtype=tl.float32)
+    gv2 = tl.zeros([BLOCK_HK, HALF], dtype=tl.float32)
+    for rep in tl.static_range(REP):
+        sk = b * sk_b + (hk * REP + rep) * sk_h + l * sk_l + cols
+        sv = b * sv_b + (hk * REP + rep) * sv_h + l * sv_l + cols
+        gk1 += tl.load(DKP + sk, mask=mk, other=0.0).to(tl.float32)
+        gk2 += tl.load(DKP + sk + HALF, mask=mk, other=0.0).to(tl.float32)
+        gv1 += tl.load(DVP + sv, mask=mk, other=0.0).to(tl.float32)
+        gv2 += tl.load(DVP + sv + HALF, mask=mk, other=0.0).to(tl.float32)
+    dk1 = ((gk1 * c1) + (gk2 * s2)).to(dt)
+    dk2 = ((gk2 * c2) - (gk1 * s1)).to(dt)
+    dstk = t * (HK * D) + hk * D + cols
+    tl.store(DK + dstk, dk1, mask=mk)
+    tl.store(DK + dstk + HALF, dk2, mask=mk)
+    if HAS_LK:
+        tl.store(DLK + dstk, dk1, mask=mk)
+        tl.store(DLK + dstk + HALF, dk2, mask=mk)
+    tl.store(DV + dstk, gv1.to(dt), mask=mk)
+    tl.store(DV + dstk + HALF, gv2.to(dt), mask=mk)
+    if HAS_LV:
+        tl.store(DLV + dstk, gv1.to(dt), mask=mk)
+        tl.store(DLV + dstk + HALF, gv2.to(dt), mask=mk)
+
+
+@triton.jit(do_not_specialize=["seq_len"])
+def heads_rows_kernel(FLAT, PAD, ROWS, sp_b, sp_h, sp_l, seq_len, H: tl.constexpr,
+                      D: tl.constexpr, BLOCK_H: tl.constexpr, TO_FLAT: tl.constexpr):
+    """(batch, heads, seq_len, D) <-> (tokens, heads * D) for the real tokens."""
+    t = tl.program_id(0).to(tl.int64)
+    r = tl.load(ROWS + t)
+    b = r // seq_len
+    l = r % seq_len
+    heads = tl.arange(0, BLOCK_H)[:, None]
+    cols = tl.arange(0, D)[None, :]
+    mask = heads < H
+    flat = FLAT + t * (H * D) + heads * D + cols
+    pad = PAD + b * sp_b + heads * sp_h + l * sp_l + cols
+    if TO_FLAT:
+        tl.store(flat, tl.load(pad, mask=mask, other=0.0), mask=mask)
+    else:
+        tl.store(pad, tl.load(flat, mask=mask, other=0.0), mask=mask)
+
+
+def _blocks(hq, hk):
+    return triton.next_power_of_2(hq), triton.next_power_of_2(hk)
+
+
+class RoPEPad(torch.autograd.Function):
+    """(q, k, v) of the real tokens (+ LoRA outputs) -> rotated, fp16, padded, GQA-repeated."""
+
+    @staticmethod
+    def forward(ctx, q, lq, k, lk, v, lv, cos, sin, rows, batch, seq_len, hq, hk, dim, rep):
+        dtype = torch.float16
+        out_heads = hk * rep
+        qp = q.new_zeros((batch, hq, seq_len, dim), dtype=dtype)
+        kp = q.new_zeros((batch, out_heads, seq_len, dim), dtype=dtype)
+        vp = q.new_zeros((batch, out_heads, seq_len, dim), dtype=dtype)
+        bq, bk = _blocks(hq, hk)
+        rope_pad_fwd_kernel[(rows.numel(),)](
+            q, lq if lq is not None else q, k, lk if lk is not None else k, v,
+            lv if lv is not None else v, cos, sin, rows, qp, kp, vp, qp.stride(0), qp.stride(1),
+            qp.stride(2), seq_len, HQ=hq, HK=hk, HALF=dim // 2, REP=rep, BLOCK_HQ=bq,
+            BLOCK_HK=bk, HAS_LQ=lq is not None, HAS_LK=lk is not None, HAS_LV=lv is not None,
+            num_warps=4, enable_fp_fusion=False)
+        ctx.save_for_backward(cos, sin, rows)
+        ctx.meta = (batch, seq_len, hq, hk, dim, rep, lq is not None, lk is not None,
+                    lv is not None)
+        ctx.dtypes = (q.dtype, k.dtype, v.dtype)
+        return qp, kp, vp
+
+    @staticmethod
+    def backward(ctx, dqp, dkp, dvp):
+        cos, sin, rows = ctx.saved_tensors
+        batch, seq_len, hq, hk, dim, rep, has_lq, has_lk, has_lv = ctx.meta
+        tokens = rows.numel()
+        f16 = torch.float16  # an output attention did not use gets a zero gradient
+        dqp = dqp if dqp is not None else cos.new_zeros((batch, hq, seq_len, dim), dtype=f16)
+        dkp = dkp if dkp is not None else cos.new_zeros((batch, hk * rep, seq_len, dim), dtype=f16)
+        dvp = dvp if dvp is not None else cos.new_zeros((batch, hk * rep, seq_len, dim), dtype=f16)
+        dqp, dkp, dvp = (t if t.stride(-1) == 1 else t.contiguous() for t in (dqp, dkp, dvp))
+        dt = torch.float16
+        dq = torch.empty((tokens, hq * dim), device=cos.device, dtype=dt)
+        dk = torch.empty((tokens, hk * dim), device=cos.device, dtype=dt)
+        dv = torch.empty((tokens, hk * dim), device=cos.device, dtype=dt)
+        dlq = torch.empty_like(dq) if has_lq else None
+        dlk = torch.empty_like(dk) if has_lk else None
+        dlv = torch.empty_like(dv) if has_lv else None
+        bq, bk = _blocks(hq, hk)
+        rope_pad_bwd_kernel[(tokens,)](
+            dqp, dkp, dvp, cos, sin, rows, dq, dlq if has_lq else dq, dk, dlk if has_lk else dk,
+            dv, dlv if has_lv else dv, dqp.stride(0), dqp.stride(1), dqp.stride(2),
+            dkp.stride(0), dkp.stride(1), dkp.stride(2), dvp.stride(0), dvp.stride(1),
+            dvp.stride(2), seq_len, HQ=hq, HK=hk, HALF=dim // 2, REP=rep, BLOCK_HQ=bq,
+            BLOCK_HK=bk, HAS_LQ=has_lq, HAS_LK=has_lk, HAS_LV=has_lv, num_warps=4,
+            enable_fp_fusion=False)
+        q_dtype, k_dtype, v_dtype = ctx.dtypes
+        return (dq.to(q_dtype), dlq, dk.to(k_dtype), dlk, dv.to(v_dtype), dlv,
+                None, None, None, None, None, None, None, None, None)
+
+
+class UnpadHeads(torch.autograd.Function):
+    """(batch, heads, seq_len, D) attention output -> (tokens, heads * D) of the real tokens."""
+
+    @staticmethod
+    def forward(ctx, padded, rows, seq_len):
+        padded = padded if padded.stride(-1) == 1 else padded.contiguous()
+        batch, heads, _, dim = padded.shape
+        flat = padded.new_empty((rows.numel(), heads * dim))
+        _heads_rows(flat, padded, rows, seq_len, to_flat=True)
+        ctx.save_for_backward(rows)
+        ctx.meta = (batch, heads, seq_len, dim)
+        return flat
+
+    @staticmethod
+    def backward(ctx, grad_flat):
+        (rows,) = ctx.saved_tensors
+        batch, heads, seq_len, dim = ctx.meta
+        grad_flat = grad_flat.contiguous()
+        padded = grad_flat.new_zeros((batch, heads, seq_len, dim))
+        _heads_rows(grad_flat, padded, rows, seq_len, to_flat=False)
+        return padded, None, None
+
+
+def _heads_rows(flat, padded, rows, seq_len, to_flat):
+    heads, dim = padded.shape[1], padded.shape[3]
+    heads_rows_kernel[(rows.numel(),)](flat, padded, rows, padded.stride(0), padded.stride(1),
+                                       padded.stride(2), seq_len, H=heads, D=dim,
+                                       BLOCK_H=triton.next_power_of_2(heads), TO_FLAT=to_flat,
+                                       num_warps=4)
+
+
+class QKV4bit(torch.autograd.Function):
+    """The q, k, v base projections of one input: x cast to fp16 once, three NF4 matmuls with
+    bias. Backward sums the three input gradients in fp32, as autograd sums the gradients of
+    the three casts Linear4bit makes."""
+
+    @staticmethod
+    def forward(ctx, x, q_layer, k_layer, v_layer, dtype):
+        x16 = x.to(dtype)
+        outs = []
+        for layer in (q_layer, k_layer, v_layer):
+            bias = layer.bias.to(dtype) if layer.bias is not None else None
+            outs.append(torch.nn.functional.linear(x16, _weight(layer, dtype), bias))
+        ctx.layers, ctx.dtype, ctx.x_dtype = (q_layer, k_layer, v_layer), dtype, x.dtype
+        return tuple(outs)
+
+    @staticmethod
+    def backward(ctx, *grads):
+        dx = None
+        for layer, grad in zip(ctx.layers, grads):
+            if grad is None:
+                continue
+            part = torch.matmul(grad.to(ctx.dtype), _weight(layer, ctx.dtype)).float()
+            dx = part if dx is None else dx.add_(part)
+        return dx.to(ctx.x_dtype) if dx is not None else None, None, None, None, None
+
+
+def _weight(layer, dtype):
+    return dequantize_nf4(layer.weight, layer.weight.quant_state, dtype)
+
+
+# ---------------------------------------------------------------- model inspection
+
+def _lora_parts(module):
+    """(base Linear4bit, lora_A, lora_B, dropout, scaling) of a vanilla PEFT LoRA 4-bit layer
+    with one active adapter; (module, None...) for a plain Linear4bit; None otherwise."""
+    import bitsandbytes as bnb
+
+    if isinstance(module, bnb.nn.Linear4bit):
+        return module, None, None, None, None
+    try:
+        from peft.tuners.lora.bnb import Linear4bit as LoraLinear4bit
+    except ImportError:
+        return None
+    if not isinstance(module, LoraLinear4bit) or module.merged or module.disable_adapters:
+        return None
+    active = [a for a in module.active_adapters if a in module.lora_A.keys()]
+    if len(active) != 1 or active[0] in module.lora_variant:
+        return None
+    name = active[0]
+    lora_a, lora_b = module.lora_A[name], module.lora_B[name]
+    dropout = module.lora_dropout[name]
+    if type(lora_a) is not torch.nn.Linear or type(lora_b) is not torch.nn.Linear or \
+            lora_a.bias is not None or lora_b.bias is not None:
+        return None
+    if type(dropout) not in (torch.nn.Dropout, torch.nn.Identity):
+        return None
+    base = module.base_layer
+    if not isinstance(base, bnb.nn.Linear4bit):
+        return None
+    return base, lora_a, lora_b, dropout, module.scaling[name]
+
+
+def _no_hooks(*modules):
+    """No torch hooks and no accelerate hook (which replaces forward) on modules the fast
+    forward calls through their weights instead of their forward."""
+    return all(not (m._forward_hooks or m._forward_pre_hooks or m._backward_hooks or
+                    getattr(m, "_backward_pre_hooks", None) or hasattr(m, "_hf_hook"))
+               for m in modules)
+
+
+def _inspect(model):
+    """Everything the fast forward needs, or None when the model is not the case it handles."""
+    from transformers.loss.loss_utils import ForCausalLMLoss
+    from transformers.models.qwen2 import modeling_qwen2
+
+    cfg = model.config
+    inner = model.model
+    n_layers = cfg.num_hidden_layers
+    if getattr(cfg, "_attn_implementation", None) != "sdpa" or inner.gradient_checkpointing:
+        return None
+    if any(t != "full_attention" for t in getattr(cfg, "layer_types", ["full_attention"] * n_layers)):
+        return None
+    if getattr(inner.rotary_emb, "rope_type", "default") != "default":
+        return None
+    if model.loss_function is not ForCausalLMLoss:
+        return None
+    head = model.lm_head
+    if type(head) is not torch.nn.Linear or head.bias is not None or not head.weight.is_cuda:
+        return None
+    hq, hk = cfg.num_attention_heads, cfg.num_key_value_heads
+    dim = getattr(cfg, "head_dim", None) or cfg.hidden_size // hq
+    if hq % hk or dim % 2 or (dim // 2) & (dim // 2 - 1) or dim > 256:
+        return None
+    if not _no_hooks(inner.norm, head, inner.rotary_emb):
+        return None
+    layers = []
+    for layer in inner.layers[:n_layers]:
+        if type(layer) is not modeling_qwen2.Qwen2DecoderLayer:
+            return None
+        attn, mlp = layer.self_attn, layer.mlp
+        norms = (layer.input_layernorm, layer.post_attention_layernorm)
+        if any(type(n) is not modeling_qwen2.Qwen2RMSNorm for n in norms):
+            return None
+        if type(mlp) is not modeling_qwen2.Qwen2MLP or \
+                getattr(cfg, "hidden_act", "silu") != "silu":
+            return None
+        projections = [_lora_parts(getattr(attn, name))
+                       for name in ("q_proj", "k_proj", "v_proj", "o_proj")]
+        if any(p is None for p in projections):
+            return None
+        bases = [p[0] for p in projections]
+        dtype = _compute_dtype((mlp.gate_proj, mlp.up_proj, mlp.down_proj))
+        if dtype != torch.float16:
+            return None
+        for base in bases:
+            state = getattr(base.weight, "quant_state", None)
+            if base.compute_dtype != torch.float16 or not nf4_supported(state) or \
+                    not base.weight.is_cuda:
+                return None
+        if bases[3].bias is not None:
+            return None
+        if not _no_hooks(layer, attn, mlp, *norms, *bases, mlp.gate_proj, mlp.up_proj,
+                         mlp.down_proj):
+            return None
+        layers.append((layer, projections))
+    return dict(layers=layers, hq=hq, hk=hk, dim=dim, rep=hq // hk)
+
+
+def _layout(model):
+    cached = model.__dict__.get("_solution_unpad")
+    if cached is None:
+        try:
+            cached = _inspect(model) or False
+        except Exception:
+            cached = False
+        model.__dict__["_solution_unpad"] = cached
+    return cached or None
+
+
+# ---------------------------------------------------------------- the forward
+
+class _Batch:
+    """Per-step state: the real-token rows and the padded copies LoRA dropout needs."""
+
+    def __init__(self, rows, batch, seq_len):
+        self.rows, self.batch, self.seq_len = rows, batch, seq_len
+        self._padded = {}
+
+    def dropout(self, dropout, x):
+        """dropout(x) of the real tokens, drawn on the (batch, seq_len, features) tensor of the
+        base run, so the random masks are the same."""
+        if type(dropout) is torch.nn.Identity:
+            return x
+        key = id(x)
+        if key not in self._padded:
+            full = x.new_zeros((self.batch * self.seq_len, x.shape[-1]))
+            self._padded[key] = (x, full.index_copy(0, self.rows, x).view(
+                self.batch, self.seq_len, x.shape[-1]))
+        padded = self._padded[key][1]
+        return dropout(padded).view(self.batch * self.seq_len, -1).index_select(0, self.rows)
+
+    def done_with(self, x):
+        self._padded.pop(id(x), None)
+
+
+def _lora_out(parts, x, step):
+    base, lora_a, lora_b, dropout, scaling = parts
+    if lora_a is None:
+        return None
+    return lora_b(lora_a(step.dropout(dropout, x))) * scaling
+
+
+def _attention(layer, projections, x, cos, sin, mask, step, meta):
+    attn = layer.self_attn
+    q_parts, k_parts, v_parts, o_parts = projections
+    q, k, v = QKV4bit.apply(x, q_parts[0], k_parts[0], v_parts[0], torch.float16)
+    # the LoRA branches in the base order (q, k, v): same dropout draws
+    lq = _lora_out(q_parts, x, step)
+    lk = _lora_out(k_parts, x, step)
+    lv = _lora_out(v_parts, x, step)
+    step.done_with(x)
+    use_gqa = mask is None and meta["rep"] > 1  # transformers' use_gqa_in_sdpa
+    rep = 1 if use_gqa else meta["rep"]
+    qp, kp, vp = RoPEPad.apply(q, lq, k, lk, v, lv, cos, sin, step.rows, step.batch,
+                               step.seq_len, meta["hq"], meta["hk"], meta["dim"], rep)
+    is_causal = mask is None and step.seq_len > 1 and getattr(attn, "is_causal", True)
+    kwargs = {"enable_gqa": True} if use_gqa else {}
+    out = torch.nn.functional.scaled_dot_product_attention(
+        qp, kp, vp, attn_mask=mask, dropout_p=0.0, scale=attn.scaling, is_causal=is_causal,
+        **kwargs)
+    del qp, kp, vp
+    a = UnpadHeads.apply(out, step.rows, step.seq_len)
+    o = MatMulNF4.apply(a, o_parts[0].weight, None, o_parts[0].weight.quant_state)
+    lo = _lora_out(o_parts, a, step)
+    step.done_with(a)
+    return o if lo is None else o + lo
+
+
+def fast_forward(model, meta, input_ids, attention_mask, labels, num_items_in_batch):
+    from transformers.modeling_outputs import CausalLMOutputWithPast
+    from transformers.models.qwen2 import modeling_qwen2
+
+    patch_metric_readers()
+    inner = model.model
+    batch, seq_len = input_ids.shape
+    rows = attention_mask.reshape(-1).nonzero().squeeze(1)
+    step = _Batch(rows, batch, seq_len)
+
+    h = inner.embed_tokens(input_ids.reshape(-1).index_select(0, rows))
+    cos, sin = inner.rotary_emb(h, (rows % seq_len)[None])  # the positions of the base run
+    cos, sin = cos[0].contiguous(), sin[0].contiguous()
+    stand_in = h.new_empty(1).expand(batch, seq_len, h.shape[-1])  # shape, dtype, device only
+    mask = modeling_qwen2.create_causal_mask(
+        config=inner.config, inputs_embeds=stand_in, attention_mask=attention_mask,
+        past_key_values=None, position_ids=torch.arange(seq_len, device=h.device)[None])
+
+    mlp_out = None
+    for layer, projections in meta["layers"]:
+        norm = layer.input_layernorm
+        if mlp_out is None:
+            x = rmsnorm(h, norm.weight, norm.variance_epsilon)
+        else:
+            h, x = add_rmsnorm(h, mlp_out, norm.weight, norm.variance_epsilon)
+        o = _attention(layer, projections, x, cos, sin, mask, step, meta)
+        norm = layer.post_attention_layernorm
+        h, x = add_rmsnorm(h, o, norm.weight, norm.variance_epsilon)
+        mlp = layer.mlp
+        mlp_out = MLP4bit.apply(x, mlp.gate_proj, mlp.up_proj, mlp.down_proj, torch.float16)
+    norm = inner.norm
+    _, x = add_rmsnorm(h, mlp_out, norm.weight, norm.variance_epsilon)
+
+    # ForCausalLMLoss: the label of position t is labels[t + 1]; -100 past the end
+    shifted = torch.cat([labels[:, 1:], labels.new_full((batch, 1), -100)], dim=1)
+    targets = shifted.reshape(-1).index_select(0, rows)
+    loss, stats = lm_head_loss(x, model.lm_head.weight, targets, num_items_in_batch)
+    logits = LazyLogits(batch, seq_len, model.lm_head.weight.shape[0], rows, stats)
+    return CausalLMOutputWithPast(loss=loss, logits=logits)
+
+
+_ALLOWED_KWARGS = {"num_items_in_batch", "output_attentions", "output_hidden_states",
+                   "return_dict"}
+
+
+def make_causal_lm_forward(original):
+    def forward(self, input_ids=None, attention_mask=None, position_ids=None,
+                past_key_values=None, inputs_embeds=None, labels=None, use_cache=None,
+                logits_to_keep=0, **kwargs):
+        eligible = (
+            self.training and torch.is_grad_enabled() and input_ids is not None
+            and inputs_embeds is None and labels is not None and attention_mask is not None
+            and position_ids is None and past_key_values is None and not use_cache
+            and isinstance(logits_to_keep, int) and logits_to_keep == 0
+            and input_ids.is_cuda and input_ids.dim() == 2
+            and attention_mask.shape == input_ids.shape and labels.shape == input_ids.shape
+            and set(kwargs) <= _ALLOWED_KWARGS
+            and not kwargs.get("output_attentions") and not kwargs.get("output_hidden_states")
+            and kwargs.get("return_dict", True) is not False
+            and torch.is_autocast_enabled("cuda")
+            and torch.get_autocast_dtype("cuda") == torch.float16
+        )
+        meta = _layout(self) if eligible else None
+        if meta is not None:
+            try:
+                return fast_forward(self, meta, input_ids, attention_mask, labels,
+                                    kwargs.get("num_items_in_batch"))
+            except Exception as exc:  # never break training: say so once, then the original
+                self.__dict__["_solution_unpad"] = False
+                import sys
+                print(f"solution: unpadded forward disabled for this run: {exc!r}",
+                      file=sys.stderr, flush=True)
+        return original(self, input_ids=input_ids, attention_mask=attention_mask,
+                        position_ids=position_ids, past_key_values=past_key_values,
+                        inputs_embeds=inputs_embeds, labels=labels, use_cache=use_cache,
+                        logits_to_keep=logits_to_keep, **kwargs)
+
+    return forward
+
+
+def patch_qwen2_causal_lm():
+    from transformers.models.qwen2 import modeling_qwen2
+
+    cls = modeling_qwen2.Qwen2ForCausalLM
+    cls.forward = make_causal_lm_forward(cls.forward)
+
+
+def warmup(hq=12, hk=2, dim=128):
+    """Compile the kernels of this file for Qwen2.5-1.5B's training step; see warmup.py."""
+    f16, f32, i64 = torch.float16, torch.float32, torch.int64
+    bq, bk = _blocks(hq, hk)
+    n = 16  # every stride of these layouts is a multiple of 16; seq_len is not specialized
+    common = dict(HQ=hq, HK=hk, HALF=dim // 2, REP=hq // hk, BLOCK_HQ=bq, BLOCK_HK=bk,
+                  HAS_LQ=True, HAS_LK=False, HAS_LV=True, num_warps=4, enable_fp_fusion=False)
+    rope_pad_fwd_kernel.warmup(f16, f16, f16, f16, f16, f16, f32, f32, i64, f16, f16, f16,
+                               n, n, n, 7, grid=(1,), **common)
+    rope_pad_bwd_kernel.warmup(f16, f16, f16, f32, f32, i64, f16, f16, f16, f16, f16, f16,
+                               n, n, n, n, n, n, n, n, n, 7, grid=(1,), **common)
+    for to_flat in (True, False):
+        heads_rows_kernel.warmup(f16, f16, i64, n, n, n, 7, grid=(1,), H=hq, D=dim,
+                                 BLOCK_H=bq, TO_FLAT=to_flat, num_warps=4)

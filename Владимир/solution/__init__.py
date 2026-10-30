@@ -20,10 +20,14 @@ from .nf4 import patch_bnb_matmul_4bit
 from .rmsnorm import patch_qwen2_rmsnorm
 from .rope import patch_qwen2_rope
 from .swiglu import patch_qwen2_mlp
+from .unpad import patch_qwen2_causal_lm
 
 # Compile our kernels in a thread of this process while Soup starts (warmup.py). It only moves
 # the first-launch compilation earlier; set to False to compile at first launch instead.
 WARMUP = True
+# The training forward on real tokens only, with the chunked lm_head + loss (unpad.py, lmhead.py).
+# False keeps the layer-level patches below, which are also its fallback.
+UNPAD = True
 
 _applied = False
 
@@ -34,10 +38,12 @@ def apply():
         return
     _applied = True
     if WARMUP:
-        warmup.start()
+        warmup.start(unpad=UNPAD)
     patch_qwen2_mlp()  # the example: does not count as ours; stays the fallback of the next one
     patch_qwen2_mlp_4bit()  # ours: 4-bit MLP with fp16 activations, NF4 kernel + example SwiGLU
     patch_qwen2_rmsnorm()  # ours: fused RMSNorm, forward and backward
     patch_qwen2_decoder_layer()  # ours: residual add fused into the post-attention RMSNorm
     patch_qwen2_rope()  # ours: rotary embedding of q and k in one launch each way
     patch_bnb_matmul_4bit()  # ours: one-launch NF4 (double-quant) dequantization for 4-bit layers
+    if UNPAD:
+        patch_qwen2_causal_lm()  # ours: real tokens only, padded only for attention; fused loss

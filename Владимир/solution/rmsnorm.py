@@ -222,5 +222,6 @@ def warmup(n=1536):
     rmsnorm_fwd_kernel.warmup(f32, f32, f32, f32, n, n, n, 1e-6, **cfg)
     add_rmsnorm_fwd_kernel.warmup(f32, f16, f32, f32, f32, f32, n, n, n, n, n, 1e-6, **cfg)
     rmsnorm_bwd_kernel.warmup(f32, f32, f32, f32, f32, n, n, n, n, **cfg)
-    add_rmsnorm_bwd_kernel.warmup(f32, f32, f32, f32, f32, f32, f16, n, n, n, n, n, n,
-                                  HAS_DH=True, **cfg)
+    for has_dh in (True, False):  # False: the final norm, whose residual output is unused
+        add_rmsnorm_bwd_kernel.warmup(f32, f32, f32, f32, f32, f32, f16, n, n, n, n, n, n,
+                                      HAS_DH=has_dh, **cfg)

@@ -12,22 +12,27 @@ warm-up. The harness counts warm-up calls as launches but does not time them.
 import threading
 
 
-def _compile_all():
+def _compile_all(unpad):
     import torch
 
-    from . import mlp, nf4, rmsnorm, rope
+    from . import lmhead, mlp, nf4, rmsnorm, rope
+    from . import unpad as unpad_module
 
     if not torch.cuda.is_available():
         return
     torch.cuda.set_device(torch.cuda.current_device())
-    for step in (nf4.warmup, rmsnorm.warmup, rope.warmup, mlp.warmup):
+    steps = [nf4.warmup, rmsnorm.warmup, mlp.warmup]
+    # the unpadded forward does RoPE inside its own kernel; rope.py is its fallback
+    steps += [unpad_module.warmup, lmhead.warmup] if unpad else [rope.warmup]
+    for step in steps:
         try:
             step()
         except Exception:  # a failed warm-up only means the first launch compiles
             pass
 
 
-def start():
-    thread = threading.Thread(target=_compile_all, name="solution-triton-warmup", daemon=True)
+def start(unpad=True):
+    thread = threading.Thread(target=_compile_all, args=(unpad,), name="solution-triton-warmup",
+                              daemon=True)
     thread.start()
     return thread
