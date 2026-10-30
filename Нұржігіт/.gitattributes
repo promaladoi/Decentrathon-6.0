@@ -1,0 +1,2 @@
+# Preserve harness report bytes: checks.json hashes result.json verbatim.
+03_validation/reports/** -text
