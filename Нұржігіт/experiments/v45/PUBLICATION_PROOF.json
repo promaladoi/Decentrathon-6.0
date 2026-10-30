@@ -12,7 +12,7 @@
     "subtests_passed": 2,
     "seconds": 6.96
   },
-  "t4_measurement": "pending; no new timing, GPU peak, quality or 10/10 claim",
+  "t4_measurement": "accepted; original archive downloaded and locally verified",
   "preserved_sources": {
     "v34": {
       "commit": "fe2272c79bf00ae17654c388c5e79237d265f968",
@@ -24,5 +24,31 @@
       "source_files_verified": 47,
       "unchanged": true
     }
-  }
+  },
+  "original_collection_proof": "../../03_validation/reports/codex_v45/collection_proof.json",
+  "summary": {
+    "base": {
+      "ok": true,
+      "runs": 2,
+      "wall_s": 79.56,
+      "gpu_peak_mib": 14345,
+      "train_loop_s": 58.38,
+      "eval_loss": 2.04963
+    },
+    "solution": {
+      "ok": true,
+      "runs": 2,
+      "wall_s": 45.03,
+      "gpu_peak_mib": 4135,
+      "train_loop_s": 26.54,
+      "eval_loss": 2.0496
+    },
+    "ratios": {
+      "speedup": 1.7668,
+      "memory_ratio": 3.4692,
+      "quality_delta_pct": -0.001
+    }
+  },
+  "checks_passed": 10,
+  "historical_publication_note": "preserved_sources records what was primary when this snapshot was first published"
 }

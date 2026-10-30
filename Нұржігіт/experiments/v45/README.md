@@ -1,11 +1,6 @@
-# v45: меньше перекрытие временных logits
+# v45: measured and locally verified
 
-Эксперимент после v44. Текущий запуск v44 остаётся на своём commit.
-8 целевых CPU-тестов прошли; 5 CUDA-тестов пропущены локально.
-Фактические время, пик GPU, loss и исходные 10/10 ещё не измерены.
-Освобождение мёртвого блока перед следующей GEMM не меняет её форму или арифметику.
-148.375 MiB — размер одного полного блока, не подтверждённая экономия пика.
-
-[Описание](../../CODEX_V45_EXPERIMENT.md) · [Запуск после завершения v44](../../04_submission/kaggle_v45_cell.py)
-
-Код: `7a3db8fd5e24bbcb58affb475007a5cf93c56f07`. Авторы общей основы: Мерей/Владимир; адаптация: Нұржігіт/Codex.
+45.03 seconds, 4135 MiB, eval loss 2.04960, original 10/10.
+The same 48-file source is now the selected ../../solution.
+[Original result](../../CODEX_V45_RESULT.md) and [source proof](PUBLICATION_PROOF.json).
+The 30-second target remains unmet. Merei/Vladimir team base plus Nurzhigit adaptations.

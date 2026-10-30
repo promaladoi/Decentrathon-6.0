@@ -1,3 +1,10 @@
+# Latest selected v45
+
+79.56 -> 45.03 s, 14345 -> 4135 MiB, eval 2.04963 -> 2.04960, original 10/10.
+Two paired runs; original archive and 48-source-file hashes verified locally.
+Source: 7a3db8fd5e24bbcb58affb475007a5cf93c56f07. See ../CODEX_V45_RESULT.md.
+The 30-second whole-command target remains unmet. Earlier table follows.
+
 <!-- latest-verified -->
 # Latest source-verified paired measurements
 

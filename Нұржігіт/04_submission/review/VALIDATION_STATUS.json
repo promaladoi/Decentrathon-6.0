@@ -1,12 +1,13 @@
 {
-  "selected_source": "fe2272c79bf00ae17654c388c5e79237d265f968",
-  "candidate_source": "458e7a1d7706737f8b3a32a8f795419c2e726f1a",
-  "launcher_source": "2fd227a7ee581c301e6683cb1b176f80a6b304ff",
-  "candidate_cpu_tests": 40,
-  "coordinator_cpu_tests": 14,
-  "native_prefix_cpu_proof": "passed",
-  "v43_t4_measured": false,
+  "selected_source": "7a3db8fd5e24bbcb58affb475007a5cf93c56f07",
+  "selected_version": "v45",
+  "t4_original_archive_verified": true,
+  "complete_time_s": 45.03,
+  "peak_mib": 4135,
+  "original_checks_passed": 10,
   "target_30_seconds_met": false,
   "external_review_completed": false,
-  "platform_submission_completed": false
+  "platform_submission_completed": false,
+  "previous_review_packet_target": "v43",
+  "previous_review_packet_needs_refresh": true
 }

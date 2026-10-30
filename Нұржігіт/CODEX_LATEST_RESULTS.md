@@ -1,3 +1,12 @@
+# Selected combined candidate: v45
+
+Locally source/hash-verified: 79.56 -> 45.03 s, 14345 -> 4135 MiB,
+eval 2.04963 -> 2.04960, original 10/10, two paired runs.
+Memory/quality user limits pass; <=30 seconds remains unmet.
+See CODEX_V45_RESULT.md and templates/codex_v45.ipynb.
+Earlier v34 (43.91 s / 7151 MiB) remains a separate-session fast alternative.
+The prior status below is historical.
+
 # Verified candidate comparison
 
 Shortest collected median total time: **v34, 78.68 → 43.91 seconds**,

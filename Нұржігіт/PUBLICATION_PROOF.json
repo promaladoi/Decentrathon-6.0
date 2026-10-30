@@ -1,12 +1,18 @@
 {
-  "production_version": "v34",
-  "production_commit": "fe2272c79bf00ae17654c388c5e79237d265f968",
-  "evidence_commit": "bc96e7581d72a1fc42c6f6bd377cc335cb10694e",
+  "production_version": "v45",
+  "production_commit": "7a3db8fd5e24bbcb58affb475007a5cf93c56f07",
+  "evidence_commit": "aaaa5819da6a2ebc39a988c15cae4a136e442272",
   "production_files_byte_verified": 48,
-  "solution_sha256": "389255c234e362a1a444a1758d11cf05e9fe30dfdf56540b7e3aacfa5658e5b4",
-  "result_sha256": "5a2166df0b3fd68a242703f5a9aeefd967194ae837d4d943c6048899ac12747f",
+  "solution_sha256": "8568c6f9abfb6458bfa4248c044cc2cf0169c104a487f8aeb4af4ae67702a787",
+  "result_sha256": "d74b291499ec6dd6597fccb6f6db11dce11e1b6c9eb72431cc3fc6c7267b06fe",
+  "archive_sha256": "a7c06beaed9f3d9a45f1996100f4a09bdc97f2f28dc9ee8a19458adbcf1609cf",
+  "original_archive_downloaded_and_locally_verified": true,
   "all_ten_checks_passed": true,
   "protected_files_unchanged": 15,
   "later_experimental_production_code_included": false,
-  "lower_memory_version": "v35"
+  "preserved_previous_source": "fe2272c79bf00ae17654c388c5e79237d265f968",
+  "preserved_previous_directory": "experiments/v34",
+  "memory_quality_limits_met": true,
+  "target_30_seconds_met": false,
+  "final_platform_submission_completed": false
 }

@@ -29,5 +29,7 @@ def exact_half_copy_cuda(weight):
 
 
 def warmup():
-    frozen_half_copy_checked.warmup(torch.float32, torch.float16, torch.int32,
-                                    1024, BLOCK, grid=(1,), num_warps=4)
+    from .warmup import load_compiled
+    load_compiled(frozen_half_copy_checked.warmup(
+        torch.float32, torch.float16, torch.int32,
+        1024, BLOCK, grid=(1,), num_warps=4))

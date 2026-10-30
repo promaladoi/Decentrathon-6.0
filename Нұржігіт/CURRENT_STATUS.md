@@ -1,38 +1,22 @@
-# v45: следующий кандидат после v44
+# Selected combined candidate: v45
 
-[v45](experiments/v45) освобождает временные logits раньше и готовит storage-кернел при загрузке.
-8 целевых CPU-тестов прошли, 5 CUDA-тестов пропущены локально. Нового результата T4 нет.
-Запущенный v44 и выбранная основная solution v34 сохранены побайтово.
-Лимиты для следующего измерения: <=7151 MiB, reported eval loss не растёт, исходные 10/10.
-Цель <=30 секунд полного запуска ещё не достигнута. Ниже история.
+Locally source/hash-verified: 79.56 -> 45.03 s, 14345 -> 4135 MiB,
+eval 2.04963 -> 2.04960, original 10/10, two paired runs.
+Memory/quality user limits pass; <=30 seconds remains unmet.
+See CODEX_V45_RESULT.md and templates/codex_v45.ipynb.
+Earlier v34 (43.91 s / 7151 MiB) remains a separate-session fast alternative.
+The prior status below is historical.
 
-# v44: проверяем снижение памяти
+# v45 candidate pending T4
 
-Новый кандидат: [experiments/v44](experiments/v44). CPU: 50 passed, 9 skipped.
-T4, фактическая память, качество и 10/10 ещё не проверены.
-Ограничения: <=7151 MiB, без роста reported eval loss, исходные 10/10; цель <=30 с отдельно.
-Проверенная основная solution остаётся v34: 43.91 с, 7151 MiB, 10/10.
-[Запуск v44](04_submission/kaggle_v44_cell.py). Ниже — история предыдущего этапа.
+Head lifetime and own storage-kernel warm-up candidate.
+8 targeted CPU checks passed; 5 CUDA checks skipped. No new GPU result.
+Running v44 remains pinned to its own source and queue.
 
-# Текущий этап: передача на независимый аудит
+# v44 candidate pending T4
 
-Проверенный production: v34, 43.91 с / 7151 MiB, 10/10.
-v41: 44.61 с / 7011 MiB, 10/10 по выводу проверки в Kaggle.
-v42 отклонён до полного обучения. v43: 40 CPU-тестов и native import proof
-прошли; T4 benchmark, память, loss и 10/10 ещё не получены.
-30 секунд пока не достигнуты. Финальный командный вариант и платформенная
-сдача ещё не выполнены.
-
-[Задание для Claude/Codex](04_submission/review/REVIEW_REQUEST.md) ·
-[Готовый текст запроса](04_submission/review/PROMPT_RU.txt) ·
-[v43](CODEX_V43_EXPERIMENT.md) ·
-[Одноразовый запуск v43 в Kaggle](04_submission/kaggle_v43_cell.py).
-
-Корневой solution/ остаётся v34. Историческая таблица ниже включает варианты,
-прошедшие исходные правила, но не всегда более строгие условия пользователя:
-например, v35 с +0.004% reported eval loss не подходит под «сапасы түспесін».
-
----
+New combined memory candidate: see CODEX_V44_EXPERIMENT.md.
+CPU checks passed; no new GPU result or promotion is claimed.
 
 # Verified candidate comparison
 
