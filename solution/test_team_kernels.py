@@ -72,3 +72,26 @@ def test_frozen_norm_matches_qwen_forward_backward(dtype, width):
     tolerance = 2e-3 if dtype == torch.float16 else 2e-5
     torch.testing.assert_close(actual, ref, rtol=tolerance, atol=tolerance)
     torch.testing.assert_close(x.grad, expected_grad, rtol=tolerance, atol=tolerance)
+
+
+@pytest.mark.parametrize("nested", [False, True])
+@pytest.mark.parametrize("dtype", [torch.float16, torch.float32])
+@pytest.mark.parametrize("shape,blocksize", [((127, 65), 64), ((128, 256), 256)])
+def test_nf4_decoder_matches_bitsandbytes(nested, dtype, shape, blocksize):
+    import bitsandbytes.functional as bnb
+    from solution.nf4 import dequantize_nf4
+
+    torch.manual_seed(31)
+    weight = torch.randn(shape, device="cuda", dtype=dtype)
+    packed, state = bnb.quantize_4bit(
+        weight, blocksize=blocksize, compress_statistics=nested, quant_type="nf4",
+    )
+    expected = bnb.dequantize_4bit(packed, state)
+    actual = dequantize_nf4(packed, state)
+    torch.testing.assert_close(actual, expected, rtol=0, atol=0)
+    output = torch.empty_like(expected)
+    actual_out = dequantize_nf4(packed, state, output)
+    assert actual_out.data_ptr() == output.data_ptr()
+    torch.testing.assert_close(actual_out, expected, rtol=0, atol=0)
+    transposed = dequantize_nf4(packed.t(), state)
+    torch.testing.assert_close(transposed, expected.t(), rtol=0, atol=0)

@@ -20,6 +20,8 @@ def apply():
     patch_qwen2_mlp()  # the example: works out of the box, does not count as your own kernel
     from .vocab import patch_vocabulary_reductions
     from .rmsnorm import patch_frozen_rmsnorm
+    from .nf4 import patch_nf4_decoder
 
     patch_vocabulary_reductions()
     patch_frozen_rmsnorm()
+    patch_nf4_decoder()
