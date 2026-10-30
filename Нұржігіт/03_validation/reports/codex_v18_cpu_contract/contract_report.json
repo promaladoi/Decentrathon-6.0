@@ -1,0 +1,19 @@
+{
+  "evidence_kind": "CPU module contract only; CUDA skipped",
+  "source_commit": "d01b2d8c71738c6345cd704b369bd58027ac09c1",
+  "torch": "2.11.0+cpu",
+  "python": "3.12.10",
+  "passed": 15,
+  "skipped_cuda": 5,
+  "elapsed_seconds": 27.89,
+  "command": "python -m pytest solution/test_frozen_storage.py -q",
+  "source_sha256": {
+    "solution/frozen_storage.py": "7c4103000fbfdb1620a7d3fdd66855353cf1e28beab888baca96258befbdd154",
+    "solution/frozen_storage_kernel.py": "6241c1eb4ebadd8b0f9ea4a909862a87667c5c1ae508b384119b9c81d44928cb",
+    "solution/test_frozen_storage.py": "0dfae93b615cdcf0b611cb2b1c12787bf144e142bd3137fcbb656f5372f88c9e"
+  },
+  "gpu_compilation_verified": false,
+  "contest_run_completed": false,
+  "quality_verified": false,
+  "performance_measured": false
+}
