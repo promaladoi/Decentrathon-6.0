@@ -1,14 +1,19 @@
 # IVNEX: Soup Kernel Challenge
 
-Fastest fully collected paired result: **v17r1, 84.28 → 54.19 seconds**, **1.5553x**,
-**35.7% less total time**, **10/10 PASS**, eval loss **-0.002%**.
-Lowest collected memory: **v20r1, 4467 MiB**, **68.9% less than its base**,
-**10/10 PASS**, 55.81 seconds. [Verified r1 comparison](CODEX_R1_RESULTS.md).
-Exact source/report hashes and adapter archives have been verified for all three r1 jobs.
+Shortest fully collected absolute wall time: **v23, 80.68 → 52.76 seconds**,
+**1.5292x**, **34.6% less total time**, **10/10 PASS**, eval delta **-0.003%**.
+Its peak is **6747 MiB**. Earlier v17r1 has a higher paired ratio with a colder
+first base; close versions need comparable pairs, not unlike baselines.
+Lowest collected peak: **v20r1/v21/v22, 4467 MiB**. The v22 time is **54.64 s**.
+Exact source, report hashes and raw adapters are verified for v21–v23 as well as
+the [three r1 jobs](CODEX_R1_RESULTS.md).
 
-**Branch-tip code is an experiment.** v21 is console-admitted awaiting collection;
-[v22 startup imports](CODEX_V22_EXPERIMENT.md) and
-[v23 frozen-weight reuse](CODEX_V23_EXPERIMENT.md) are being measured serially in Kaggle.
+**Branch-tip code is an experiment.** v24 native variable-length attention and
+v25 faster package discovery both show **10/10 in the Kaggle console**; their
+raw archive collection is queued. v25 solution runs took **48.36 / 49.57 s**.
+v26 launcher preparation, v27 wider frozen-weight reuse and v28 tokenizer
+fingerprinting are being tested serially. v29's new fused MLP-gradient research
+kernel is inactive until its separate correctness/performance comparison wins.
 The original [v16 fallback](CODEX_V16_RESULT.md) remains archived separately.
 [Current status](CURRENT_STATUS.md) · [All variants](03_validation/VERSION_COMPARISON.md).
 
