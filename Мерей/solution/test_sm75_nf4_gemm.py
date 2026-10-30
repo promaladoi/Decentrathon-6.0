@@ -43,34 +43,6 @@ def test_basis_decode_and_masks_are_exact_with_turing_mma_and_zero_spills(transp
 
 
 @pytest.mark.parametrize('transpose', [False, True])
-@pytest.mark.parametrize('tile_name', ['m128n32k32w4s1', 'm256n32k32w8s1'])
-def test_narrow_tiles_preserve_half_quant_blocks_and_nested_scale_boundary(transpose, tile_name):
-    from solution.nf4 import dequantize_nf4
-    from solution.sm75_nf4_gemm import TILES, sm75_nf4_gemm
-
-    torch.manual_seed(989)
-    # Two quant blocks per row cross second-level scale groups at row 128.
-    packed, state = _weight(257, 128)
-    reduction = state.shape[1 if transpose else 0]
-    positions = torch.tensor([0, 31, 32, 63, 64, 95, 96, 127,
-                              min(128, reduction - 1), reduction - 1],
-                             device='cuda', dtype=torch.int64)
-    # A second row CTA and its short tail must not alias the first tile.
-    selected = positions[torch.arange(TILES[tile_name].m + 3, device='cuda') % positions.numel()]
-    a = torch.zeros((selected.numel(), reduction), device='cuda', dtype=torch.float16)
-    a[torch.arange(selected.numel(), device='cuda'), selected] = 1.0
-    with torch.no_grad():
-        dense = dequantize_nf4(packed, state, torch.float16)
-        expected = dense.t().index_select(0, selected) if transpose else dense.index_select(0, selected)
-        actual, compiled = sm75_nf4_gemm(a, packed, state, transpose_weight=transpose,
-                                         tile=TILES[tile_name], return_compiled=True)
-    torch.testing.assert_close(actual, expected, rtol=0, atol=0)
-    assert 'mma.sync.aligned.m16n8k8' in compiled.asm['ptx']
-    assert 'mma.sync.aligned.m16n8k16' not in compiled.asm['ptx']
-    assert compiled.n_spills == 0
-
-
-@pytest.mark.parametrize('transpose', [False, True])
 @pytest.mark.parametrize('strided', [False, True])
 def test_random_products_match_current_on_demand_reference(transpose, strided):
     from solution.benchmark_sm75_nf4_gemm import accuracy

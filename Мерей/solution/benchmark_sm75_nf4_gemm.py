@@ -24,7 +24,7 @@ ROOT = Path(__file__).resolve().parents[1]
 if str(ROOT) not in sys.path:
     sys.path.insert(0, str(ROOT))
 from solution.nf4_gemm import reference_nf4_gemm
-from solution.sm75_nf4_gemm import SOURCE_REVISION, TILES, sm75_nf4_gemm
+from solution.sm75_nf4_gemm import TILES, sm75_nf4_gemm
 
 
 def _sample(call):
@@ -98,7 +98,6 @@ def main():
     output_path = Path(args.out)
     output_path.parent.mkdir(parents=True, exist_ok=True)
     report = {'kind': 'sm75_gluon_nf4_gemm_micro_not_training_score',
-              'source_revision': SOURCE_REVISION,
               'device': torch.cuda.get_device_name(0), 'torch': torch.__version__,
               'triton': triton.__version__, 'cache_dir': os.environ.get('TRITON_CACHE_DIR'),
               'first_call_may_include_compilation': True, 'dense_weight_cache': False,
@@ -130,9 +129,7 @@ def main():
                     tile = TILES[name]
                     call = lambda: sm75_nf4_gemm(a, packed, state, transpose_weight=transpose, tile=tile)
                     case = {'shape': list(shape), 'shape_name': shape_name, 'direction': direction,
-                            'm': m, 'tile_name': name, 'tile': asdict(tile),
-                            'mma_warps_per_cta': ([tile.warps, 1] if tile.n == 32 else [2, 2]),
-                            'num_stages_is_launch_option_not_verified_pipeline': True}
+                            'm': m, 'tile_name': name, 'tile': asdict(tile)}
                     report['cases'].append(case)
                     try:
                         torch.cuda.synchronize()
