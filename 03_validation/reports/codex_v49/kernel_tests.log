@@ -1,0 +1,13 @@
+........................................................................ [ 18%]
+........................................................................ [ 37%]
+........................................................................ [ 55%]
+........................................................................ [ 74%]
+...................................................s.................... [ 93%]
+...........................                                              [100%]
+=============================== warnings summary ===============================
+solution/test_early_storage.py: 14 warnings
+  /usr/local/lib/python3.13/dist-packages/torch/jit/_script.py:365: DeprecationWarning: `torch.jit.script_method` is deprecated. Please switch to `torch.compile` or `torch.export`.
+    warnings.warn(
+
+-- Docs: https://docs.pytest.org/en/stable/how-to/capture-warnings.html
+386 passed, 1 skipped, 14 warnings in 18.46s
