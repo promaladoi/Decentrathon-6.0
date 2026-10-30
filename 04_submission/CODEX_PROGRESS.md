@@ -36,6 +36,12 @@ Read `CODEX_VARIANT.md` for implementation details and
 
 ## Next work
 
+The unchanged starter verification notebook is
+`templates/original_starter_kaggle.ipynb`. Import it into Kaggle, select GPU T4 x2
+and Internet On, then Run All. It pins the organizer commit and uses no GitHub
+token. Checks 3 and 4 are expected to fail for the organizer example. A direct
+verification run is in progress; its results are not yet recorded here.
+
 Verify the unchanged public starter directly, then investigate remaining
 training-time bottlenecks. Record each finished experiment, including failures,
 with its exact code commit and original benchmark/check reports. Compare other
