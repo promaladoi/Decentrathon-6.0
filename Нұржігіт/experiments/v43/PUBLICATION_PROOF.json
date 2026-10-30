@@ -1,0 +1,16 @@
+{
+  "v34": {
+    "source_commit": "fe2272c79bf00ae17654c388c5e79237d265f968",
+    "source_files_verified": 48,
+    "solution_sha256": "389255c234e362a1a444a1758d11cf05e9fe30dfdf56540b7e3aacfa5658e5b4",
+    "exact_git_blobs": true,
+    "role": "selected production, not replaced"
+  },
+  "v43": {
+    "source_commit": "458e7a1d7706737f8b3a32a8f795419c2e726f1a",
+    "source_files_verified": 57,
+    "solution_sha256": "c37084395664d13411a7c8caa81f4834cac686c2ac8dae169890e1e1542a24c0",
+    "exact_git_blobs": true,
+    "t4_measurement": "pending; no 10/10 or performance claim"
+  }
+}
