@@ -19,6 +19,20 @@
 7. Нәтижені `BASELINE.md` ішіне жазыңыз. Kaggle Output файлдарынан `/kaggle/working/repo/runs/result.json` және `checks.json` сақтап алыңыз. Қате болса, ұяшық нөмірін және қате мәтінін жазыңыз.
 8. `BASELINE.md` өзгерісін команданың осы репозиторийіне commit жасаңыз.
 
+### BAITC-Hacks токен тізімінде болмаса
+
+`Resource owner` ішінде тек жеке аккаунтыңыз көрінсе, оны таңдау команданың
+private репозиторийіне құқық бермейді. GitHub outside collaborator қолжетімділігі
+үшін classic PAT қажет болуы мүмкін. Ұйым саясаты рұқсат етсе, GitHub Settings →
+Developer settings → Personal access tokens → Tokens (classic) → Generate new token
+арқылы қысқа мерзімді (мысалы, 7 күн) токен жасап, тек `repo` scope таңдаңыз.
+Classic `repo` тек оқумен не бір репозиториймен шектелмейді: аккаунтыңыз қол
+жеткізе алатын private репозиторийлерге кеңірек құқық береді. Оны Kaggle Secrets
+ішіндегі `GITHUB_TOKEN` ретінде ғана сақтап, хакатоннан кейін жойыңыз. Ұйым
+токенге тыйым салса, капитан ұйымдастырушымен репозиторийге қолжетімділікті реттейді.
+
+Ресми түсіндірме: https://docs.github.com/en/authentication/keeping-your-account-and-data-secure/managing-your-personal-access-tokens
+
 ## Бірінші іске қосудан күтілетін нәтиже
 
 Base Soup пен шаблондағы solution орындалып, уақыт, GPU жады және eval loss көрсетіледі. Шаблонның SwiGLU кернелі команданың өз кернелі болып есептелмейді: №3 және №4 тексерулерінің өтпеуі осы кезеңде күтіледі. Басқа қателерді бөлек зерттеңіз. Бұл әлі финалдық шешім емес.

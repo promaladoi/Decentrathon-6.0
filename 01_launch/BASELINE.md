@@ -6,7 +6,7 @@
 - Іске қосу күні / уақыты: output-та көрсетілмеген.
 - Notebook editor: https://www.kaggle.com/code/nellzmi/notebook161b21487d/edit
 - Нәтижелері сақталған public notebook version сілтемесі: әлі расталмаған.
-- Notebook clone жасаған нақты commit SHA: output берілмеген, анықталмаған.
+- Notebook clone жасаған commit SHA: `699daa9984b4a52e4f6a3334855435e150e2a8f4`; кейін notebook-тегі clone output-тан тексерілді.
 - Жабдық: clean-measurement check №9 Tesla T4 және бір GPU пайдаланылғанын растады.
 - Run саны: 1 base, 1 solution; бұл жюридің hidden-data финалдық тексеруі емес.
 

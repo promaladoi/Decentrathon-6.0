@@ -2,7 +2,7 @@
 
 Дерек көзі: қатысушы чатқа жіберген `harness/check_rules.py` output. Assistant бұл GPU тексеруін өзі орындаған жоқ. Raw `checks.json` әлі берілген жоқ.
 
-- Код commit SHA: notebook clone output берілмеген, расталмаған.
+- Код commit SHA: `699daa9984b4a52e4f6a3334855435e150e2a8f4`; кейін notebook clone output-тан тексерілді.
 - Notebook editor: https://www.kaggle.com/code/nellzmi/notebook161b21487d/edit
 - Public results version: әлі расталмаған.
 
