@@ -85,7 +85,9 @@ def compact_batch_metadata(attention_mask, labels):
 
 def warmup():
     """Compile the task's int64-mask signature without executing metadata work."""
-    compact_batch_metadata_kernel.warmup(
+    from .warmup import load_compiled
+
+    load_compiled(compact_batch_metadata_kernel.warmup(
         torch.int64, torch.int64, torch.int64, torch.int32, torch.int32,
         MAX_BATCH, MAX_SEQUENCE, MAX_SEQUENCE, 1, MAX_SEQUENCE, 1,
-        BLOCK_B=MAX_BATCH, BLOCK_S=MAX_SEQUENCE, grid=(1,), num_warps=4)
+        BLOCK_B=MAX_BATCH, BLOCK_S=MAX_SEQUENCE, grid=(1,), num_warps=4))

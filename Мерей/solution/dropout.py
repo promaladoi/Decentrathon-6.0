@@ -146,11 +146,13 @@ def real_row_dropout(x, rows, batch, seq_len, p=0.05, training=True, *, rows_fro
 
 def warmup(width=1536, p=0.05):
     """Compile only the original gather/apply kernels; never draw random bits."""
+    from .warmup import load_compiled
+
     forward, backward = _scales(p)
-    real_dropout_gather_kernel.warmup(
+    load_compiled(real_dropout_gather_kernel.warmup(
         torch.float32, torch.bool, torch.int64, torch.float32, torch.uint8,
         16 * width, 16, width, forward, BLOCK, grid=(1,),
-        num_warps=4, enable_fp_fusion=False)
-    real_dropout_backward_kernel.warmup(
+        num_warps=4, enable_fp_fusion=False))
+    load_compiled(real_dropout_backward_kernel.warmup(
         torch.float32, torch.uint8, torch.float32, 16 * width, backward, BLOCK,
-        grid=(1,), num_warps=4, enable_fp_fusion=False)
+        grid=(1,), num_warps=4, enable_fp_fusion=False))

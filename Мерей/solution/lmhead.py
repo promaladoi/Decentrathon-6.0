@@ -182,7 +182,15 @@ class LMHeadLoss(torch.autograd.Function):
                             "cross_entropy target out of bounds")
         tokens, hidden = x.shape
         x16 = x.to(torch.float16)
-        w16 = weight.to(torch.float16)
+        expected = (_private_expected_loss_scale()
+                    if ctx.needs_input_grad[0] and x.dtype == torch.float32 else None)
+        if expected is not None:
+            # Only the already-qualified private training scope reuses this
+            # exact cast. Public/general calls keep their ordinary lifetime.
+            from .head_weight_cache import get_half_weight
+            w16 = get_half_weight(weight)
+        else:
+            w16 = weight.to(torch.float16)
         entropy = torch.empty(tokens, device=x.device, dtype=torch.float32)
         argmax = torch.empty(tokens, device=x.device, dtype=torch.int64)
         ce = torch.zeros(tokens, device=x.device, dtype=torch.float32)
@@ -190,8 +198,6 @@ class LMHeadLoss(torch.autograd.Function):
         labelled = valid.nonzero().squeeze(1)
         prompt = (~valid).nonzero().squeeze(1)
         chunks = []
-        expected = (_private_expected_loss_scale()
-                    if ctx.needs_input_grad[0] and x.dtype == torch.float32 else None)
         ctx.precomputed = expected is not None
         if ctx.precomputed:
             expected = torch.tensor(expected, device=x.device, dtype=torch.float32)
@@ -368,9 +374,11 @@ def patch_metric_readers():
 
 def warmup(vocab=151936):
     """Compile the production scatter statistics and actual-scale backward."""
+    from .warmup import load_compiled
+
     f16, f32, i64 = torch.float16, torch.float32, torch.int64
-    lm_ce_scatter_kernel.warmup(
+    load_compiled(lm_ce_scatter_kernel.warmup(
         f16, i64, i64, f32, i64, f32, f32, vocab, 1, 1, vocab,
-        grid=(1,), BLOCK_V=BLOCK_V, num_warps=8)
-    lm_scale_gradient_kernel.warmup(f16, f32, i64, f32, f16, vocab, vocab,
-                                    grid=(1, 1), BLOCK=GRAD_BLOCK, num_warps=4)
+        grid=(1,), BLOCK_V=BLOCK_V, num_warps=8))
+    load_compiled(lm_scale_gradient_kernel.warmup(f16, f32, i64, f32, f16, vocab, vocab,
+                                    grid=(1, 1), BLOCK=GRAD_BLOCK, num_warps=4))

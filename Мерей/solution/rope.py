@@ -134,10 +134,12 @@ def patch_qwen2_rope():
 
 def warmup(hq=12, hk=2, dim=128):
     """Compile the fp32 forward and backward variants Qwen2.5-1.5B launches; see warmup.py."""
+    from .warmup import load_compiled
+
     f32 = torch.float32
     n = 16  # every stride of these layouts is a multiple of 16; seq_len is not specialized
     for backward in (False, True):
-        rope_kernel.warmup(f32, f32, f32, f32, f32, f32, n, n, n, n, n, n, n, n, n, n, n, n, 0, n,
+        load_compiled(rope_kernel.warmup(f32, f32, f32, f32, f32, f32, n, n, n, n, n, n, n, n, n, n, n, n, 0, n,
                            7, grid=(1,), HQ=hq, HK=hk, HALF=dim // 2,
                            BLOCK_HQ=triton.next_power_of_2(hq), BLOCK_HK=triton.next_power_of_2(hk),
-                           BACKWARD=backward, num_warps=4, enable_fp_fusion=False)
+                           BACKWARD=backward, num_warps=4, enable_fp_fusion=False))

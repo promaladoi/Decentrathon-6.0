@@ -144,12 +144,14 @@ def patch_qwen2_mlp_4bit():
 
 def warmup(parts=("fwd", "bwd")):
     """Compile the fp16 variants of the example SwiGLU kernels this MLP launches; see warmup.py."""
+    from .warmup import load_compiled
+
     f16 = torch.float16
     n = 16 * 8960  # tokens x 8960 is always a multiple of 16
     if "fwd" in parts:
-        example_swiglu_fwd_kernel.warmup(f16, f16, f16, n, grid=(1,), BLOCK=SWIGLU_BLOCK)
+        load_compiled(example_swiglu_fwd_kernel.warmup(f16, f16, f16, n, grid=(1,), BLOCK=SWIGLU_BLOCK))
     if "bwd" in parts:
         from .backward_sums import warmup as warmup_backward_sums
         warmup_backward_sums()
-        example_swiglu_bwd_kernel.warmup(f16, f16, f16, f16, f16, n, grid=(1,),
-                                         BLOCK=SWIGLU_BLOCK)
+        load_compiled(example_swiglu_bwd_kernel.warmup(f16, f16, f16, f16, f16, n, grid=(1,),
+                                         BLOCK=SWIGLU_BLOCK))

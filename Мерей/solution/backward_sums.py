@@ -64,8 +64,10 @@ def sum_half_gradients(parts):
 
 def warmup():
     """Compile both arities without launching arithmetic or consuming RNG."""
+    from .warmup import load_compiled
+
     for three in (False, True):
-        sum_half_gradients_kernel.warmup(
+        load_compiled(sum_half_gradients_kernel.warmup(
             torch.float16, torch.float16, torch.float16, torch.float32,
             16 * 1536, THREE=three, BLOCK=BLOCK, grid=(1,),
-            num_warps=4, enable_fp_fusion=False)
+            num_warps=4, enable_fp_fusion=False))

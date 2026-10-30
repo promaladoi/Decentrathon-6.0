@@ -3,9 +3,11 @@
 Triton compiles a kernel at its first launch, once per signature, and that time is part of the
 measured `soup train` command. apply() runs before Soup imports its trainer, reads the data and
 builds the 4-bit model, which takes many seconds; this thread compiles the signatures the training
-run will launch during that time (kernel.warmup compiles without launching anything), in the order
-the first step needs them. The first step waits for the thread instead of compiling a kernel a
-second time. It is the same compilation the first step would do, only earlier: nothing is read
+run will launch during that time, in the order the first step needs them. kernel.warmup compiles
+without launching anything; load_compiled then reads the returned kernel's run property so Triton
+also loads its CUDA binary and launcher handles without invoking them. The first step waits for
+the thread instead of compiling a kernel a second time. It is the same compilation the first step
+would do, only earlier: nothing is read
 from or kept for another run, and a signature that does not match the run only costs a compile at
 first launch, as without warm-up. The harness counts warm-up calls as launches but does not time
 them. Two lines in the training log say when the thread finished and how long step 1 waited.
@@ -16,6 +18,17 @@ import threading
 import time
 
 _state = {"thread": None, "started": None}
+
+
+def load_compiled(compiled):
+    """Load this run's compiled kernel handles without calling its launcher.
+
+    Triton 3.6 initializes handles lazily when CompiledKernel.run is read.
+    Merely reading that property performs no kernel arithmetic or RNG work.
+    A load failure follows the ordinary warm-up exception/fallback path.
+    """
+    getattr(compiled, "run", None)
+    return compiled
 
 
 def _steps(unpad):
