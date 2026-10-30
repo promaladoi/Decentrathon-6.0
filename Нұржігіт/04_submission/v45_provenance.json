@@ -1,0 +1,63 @@
+{
+  "baseline_candidate": "2d171ddc1f6d43e593f5dd80e1a86731f27ad6f7",
+  "team_source_commit": "6a4f577e95605547b1b713013db1ffc44aa620bd",
+  "attribution": "Merei stage2; underlying shared kernels credit Vladimir. Nurzhigit adds lossless tied storage.",
+  "unchanged_imported_python_files": {
+    "attention_rows.py": "75bb1a69b713ce8ec4e1d598dc7ae767a0d2ef1ef800f60aae37359310cc5cea",
+    "backward_sums.py": "a18573560ba986b5f1d260e4f8c3c06273ef246620b1f711ab9597f8855535be",
+    "batch_metadata.py": "415e8003459c5806fe53609f8e6723bad56bad8d6903ad04facc341807c1f50c",
+    "benchmark_attention_rows.py": "f1ba4231d25d45e6f85c2a6ef071a33eb43157ee5beb750b7976bc886b8a57b4",
+    "benchmark_dropout.py": "3083249b9b56f02d45b9ad710784c2d2c8ca2baa1083b98e506124aa2dec09d8",
+    "benchmark_packed_integration.py": "e15787cbc88059765978d97ca8d57c64051b0f13a0742f3b96529d36a3619853",
+    "diagnostics/hash_tokenization.py": "7fc017b88e310263b037bd6db6424c1333237a9af909b5b48065646f0361bdeb",
+    "dropout.py": "455cdbbaa230d9d17b814836a5c21ce4fb8915df64f2b13da9ac2693e7aa33a1",
+    "head_weight_cache.py": "20fe9ed84c8d86c6dce85efd252f9e04e1e8a4db4db7be878ad761d445140bf2",
+    "layer.py": "8152434dd8f9cce8df9731de61e50d5a61e5bc72edd93e120175ee4c5571cc0c",
+    "mlp.py": "234e78cabd61988ec595615a423747b445b8da14b5d7e323c3dd0ed4acb74238",
+    "nf4.py": "61faac0c009052988c88216ec8055aa202acd278d6123421ab7c05f031da587c",
+    "package_metadata_snapshot.py": "f9fb19d5577f8276aaebaf1df16ecb867f791575b685fdfefddb1b84659ce3d3",
+    "private_scope.py": "916a8b055fa0eda71748f735319a4ae100526c9f8292806fe7bfb6816fe1214b",
+    "rmsnorm.py": "e9b41e15f7f67d1e26d7a96223adfc25d99228b6a0944769cfc9a52672473b78",
+    "rope.py": "62d5367f4cd231b0e6033b3a630e2eb186108571c613f2e4bace9a13dd4e6c64",
+    "run_diagnostics.py": "0d014c820575522e067eb91a05e825cc8250a287c9225c66e8b44622f3aaf796",
+    "swiglu.py": "e665910faeca6091c958ed7a191604484a44216f51d6fa069f5f48220e7472e6",
+    "test_attention_rows.py": "316cbcd38e6c2782c18bcb44d0adaf52f8538cf9f64c7051c4e301d071ef21f1",
+    "test_backward_sums.py": "fbc8c62c40363d3974b4617956b0a389acd9e9a8b84f3fa2b4d47b8c097f4efa",
+    "test_batch_metadata.py": "e39d3261debeabd627847187f4db0bf777f3fec6442349ead04aa244240f5e49",
+    "test_dropout.py": "f9ebcba19ca1a79b1d3e74fa0fa9db064225bef9da5f0b7716966ed8388baa79",
+    "test_dropout_integration.py": "e107161ce8cc68c7919b5c57917b5781df06b10a78df4f3533b832c87aeebaef",
+    "test_dropout_packed.py": "174774a9a98e7707b9f8b1091c5788e609d88eea71866ef52aed01d1ed51cb75",
+    "test_head_weight_cache.py": "5474bbd82c9146a0e762b4ad51b2889b93c6d871e75c65a3026c75fac12cdfed",
+    "test_kernels.py": "76fe33971f4f4b9600a8c8f79ec67d243024cdb9f0c4c32c72499e50c3adbc96",
+    "test_layer.py": "aa0706715a56346a7a399a6740e142709cfcb8de01108a60f3ce3e98864927e1",
+    "test_lmhead_scaled.py": "16af9beccd65e13d5f4d62aec38714f61af820b62766ad70f68e50632c420e67",
+    "test_lmhead_scatter.py": "455aa2107ab2db974658b88f4873953d9c6c98ad5c3e001a92ebeea4281cd0e7",
+    "test_lora_scaling.py": "3a3ae8aab6e02e3fb6143ef73458efe86e3d9722e4793f513b2b347d504ec1bf",
+    "test_numerics.py": "5845b38db516f46527db6f3ecc6db42c5231651636c690b1a4f60ce1af41d1ea",
+    "test_package_metadata_snapshot.py": "25f4d0892c34d2341e49ae30c4f781ae3dc55a3756136e53e9e7cd1b797276c2",
+    "test_packed_integration.py": "606cc31cca4cd5a7e85bc84d79ef015d58420b5429ca8aaf9c35ae390456c23a",
+    "test_private_streaming.py": "3e80b32e6d8234e6b3fec6243d176f73c149ed17c0f042f9142d046c5cf72ba7",
+    "test_qkv_backward_sums.py": "4590194b29948a90d51f8b07a1e1674cadb4e599ee916cb0a10f75908d68ff9e",
+    "test_tokenization_map.py": "a7974264264047fd0bc54984a383d3cca4b71a9d405910b1c3ba897617317d08",
+    "test_unpad.py": "188e8cccda7ced1535ec3237df6c88445c423aad1e27fb0d3bb002c9f6591f48",
+    "test_warmup_handles.py": "fc585cc08a2b85b6b75ea77f57e1221cb647a1b593e25d5f41a942a01a4f19c3",
+    "tokenization_map.py": "8326dca9c11c03bbf5fe80ba55d87f56a0452b989c759f4dd39d644c0e0e7d29",
+    "unpad.py": "6054934c94a1be050208fe7ac220a8bd0de35c776ca26f32e82c06982991545f"
+  },
+  "adapted_imported_python_files": {
+    "lmhead.py": {
+      "team_original_sha256": "f4b50b1d2e82997145645716284ceddc4e5a77a46075ebd3a429a22de3bf39b0",
+      "current_sha256": "aebe95490e168e46ec7933f44e886cc902fe92e9b68b5cd3356b48f5d610f3f4"
+    },
+    "warmup.py": {
+      "team_original_sha256": "7663b278f94b8b3cc827d7691e73ef947d279c7f5b03f2a1b570a58fd931eec2",
+      "current_sha256": "20235fc3226b1f066ccbf095066ac8749b725ec36b4be55a4954a7b412977ddb"
+    }
+  },
+  "nurzhigit_changes": [
+    "release dead head chunk locals",
+    "precompile own exact-storage proof in this run",
+    "lifetime/retained-graph tests and probe"
+  ],
+  "performance_claim": "none until full paired T4 result and all original checks"
+}

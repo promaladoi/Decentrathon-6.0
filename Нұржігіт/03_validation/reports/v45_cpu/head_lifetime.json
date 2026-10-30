@@ -1,0 +1,54 @@
+{
+  "kind": "CPU Python ownership only; GPU kernels replaced by no-retention stubs",
+  "baseline_commit": "2d171ddc1f6d43e593f5dd80e1a86731f27ad6f7",
+  "cases": {
+    "prompt": {
+      "v44_previous_chunks_alive_before_next_mm": [
+        0,
+        1,
+        1,
+        1
+      ],
+      "v45_previous_chunks_alive_before_next_mm": [
+        0,
+        0,
+        0,
+        0
+      ],
+      "gemm_row_schedule_unchanged": true
+    },
+    "private": {
+      "v44_previous_chunks_alive_before_next_mm": [
+        0,
+        1,
+        1,
+        1
+      ],
+      "v45_previous_chunks_alive_before_next_mm": [
+        0,
+        0,
+        0,
+        0
+      ],
+      "gemm_row_schedule_unchanged": true
+    },
+    "saved": {
+      "v44_previous_chunks_alive_before_next_mm": [
+        0,
+        1,
+        2,
+        3
+      ],
+      "v45_previous_chunks_alive_before_next_mm": [
+        0,
+        1,
+        2,
+        3
+      ],
+      "gemm_row_schedule_unchanged": true
+    }
+  },
+  "fixed_task_full_fp16_logit_chunk_mib": 148.375,
+  "full_task_gpu_peak_saving_measured": false,
+  "full_task_time_measured": false
+}
