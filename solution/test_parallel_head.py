@@ -33,3 +33,10 @@ def test_combined_chunked_head_loss_and_hidden_gradient():
     patch_parallel_head()
     for with_num_items in (True, False):
         test_lm_head_loss_matches_cross_entropy(with_num_items)
+
+
+def test_current_head_and_dropout_warmup_signatures_compile():
+    # Exercise the actual production signatures; do not swallow a failed
+    # warmup as the startup thread deliberately does for its safe fallback.
+    from solution.parallel_head import warmup
+    warmup()

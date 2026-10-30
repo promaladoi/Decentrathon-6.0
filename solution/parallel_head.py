@@ -105,3 +105,28 @@ def parallel_stats(x16, w16, idx, targets, ent, amax, ce, grad_x):
 def patch_parallel_head():
     from .team_vladimir import lmhead
     lmhead._stats = parallel_stats
+    # Registered before apply_team starts its compile thread. Compile the
+    # kernels this head actually uses, rather than the superseded serial loop.
+    lmhead.warmup = warmup
+
+
+def warmup(vocab=151936):
+    """Compile current signatures inside this run while Soup loads the model.
+
+    These calls do not launch training work or load a cache from another run.
+    A failed warmup is handled by the existing team thread: normal first launch
+    compiles that signature. All ordinary training launches remain unchanged.
+    """
+    from .compact_dropout import warmup as warmup_dropout
+    f16, f32, i32, i64 = torch.float16, torch.float32, torch.int32, torch.int64
+    parts = triton.cdiv(vocab, TILE)
+    head_tile_statistics.warmup(f16, f32, f32, f32, i32, vocab, vocab,
+                                parts, TILE, grid=(1, parts), num_warps=4)
+    for with_grad in (False, True):
+        head_finish_statistics.warmup(
+            f16, i64 if with_grad else i32, f32, f32, f32, i32,
+            f32, f32, i64, f32, vocab, vocab, parts, with_grad,
+            triton.next_power_of_2(parts), grid=(1,), num_warps=4)
+    head_gradient_inplace.warmup(f16, i64, f32, vocab, vocab, 1024.0,
+                                 TILE, grid=(1, parts), num_warps=4)
+    warmup_dropout()
