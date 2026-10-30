@@ -29,3 +29,5 @@ def apply():
     patch_mlp_intermediates()
     from .lora_add import patch_lora_add
     patch_lora_add()
+    from .causal_loss import patch_causal_loss
+    patch_causal_loss()

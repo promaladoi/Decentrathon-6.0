@@ -4,6 +4,26 @@ import pytest
 import torch
 
 
+@pytest.mark.parametrize('provided_shift', [False, True])
+@pytest.mark.parametrize('count', [None, 7])
+def test_half_causal_loss_matches_float_reference(provided_shift, count):
+    from solution.causal_loss import causal_loss
+    torch.manual_seed(43)
+    x = torch.randn(2, 5, 1031, device='cuda', dtype=torch.float16, requires_grad=True)
+    labels = torch.randint(1031, (2, 5), device='cuda')
+    labels[:, 0] = -100
+    shifted = torch.nn.functional.pad(labels, (0, 1), value=-100)[:, 1:].contiguous()
+    expected = torch.nn.functional.cross_entropy(x.float().view(-1, 1031), shifted.view(-1),
+                reduction='sum' if count is not None else 'mean')
+    if count is not None:
+        expected = expected / count
+    actual = causal_loss(x, labels, 1031, count, shift_labels=shifted if provided_shift else None)
+    eg, = torch.autograd.grad(expected, x)
+    ag, = torch.autograd.grad(actual, x)
+    torch.testing.assert_close(actual, expected, rtol=2e-5, atol=2e-5)
+    torch.testing.assert_close(ag, eg, rtol=2e-3, atol=2e-6)
+
+
 @pytest.mark.parametrize('dtype', [torch.float16, torch.float32])
 @pytest.mark.parametrize('scale', [0.5, 1.0, 2.0])
 def test_lora_scale_add_exact_forward_backward(dtype, scale):
