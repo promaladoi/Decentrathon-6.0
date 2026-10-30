@@ -1,5 +1,5 @@
 {
-  "source_commit": "7e49ba17ac025a511693bb1647a54fbcf8433235",
+  "source_commit": "322d88ec003235e51ad766d661c14594e88bb3dd",
   "source_repo": "BAITC-Hacks/hack-a5a4072f-wither-ai",
   "files": [
     ".gitattributes",
@@ -60,6 +60,7 @@
     "harness/score.py",
     "solution/__init__.py",
     "solution/causal_loss.py",
+    "solution/compact_dropout.py",
     "solution/frozen_head.py",
     "solution/mlp_precision.py",
     "solution/nf4.py",
@@ -81,6 +82,7 @@
     "solution/team_vladimir/test_unpad.py",
     "solution/team_vladimir/unpad.py",
     "solution/team_vladimir/warmup.py",
+    "solution/test_compact_dropout.py",
     "solution/test_frozen_head.py",
     "solution/test_kernels.py",
     "solution/test_parallel_head.py",

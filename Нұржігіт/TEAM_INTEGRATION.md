@@ -15,3 +15,8 @@ No harness, fixed task, model/data, dropout, optimizer or Soup switch changes.
 The v13 version must pass GPU unit tests, regression tests and a fresh paired
 benchmark before its result is considered validated. Older files remain for
 the v1-v12 experiment history; apply() selects only the shared path and this patch.
+
+The v14 experiment additionally keeps PyTorch's full-shape native dropout mask
+and RNG consumption, but applies that mask and its backward only on real-token
+rows. `solution/compact_dropout.py` and its GPU tests verify exact output,
+input gradient and RNG state equality against the original padded dropout.
