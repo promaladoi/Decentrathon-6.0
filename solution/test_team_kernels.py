@@ -99,7 +99,8 @@ def test_nf4_decoder_matches_bitsandbytes(nested, dtype, shape, blocksize):
 
 @pytest.mark.parametrize("nested", [False, True])
 @pytest.mark.parametrize("dtype", [torch.float16, torch.float32])
-def test_nf4_forward_fallback_matches_backend(nested, dtype):
+@pytest.mark.parametrize("autocast", [False, True])
+def test_nf4_forward_fallback_matches_backend(nested, dtype, autocast):
     import bitsandbytes.functional as bnb
     from bitsandbytes.backends.cuda import ops
     from solution.nf4 import nf4_linear_fallback
@@ -107,7 +108,7 @@ def test_nf4_forward_fallback_matches_backend(nested, dtype):
     torch.manual_seed(37)
     weight = torch.randn((128, 64), device="cuda", dtype=torch.float16)
     packed, state = bnb.quantize_4bit(weight, compress_statistics=nested, quant_type="nf4")
-    x = torch.randn((2, 7, 64), device="cuda", dtype=dtype)
+    x = torch.randn((2, 7, 64), device="cuda", dtype=dtype, requires_grad=True)
     bias = torch.randn(128, device="cuda", dtype=dtype)
     args = (x, packed, state.shape, state.state2.absmax if nested else state.absmax,
             state.blocksize, "nf4")
@@ -115,6 +116,11 @@ def test_nf4_forward_fallback_matches_backend(nested, dtype):
     if nested:
         kwargs.update(absmax_8bit=state.absmax, absmax_code=state.state2.code,
                       absmax_offset=state.offset)
-    expected = ops._dequant_linear_fallback(*args, **kwargs)
-    actual = nf4_linear_fallback(*args, **kwargs)
+    with torch.autocast("cuda", dtype=torch.float16, enabled=autocast):
+        expected = ops._dequant_linear_fallback(*args, **kwargs)
+        actual = nf4_linear_fallback(*args, **kwargs)
     torch.testing.assert_close(actual, expected, rtol=0, atol=0)
+    upstream = torch.randn_like(expected)
+    expected_grad, = torch.autograd.grad(expected, x, upstream)
+    actual_grad, = torch.autograd.grad(actual, x, upstream)
+    torch.testing.assert_close(actual_grad, expected_grad, rtol=0, atol=0)

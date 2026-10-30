@@ -61,7 +61,14 @@ def nf4_linear_fallback(A, B, shapeB, absmax, blocksize, quant_type,
         # Only the fixed NF4 format codebook is cached, never model weights.
         _codebooks[key] = functional.get_4bit_type("nf4", device=A.device)
     code = _codebooks[key]
-    dense = torch.empty(shapeB, dtype=A.dtype, device=A.device)
+    # F.linear under CUDA fp16 autocast would immediately cast a float32
+    # decoded weight to fp16. Decode directly into that final buffer instead.
+    # Keep the input and bias handling in the same F.linear autocast path.
+    dense_dtype = A.dtype
+    if (A.dtype == torch.float32 and torch.is_autocast_enabled("cuda")
+            and torch.get_autocast_dtype("cuda") == torch.float16):
+        dense_dtype = torch.float16
+    dense = torch.empty(shapeB, dtype=dense_dtype, device=A.device)
     nested = absmax_8bit is not None
     decode_nf4_weights[(triton.cdiv(math.prod(shapeB), 1024),)](
         B, absmax_8bit if nested else absmax, code,
