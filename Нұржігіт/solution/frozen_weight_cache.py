@@ -73,17 +73,22 @@ class FrozenWeightCache:
         return value
 
 
-def patch_frozen_weight_cache():
+def cacheable_size(shape,min_elements,max_elements=None):
+    count=math.prod(shape)
+    return count>=min_elements and (max_elements is None or count<max_elements)
+
+
+def patch_frozen_weight_cache(min_elements=MIN_ELEMENTS,max_elements=None,max_bytes=MAX_BYTES):
     from .team_vladimir import mlp, nf4, unpad
     original = nf4.dequantize_nf4
     if hasattr(original, '_frozen_weight_cache'):
         return original._frozen_weight_cache
-    cache = FrozenWeightCache(original)
+    cache = FrozenWeightCache(original,max_bytes=max_bytes)
 
     def decode(packed, state, dtype):
         if (packed.is_cuda and not packed.requires_grad and packed.is_contiguous() and
                 dtype == torch.float16 and nf4.supported(state) and
-                math.prod(state.shape) >= MIN_ELEMENTS):
+                cacheable_size(state.shape,min_elements,max_elements)):
             return cache.get(packed, state, dtype)
         return original(packed, state, dtype)
 

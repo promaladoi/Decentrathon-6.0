@@ -5,6 +5,34 @@ import weakref
 import pytest
 import torch
 
+
+@pytest.mark.parametrize('shape,expected',[
+    ((512,511),False),((512,512),True),((1536,1536),True),
+    ((256,1536),True),((2048,2048),False),((8960,1536),False),
+])
+def test_attention_only_cache_size_boundaries(shape,expected):
+    from .frozen_weight_cache import cacheable_size
+    assert cacheable_size(shape,262_144,4_194_304) is expected
+
+
+@pytest.mark.skipif(not torch.cuda.is_available(),reason='needs CUDA')
+def test_actual_small_only_routing_retains_only_attention_matrices(monkeypatch):
+    import bitsandbytes.functional as bnb
+    from .team_vladimir import nf4,mlp,unpad
+    from .frozen_weight_cache import patch_frozen_weight_cache
+    # Restore module bindings after this isolated policy test.
+    for module in (nf4,mlp,unpad):
+        monkeypatch.setattr(module,'dequantize_nf4',nf4.dequantize_nf4)
+    cache=patch_frozen_weight_cache(max_elements=4_194_304,max_bytes=400_000_000)
+    for shape,retain in [((1024,512),True),((8960,1536),False)]:
+        x=torch.randn(shape,device='cuda',dtype=torch.float16)
+        packed,state=bnb.quantize_4bit(x,quant_type='nf4',compress_statistics=True)
+        a=nf4.dequantize_nf4(packed,state,torch.float16)
+        b=nf4.dequantize_nf4(packed,state,torch.float16)
+        assert (a is b) is retain
+        torch.testing.assert_close(a,b,rtol=0,atol=0)
+        assert cache.bytes<=400_000_000
+
 from solution.frozen_weight_cache import FrozenWeightCache
 
 
