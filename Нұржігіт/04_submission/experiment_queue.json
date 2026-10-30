@@ -22,16 +22,6 @@
       "nf4_analysis": false
     },
     {
-      "version": "v32",
-      "commit": "b33081a7f73eee21c0101f3ae865581f000fb68a",
-      "nf4_analysis": false
-    },
-    {
-      "version": "v33",
-      "commit": "7d70da7438d419be834f51da5aaee3154799519d",
-      "nf4_analysis": false
-    },
-    {
       "version": "v34",
       "commit": "fe2272c79bf00ae17654c388c5e79237d265f968",
       "nf4_analysis": false
@@ -39,6 +29,11 @@
     {
       "version": "v35",
       "commit": "bba28df972b99bb7a3a23328a3e3444ea79d7765",
+      "nf4_analysis": false
+    },
+    {
+      "version": "v36",
+      "commit": "dd8ccef6d61b02bddcf5f0307b05805c76725dd4",
       "nf4_analysis": false
     }
   ]

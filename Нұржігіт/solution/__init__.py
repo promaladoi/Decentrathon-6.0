@@ -25,13 +25,14 @@ def apply():
     from .frozen_storage import patch_frozen_storage
     from .frozen_weight_cache import patch_frozen_weight_cache
     from .varlen_attention import patch_varlen_attention
+    from .team_merei import backward_sums, batch_metadata
     # Register the active head and compile signatures before the shared
     # apply() starts its model-loading-time compilation thread.
     patch_parallel_head()
     patch_compact_dropout()
     patch_paired_nf4()
-    patch_frozen_weight_cache(max_elements=4_194_304,max_bytes=400_000_000)
-    patch_launcher_warmup()
+    patch_frozen_weight_cache()
+    patch_launcher_warmup(extra_steps=(batch_metadata.warmup, backward_sums.warmup))
     apply_team()
     patch_frozen_storage()
     patch_varlen_attention()

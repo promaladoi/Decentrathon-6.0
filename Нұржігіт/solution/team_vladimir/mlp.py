@@ -19,6 +19,7 @@ import torch
 import triton
 
 from .nf4 import dequantize_nf4, supported as nf4_supported
+from ..team_merei.backward_sums import sum_half_gradients
 from .swiglu import BLOCK as SWIGLU_BLOCK, example_swiglu_bwd_kernel, example_swiglu_fwd_kernel
 
 
@@ -57,9 +58,10 @@ class MLP4bit(torch.autograd.Function):
         example_swiglu_bwd_kernel[(triton.cdiv(n, SWIGLU_BLOCK),)](dh, g, u, dg, du, n,
                                                                    BLOCK=SWIGLU_BLOCK)
         del dh, g, u
-        dx = torch.matmul(dg, _weight(gate, dtype)).float()
+        dx_gate = torch.matmul(dg, _weight(gate, dtype))
         del dg
-        dx += torch.matmul(du, _weight(up, dtype)).float()  # autograd sums the two casts in fp32
+        dx_up = torch.matmul(du, _weight(up, dtype))
+        dx = sum_half_gradients((dx_gate, dx_up))  # unchanged native GEMMs, ordered FP32 sum
         return dx.to(ctx.x_dtype), None, None, None, None
 
 

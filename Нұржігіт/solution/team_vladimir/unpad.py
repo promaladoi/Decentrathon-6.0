@@ -36,6 +36,8 @@ from .mlp import MLP4bit, _compute_dtype
 from .nf4 import MatMulNF4, dequantize_nf4, supported as nf4_supported
 from . import warmup as _warmup
 from .rmsnorm import add_rmsnorm
+from ..team_merei.backward_sums import sum_half_gradients
+from ..team_merei.batch_metadata import compact_batch_metadata
 
 
 @triton.jit(do_not_specialize=["seq_len"])
@@ -282,12 +284,13 @@ class QKV4bit(torch.autograd.Function):
 
     @staticmethod
     def backward(ctx, *grads):
-        dx = None
+        parts = []
         for layer, grad in zip(ctx.layers, grads):
             if grad is None:
                 continue
-            part = torch.matmul(grad.to(ctx.dtype), _weight(layer, ctx.dtype)).float()
-            dx = part if dx is None else dx.add_(part)
+            parts.append(torch.matmul(grad.to(ctx.dtype), _weight(layer, ctx.dtype)))
+        dx = (sum_half_gradients(parts) if len(parts)>1 else
+              parts[0].float() if parts else None)
         return dx.to(ctx.x_dtype) if dx is not None else None, None, None, None, None
 
 
@@ -471,8 +474,20 @@ def fast_forward(model, meta, input_ids, attention_mask, labels, num_items_in_ba
     _warmup.wait()  # a kernel still compiling in the warm-up thread: wait, do not compile twice
     inner = model.model
     batch, seq_len = input_ids.shape
-    rows = attention_mask.reshape(-1).nonzero().squeeze(1)
-    step = _Batch(rows, batch, seq_len)
+    metadata = compact_batch_metadata(attention_mask, labels)
+    if metadata is None:
+        raise ValueError('unsupported non-prefix mask, empty row or removed labels')
+    if metadata is NotImplemented:
+        rows = attention_mask.reshape(-1).nonzero().squeeze(1)
+        step = _Batch(rows, batch, seq_len)
+    else:
+        rows = metadata['rows']
+        if getattr(_Batch.__init__, '_varlen_attention', False):
+            plan = {'rows': torch.arange(rows.numel(), device=rows.device, dtype=torch.int64),
+                    'cu': metadata['cumulative'], 'max_len': metadata['maximum'], 'n': rows.numel()}
+            step = _Batch(rows, batch, seq_len, plan=plan)
+        else:
+            step = _Batch(rows, batch, seq_len)
 
     h = inner.embed_tokens(input_ids.reshape(-1).index_select(0, rows))
     cos, sin = inner.rotary_emb(h, (rows % seq_len)[None])  # the positions of the base run

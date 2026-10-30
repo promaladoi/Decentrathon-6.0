@@ -1,5 +1,5 @@
 {
-  "source_commit": "564da53184387e05bed985cf4fce57d8ecd42bde",
+  "source_commit": "0ae953fe736ba627383b97f1860e61c46acdc746",
   "source_repo": "BAITC-Hacks/hack-a5a4072f-wither-ai",
   "files": [
     ".gitattributes",
@@ -345,6 +345,7 @@
     "CODEX_V33_EXPERIMENT.md",
     "CODEX_V34_EXPERIMENT.md",
     "CODEX_V35_EXPERIMENT.md",
+    "CODEX_V36_EXPERIMENT.md",
     "CODEX_V4_EXPERIMENT.md",
     "CODEX_V5_RESULT.md",
     "CODEX_V6_RESULT.md",
@@ -382,6 +383,11 @@
     "solution/rmsnorm.py",
     "solution/sparse_mlp.py",
     "solution/swiglu.py",
+    "solution/team_merei/__init__.py",
+    "solution/team_merei/backward_sums.py",
+    "solution/team_merei/batch_metadata.py",
+    "solution/team_merei/test_backward_sums.py",
+    "solution/team_merei/test_batch_metadata.py",
     "solution/team_vladimir/__init__.py",
     "solution/team_vladimir/layer.py",
     "solution/team_vladimir/lmhead.py",
