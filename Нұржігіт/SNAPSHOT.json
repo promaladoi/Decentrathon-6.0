@@ -1,5 +1,5 @@
 {
-  "source_commit": "e0552ad6158979dfbcbeabc9b22000725139a5c0",
+  "source_commit": "1f8742e957b5e5916697259ce82c90b33fc8de35",
   "source_repo": "BAITC-Hacks/hack-a5a4072f-wither-ai",
   "files": [
     ".gitattributes",
@@ -13,6 +13,7 @@
     "03_validation/LOCAL_V28_CPU.json",
     "03_validation/README.md",
     "03_validation/VERSION_COMPARISON.md",
+    "03_validation/benchmark_mlp_gradient.py",
     "03_validation/benchmark_nf4_pair.py",
     "03_validation/collect_artifact.py",
     "03_validation/compare_variants.py",
@@ -218,6 +219,7 @@
     "CODEX_V26_EXPERIMENT.md",
     "CODEX_V27_EXPERIMENT.md",
     "CODEX_V28_EXPERIMENT.md",
+    "CODEX_V29_RESEARCH.md",
     "CODEX_V4_EXPERIMENT.md",
     "CODEX_V5_RESULT.md",
     "CODEX_V6_RESULT.md",
@@ -244,6 +246,7 @@
     "solution/frozen_storage.py",
     "solution/frozen_storage_kernel.py",
     "solution/frozen_weight_cache.py",
+    "solution/fused_mlp_gradient.py",
     "solution/launcher_warmup.py",
     "solution/lazy_train_cli.py",
     "solution/metadata_scan.py",
@@ -272,6 +275,7 @@
     "solution/test_frozen_head.py",
     "solution/test_frozen_storage.py",
     "solution/test_frozen_weight_cache.py",
+    "solution/test_fused_mlp_gradient.py",
     "solution/test_kernels.py",
     "solution/test_launcher_warmup.py",
     "solution/test_lazy_train_cli.py",

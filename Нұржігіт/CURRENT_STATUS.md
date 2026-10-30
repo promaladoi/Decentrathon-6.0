@@ -20,10 +20,20 @@ highest observed paired ratio (1.5553x), but its first base was 87.03 s compared
 with 81.52 s for its second. Do not rank close versions from unlike cold baselines
 alone. v20r1/v21/v22 retain the lowest collected peak, 4467 MiB.
 
-v24 (`053c9c4`) is an experiment, not an admitted result yet. It passed 214
-solution tests and 79 Soup tests on T4 and is in the unchanged paired benchmark.
+v24 (`053c9c4`) passed 214 solution tests, 79 Soup tests and all ten original
+checks in the Kaggle console: base 77.09/80.89 s, solution 50.37/51.52 s,
+peak 6651 MiB, eval delta -0.001%. Raw local collection is queued.
 It uses native PyTorch variable-length causal attention, preserving per-example
 boundaries, positions, full-shape dropout draws and exact task settings.
+
+v25 (`fd296f4`) passed 230 solution tests, 79 Soup tests and all ten original
+checks in the Kaggle console: base 80.65/81.09 s, solution 48.36/49.57 s,
+peak 6651 MiB, eval delta +0.000%, real own-kernel share 8.1%. Collection pending.
+v26 (`79643de`) passed 233 solution tests and 79 Soup tests. Its two training
+commands took 45.86/46.91 s; eval and final admission checks are still running.
+v27 (`7efba21`) and v28 (`4aaaade`) are queued afterward. No current user action
+is required. v29 (`9b0d96b`) adds an inactive two-product MLP-gradient fusion for
+a separate native-vs-own T4 diagnostic after the paired jobs finish.
 
 A separate diagnostic of v17r1 completed: GPU attention forward/backward was
 about 14.9% of recorded GPU kernel time; NF4 decoding about 9.2%. CPU profiling
