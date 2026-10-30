@@ -38,7 +38,7 @@ from .nf4 import MatMulNF4, dequantize_nf4, supported as nf4_supported, _linear_
 from . import warmup as _warmup
 from .rmsnorm import add_rmsnorm
 from .dropout import real_row_dropout, _supported as _real_dropout_supported
-from .batch_metadata import compact_batch_metadata
+from .batch_metadata import PreparedHeadMetadata, compact_batch_metadata
 from .backward_sums import sum_half_gradients
 
 # Static candidate configuration: no harness/test/environment-dependent switch.
@@ -747,10 +747,16 @@ def fast_forward(model, meta, input_ids, attention_mask, labels, num_items_in_ba
     norm = inner.norm
     _, x = add_rmsnorm(h, mlp_out, norm.weight, norm.variance_epsilon)
 
-    # ForCausalLMLoss: the label of position t is labels[t + 1]; -100 past the end
-    shifted = torch.cat([labels[:, 1:], labels.new_full((batch, 1), -100)], dim=1)
-    targets = shifted.reshape(-1).index_select(0, rows)
-    loss, stats = lm_head_loss(x, model.lm_head.weight, targets, num_items_in_batch)
+    head = packed_metadata.get("head")
+    if type(head) is PreparedHeadMetadata and head.is_current_source(labels):
+        loss, stats = lm_head_loss(x, model.lm_head.weight, head.targets,
+                                  num_items_in_batch, prepared=head)
+    else:
+        # ForCausalLMLoss: labels[t + 1], with -100 at each sequence end.
+        # Unsupported/stale metadata keeps the original head preparation.
+        shifted = torch.cat([labels[:, 1:], labels.new_full((batch, 1), -100)], dim=1)
+        targets = shifted.reshape(-1).index_select(0, rows)
+        loss, stats = lm_head_loss(x, model.lm_head.weight, targets, num_items_in_batch)
     logits = LazyLogits(batch, seq_len, model.lm_head.weight.shape[0], rows, stats)
     return CausalLMOutputWithPast(loss=loss, logits=logits)
 
