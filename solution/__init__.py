@@ -19,6 +19,7 @@ def apply():
     from .paired_nf4 import patch_paired_nf4
     from .frozen_storage import patch_frozen_storage
     from .frozen_weight_cache import patch_frozen_weight_cache
+    from .varlen_attention import patch_varlen_attention
     # Register the active head and compile signatures before the shared
     # apply() starts its model-loading-time compilation thread.
     patch_parallel_head()
@@ -27,3 +28,4 @@ def apply():
     patch_frozen_weight_cache()
     apply_team()
     patch_frozen_storage()
+    patch_varlen_attention()
