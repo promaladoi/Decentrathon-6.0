@@ -1,46 +1,56 @@
-# Мерей — жұмыс күйі
+# Мерей — состояние работы
 
-Жаңа DDC шешімі толық Kaggle T4 тексеруінен өтті: **10/10 ереже PASS**.
-**241 passed, 1 skipped** solution; **79 passed** Soup с патчами. Финалдық тапсыру әлі рәсімделмеген.
+Полный Kaggle T4 development checkpoint прошёл **10/10 automatic checks**.
+**181 passed, 0 skipped** solution; **79 passed** Soup с патчами. Финальная платформенная сдача ещё не оформлена.
 
-| Показатель | База | Решение | Отношение / проверка |
+| Показатель | Базовый Soup | Решение | Отношение / проверка |
 | --- | --- | --- | --- |
-| Полное время soup train, с | 88.74 | 78.18 | 1.1351× |
-| GPU peak, MiB, nvidia-smi | 14345 | 7381 | база/решение 1.9435× |
-| Public eval loss | 2.04964 | 2.04964 | JSON Δ +0.000% |
-| Собственные кернелы, steps 3+ | — | 6.60% | минимум двух запусков, ≥5% |
+| Полное время soup train, с | 82.19 | 56.09 | 1.4653× |
+| GPU peak, MiB (nvidia-smi) | 14345 | 5275 | база/решение 2.7194× |
+| Public eval loss | 2.04962 | 2.04965 | JSON Δ +0.001% |
+| Собственные kernels, steps 3+ | — | 15.08% | минимум двух запусков, ≥5% |
 | Автоматические правила | — | 10/10 PASS | публичные данные |
 
-Жеке кернелдер үлесі кемінде **6.60%**, steps 3+; SwiGLU үлгісі
-есепке кірмейді. Толық уақыт компиляцияны қамтиды. Шамалар осы бір
-сессиядағы екі base және екі solution іске қосуынан алынған.
+| Одна сессия, два запуска каждого | Владимир pinned | Новое решение | Отношение reference/candidate |
+| --- | --- | --- | --- |
+| Полное время, с (median) | 59.655 | 56.095 | 1.0635× |
+| GPU peak, MiB (maximum) | 5641 | 5275 | 1.0694× |
+| Training loop, с (median) | 30.79 | 31.78 | диагностика |
 
-Кодтың commit-і: [b7c406dea7dbdc379149910efe044dccf155d083](https://github.com/promaladoi/Decentrathon-6.0/commit/b7c406dea7dbdc379149910efe044dccf155d083). [Kaggle №363837033](https://www.kaggle.com/code/promaladoi/soup-kaggle-development?scriptVersionId=363837033)
-әзірге private және embedded DDC snapshot қолданады.
-Snapshot: `ddc7740aa180e81cbdafa886d4fa44c1698cd2f79ae1cc45e63dbd45bedb033b`. Solution: `698b33301c9a191f3b8bfadc502a0c15d7a08870579c465cfed119a06a2d4d77`.
-Все 32 solution-файла рабочего commit побайтно сверены с измеренным snapshot; measured solution SHA256 совпадает.
+A/B — performance diagnostic относительно pinned командного кода Владимира.
+Official score сравнивает только native Soup и новое решение.
+Собственная активная доля — минимум **15.08%**, steps 3+;
+два organizer SwiGLU kernel не учитываются.
 
-Private training metrics FP16 storage, batched rewind, strided accuracy және
-narrow frozen NF4 MLP қосылған. Head recomputation және compressed-only
-SwiGLU training-те қосылмайды. Публичный model outputs FP32 күйінде қалады.
-Барлық 15 harness/tests/task файлдары өзгеріссіз, басқа қатысушылардың
-қалталары мен платформалық репозиторийге жазылған жоқ.
-
-Іске қосу: [working notebook](templates/kaggle_working_notebook.ipynb),
-GPU T4 x2 + Internet + Run All. Ол `b7c406dea7dbdc379149910efe044dccf155d083` commit-ін алып,
-`/kaggle/working/repo/Мерей` ішінен measured SHA256-ны тексеріп орындайды.
-Бұл clone notebook өзі әлі орындалған жоқ; дәлел — толық embedded run.
-Жергілікті репозиторий түбірінен `cd Мерей` жасаңыз.
-
-Историческая v9 №363823158 имела solution `wall_s=72.91`
-и peak `11181 MiB`; текущие значения — `78.18`
-и `7381 MiB`. Это **разные Kaggle-сессии**, не парный
-v9/new A/B. Разница не приписывается одному изменению; текущий speedup
-вычислен неизменённым harness относительно базы той же новой сессии.
+Saved Kaggle full development version: [№363884710](https://www.kaggle.com/code/promaladoi/soup-kaggle-development?scriptVersionId=363884710), private.
+Snapshot ZIP SHA256: `1916a1eab83d5ad80877937c6dc1203b63c10e7a151a64d49ca9beb89401403c`.
+Measured solution SHA256: `60216a16a1f993117f90e6028e93e4096fbacc4fb21afefbccd3f7f3a2e3a7f0`.
+Result SHA256: `53b72beee7141c1b18cb2b7d6b6ea60f796ecbdd23dbb8b05c1b945b9c8b8a7b`; совпадает с checks и audit.
+Рабочий code commit: [66bcd9b6585b027561a158448d87c2699f975931](https://github.com/promaladoi/Decentrathon-6.0/commit/66bcd9b6585b027561a158448d87c2699f975931).
+Все 27 solution-файла этого commit
+побайтно сверены с измеренным source snapshot по GitHub readback receipt.
+`kaggle_notebook_dev.ipynb` — точная побайтовая копия входного notebook
+этой saved версии, а не новый исполненный clone notebook.
 
 
-Дәлелдер: [result](verification/t4-result.json), [checks](verification/t4-checks.json), [Kaggle UI log](verification/t4-run.log), [source audit](verification/source-audit.json). [Толық түсіндірме](README.md),
-[verification](LOCAL_VERIFICATION.md), [submission](SUBMISSION.md).
-Финалға: платформалық final commit, public saved notebook, команда деректері,
-3 минутқа дейінгі демо және презентация. Hidden data мен басқа seed
-тексерілмеді; соңғы допуск пен ұпай бөлек анықталады.
+Авторство командной основы Владимира сохранено. В candidate включены
+private scope с публичным Tensor fallback, actual-scale head backward,
+direct packed RoPE/native attention, real-row native-RNG dropout на больших
+размерах и numerical contract fixes. Все protected files без изменений.
+
+Воспроизведение: [pinned working notebook](templates/kaggle_working_notebook.ipynb),
+GPU T4 x2 + Internet + Run All. Он закрепляет code commit и проверяет
+solution SHA256 до тестов из папки `Мерей`. Этот clone notebook ещё не
+исполнен; текущие доказательства — saved embedded development run.
+
+[result](verification/final-result.json), [checks](verification/final-checks.json), [full Kaggle log](verification/final-run.log), [A/B](verification/final-comparison.json), [source audit](verification/source-audit.json). [README](README.md), [verification](LOCAL_VERIFICATION.md),
+[submission](SUBMISSION.md).
+
+Рабочее место — [личная папка Мерей](https://github.com/promaladoi/Decentrathon-6.0/tree/main/%D0%9C%D0%B5%D1%80%D0%B5%D0%B9).
+Финальная платформенная сдача ещё не оформлена. По указанию пользователя
+[платформенный репозиторий](https://github.com/BAITC-Hacks/hack-a5a4072f-wither-ai) и папки других участников не
+изменяются. Для сдачи остаются final commit в репозитории платформы,
+публичный saved notebook из исходного шаблона с этим commit и успешным
+Run All, данные команды, демо до 3 минут и презентация. Скрытые строки и
+другие seed не проверены; окончательный допуск и баллы определяет жюри.
+

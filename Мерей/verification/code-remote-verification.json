@@ -1,0 +1,294 @@
+{
+  "repository": "promaladoi/Decentrathon-6.0",
+  "directory": "Мерей",
+  "commit": "66bcd9b6585b027561a158448d87c2699f975931",
+  "commit_url": "https://github.com/promaladoi/Decentrathon-6.0/commit/66bcd9b6585b027561a158448d87c2699f975931",
+  "parent": "2aca589e9953fe6838c910632d8df6bcbc80c42e",
+  "main_head_at_readback": "66bcd9b6585b027561a158448d87c2699f975931",
+  "code_commit": "66bcd9b6585b027561a158448d87c2699f975931",
+  "snapshot_sha256": "1916a1eab83d5ad80877937c6dc1203b63c10e7a151a64d49ca9beb89401403c",
+  "kaggle_version": 363884710,
+  "result_sha256": "53b72beee7141c1b18cb2b7d6b6ea60f796ecbdd23dbb8b05c1b945b9c8b8a7b",
+  "remote_solution_sha256": "60216a16a1f993117f90e6028e93e4096fbacc4fb21afefbccd3f7f3a2e3a7f0",
+  "verified_solution_sha256": "60216a16a1f993117f90e6028e93e4096fbacc4fb21afefbccd3f7f3a2e3a7f0",
+  "solution_files": 27,
+  "all_solution_files_byte_identical": true,
+  "payload_files": 27,
+  "all_payload_files_byte_identical": true,
+  "files": [
+    {
+      "path": "solution/__init__.py",
+      "sha256": "e26a3c42cb2c434658c8ae3234e3edafad6fa99174da3cfcc2440a598f392990",
+      "git_blob_sha": "a124e32562e340cd6a6d8789f449ec2c1a8af12d",
+      "bytes": 2543,
+      "exact_bytes_match": true
+    },
+    {
+      "path": "solution/attention_rows.py",
+      "sha256": "75bb1a69b713ce8ec4e1d598dc7ae767a0d2ef1ef800f60aae37359310cc5cea",
+      "git_blob_sha": "f75b2a178e18f811074b16d0201ec17428619ba5",
+      "bytes": 7562,
+      "exact_bytes_match": true
+    },
+    {
+      "path": "solution/benchmark_attention_rows.py",
+      "sha256": "f1ba4231d25d45e6f85c2a6ef071a33eb43157ee5beb750b7976bc886b8a57b4",
+      "git_blob_sha": "ae1d15cbcb1b9f5cf15d31fb2ff8fb1804c663c6",
+      "bytes": 12139,
+      "exact_bytes_match": true
+    },
+    {
+      "path": "solution/benchmark_dropout.py",
+      "sha256": "3083249b9b56f02d45b9ad710784c2d2c8ca2baa1083b98e506124aa2dec09d8",
+      "git_blob_sha": "d679868508ee285f85f9439ab94fd95675c30c91",
+      "bytes": 9892,
+      "exact_bytes_match": true
+    },
+    {
+      "path": "solution/benchmark_packed_integration.py",
+      "sha256": "e15787cbc88059765978d97ca8d57c64051b0f13a0742f3b96529d36a3619853",
+      "git_blob_sha": "bfae5d596ac778ecf3c6129071d2a6b12e91ad26",
+      "bytes": 11791,
+      "exact_bytes_match": true
+    },
+    {
+      "path": "solution/dropout.py",
+      "sha256": "ae5ce3b85e03b50394cb025329743719bc32bcf4dc2097cc2053294a33d60392",
+      "git_blob_sha": "92cc1954ef9966c4cde9300405ba99cf50c241ac",
+      "bytes": 7067,
+      "exact_bytes_match": true
+    },
+    {
+      "path": "solution/layer.py",
+      "sha256": "8152434dd8f9cce8df9731de61e50d5a61e5bc72edd93e120175ee4c5571cc0c",
+      "git_blob_sha": "919908995f3776f6763c562efff7bfa04cf0ec90",
+      "bytes": 2003,
+      "exact_bytes_match": true
+    },
+    {
+      "path": "solution/lmhead.py",
+      "sha256": "56a5d4688991945ae9a3f2a5522cbc9556959131eef5dfc3d20014e88d709dfb",
+      "git_blob_sha": "0a47da23a03eaab11050999f2638ab94cc160b0f",
+      "bytes": 15389,
+      "exact_bytes_match": true
+    },
+    {
+      "path": "solution/mlp.py",
+      "sha256": "669bf4c156b42d5dbfa2fc5bced19c01c4ff7a5c2ca481c46a6db152dd0cd8f0",
+      "git_blob_sha": "a2d3a6fcabe9bd020b8b137a0e6d25ca5251e518",
+      "bytes": 7097,
+      "exact_bytes_match": true
+    },
+    {
+      "path": "solution/nf4.py",
+      "sha256": "58d920ab0826131fb6c6606803215c6a28f539f7b96942fe8990fa309f123c53",
+      "git_blob_sha": "fb22b485ea1ea099f6c722df6be36d4e1a405de6",
+      "bytes": 8263,
+      "exact_bytes_match": true
+    },
+    {
+      "path": "solution/private_scope.py",
+      "sha256": "916a8b055fa0eda71748f735319a4ae100526c9f8292806fe7bfb6816fe1214b",
+      "git_blob_sha": "d982423c8e263f2eb5a78261abe183d337a7d1f2",
+      "bytes": 6834,
+      "exact_bytes_match": true
+    },
+    {
+      "path": "solution/rmsnorm.py",
+      "sha256": "a8ff7c4d909cbef0581c29e1bb021c9d9c76b01abbf608818d640d04ca3330cf",
+      "git_blob_sha": "d544d386804d54aa1645303ff6503578f86884ad",
+      "bytes": 11701,
+      "exact_bytes_match": true
+    },
+    {
+      "path": "solution/rope.py",
+      "sha256": "d28e9bda9b1a195bc6ed8e5cb4fbb70184c1cf70c80deabb7fca1ca436e2e65e",
+      "git_blob_sha": "f360ff4c78e10d0314bb6b9397eb22f90d92536f",
+      "bytes": 6825,
+      "exact_bytes_match": true
+    },
+    {
+      "path": "solution/run_diagnostics.py",
+      "sha256": "0d014c820575522e067eb91a05e825cc8250a287c9225c66e8b44622f3aaf796",
+      "git_blob_sha": "752c426434a9d6bb3da4bdfcb5ff46f1d31db068",
+      "bytes": 992,
+      "exact_bytes_match": true
+    },
+    {
+      "path": "solution/swiglu.py",
+      "sha256": "e665910faeca6091c958ed7a191604484a44216f51d6fa069f5f48220e7472e6",
+      "git_blob_sha": "92bb82b4f122622e00852583de6ad3aae8d1cb60",
+      "bytes": 3185,
+      "exact_bytes_match": true
+    },
+    {
+      "path": "solution/test_attention_rows.py",
+      "sha256": "316cbcd38e6c2782c18bcb44d0adaf52f8538cf9f64c7051c4e301d071ef21f1",
+      "git_blob_sha": "3d293aeae8b9beaa3e10a79bb7c3c2fa39b4ffa1",
+      "bytes": 3581,
+      "exact_bytes_match": true
+    },
+    {
+      "path": "solution/test_dropout.py",
+      "sha256": "22118faf87319ce405842dfe3d6d13a1228cfc76a5a27ee13b08d34c0d19756c",
+      "git_blob_sha": "e25e999883d7e4932e4ae99813e94c3b4e47f63d",
+      "bytes": 6692,
+      "exact_bytes_match": true
+    },
+    {
+      "path": "solution/test_dropout_integration.py",
+      "sha256": "e107161ce8cc68c7919b5c57917b5781df06b10a78df4f3533b832c87aeebaef",
+      "git_blob_sha": "88cf2e65f76e7391914700e5d0772a2c77edec02",
+      "bytes": 2052,
+      "exact_bytes_match": true
+    },
+    {
+      "path": "solution/test_kernels.py",
+      "sha256": "76fe33971f4f4b9600a8c8f79ec67d243024cdb9f0c4c32c72499e50c3adbc96",
+      "git_blob_sha": "046251d5308c226614152a7e4e765fae3b440c23",
+      "bytes": 4344,
+      "exact_bytes_match": true
+    },
+    {
+      "path": "solution/test_layer.py",
+      "sha256": "aa0706715a56346a7a399a6740e142709cfcb8de01108a60f3ce3e98864927e1",
+      "git_blob_sha": "38179423a233e11f764f53a3a4de2eaae212e072",
+      "bytes": 9306,
+      "exact_bytes_match": true
+    },
+    {
+      "path": "solution/test_lmhead_scaled.py",
+      "sha256": "16af9beccd65e13d5f4d62aec38714f61af820b62766ad70f68e50632c420e67",
+      "git_blob_sha": "ef04167aa6006dd983f2aa05b072d0d4b3f39d7a",
+      "bytes": 16155,
+      "exact_bytes_match": true
+    },
+    {
+      "path": "solution/test_numerics.py",
+      "sha256": "5845b38db516f46527db6f3ecc6db42c5231651636c690b1a4f60ce1af41d1ea",
+      "git_blob_sha": "f5ab55747db0d91883afba9d35bb69059af61e0a",
+      "bytes": 9437,
+      "exact_bytes_match": true
+    },
+    {
+      "path": "solution/test_packed_integration.py",
+      "sha256": "606cc31cca4cd5a7e85bc84d79ef015d58420b5429ca8aaf9c35ae390456c23a",
+      "git_blob_sha": "bc6a2cf090e79e0912b55dde43e3fbe8a6f2a77b",
+      "bytes": 7812,
+      "exact_bytes_match": true
+    },
+    {
+      "path": "solution/test_private_streaming.py",
+      "sha256": "3e80b32e6d8234e6b3fec6243d176f73c149ed17c0f042f9142d046c5cf72ba7",
+      "git_blob_sha": "a128baf286a3766518768dde8178179765e142e8",
+      "bytes": 5959,
+      "exact_bytes_match": true
+    },
+    {
+      "path": "solution/test_unpad.py",
+      "sha256": "188e8cccda7ced1535ec3237df6c88445c423aad1e27fb0d3bb002c9f6591f48",
+      "git_blob_sha": "259b7b5232ca0bc13d02ae7183f2e489091de3d9",
+      "bytes": 10770,
+      "exact_bytes_match": true
+    },
+    {
+      "path": "solution/unpad.py",
+      "sha256": "5b51827304c4fdd60c038e6489bae0c4bb161ff110a71e8eec46a4f928ac3073",
+      "git_blob_sha": "7afc106de90f6cd7d94f7a48692245100b63157c",
+      "bytes": 37491,
+      "exact_bytes_match": true
+    },
+    {
+      "path": "solution/warmup.py",
+      "sha256": "00db47a43ff397584c9142209a4c69c0e796bb50d7395070b14e4ce6516cbd19",
+      "git_blob_sha": "88efcac9e868cb6e726110ed9e17b4d95c27fe4a",
+      "bytes": 3367,
+      "exact_bytes_match": true
+    }
+  ],
+  "protected_files_checked": 15,
+  "protected_mismatches": [],
+  "outside_merey_changed": [],
+  "changed_paths": [
+    "Мерей/solution/__init__.py",
+    "Мерей/solution/attention_rows.py",
+    "Мерей/solution/benchmark.py",
+    "Мерей/solution/benchmark_attention_rows.py",
+    "Мерей/solution/benchmark_dropout.py",
+    "Мерей/solution/benchmark_frozen_head.py",
+    "Мерей/solution/benchmark_half.py",
+    "Мерей/solution/benchmark_mlp_variants.py",
+    "Мерей/solution/benchmark_packed_integration.py",
+    "Мерей/solution/compressed_swiglu.py",
+    "Мерей/solution/dropout.py",
+    "Мерей/solution/frozen_head.py",
+    "Мерей/solution/half_loss.py",
+    "Мерей/solution/half_metrics.py",
+    "Мерей/solution/layer.py",
+    "Мерей/solution/lmhead.py",
+    "Мерей/solution/mlp.py",
+    "Мерей/solution/narrow_mlp.py",
+    "Мерей/solution/nf4.py",
+    "Мерей/solution/patches.py",
+    "Мерей/solution/private_logits.py",
+    "Мерей/solution/private_scope.py",
+    "Мерей/solution/rmsnorm.py",
+    "Мерей/solution/rope.py",
+    "Мерей/solution/run_diagnostics.py",
+    "Мерей/solution/strided_accuracy.py",
+    "Мерей/solution/swiglu.py",
+    "Мерей/solution/test_attention_rows.py",
+    "Мерей/solution/test_compressed_swiglu.py",
+    "Мерей/solution/test_dropout.py",
+    "Мерей/solution/test_dropout_integration.py",
+    "Мерей/solution/test_frozen_head.py",
+    "Мерей/solution/test_half_loss.py",
+    "Мерей/solution/test_half_metrics.py",
+    "Мерей/solution/test_integration.py",
+    "Мерей/solution/test_kernels.py",
+    "Мерей/solution/test_layer.py",
+    "Мерей/solution/test_lmhead_scaled.py",
+    "Мерей/solution/test_narrow_mlp.py",
+    "Мерей/solution/test_nf4.py",
+    "Мерей/solution/test_numerics.py",
+    "Мерей/solution/test_packed_integration.py",
+    "Мерей/solution/test_private_logits.py",
+    "Мерей/solution/test_private_streaming.py",
+    "Мерей/solution/test_rmsnorm.py",
+    "Мерей/solution/test_rope.py",
+    "Мерей/solution/test_strided_accuracy.py",
+    "Мерей/solution/test_unpad.py",
+    "Мерей/solution/test_vocab.py",
+    "Мерей/solution/unpad.py",
+    "Мерей/solution/vocab.py",
+    "Мерей/solution/warmup.py"
+  ],
+  "removed_obsolete_solution_files": [
+    "Мерей/solution/benchmark.py",
+    "Мерей/solution/benchmark_frozen_head.py",
+    "Мерей/solution/benchmark_half.py",
+    "Мерей/solution/benchmark_mlp_variants.py",
+    "Мерей/solution/compressed_swiglu.py",
+    "Мерей/solution/frozen_head.py",
+    "Мерей/solution/half_loss.py",
+    "Мерей/solution/half_metrics.py",
+    "Мерей/solution/narrow_mlp.py",
+    "Мерей/solution/patches.py",
+    "Мерей/solution/private_logits.py",
+    "Мерей/solution/strided_accuracy.py",
+    "Мерей/solution/test_compressed_swiglu.py",
+    "Мерей/solution/test_frozen_head.py",
+    "Мерей/solution/test_half_loss.py",
+    "Мерей/solution/test_half_metrics.py",
+    "Мерей/solution/test_integration.py",
+    "Мерей/solution/test_narrow_mlp.py",
+    "Мерей/solution/test_nf4.py",
+    "Мерей/solution/test_private_logits.py",
+    "Мерей/solution/test_rmsnorm.py",
+    "Мерей/solution/test_rope.py",
+    "Мерей/solution/test_strided_accuracy.py",
+    "Мерей/solution/test_vocab.py",
+    "Мерей/solution/vocab.py"
+  ],
+  "note": "All payload bytes fetched with base64 from this immutable commit, compared with local measured source/staged evidence and verified against the remote Git blob. All protected remote blobs and outside-directory files equal the parent commit. Receipt created after publication, excluded from its own commit."
+}

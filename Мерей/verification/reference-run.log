@@ -1,0 +1,430 @@
+Kaggle reference version363851998; snapshotbd48b8910d3cdbc261c76e723a43ce10b9e94cb4f36a5359b12e7e0603d7df7f; TIME TAB LINE TAB BODY
+6.1s	1	0.00s - Debugger warning: It seems that frozen modules are being used, which may
+
+6.1s	2	0.00s - make the debugger miss breakpoints. Please pass -Xfrozen_modules=off
+
+6.1s	3	0.00s - to python to disable frozen modules.
+
+6.1s	4	0.00s - Note: Debugging will proceed. Set PYDEVD_DISABLE_FILE_VALIDATION=1 to disable this validation.
+
+6.7s	5	0.00s - Debugger warning: It seems that frozen modules are being used, which may
+
+6.7s	6	0.00s - make the debugger miss breakpoints. Please pass -Xfrozen_modules=off
+
+6.7s	7	0.00s - to python to disable frozen modules.
+
+6.7s	8	0.00s - Note: Debugging will proceed. Set PYDEVD_DISABLE_FILE_VALIDATION=1 to disable this validation.
+
+7.7s	9	{'kind': 'team_reference', 'snapshot_sha256': 'bd48b8910d3cdbc261c76e723a43ce10b9e94cb4f36a5359b12e7e0603d7df7f', 'team_source_commit': '987da36e1efa90652e1a7f8c48afef50685dbc40'}
+
+7.9s	10	Tesla T4
+
+7.9s	11	Tesla T4
+
+7.9s	12	
+
+8.5s	13	Found existing installation: torchao 0.10.0
+
+8.5s	14	Uninstalling torchao-0.10.0:
+
+8.8s	15	  Successfully uninstalled torchao-0.10.0
+
+15.7s	16	{'source': 'development snapshot', 'sha256': 'bd48b8910d3cdbc261c76e723a43ce10b9e94cb4f36a5359b12e7e0603d7df7f', 'starter_commit': 'c7c2fcd15972ce8b898d8d3ff732ee192c817ceb', 'files': 35}
+
+15.7s	17	{'soup-cli': '0.77.0', 'torch': '2.11.0+cu128', 'triton': '3.6.0', 'transformers': '5.16.1', 'peft': '0.20.0', 'trl': '0.29.1', 'bitsandbytes': '0.50.2', 'accelerate': '1.14.0'}
+
+63.7s	18	.........................................................................                                    [100%]
+
+63.7s	19	=============================== warnings summary ===============================
+
+63.7s	20	solution/test_kernels.py: 14 warnings
+
+63.7s	21	  /usr/local/lib/python3.13/dist-packages/torch/jit/_script.py:365: DeprecationWarning: `torch.jit.script_method` is deprecated. Please switch to `torch.compile` or `torch.export`.
+
+63.7s	22	    warnings.warn(
+
+63.7s	23	
+
+63.7s	24	-- Docs: https://docs.pytest.org/en/stable/how-to/capture-warnings.html
+
+63.7s	25	37 passed, 14 warnings in 46.63s
+
+63.9s	26	.                                    [100%]
+
+63.9s	27	=============================== warnings summary ===============================
+
+63.9s	28	solution/test_kernels.py: 14 warnings
+
+63.9s	29	  /usr/local/lib/python3.13/dist-packages/torch/jit/_script.py:365: DeprecationWarning: `torch.jit.script_method` is deprecated. Please switch to `torch.compile` or `torch.export`.
+
+63.9s	30	    warnings.warn(
+
+63.9s	31	
+
+63.9s	32	-- Docs: https://docs.pytest.org/en/stable/how-to/capture-warnings.html
+
+63.9s	33	37 passed, 14 warnings in 46.63s
+
+79.8s	34	.......................................................................................................................... [ 91%]
+
+79.8s	35	.......                                                                  [100%]
+
+79.8s	36	=============================== warnings summary ===============================
+
+79.8s	37	../../../usr/local/lib/python3.13/dist-packages/torch/jit/_script.py:365: 14 warnings
+
+79.8s	38	  /usr/local/lib/python3.13/dist-packages/torch/jit/_script.py:365: DeprecationWarning: `torch.jit.script_method` is deprecated. Please switch to `torch.compile` or `torch.export`.
+
+79.8s	39	    warnings.warn(
+
+79.8s	40	
+
+79.8s	41	-- Docs: https://docs.pytest.org/en/stable/how-to/capture-warnings.html
+
+79.8s	42	79 passed, 14 warnings in 1.05s
+
+79.9s	43	...................... [ 91%]
+
+79.9s	44	.......                                                                  [100%]
+
+79.9s	45	=============================== warnings summary ===============================
+
+79.9s	46	../../../usr/local/lib/python3.13/dist-packages/torch/jit/_script.py:365: 14 warnings
+
+79.9s	47	  /usr/local/lib/python3.13/dist-packages/torch/jit/_script.py:365: DeprecationWarning: `torch.jit.script_method` is deprecated. Please switch to `torch.compile` or `torch.export`.
+
+79.9s	48	    warnings.warn(
+
+79.9s	49	
+
+79.9s	50	-- Docs: https://docs.pytest.org/en/stable/how-to/capture-warnings.html
+
+79.9s	51	79 passed, 14 warnings in 1.05s
+
+85.0s	52	Warning: You are sending unauthenticated requests to the HF Hub. Please set a HF_TOKEN to enable higher rate limits and faster downloads.
+
+85.2s	53	Warning: You are sending unauthenticated requests to the HF Hub. Please set a HF_TOKEN to enable higher rate limits and faster downloads.
+
+85.2s	54	
+
+85.2s	55	Warning: You are sending unauthenticated requests to the HF Hub. Please set a HF_TOKEN to enable higher rate limits and faster downloads.
+
+86.8s	56	Generating train split: 0 examples [00:00, ? examples/s]Generating train split: 0 examples [00:00, ? examples/s]
+
+88.4s	57	Generating train split: 0 examples [00:00, ? examples/s]Generating train split: 52201 examples [00:01, 28669.37 examples/s]Generating train split: 52201 examples [00:01, 28377.98 examples/s]
+
+88.5s	58	wrote 256 training rows and 256 eval rows to /kaggle/working/repo/data
+
+88.6s	59	Generating train split: 52201 examples [00:01, 28669.37 examples/s]Generating train split: 52201 examples [00:01, 28377.98 examples/s]
+
+88.6s	60	
+
+88.6s	61	Generating train split: 52201 examples [00:01, 28669.37 examples/s]Generating train split: 52201 examples [00:01, 28377.98 examples/s]
+
+88.7s	62	wrote 256 training rows and 256 eval rows to /kaggle/working/repo/data
+
+113.2s	63	[run_task] warm-up done in 23.39 s
+
+113.2s	64	[run_task] base_1: training ...
+
+113.4s	65	[run_task] warm-up done in 23.39 s
+
+113.4s	66	[run_task] base_1: training ...
+
+198.8s	67	[run_task] base_1: ok, 85.44 s, peak 14345 MiB
+
+198.8s	68	[run_task] solution_1: training ...
+
+199.0s	69	[run_task] base_1: ok, 85.44 s, peak 14345 MiB
+
+199.0s	70	[run_task] solution_1: training ...
+
+251.2s	71	[run_task] solution_1: ok, 52.24 s, peak 5641 MiB
+
+251.2s	72	[run_task] solution_2: training ...
+
+251.4s	73	[run_task] solution_1: ok, 52.24 s, peak 5641 MiB
+
+251.4s	74	[run_task] solution_2: training ...
+
+303.7s	75	[run_task] solution_2: ok, 52.4 s, peak 5641 MiB
+
+303.7s	76	[run_task] base_2: training ...
+
+303.9s	77	[run_task] solution_2: ok, 52.4 s, peak 5641 MiB
+
+303.9s	78	[run_task] base_2: training ...
+
+382.0s	79	[run_task] base_2: ok, 78.22 s, peak 14345 MiB
+
+382.0s	80	[run_task] eval base ...
+
+382.2s	81	[run_task] base_2: ok, 78.22 s, peak 14345 MiB
+
+382.2s	82	[run_task] eval base ...
+
+422.4s	83	[run_task] eval solution ...
+
+422.6s	84	[run_task] eval solution ...
+
+463.9s	85	
+
+463.9s	86	=== result ===
+
+463.9s	87	base      time     81.8 s   peak  14345 MiB   eval loss 2.04968
+
+463.9s	88	solution  time     52.3 s   peak   5641 MiB   eval loss 2.04968
+
+463.9s	89	speedup 1.564x   memory base/solution 2.543x   eval loss vs base 0.0 %
+
+463.9s	90	written: /kaggle/working/repo/runs/result.json
+
+463.9s	91	
+
+463.9s	92	=== result ===
+
+463.9s	93	base      time     81.8 s   peak  14345 MiB   eval loss 2.04968
+
+463.9s	94	solution  time     52.3 s   peak   5641 MiB   eval loss 2.04968
+
+463.9s	95	speedup 1.564x   memory base/solution 2.543x   eval loss vs base 0.0 %
+
+463.9s	96	written: /kaggle/working/repo/runs/result.json
+
+478.1s	97	PASS  1. every base and solution run finished                                            2 base and 2 solution runs of 2 each
+
+478.1s	98	PASS  2. no ready-made kernel libraries                                                  loaded: none; imported in solution/: none; packages changed during the run: none
+
+478.1s	99	PASS  3. own @triton.jit kernels in solution/ run in training                            add_rmsnorm_bwd_kernel (solution/rmsnorm.py), add_rmsnorm_fwd_kernel (solution/rmsnorm.py), heads_rows_kernel (solution/unpad.py), lm_ce_kernel (solution/lmhead.py), nf4_dequant_kernel (solution/nf4.py), rope_pad_bwd_kernel (solution/unpad.py), rope_pad_fwd_kernel (solution/unpad.py); not launched in every solution run: _rotate_heads, rmsnorm_bwd_kernel, rmsnorm_fwd_kernel, rope_kernel; the example's kernels do not count, under any name: example_swiglu_fwd_kernel, example_swiglu_bwd_kernel
+
+478.1s	100	PASS  4. own kernels together take >= 5% of the training time                            12.6% of the training time (lowest of 2 runs, steps 3+)
+
+478.1s	101	PASS  5. same task and Soup outputs (steps, adapter, settings, tokens, metrics, rewind)  identical within tolerance
+
+478.1s	102	PASS  6. loss curve follows the base                                                     base_2: first step 0.00%, mean of all steps 0.01%; solution_1: first step 0.02%, mean of all steps 0.01%; solution_2: first step 0.02%, mean of all steps 0.01% (max 1% and 3%)
+
+478.1s	103	PASS  7. quality: eval loss at most 0.5% above the base                                  +0.000%
+
+478.1s	104	PASS  8. not worse than the base on time or memory (10% margin)                          time x0.639, memory x0.393 of the base
+
+478.1s	105	PASS  9. clean measurement (a T4, idle GPUs, one GPU, harness allocator, peaks agree)    clean
+
+478.1s	106	PASS  10. Soup regression tests with your patches                                        79 passed, 14 warnings in 0.83s
+
+478.1s	107	
+
+478.1s	108	ALL CHECKS PASSED
+
+478.2s	109	speedup 1.564x (counts as 1.564), memory base/solution 2.543x (counts as 2.543), eval loss vs base +0.000 %, all checks passed on this result: True
+
+478.2s	110	Speed and memory points depend on the best admitted team: 35 * ln(s) / ln(best s) and 30 * ln(m) / ln(best m).
+
+478.2s	111	PASS  1. every base and solution run finished                                            2 base and 2 solution runs of 2 each
+
+478.2s	112	PASS  2. no ready-made kernel libraries                                                  loaded: none; imported in solution/: none; packages changed during the run: none
+
+478.2s	113	PASS  3. own @triton.jit kernels in solution/ run in training                            add_rmsnorm_bwd_kernel (solution/rmsnorm.py), add_rmsnorm_fwd_kernel (solution/rmsnorm.py), heads_rows_kernel (solution/unpad.py), lm_ce_kernel (solution/lmhead.py), nf4_dequant_kernel (solution/nf4.py), rope_pad_bwd_kernel (solution/unpad.py), rope_pad_fwd_kernel (solution/unpad.py); not launched in every solution run: _rotate_heads, rmsnorm_bwd_kernel, rmsnorm_fwd_kernel, rope_kernel; the example's kernels do not count, under any name: example_swiglu_fwd_kernel, example_swiglu_bwd_kernel
+
+478.2s	114	PASS  4. own kernels together take >= 5% of the training time                            12.6% of the training time (lowest of 2 runs, steps 3+)
+
+478.2s	115	PASS  5. same task and Soup outputs (steps, adapter, settings, tokens, metrics, rewind)  identical within tolerance
+
+478.2s	116	PASS  6. loss curve follows the base                                                     base_2: first step 0.00%, mean of all steps 0.01%; solution_1: first step 0.02%, mean of all steps 0.01%; solution_2: first step 0.02%, mean of all steps 0.01% (max 1% and 3%)
+
+478.2s	117	PASS  7. quality: eval loss at most 0.5% above the base                                  +0.000%
+
+478.2s	118	PASS  8. not worse than the base on time or memory (10% margin)                          time x0.639, memory x0.393 of the base
+
+478.2s	119	PASS  9. clean measurement (a T4, idle GPUs, one GPU, harness allocator, peaks agree)    clean
+
+478.2s	120	PASS  10. Soup regression tests with your patches                                        79 passed, 14 warnings in 0.83s
+
+478.2s	121	
+
+478.2s	122	ALL CHECKS PASSED
+
+478.2s	123	speedup 1.564x (counts as 1.564), memory base/solution 2.543x (counts as 2.543), eval loss vs base +0.000 %, all checks passed on this result: True
+
+478.2s	124	Speed and memory points depend on the best admitted team: 35 * ln(s) / ln(best s) and 30 * ln(m) / ln(best m).
+
+478.2s	125	{
+
+478.2s	126	  "snapshot_sha256": "bd48b8910d3cdbc261c76e723a43ce10b9e94cb4f36a5359b12e7e0603d7df7f",
+
+478.2s	127	  "summary": {
+
+478.2s	128	    "base": {
+
+478.2s	129	      "ok": true,
+
+478.2s	130	      "runs": 2,
+
+478.2s	131	      "wall_s": 81.83,
+
+478.2s	132	      "gpu_peak_mib": 14345,
+
+478.2s	133	      "train_loop_s": 55.5,
+
+478.2s	134	      "eval_loss": 2.04968
+
+478.2s	135	    },
+
+478.2s	136	    "solution": {
+
+478.2s	137	      "ok": true,
+
+478.2s	138	      "runs": 2,
+
+478.2s	139	      "wall_s": 52.32,
+
+478.2s	140	      "gpu_peak_mib": 5641,
+
+478.2s	141	      "train_loop_s": 29.66,
+
+478.2s	142	      "eval_loss": 2.04968
+
+478.2s	143	    },
+
+478.2s	144	    "ratios": {
+
+478.2s	145	      "speedup": 1.564,
+
+478.2s	146	      "memory_ratio": 2.543,
+
+478.2s	147	      "quality_delta_pct": 0.0
+
+478.2s	148	    }
+
+478.2s	149	  },
+
+478.2s	150	  "checks": {
+
+478.2s	151	    "result_sha256": "017aa14b371566d5f798b9587d9a7b803177012e6bbfa0486c5f679f40d9f3a6",
+
+478.2s	152	    "solution_sha256": "471325dcf47b53f93bdb61a0ef685313bdffc02ff22c9a63e37cf4b08a01efc4",
+
+478.2s	153	    "checks": [
+
+478.2s	154	      {
+
+478.2s	155	        "check": "1. every base and solution run finished",
+
+478.2s	156	        "ok": true,
+
+478.2s	157	        "detail": "2 base and 2 solution runs of 2 each"
+
+478.2s	158	      },
+
+478.2s	159	      {
+
+478.2s	160	        "check": "2. no ready-made kernel libraries",
+
+478.2s	161	        "ok": true,
+
+478.2s	162	        "detail": "loaded: none; imported in solution/: none; packages changed during the run: none"
+
+478.2s	163	      },
+
+478.2s	164	      {
+
+478.2s	165	        "check": "3. own @triton.jit kernels in solution/ run in training",
+
+478.2s	166	        "ok": true,
+
+478.2s	167	        "detail": "add_rmsnorm_bwd_kernel (solution/rmsnorm.py), add_rmsnorm_fwd_kernel (solution/rmsnorm.py), heads_rows_kernel (solution/unpad.py), lm_ce_kernel (solution/lmhead.py), nf4_dequant_kernel (solution/nf4.py), rope_pad_bwd_kernel (solution/unpad.py), rope_pad_fwd_kernel (solution/unpad.py); not launched in every solution run: _rotate_heads, rmsnorm_bwd_kernel, rmsnorm_fwd_kernel, rope_kernel; the example's kernels do not count, under any name: example_swiglu_fwd_kernel, example_swiglu_bwd_kernel"
+
+478.2s	168	      },
+
+478.2s	169	      {
+
+478.2s	170	        "check": "4. own kernels together take >= 5% of the training time",
+
+478.2s	171	        "ok": true,
+
+478.2s	172	        "detail": "12.6% of the training time (lowest of 2 runs, steps 3+)"
+
+478.2s	173	      },
+
+478.2s	174	      {
+
+478.2s	175	        "check": "5. same task and Soup outputs (steps, adapter, settings, tokens, metrics, rewind)",
+
+478.2s	176	        "ok": true,
+
+478.2s	177	        "detail": "identical within tolerance"
+
+478.2s	178	      },
+
+478.2s	179	      {
+
+478.2s	180	        "check": "6. loss curve follows the base",
+
+478.2s	181	        "ok": true,
+
+478.2s	182	        "detail": "base_2: first step 0.00%, mean of all steps 0.01%; solution_1: first step 0.02%, mean of all steps 0.01%; solution_2: first step 0.02%, mean of all steps 0.01% (max 1% and 3%)"
+
+478.2s	183	      },
+
+478.2s	184	      {
+
+478.2s	185	        "check": "7. quality: eval loss at most 0.5% above the base",
+
+478.2s	186	        "ok": true,
+
+478.2s	187	        "detail": "+0.000%"
+
+478.2s	188	      },
+
+478.2s	189	      {
+
+478.2s	190	        "check": "8. not worse than the base on time or memory (10% margin)",
+
+478.2s	191	        "ok": true,
+
+478.2s	192	        "detail": "time x0.639, memory x0.393 of the base"
+
+478.2s	193	      },
+
+478.2s	194	      {
+
+478.2s	195	        "check": "9. clean measurement (a T4, idle GPUs, one GPU, harness allocator, peaks agree)",
+
+478.2s	196	        "ok": true,
+
+478.2s	197	        "detail": "clean"
+
+478.2s	198	      },
+
+478.2s	199	      {
+
+478.2s	200	        "check": "10. Soup regression tests with your patches",
+
+478.2s	201	        "ok": true,
+
+478.2s	202	        "detail": "79 passed, 14 warnings in 0.83s"
+
+478.2s	203	      }
+
+478.2s	204	    ],
+
+478.2s	205	    "notes": []
+
+478.2s	206	  }
+
+478.2s	207	}
+
+480.6s	208	/usr/local/lib/python3.13/dist-packages/mistune.py:435: SyntaxWarning: invalid escape sequence '\|'
+
+480.6s	209	  cells[i][c] = re.sub('\\\\\|', '|', cell)
+
+480.8s	210	/usr/local/lib/python3.13/dist-packages/nbconvert/filters/filter_links.py:36: SyntaxWarning: invalid escape sequence '\_'
+
+480.8s	211	  text = re.sub(r'_', '\_', text) # Escape underscores in display text
+
+481.5s	212	[NbConvertApp] Converting notebook __notebook__.ipynb to notebook
+
+481.6s	213	[NbConvertApp] Writing 153977 bytes to __notebook__.ipynb
+
+484.1s	214	[NbConvertApp] Converting notebook __notebook__.ipynb to html
+
+484.6s	215	[NbConvertApp] Writing 446582 bytes to __results__.html

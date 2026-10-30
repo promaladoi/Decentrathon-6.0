@@ -1,93 +1,68 @@
 {
-  "kind": "independent_diagnostic_review_not_training_score",
-  "kaggle_smoke_version": 363836042,
-  "snapshot_sha256": "ddc7740aa180e81cbdafa886d4fa44c1698cd2f79ae1cc45e63dbd45bedb033b",
+  "kind": "independent_v15_diagnostic_review_not_training_score",
+  "kaggle_version": 363864828,
+  "snapshot_sha256": "60f69a0d2fc464c4163ea542b81fa9c020f6bf36e14d6764823c7e3ef3d2c227",
   "integrity": {
-    "zip_sha256": "ddc7740aa180e81cbdafa886d4fa44c1698cd2f79ae1cc45e63dbd45bedb033b",
-    "zip_matches_snapshot": true,
-    "manifest_snapshot_matches": true,
-    "manifest_file_count": 54,
-    "all_manifest_file_hashes_match_zip": true,
-    "embedded_notebook_snapshot_sha256": {
-      "smoke": "ddc7740aa180e81cbdafa886d4fa44c1698cd2f79ae1cc45e63dbd45bedb033b",
-      "full": "ddc7740aa180e81cbdafa886d4fa44c1698cd2f79ae1cc45e63dbd45bedb033b"
-    },
-    "both_notebooks_embed_identical_verified_zip": true,
-    "runtime_log_declares_snapshot": true,
-    "runtime_log_declares_tests": true,
-    "declared_runtime_source_hashes": {
-      "mlp": {
-        "swiglu.py": {
-          "declared_sha256": "249aeef5d691062e609b8445194165071c1f1690280131395a74fc38d216c346",
-          "zip_sha256": "249aeef5d691062e609b8445194165071c1f1690280131395a74fc38d216c346",
-          "matches": true
+    "archive": "work\\vladimir\\optimized-60f69a0d2fc4.zip",
+    "archive_sha256": "60f69a0d2fc464c4163ea542b81fa9c020f6bf36e14d6764823c7e3ef3d2c227",
+    "all_manifest_files_verified": 46,
+    "embedded_notebook_matches_zip": true,
+    "runtime_log_binds_snapshot_and_version": true,
+    "runtime_source_bindings": {
+      "dropout": {
+        "dropout.py": {
+          "sha256": "ae5ce3b85e03b50394cb025329743719bc32bcf4dc2097cc2053294a33d60392",
+          "matches_zip": true
         },
-        "nf4.py": {
-          "declared_sha256": "daaf608b76960072ca1cf89bc245dd0ac55ad588d49bd79ec33c387c7d0245fc",
-          "zip_sha256": "daaf608b76960072ca1cf89bc245dd0ac55ad588d49bd79ec33c387c7d0245fc",
-          "matches": true
-        },
-        "compressed_swiglu.py": {
-          "declared_sha256": "b0ca176bf3e815fa93d1664e1b852a79550ca227bcac9e15aa7f8d690a058742",
-          "zip_sha256": "b0ca176bf3e815fa93d1664e1b852a79550ca227bcac9e15aa7f8d690a058742",
-          "matches": true
-        },
-        "narrow_mlp.py": {
-          "declared_sha256": "567ddc16224e90010a30b9d4678c27e7036a61067d24218a1df354d7bcef0022",
-          "zip_sha256": "567ddc16224e90010a30b9d4678c27e7036a61067d24218a1df354d7bcef0022",
-          "matches": true
+        "benchmark_dropout.py": {
+          "sha256": "18cef0ab5452da12f499b8f7d43d5c1a7822b3bc9edcc332316ea9377d51ade3",
+          "matches_zip": true
         }
       },
-      "head": {
-        "frozen_head.py": {
-          "declared_sha256": "6e97bac58015a010c98e133fa148384f0793cd3ec951ef176537cad392d4135e",
-          "zip_sha256": "6e97bac58015a010c98e133fa148384f0793cd3ec951ef176537cad392d4135e",
-          "matches": true
+      "attention": {
+        "attention_rows.py": {
+          "sha256": "75bb1a69b713ce8ec4e1d598dc7ae767a0d2ef1ef800f60aae37359310cc5cea",
+          "matches_zip": true
         },
-        "benchmark_frozen_head.py": {
-          "declared_sha256": "74604ec84d0f11fb8982f7086213c13b211bd8273b420fd4af66c32fce422be2",
-          "zip_sha256": "74604ec84d0f11fb8982f7086213c13b211bd8273b420fd4af66c32fce422be2",
-          "matches": true
+        "test_attention_rows.py": {
+          "sha256": "316cbcd38e6c2782c18bcb44d0adaf52f8538cf9f64c7051c4e301d071ef21f1",
+          "matches_zip": true
         },
-        "vocab.py": {
-          "declared_sha256": "feffe6a066c83690de5b9974a3c172073d487055086e516ff46e1665b40c9486",
-          "zip_sha256": "feffe6a066c83690de5b9974a3c172073d487055086e516ff46e1665b40c9486",
-          "matches": true
+        "benchmark_attention_rows.py": {
+          "sha256": "f1ba4231d25d45e6f85c2a6ef071a33eb43157ee5beb750b7976bc886b8a57b4",
+          "matches_zip": true
+        },
+        "unpad.py": {
+          "sha256": "a49331ceb8585c55d2d336908667ac30821539da13c445d40ef78b0d19288ad0",
+          "matches_zip": true
         }
       }
     },
-    "all_declared_source_hashes_bind_zip": true,
-    "protected_parent_files_compared": 15,
-    "all_protected_files_unchanged_from_verified_parent": true,
-    "snapshot_head_install_disabled": true,
-    "snapshot_narrow_mlp_enabled": true
-  },
-  "environment": {
-    "device": "Tesla T4",
-    "torch": "2.11.0+cu128",
-    "triton": "3.6.0",
-    "bitsandbytes": "0.50.2"
+    "all_declared_source_hashes_match_immutable_zip": true,
+    "protected_files_compared": 15,
+    "protected_files_unchanged_from_verified_ddc": true,
+    "test_summary_lines": [
+      "125 passed, 14 warnings in 64.43s (0:01:04)",
+      "79 passed, 14 warnings in 0.96s"
+    ]
   },
   "raw_reports": {
-    "mlp": {
-      "path": "outputs/maxopt/mlp-diagnostic.json",
-      "sha256": "02dbe32f7dc65e195d97fc0a30e08f59d2ebd4c78e394727d16139b7d01645cf",
-      "bytes": 96646,
+    "dropout": {
+      "path": "outputs\\vladimir\\dropout-diagnostic.json",
+      "sha256": "ac617a4ac97873f4afd6cba968aafd284c51c41470525ad0b692b03e80b22067",
+      "bytes": 70702,
       "completed": true,
       "status": "completed_diagnostic_only"
     },
-    "head": {
-      "path": "outputs/maxopt/head-diagnostic.json",
-      "sha256": "e4e070caa7eb49e7069eaac69d0e281ccf6798a7387472464a25ea3e7ef38600",
-      "bytes": 40315,
+    "attention": {
+      "path": "outputs\\vladimir\\attention-diagnostic.json",
+      "sha256": "fa68dad8680523bec7382dab3e07f3da5ba904a0f0266262375c33f788e52c6b",
+      "bytes": 370184,
       "completed": true,
       "status": "completed_diagnostic_only"
     }
   },
-  "mlp": {
-    "quick_parity_cases": 6,
-    "quick_parity_all_bitwise_equal": true,
-    "main_case_output_and_input_gradient_dtype": "torch.float32",
+  "dropout": {
     "cases": [
       {
         "shape": [
@@ -95,70 +70,41 @@
           128,
           1536
         ],
-        "intermediate_size": 8960,
-        "status": "qualified_diagnostic_only",
-        "bitwise_parity": true,
-        "variants": {
-          "example": {
-            "cuda_event_median_ms": 5.94047999382019,
-            "wall_median_ms": 5.964802500017186,
-            "sample_count": 36,
-            "extra_allocated_peak_bytes": 95043584,
-            "allocated_start_bytes": 50929152,
-            "allocated_peak_bytes": 145972736,
-            "extra_peak_bytes_saved_vs_baseline": 0
-          },
-          "compressed": {
-            "cuda_event_median_ms": 6.156304121017456,
-            "wall_median_ms": 6.18354150000755,
-            "sample_count": 18,
-            "extra_allocated_peak_bytes": 113393664,
-            "allocated_start_bytes": 50929152,
-            "allocated_peak_bytes": 164322816,
-            "extra_peak_bytes_saved_vs_baseline": -18350080
-          },
-          "narrow": {
-            "cuda_event_median_ms": 4.771568059921265,
-            "wall_median_ms": 4.798249000003807,
-            "sample_count": 18,
-            "extra_allocated_peak_bytes": 59768832,
-            "allocated_start_bytes": 50929152,
-            "allocated_peak_bytes": 110697984,
-            "extra_peak_bytes_saved_vs_baseline": 35274752
-          }
+        "real_rows": 320,
+        "real_fraction": 0.625,
+        "exact_q_v_output_and_joined_gradient": true,
+        "exact_rng_and_following_draw": true,
+        "inputs_and_gradients_unchanged": true,
+        "cuda_event_median_ms": {
+          "reference": 0.6226079761981964,
+          "candidate": 0.758432000875473
         },
-        "paired_round_speedups_baseline_over_candidate": {
-          "compressed": {
-            "cuda_event": [
-              0.9698011457596477,
-              0.9535672717781056,
-              0.9672176580060142
-            ],
-            "wall": [
-              0.9687752552405273,
-              0.9532132713609527,
-              0.9675301380229275
-            ]
-          },
-          "narrow": {
-            "cuda_event": [
-              1.2139004877313992,
-              1.2541868039306983,
-              1.2938438498145604
-            ],
-            "wall": [
-              1.2155988179109938,
-              1.2540553506010013,
-              1.292062625972639
-            ]
-          }
+        "wall_median_ms": {
+          "reference": 0.6448310000166657,
+          "candidate": 0.7787855000174204
         },
-        "raw_sample_medians_and_counts_verified": true,
-        "three_rounds_balanced_ab_ba_verified": true,
-        "memory_starts_equal": true,
-        "all_result_releases_return_to_start": true,
-        "inputs_unchanged": true,
-        "labels_or_upstream_unchanged": true
+        "paired_round_speedups": {
+          "cuda_event": [
+            0.8592926432806152,
+            0.7969013563859005,
+            0.8442623748632272
+          ],
+          "wall": [
+            0.8680290792039618,
+            0.7995022029605339,
+            0.8492334109487343
+          ]
+        },
+        "extra_allocated_peak_bytes": {
+          "reference": 14155776,
+          "candidate": 9535488
+        },
+        "extra_peak_bytes_saved": 4620288,
+        "common_allocated_start_bytes": 11799552,
+        "all_results_released_back_to_start": true,
+        "all_raw_summaries_and_paired_ratios_recomputed": true,
+        "balanced_ab_ba_three_rounds": true,
+        "initial_selection": "original_cached_dense_path"
       },
       {
         "shape": [
@@ -166,187 +112,573 @@
           512,
           1536
         ],
-        "intermediate_size": 8960,
-        "status": "qualified_diagnostic_only",
-        "bitwise_parity": true,
-        "variants": {
-          "example": {
-            "cuda_event_median_ms": 20.009967803955078,
-            "wall_median_ms": 20.04016699999056,
-            "sample_count": 36,
-            "extra_allocated_peak_bytes": 379584512,
-            "allocated_start_bytes": 88677888,
-            "allocated_peak_bytes": 468262400,
-            "extra_peak_bytes_saved_vs_baseline": 0
-          },
-          "compressed": {
-            "cuda_event_median_ms": 20.028400421142578,
-            "wall_median_ms": 20.059172500026534,
-            "sample_count": 18,
-            "extra_allocated_peak_bytes": 365838336,
-            "allocated_start_bytes": 88677888,
-            "allocated_peak_bytes": 454516224,
-            "extra_peak_bytes_saved_vs_baseline": 13746176
-          },
-          "narrow": {
-            "cuda_event_median_ms": 16.696640014648438,
-            "wall_median_ms": 16.726051499972527,
-            "sample_count": 18,
-            "extra_allocated_peak_bytes": 196083712,
-            "allocated_start_bytes": 88677888,
-            "allocated_peak_bytes": 284761600,
-            "extra_peak_bytes_saved_vs_baseline": 183500800
-          }
+        "real_rows": 884,
+        "real_fraction": 0.431640625,
+        "exact_q_v_output_and_joined_gradient": true,
+        "exact_rng_and_following_draw": true,
+        "inputs_and_gradients_unchanged": true,
+        "cuda_event_median_ms": {
+          "reference": 1.3660160303115845,
+          "candidate": 0.7560479938983917
         },
-        "paired_round_speedups_baseline_over_candidate": {
-          "compressed": {
-            "cuda_event": [
-              0.9829244127320431,
-              0.9876708671772587,
-              0.9992180666726904
-            ],
-            "wall": [
-              0.9833126411707811,
-              0.9875112842932711,
-              0.999230312661995
-            ]
-          },
-          "narrow": {
-            "cuda_event": [
-              1.2214551951452655,
-              1.2377342654941108,
-              1.2287109245972667
-            ],
-            "wall": [
-              1.2206411660454322,
-              1.2373856119409434,
-              1.2283995291622056
-            ]
-          }
+        "wall_median_ms": {
+          "reference": 1.3885810000147103,
+          "candidate": 0.783817000012732
         },
-        "raw_sample_medians_and_counts_verified": true,
-        "three_rounds_balanced_ab_ba_verified": true,
-        "memory_starts_equal": true,
-        "all_result_releases_return_to_start": true,
-        "inputs_unchanged": true,
-        "labels_or_upstream_unchanged": true
-      }
-    ],
-    "decision": "Select narrow MLP for full unchanged-harness qualification. Both shapes have exact forward/input-gradient parity and every paired round improves CUDA-event and wall latency with lower extra allocated peak. Reject compressed-only variant in favor of narrow: slower in every paired round and weaker memory results."
-  },
-  "head": {
-    "all_logits_loss_and_input_gradient_bitwise_equal": true,
-    "logits_dtype": "torch.float16",
-    "loss_and_input_gradient_dtype": "torch.float32",
-    "cases": [
-      {
-        "shape": [
-          256,
-          1536
-        ],
-        "intermediate_size": null,
-        "status": "qualified_diagnostic_only",
-        "bitwise_parity": true,
-        "variants": {
-          "native": {
-            "cuda_event_median_ms": 14.494607925415039,
-            "wall_median_ms": 14.523750000023483,
-            "sample_count": 24,
-            "extra_allocated_peak_bytes": 623117312,
-            "allocated_start_bytes": 953684992,
-            "allocated_peak_bytes": 1576802304,
-            "extra_peak_bytes_saved_vs_baseline": 0
-          },
-          "recompute": {
-            "cuda_event_median_ms": 19.51755142211914,
-            "wall_median_ms": 19.550941999995075,
-            "sample_count": 24,
-            "extra_allocated_peak_bytes": 624690176,
-            "allocated_start_bytes": 953684992,
-            "allocated_peak_bytes": 1578375168,
-            "extra_peak_bytes_saved_vs_baseline": -1572864
-          }
+        "paired_round_speedups": {
+          "cuda_event": [
+            1.8139729751713212,
+            1.7710481436969985,
+            1.771356258537636
+          ],
+          "wall": [
+            1.793812660049198,
+            1.755103105280805,
+            1.7518150426975614
+          ]
         },
-        "paired_round_speedups_baseline_over_candidate": {
-          "recompute": {
-            "cuda_event": [
-              0.7301933809067109,
-              0.741461347136668,
-              0.7315473138158632
-            ],
-            "wall": [
-              0.7304855197110887,
-              0.7415863540925165,
-              0.7321776202018309
-            ]
-          }
+        "extra_allocated_peak_bytes": {
+          "reference": 51757056,
+          "candidate": 35100672
         },
-        "raw_sample_medians_and_counts_verified": true,
-        "three_rounds_balanced_ab_ba_verified": true,
-        "memory_starts_equal": true,
-        "all_result_releases_return_to_start": true,
-        "inputs_unchanged": true,
-        "labels_or_upstream_unchanged": true,
-        "vocabulary": 151936
+        "extra_peak_bytes_saved": 16656384,
+        "common_allocated_start_bytes": 32596992,
+        "all_results_released_back_to_start": true,
+        "all_raw_summaries_and_paired_ratios_recomputed": true,
+        "balanced_ab_ba_three_rounds": true,
+        "initial_selection": "candidate"
       },
       {
         "shape": [
-          2048,
+          4,
+          512,
           1536
         ],
-        "intermediate_size": null,
-        "status": "qualified_diagnostic_only",
-        "bitwise_parity": true,
-        "variants": {
-          "native": {
-            "cuda_event_median_ms": 92.56632232666016,
-            "wall_median_ms": 92.60521749999384,
-            "sample_count": 24,
-            "extra_allocated_peak_bytes": 1717699584,
-            "allocated_start_bytes": 975733760,
-            "allocated_peak_bytes": 2693433344,
-            "extra_peak_bytes_saved_vs_baseline": 0
-          },
-          "recompute": {
-            "cuda_event_median_ms": 96.0726547241211,
-            "wall_median_ms": 96.1282969999786,
-            "sample_count": 24,
-            "extra_allocated_peak_bytes": 1730282496,
-            "allocated_start_bytes": 975733760,
-            "allocated_peak_bytes": 2706016256,
-            "extra_peak_bytes_saved_vs_baseline": -12582912
-          }
+        "real_rows": 2048,
+        "real_fraction": 1.0,
+        "exact_q_v_output_and_joined_gradient": true,
+        "exact_rng_and_following_draw": true,
+        "inputs_and_gradients_unchanged": true,
+        "cuda_event_median_ms": {
+          "reference": 1.7768799662590027,
+          "candidate": 1.013040006160736
         },
-        "paired_round_speedups_baseline_over_candidate": {
-          "recompute": {
+        "wall_median_ms": {
+          "reference": 1.8030979999821284,
+          "candidate": 1.0384150000106729
+        },
+        "paired_round_speedups": {
+          "cuda_event": [
+            1.7303562641562849,
+            1.744528844799138,
+            1.756316129980266
+          ],
+          "wall": [
+            1.719162058958412,
+            1.7305983188563203,
+            1.7428348413096901
+          ]
+        },
+        "extra_allocated_peak_bytes": {
+          "reference": 66060288,
+          "candidate": 53477376
+        },
+        "extra_peak_bytes_saved": 12582912,
+        "common_allocated_start_bytes": 75515904,
+        "all_results_released_back_to_start": true,
+        "all_raw_summaries_and_paired_ratios_recomputed": true,
+        "balanced_ab_ba_three_rounds": true,
+        "initial_selection": "candidate"
+      }
+    ],
+    "decision": "Qualify integration only at the measured large full shape initially; keep the cached dense reference below it.",
+    "initial_threshold_full_padded_elements": 3145728,
+    "threshold_expression": "batch * seq_len * hidden >= 3145728, restricted to fixed batch=4, hidden=1536, seq_len<=512; equivalently seq_len==512",
+    "reason": "S128 is slower in every paired round despite less allocated memory. Both measured S512 lengths patterns are faster in every paired round with lower extra allocated peaks. Exact output, gradient and RNG continuation all passed.",
+    "unmeasured_thresholds": "No S256 dropout result exists. Do not infer or advertise a S256 crossover.",
+    "remaining": "Apply threshold integration, test actual LoRA/dropout ordering and unchanged public contracts, then run the full unchanged harness before claiming a training benefit."
+  },
+  "attention": {
+    "cases": [
+      {
+        "lengths": [
+          512,
+          128,
+          96,
+          64
+        ],
+        "padded_sequence": 512,
+        "real_tokens": 800,
+        "current_backend": "efficient",
+        "equalheads_backend": "efficient",
+        "cuda_event_median_ms": {
+          "current": 2.948192000389099,
+          "equalheads": 2.9982399940490723,
+          "rows": 2.6310399770736694,
+          "packed": 2.291216015815735,
+          "causal_bias": 2.214448094367981
+        },
+        "wall_median_ms": {
+          "current": 2.9853915000046527,
+          "equalheads": 3.039054499993199,
+          "rows": 2.6635019999901033,
+          "packed": 2.323409499979334,
+          "causal_bias": 2.247715500004688
+        },
+        "paired_round_speedups": {
+          "equalheads": {
             "cuda_event": [
-              0.9605442985052044,
-              0.959839719440398,
-              0.9646558271222463
+              0.9942863233875482,
+              0.9964400557068398,
+              0.9907867683468315
             ],
             "wall": [
-              0.9606771944360298,
-              0.9598201828378681,
-              0.9645382602828666
+              0.9955787420812299,
+              0.9986686374926474,
+              0.9884751946312704
+            ]
+          },
+          "rows": {
+            "cuda_event": [
+              1.1134685381274698,
+              1.145113756623135,
+              1.1167972872548513
+            ],
+            "wall": [
+              1.113504362283145,
+              1.144337154512489,
+              1.1138083564266386
+            ]
+          },
+          "packed": {
+            "cuda_event": [
+              1.2702143004029014,
+              1.2571484324488527,
+              1.2374379948115393
+            ],
+            "wall": [
+              1.2685406463995723,
+              1.2547082958960332,
+              1.2341669326829496
+            ]
+          },
+          "causal_bias": {
+            "cuda_event": [
+              1.3099330147976986,
+              1.3093007037528874,
+              1.2760317845975626
+            ],
+            "wall": [
+              1.3054582763549316,
+              1.3044199019394909,
+              1.272952312674716
             ]
           }
         },
-        "raw_sample_medians_and_counts_verified": true,
-        "three_rounds_balanced_ab_ba_verified": true,
-        "memory_starts_equal": true,
-        "all_result_releases_return_to_start": true,
+        "extra_allocated_peak_bytes": {
+          "current": 55089152,
+          "equalheads": 55089152,
+          "rows": 33965568,
+          "packed": 31653888,
+          "causal_bias": 52996096
+        },
+        "parity": {
+          "equalheads": {
+            "passed_reported_tolerance": true,
+            "output_bitwise_equal": true,
+            "output_relative_l2": 0.0,
+            "maximum_gradient_relative_l2": 1.460746830161952e-06,
+            "all_gradients_bitwise_equal": false
+          },
+          "rows": {
+            "passed_reported_tolerance": true,
+            "output_bitwise_equal": true,
+            "output_relative_l2": 0.0,
+            "maximum_gradient_relative_l2": 4.5699539441557135e-06,
+            "all_gradients_bitwise_equal": false
+          },
+          "packed": {
+            "passed_reported_tolerance": true,
+            "output_bitwise_equal": true,
+            "output_relative_l2": 0.0,
+            "maximum_gradient_relative_l2": 4.623573659046087e-06,
+            "all_gradients_bitwise_equal": false
+          },
+          "causal_bias": {
+            "passed_reported_tolerance": true,
+            "output_bitwise_equal": true,
+            "output_relative_l2": 0.0,
+            "maximum_gradient_relative_l2": 4.5370143197942525e-06,
+            "all_gradients_bitwise_equal": false
+          }
+        },
         "inputs_unchanged": true,
-        "labels_or_upstream_unchanged": true,
-        "vocabulary": 151936
+        "all_results_released_back_to_start": true,
+        "all_raw_summaries_and_paired_ratios_recomputed": true,
+        "balanced_ab_ba_three_rounds": true
+      },
+      {
+        "lengths": [
+          512,
+          512,
+          512,
+          512
+        ],
+        "padded_sequence": 512,
+        "real_tokens": 2048,
+        "current_backend": "math",
+        "equalheads_backend": "efficient",
+        "cuda_event_median_ms": {
+          "current": 9.291455745697021,
+          "equalheads": 2.4213919639587402,
+          "rows": 3.7662720680236816,
+          "packed": 3.4476959705352783,
+          "causal_bias": 2.467743992805481
+        },
+        "wall_median_ms": {
+          "current": 9.321751999976868,
+          "equalheads": 2.4487539999995533,
+          "rows": 3.7941129999978784,
+          "packed": 3.4779404999767394,
+          "causal_bias": 2.4954929999978503
+        },
+        "paired_round_speedups": {
+          "equalheads": {
+            "cuda_event": [
+              3.885104921144823,
+              3.796905058380541,
+              3.828448924038753
+            ],
+            "wall": [
+              3.855631875744213,
+              3.7690473703514478,
+              3.7960945670420196
+            ]
+          },
+          "rows": {
+            "cuda_event": [
+              2.421688037953084,
+              2.433266274610753,
+              2.454722137509842
+            ],
+            "wall": [
+              2.410097624159122,
+              2.4234338860578726,
+              2.445113268615289
+            ]
+          },
+          "packed": {
+            "cuda_event": [
+              2.68130965060919,
+              2.676764412889249,
+              2.69850593189822
+            ],
+            "wall": [
+              2.6678963841911187,
+              2.6625299174028836,
+              2.686493978383968
+            ]
+          },
+          "causal_bias": {
+            "cuda_event": [
+              3.80551648797153,
+              3.743517261725598,
+              3.7976610834801026
+            ],
+            "wall": [
+              3.776832215854478,
+              3.715638013699596,
+              3.764771694860195
+            ]
+          }
+        },
+        "extra_allocated_peak_bytes": {
+          "current": 245366784,
+          "equalheads": 56825856,
+          "rows": 40994304,
+          "packed": 56825856,
+          "causal_bias": 56825856
+        },
+        "parity": {
+          "equalheads": {
+            "passed_reported_tolerance": true,
+            "output_bitwise_equal": false,
+            "output_relative_l2": 0.00024204509099945426,
+            "maximum_gradient_relative_l2": 0.00042300665518268943,
+            "all_gradients_bitwise_equal": false
+          },
+          "rows": {
+            "passed_reported_tolerance": true,
+            "output_bitwise_equal": false,
+            "output_relative_l2": 0.00024204509099945426,
+            "maximum_gradient_relative_l2": 0.00042300665518268943,
+            "all_gradients_bitwise_equal": false
+          },
+          "packed": {
+            "passed_reported_tolerance": true,
+            "output_bitwise_equal": false,
+            "output_relative_l2": 0.00024204509099945426,
+            "maximum_gradient_relative_l2": 0.00042300665518268943,
+            "all_gradients_bitwise_equal": false
+          },
+          "causal_bias": {
+            "passed_reported_tolerance": true,
+            "output_bitwise_equal": false,
+            "output_relative_l2": 0.00024204509099945426,
+            "maximum_gradient_relative_l2": 0.00042300665518268943,
+            "all_gradients_bitwise_equal": false
+          }
+        },
+        "inputs_unchanged": true,
+        "all_results_released_back_to_start": true,
+        "all_raw_summaries_and_paired_ratios_recomputed": true,
+        "balanced_ab_ba_three_rounds": true
+      },
+      {
+        "lengths": [
+          256,
+          192,
+          128,
+          96
+        ],
+        "padded_sequence": 256,
+        "real_tokens": 672,
+        "current_backend": "efficient",
+        "equalheads_backend": "efficient",
+        "cuda_event_median_ms": {
+          "current": 1.2459039688110352,
+          "equalheads": 1.2183520197868347,
+          "rows": 1.8872320055961609,
+          "packed": 1.5789599418640137,
+          "causal_bias": 1.211471974849701
+        },
+        "wall_median_ms": {
+          "current": 1.2729219999982888,
+          "equalheads": 1.244907000028661,
+          "rows": 1.9141049999973347,
+          "packed": 1.6046689999882346,
+          "causal_bias": 1.2432945000000473
+        },
+        "paired_round_speedups": {
+          "equalheads": {
+            "cuda_event": [
+              0.9923603370061408,
+              1.0160556627876376,
+              0.9791170293845864
+            ],
+            "wall": [
+              0.99379323227475,
+              1.018951792825702,
+              0.985151952157187
+            ]
+          },
+          "rows": {
+            "cuda_event": [
+              0.651580237295034,
+              0.6622337128524783,
+              0.7175240840246584
+            ],
+            "wall": [
+              0.6568389774128474,
+              0.6655256626037012,
+              0.7274443817531766
+            ]
+          },
+          "packed": {
+            "cuda_event": [
+              0.7787727669530915,
+              0.7938677349933678,
+              0.7858453288112276
+            ],
+            "wall": [
+              0.781203569370841,
+              0.7962739164506702,
+              0.791052755049947
+            ]
+          },
+          "causal_bias": {
+            "cuda_event": [
+              1.0475988315704854,
+              1.015818596488697,
+              1.031083670585849
+            ],
+            "wall": [
+              1.0479126375491794,
+              1.0125621136681326,
+              1.0264515035133064
+            ]
+          }
+        },
+        "extra_allocated_peak_bytes": {
+          "current": 27855872,
+          "equalheads": 27855872,
+          "rows": 17818624,
+          "packed": 20826624,
+          "causal_bias": 27333632
+        },
+        "parity": {
+          "equalheads": {
+            "passed_reported_tolerance": true,
+            "output_bitwise_equal": true,
+            "output_relative_l2": 0.0,
+            "maximum_gradient_relative_l2": 2.1305236259649973e-06,
+            "all_gradients_bitwise_equal": false
+          },
+          "rows": {
+            "passed_reported_tolerance": true,
+            "output_bitwise_equal": true,
+            "output_relative_l2": 0.0,
+            "maximum_gradient_relative_l2": 4.602582521329168e-06,
+            "all_gradients_bitwise_equal": false
+          },
+          "packed": {
+            "passed_reported_tolerance": true,
+            "output_bitwise_equal": true,
+            "output_relative_l2": 0.0,
+            "maximum_gradient_relative_l2": 3.912718057108577e-06,
+            "all_gradients_bitwise_equal": false
+          },
+          "causal_bias": {
+            "passed_reported_tolerance": true,
+            "output_bitwise_equal": true,
+            "output_relative_l2": 0.0,
+            "maximum_gradient_relative_l2": 4.544599505607039e-06,
+            "all_gradients_bitwise_equal": false
+          }
+        },
+        "inputs_unchanged": true,
+        "all_results_released_back_to_start": true,
+        "all_raw_summaries_and_paired_ratios_recomputed": true,
+        "balanced_ab_ba_three_rounds": true
+      },
+      {
+        "lengths": [
+          128,
+          64,
+          32,
+          16
+        ],
+        "padded_sequence": 128,
+        "real_tokens": 240,
+        "current_backend": "efficient",
+        "equalheads_backend": "efficient",
+        "cuda_event_median_ms": {
+          "current": 0.8744959831237793,
+          "equalheads": 0.8611840009689331,
+          "rows": 1.7262399792671204,
+          "packed": 1.5371679663658142,
+          "causal_bias": 0.9319999814033508
+        },
+        "wall_median_ms": {
+          "current": 0.8993189999557671,
+          "equalheads": 0.8908509999798753,
+          "rows": 1.7538024999907975,
+          "packed": 1.5683310000156325,
+          "causal_bias": 0.9573704999752408
+        },
+        "paired_round_speedups": {
+          "equalheads": {
+            "cuda_event": [
+              1.0307402582955696,
+              1.007903762491955,
+              0.9565270850987433
+            ],
+            "wall": [
+              1.030127975453278,
+              1.0070095990190504,
+              0.9563069440542503
+            ]
+          },
+          "rows": {
+            "cuda_event": [
+              0.5121438801507551,
+              0.5254417994872448,
+              0.50581813225343
+            ],
+            "wall": [
+              0.51933145890159,
+              0.5336675068524557,
+              0.5121724129700347
+            ]
+          },
+          "packed": {
+            "cuda_event": [
+              0.5744763220035107,
+              0.5793047933232524,
+              0.5969456748700854
+            ],
+            "wall": [
+              0.5794585881437944,
+              0.5870750017213457,
+              0.6025198215040017
+            ]
+          },
+          "causal_bias": {
+            "cuda_event": [
+              0.952307079475673,
+              0.919642575122486,
+              0.9745217755994124
+            ],
+            "wall": [
+              0.9522469806010061,
+              0.9173551153400317,
+              0.975325195764953
+            ]
+          }
+        },
+        "extra_allocated_peak_bytes": {
+          "current": 13501952,
+          "equalheads": 13501952,
+          "rows": 8614400,
+          "packed": 8344576,
+          "causal_bias": 13371904
+        },
+        "parity": {
+          "equalheads": {
+            "passed_reported_tolerance": true,
+            "output_bitwise_equal": true,
+            "output_relative_l2": 0.0,
+            "maximum_gradient_relative_l2": 4.786692215930088e-07,
+            "all_gradients_bitwise_equal": false
+          },
+          "rows": {
+            "passed_reported_tolerance": true,
+            "output_bitwise_equal": true,
+            "output_relative_l2": 0.0,
+            "maximum_gradient_relative_l2": 5.950445256530656e-07,
+            "all_gradients_bitwise_equal": false
+          },
+          "packed": {
+            "passed_reported_tolerance": true,
+            "output_bitwise_equal": true,
+            "output_relative_l2": 0.0,
+            "maximum_gradient_relative_l2": 4.563048037198314e-07,
+            "all_gradients_bitwise_equal": false
+          },
+          "causal_bias": {
+            "passed_reported_tolerance": true,
+            "output_bitwise_equal": true,
+            "output_relative_l2": 0.0,
+            "maximum_gradient_relative_l2": 4.786692215930088e-07,
+            "all_gradients_bitwise_equal": false
+          }
+        },
+        "inputs_unchanged": true,
+        "all_results_released_back_to_start": true,
+        "all_raw_summaries_and_paired_ratios_recomputed": true,
+        "balanced_ab_ba_three_rounds": true
       }
     ],
-    "decision": "Keep frozen-head recomputation disabled. It is slower in every paired round and has larger extra allocated peaks at both tested sizes despite exact numerical parity."
+    "numerical_scope": "Every variant passes the diagnostic relative-L2 thresholds; gradients are generally not bitwise equal. The all-full case changes backend from native math GQA to efficient equal-head attention.",
+    "decision": "Packed/native attention is promising at S512. Current packed diagnostic loses at S256 and S128, so universal promotion is unsupported. Integrated direct-pack code requires separate correctness and performance qualification.",
+    "preparation_excluded": "length metadata, masks, cumulative int32 boundaries and explicit K/V repeats prepared once outside timing, as once-per-batch integration would do",
+    "gather_limit": "all variants use native cat/slice real-token output; padded baseline training uses its own one-launch gather instead; packed includes three input gathers not needed by future fused-pack integration",
+    "aggregate_caution": "Current medians pool all four candidate comparisons; use the recomputed candidate-specific paired-round ratios for comparisons."
   },
   "limitations": [
-    "Seeded random diagnostic weights and isolated operations; no whole-training speed or memory claim.",
-    "Per-call PyTorch allocated peaks are not official NVML training peaks.",
-    "MLP aggregate example medians pool both candidate comparisons; paired-round ratios provide the balanced candidate-specific evidence.",
-    "The MLP runtime report declares hashes for its four kernel/candidate inputs, not its benchmark helper. The helper is bound through the verified embedded notebook ZIP and snapshot log.",
-    "Full ddc candidate qualification is pending; no submission promotion or score inferred."
+    "Isolated diagnostics do not establish whole-training time, NVML peak, quality or rule-check admission.",
+    "All allocation measurements are extra PyTorch allocated bytes for one call, not reserved/NVML peaks.",
+    "Future fused direct-pack code omits gathers/scatters present here but also changes inputs and integration lifetimes; its result cannot be inferred by subtracting synthetic costs.",
+    "No source files were edited during this review."
   ]
 }

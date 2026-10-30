@@ -1,0 +1,816 @@
+{
+  "kind": "independent_v16_packed_and_dropout_diagnostic_review_not_training_score",
+  "kaggle_version": 363875832,
+  "snapshot_sha256": "4a0a2af0d7fb922f6bcd1922de8e6d8923314dbcae584097b9b22753eac09dbd",
+  "final_snapshot_sha256": "1916a1eab83d5ad80877937c6dc1203b63c10e7a151a64d49ca9beb89401403c",
+  "integrity": {
+    "manifest_files_verified": 49,
+    "notebook_embedded_zip_identical": true,
+    "runtime_log_binds_version_and_snapshot": true,
+    "all_runtime_declared_source_hashes_match_zip": true,
+    "protected_files_byte_identical_to_verified_reference": 15,
+    "final_solution_identical_to_4c45_snapshot": true,
+    "solution_changes_since_v16": [
+      "solution/test_dropout_integration.py",
+      "solution/unpad.py"
+    ],
+    "changes_exactly_dropout_threshold_512_to_384_and_new_dispatch_test": true,
+    "v16_unit_tests": [
+      "180 passed, 14 warnings in 63.25s (0:01:03)",
+      "180 passed, 14 warnings in 63.25s (0:01:03)",
+      "79 passed, 14 warnings in 0.93s",
+      "79 passed, 14 warnings in 0.93s"
+    ]
+  },
+  "raw_reports": {
+    "dropout": {
+      "file": "dropout-expanded-diagnostic.json",
+      "sha256": "3dbdaa687f83bdfd945d3f72ee5b18dde59c000eaa76e7d0e2ac88798555e360",
+      "bytes": 117002
+    },
+    "packed": {
+      "file": "packed-diagnostic.json",
+      "sha256": "dba99f3c385b7e3ac9a501403387736f374f3d65b04f3187cdb9154ff6087bd4",
+      "bytes": 86997
+    }
+  },
+  "dropout": {
+    "cases": [
+      {
+        "shape": [
+          4,
+          128,
+          1536
+        ],
+        "lengths": [
+          128,
+          96,
+          64,
+          32
+        ],
+        "real_rows": 320,
+        "bitwise_output_joined_gradient_and_rng_equal": true,
+        "latency_medians_ms": {
+          "cuda_event": {
+            "reference": 0.6463519930839539,
+            "candidate": 0.805184006690979
+          },
+          "wall": {
+            "reference": 0.6706515000018953,
+            "candidate": 0.8283850000054827
+          }
+        },
+        "paired_round_speedups": {
+          "cuda_event": [
+            0.8741829072093235,
+            0.8060926472232559,
+            0.785240434015928
+          ],
+          "wall": [
+            0.8675186213262687,
+            0.8054871793148787,
+            0.7905336502640582
+          ]
+        },
+        "extra_allocated_peak_bytes": {
+          "reference": 14155776,
+          "candidate": 9535488
+        },
+        "samples_per_variant": 42,
+        "selected": false
+      },
+      {
+        "shape": [
+          4,
+          256,
+          1536
+        ],
+        "lengths": [
+          256,
+          192,
+          128,
+          96
+        ],
+        "real_rows": 672,
+        "bitwise_output_joined_gradient_and_rng_equal": true,
+        "latency_medians_ms": {
+          "cuda_event": {
+            "reference": 0.8360479772090912,
+            "candidate": 0.7619040012359619
+          },
+          "wall": {
+            "reference": 0.8580324999911682,
+            "candidate": 0.7836695000094096
+          }
+        },
+        "paired_round_speedups": {
+          "cuda_event": [
+            1.068765714060236,
+            1.091154902051036,
+            1.1295368026365837
+          ],
+          "wall": [
+            1.0668856132604314,
+            1.0894138593139353,
+            1.1244505038082304
+          ]
+        },
+        "extra_allocated_peak_bytes": {
+          "reference": 28704768,
+          "candidate": 19316736
+        },
+        "samples_per_variant": 42,
+        "selected": false
+      },
+      {
+        "shape": [
+          4,
+          384,
+          1536
+        ],
+        "lengths": [
+          384,
+          192,
+          128,
+          64
+        ],
+        "real_rows": 768,
+        "bitwise_output_joined_gradient_and_rng_equal": true,
+        "latency_medians_ms": {
+          "cuda_event": {
+            "reference": 1.0896959900856018,
+            "candidate": 0.794624000787735
+          },
+          "wall": {
+            "reference": 1.1127299999600382,
+            "candidate": 0.8175989999870126
+          }
+        },
+        "paired_round_speedups": {
+          "cuda_event": [
+            1.3827445514677577,
+            1.357680149070481,
+            1.3557779343767
+          ],
+          "wall": [
+            1.372817868842083,
+            1.3534707811658122,
+            1.3484683566161844
+          ]
+        },
+        "extra_allocated_peak_bytes": {
+          "reference": 40108032,
+          "candidate": 27131904
+        },
+        "samples_per_variant": 42,
+        "selected": true
+      },
+      {
+        "shape": [
+          4,
+          512,
+          1536
+        ],
+        "lengths": [
+          512,
+          250,
+          100,
+          22
+        ],
+        "real_rows": 884,
+        "bitwise_output_joined_gradient_and_rng_equal": true,
+        "latency_medians_ms": {
+          "cuda_event": {
+            "reference": 1.3666239976882935,
+            "candidate": 0.7703520059585571
+          },
+          "wall": {
+            "reference": 1.3904340000010507,
+            "candidate": 0.7917969999766683
+          }
+        },
+        "paired_round_speedups": {
+          "cuda_event": [
+            1.7806851397564696,
+            1.873445810472517,
+            1.7225876774693456
+          ],
+          "wall": [
+            1.7532623565504593,
+            1.8295324210476143,
+            1.7023425711886118
+          ]
+        },
+        "extra_allocated_peak_bytes": {
+          "reference": 51757056,
+          "candidate": 35100672
+        },
+        "samples_per_variant": 42,
+        "selected": true
+      },
+      {
+        "shape": [
+          4,
+          512,
+          1536
+        ],
+        "lengths": [
+          512,
+          512,
+          512,
+          512
+        ],
+        "real_rows": 2048,
+        "bitwise_output_joined_gradient_and_rng_equal": true,
+        "latency_medians_ms": {
+          "cuda_event": {
+            "reference": 1.8431040048599243,
+            "candidate": 1.0198879837989807
+          },
+          "wall": {
+            "reference": 1.865655000017341,
+            "candidate": 1.043933999994806
+          }
+        },
+        "paired_round_speedups": {
+          "cuda_event": [
+            1.8007617195541428,
+            1.8080455117125735,
+            1.8049974167301706
+          ],
+          "wall": [
+            1.7777824869181456,
+            1.7890785908243387,
+            1.7898329289678443
+          ]
+        },
+        "extra_allocated_peak_bytes": {
+          "reference": 66060288,
+          "candidate": 53477376
+        },
+        "samples_per_variant": 42,
+        "selected": true
+      }
+    ],
+    "decision": {
+      "minimum_padded_elements": 2359296,
+      "reason": "S128 regressed. S256 gives a modest aggregate gain with candidate spread; S384 and S512 are faster in every paired round. Keep the guarded real-row path at padded size >=4*384*1536.",
+      "s256_cuda_round_speedups": [
+        1.068765714060236,
+        1.091154902051036,
+        1.1295368026365837
+      ],
+      "s384_cuda_round_speedups": [
+        1.3827445514677577,
+        1.357680149070481,
+        1.3557779343767
+      ],
+      "selection_uses_actual_tensor_size_not_training_step_or_measurement_detection": true
+    }
+  },
+  "packed": {
+    "cases": [
+      {
+        "lengths": [
+          512,
+          128,
+          96,
+          64
+        ],
+        "real_tokens": 800,
+        "rope_mapping_bitwise_equal": true,
+        "output_and_gradient_parity": {
+          "output": {
+            "dtype": "torch.float16",
+            "reference_dtype": "torch.float16",
+            "shape": [
+              800,
+              1536
+            ],
+            "all_finite": true,
+            "relative_l2": 0.0,
+            "max_abs_difference": 0.0
+          },
+          "gradients": {
+            "q": {
+              "dtype": "torch.float16",
+              "reference_dtype": "torch.float16",
+              "shape": [
+                800,
+                1536
+              ],
+              "all_finite": true,
+              "relative_l2": 5.075845365354326e-06,
+              "max_abs_difference": 7.62939453125e-06
+            },
+            "lq": {
+              "dtype": "torch.float16",
+              "reference_dtype": "torch.float16",
+              "shape": [
+                800,
+                1536
+              ],
+              "all_finite": true,
+              "relative_l2": 5.075845365354326e-06,
+              "max_abs_difference": 7.62939453125e-06
+            },
+            "k": {
+              "dtype": "torch.float16",
+              "reference_dtype": "torch.float16",
+              "shape": [
+                800,
+                256
+              ],
+              "all_finite": true,
+              "relative_l2": 5.684872121491935e-06,
+              "max_abs_difference": 7.62939453125e-06
+            },
+            "v": {
+              "dtype": "torch.float16",
+              "reference_dtype": "torch.float16",
+              "shape": [
+                800,
+                256
+              ],
+              "all_finite": true,
+              "relative_l2": 5.4790211834188085e-06,
+              "max_abs_difference": 0.000244140625
+            },
+            "lv": {
+              "dtype": "torch.float16",
+              "reference_dtype": "torch.float16",
+              "shape": [
+                800,
+                256
+              ],
+              "all_finite": true,
+              "relative_l2": 5.4790211834188085e-06,
+              "max_abs_difference": 0.000244140625
+            }
+          },
+          "passed": true
+        },
+        "latency_medians_ms": {
+          "cuda_event": {
+            "original": 3.494096040725708,
+            "packed": 1.015712022781372
+          },
+          "wall": {
+            "original": 3.5253585000418752,
+            "packed": 1.056575999996312
+          }
+        },
+        "paired_round_speedups": {
+          "cuda_event": [
+            3.494309440498875,
+            3.561066854650797,
+            3.376474145994841
+          ],
+          "wall": [
+            3.4287986502507293,
+            3.4682224756369626,
+            3.3100490414855126
+          ]
+        },
+        "extra_allocated_peak_bytes": {
+          "original": 73963520,
+          "packed": 29928960
+        },
+        "samples_per_variant": 24,
+        "rng_and_inputs_unchanged": true,
+        "original_backend": {
+          "choice": 2,
+          "name": "efficient",
+          "q_shape": [
+            4,
+            12,
+            512,
+            128
+          ],
+          "k_shape": [
+            4,
+            12,
+            512,
+            128
+          ],
+          "mask_shape": [
+            4,
+            1,
+            512,
+            512
+          ]
+        },
+        "candidate_backend": "direct_native_efficient_Cutlass_varlen"
+      },
+      {
+        "lengths": [
+          512,
+          512,
+          512,
+          512
+        ],
+        "real_tokens": 2048,
+        "rope_mapping_bitwise_equal": true,
+        "output_and_gradient_parity": {
+          "output": {
+            "dtype": "torch.float16",
+            "reference_dtype": "torch.float16",
+            "shape": [
+              2048,
+              1536
+            ],
+            "all_finite": true,
+            "relative_l2": 0.0002402501559117809,
+            "max_abs_difference": 0.000244140625
+          },
+          "gradients": {
+            "q": {
+              "dtype": "torch.float16",
+              "reference_dtype": "torch.float16",
+              "shape": [
+                2048,
+                1536
+              ],
+              "all_finite": true,
+              "relative_l2": 0.0004340656741987914,
+              "max_abs_difference": 6.103515625e-05
+            },
+            "lq": {
+              "dtype": "torch.float16",
+              "reference_dtype": "torch.float16",
+              "shape": [
+                2048,
+                1536
+              ],
+              "all_finite": true,
+              "relative_l2": 0.0004340656741987914,
+              "max_abs_difference": 6.103515625e-05
+            },
+            "k": {
+              "dtype": "torch.float16",
+              "reference_dtype": "torch.float16",
+              "shape": [
+                2048,
+                256
+              ],
+              "all_finite": true,
+              "relative_l2": 0.0005004699341952801,
+              "max_abs_difference": 0.000244140625
+            },
+            "v": {
+              "dtype": "torch.float16",
+              "reference_dtype": "torch.float16",
+              "shape": [
+                2048,
+                256
+              ],
+              "all_finite": true,
+              "relative_l2": 0.0003954230051022023,
+              "max_abs_difference": 0.0078125
+            },
+            "lv": {
+              "dtype": "torch.float16",
+              "reference_dtype": "torch.float16",
+              "shape": [
+                2048,
+                256
+              ],
+              "all_finite": true,
+              "relative_l2": 0.0003954230051022023,
+              "max_abs_difference": 0.0078125
+            }
+          },
+          "passed": true
+        },
+        "latency_medians_ms": {
+          "cuda_event": {
+            "original": 9.369423866271973,
+            "packed": 2.2780799865722656
+          },
+          "wall": {
+            "original": 9.402909500010992,
+            "packed": 2.3072529999978997
+          }
+        },
+        "paired_round_speedups": {
+          "cuda_event": [
+            4.150524632428796,
+            4.051523610153296,
+            4.119070131112891
+          ],
+          "wall": [
+            4.108742395910522,
+            4.017196170791197,
+            4.0739295453272435
+          ]
+        },
+        "extra_allocated_peak_bytes": {
+          "original": 245366784,
+          "packed": 56825856
+        },
+        "samples_per_variant": 24,
+        "rng_and_inputs_unchanged": true,
+        "original_backend": {
+          "choice": 0,
+          "name": "math",
+          "q_shape": [
+            4,
+            12,
+            512,
+            128
+          ],
+          "k_shape": [
+            4,
+            2,
+            512,
+            128
+          ],
+          "mask_shape": null
+        },
+        "candidate_backend": "direct_native_efficient_Cutlass_varlen"
+      },
+      {
+        "lengths": [
+          256,
+          192,
+          128,
+          96
+        ],
+        "real_tokens": 672,
+        "rope_mapping_bitwise_equal": true,
+        "output_and_gradient_parity": {
+          "output": {
+            "dtype": "torch.float16",
+            "reference_dtype": "torch.float16",
+            "shape": [
+              672,
+              1536
+            ],
+            "all_finite": true,
+            "relative_l2": 0.0,
+            "max_abs_difference": 0.0
+          },
+          "gradients": {
+            "q": {
+              "dtype": "torch.float16",
+              "reference_dtype": "torch.float16",
+              "shape": [
+                672,
+                1536
+              ],
+              "all_finite": true,
+              "relative_l2": 3.306633288957528e-06,
+              "max_abs_difference": 7.62939453125e-06
+            },
+            "lq": {
+              "dtype": "torch.float16",
+              "reference_dtype": "torch.float16",
+              "shape": [
+                672,
+                1536
+              ],
+              "all_finite": true,
+              "relative_l2": 3.306633288957528e-06,
+              "max_abs_difference": 7.62939453125e-06
+            },
+            "k": {
+              "dtype": "torch.float16",
+              "reference_dtype": "torch.float16",
+              "shape": [
+                672,
+                256
+              ],
+              "all_finite": true,
+              "relative_l2": 4.667910616262816e-06,
+              "max_abs_difference": 7.62939453125e-06
+            },
+            "v": {
+              "dtype": "torch.float16",
+              "reference_dtype": "torch.float16",
+              "shape": [
+                672,
+                256
+              ],
+              "all_finite": true,
+              "relative_l2": 2.4110713638947345e-06,
+              "max_abs_difference": 0.0001220703125
+            },
+            "lv": {
+              "dtype": "torch.float16",
+              "reference_dtype": "torch.float16",
+              "shape": [
+                672,
+                256
+              ],
+              "all_finite": true,
+              "relative_l2": 2.4110713638947345e-06,
+              "max_abs_difference": 0.0001220703125
+            }
+          },
+          "passed": true
+        },
+        "latency_medians_ms": {
+          "cuda_event": {
+            "original": 1.2728319764137268,
+            "packed": 0.7960000038146973
+          },
+          "wall": {
+            "original": 1.304295500005992,
+            "packed": 0.8364800000038031
+          }
+        },
+        "paired_round_speedups": {
+          "cuda_event": [
+            1.5764727686985691,
+            1.5906518572372055,
+            1.6374820170318007
+          ],
+          "wall": [
+            1.556908470956122,
+            1.5729664320983274,
+            1.60210754925758
+          ]
+        },
+        "extra_allocated_peak_bytes": {
+          "original": 37293056,
+          "packed": 20826624
+        },
+        "samples_per_variant": 24,
+        "rng_and_inputs_unchanged": true,
+        "original_backend": {
+          "choice": 2,
+          "name": "efficient",
+          "q_shape": [
+            4,
+            12,
+            256,
+            128
+          ],
+          "k_shape": [
+            4,
+            12,
+            256,
+            128
+          ],
+          "mask_shape": [
+            4,
+            1,
+            256,
+            256
+          ]
+        },
+        "candidate_backend": "direct_native_efficient_Cutlass_varlen"
+      },
+      {
+        "lengths": [
+          128,
+          64,
+          32,
+          16
+        ],
+        "real_tokens": 240,
+        "rope_mapping_bitwise_equal": true,
+        "output_and_gradient_parity": {
+          "output": {
+            "dtype": "torch.float16",
+            "reference_dtype": "torch.float16",
+            "shape": [
+              240,
+              1536
+            ],
+            "all_finite": true,
+            "relative_l2": 0.0,
+            "max_abs_difference": 0.0
+          },
+          "gradients": {
+            "q": {
+              "dtype": "torch.float16",
+              "reference_dtype": "torch.float16",
+              "shape": [
+                240,
+                1536
+              ],
+              "all_finite": true,
+              "relative_l2": 6.736342470503587e-07,
+              "max_abs_difference": 1.9073486328125e-06
+            },
+            "lq": {
+              "dtype": "torch.float16",
+              "reference_dtype": "torch.float16",
+              "shape": [
+                240,
+                1536
+              ],
+              "all_finite": true,
+              "relative_l2": 6.736342470503587e-07,
+              "max_abs_difference": 1.9073486328125e-06
+            },
+            "k": {
+              "dtype": "torch.float16",
+              "reference_dtype": "torch.float16",
+              "shape": [
+                240,
+                256
+              ],
+              "all_finite": true,
+              "relative_l2": 0.0,
+              "max_abs_difference": 0.0
+            },
+            "v": {
+              "dtype": "torch.float16",
+              "reference_dtype": "torch.float16",
+              "shape": [
+                240,
+                256
+              ],
+              "all_finite": true,
+              "relative_l2": 0.0,
+              "max_abs_difference": 0.0
+            },
+            "lv": {
+              "dtype": "torch.float16",
+              "reference_dtype": "torch.float16",
+              "shape": [
+                240,
+                256
+              ],
+              "all_finite": true,
+              "relative_l2": 0.0,
+              "max_abs_difference": 0.0
+            }
+          },
+          "passed": true
+        },
+        "latency_medians_ms": {
+          "cuda_event": {
+            "original": 1.0559839606285095,
+            "packed": 0.8197439908981323
+          },
+          "wall": {
+            "original": 1.082748500039088,
+            "packed": 0.844317499996805
+          }
+        },
+        "paired_round_speedups": {
+          "cuda_event": [
+            1.359299374001095,
+            1.1088813951180487,
+            1.3383984673683893
+          ],
+          "wall": [
+            1.3577459075550815,
+            1.0981727706755202,
+            1.3276752090264927
+          ]
+        },
+        "extra_allocated_peak_bytes": {
+          "original": 18220544,
+          "packed": 8344576
+        },
+        "samples_per_variant": 24,
+        "rng_and_inputs_unchanged": true,
+        "original_backend": {
+          "choice": 2,
+          "name": "efficient",
+          "q_shape": [
+            4,
+            12,
+            128,
+            128
+          ],
+          "k_shape": [
+            4,
+            12,
+            128,
+            128
+          ],
+          "mask_shape": [
+            4,
+            1,
+            128,
+            128
+          ]
+        },
+        "candidate_backend": "direct_native_efficient_Cutlass_varlen"
+      }
+    ],
+    "scope": "Whole direct packed RoPE producer + native efficient causal varlen attention + output reshape + gradients to q/lq/k/v/lv. Input constants preparation excluded; no candidate packing/gather copies excluded."
+  },
+  "source_contract_review": {
+    "no_production_rng_state_read_reset_or_manual_advance": true,
+    "native_full_shape_dropout_mask_consumed_by_own_kernels": true,
+    "private_tensor_identity_scope_and_public_tensor_forward_preserved": true,
+    "no_replay_of_original_after_partial_fast_forward": true,
+    "native_attention_boundaries_preserve_separate_rows_inside_one_batch": true,
+    "fixed_task_settings_and_harness_unchanged": true,
+    "frozen_source_has_stale_experimental_header_comment_in_dropout_py": true,
+    "stale_comment_has_no_behavioral_effect_readme_should_describe_actual_integration": true,
+    "material_blockers_found": []
+  },
+  "limits": [
+    "These are synthetic component diagnostics, not a full training time or NVML training peak.",
+    "Native efficient attention uses a different FP16 reduction order; parity checks pass within stated tolerances, not bitwise gradient identity.",
+    "Final source adds the S384 dispatch test and threshold; complete final-source harness and same-session comparison are still required.",
+    "This review does not claim hidden-row quality, jury admission or final submission."
+  ]
+}

@@ -1,0 +1,2414 @@
+{
+  "name": "benchmark_packed_integration",
+  "kind": "candidate_diagnostic_not_training_score",
+  "results": {
+    "kind": "whole_packed_rope_native_attention_diagnostic_not_training_score",
+    "device": "Tesla T4",
+    "capability": [
+      7,
+      5
+    ],
+    "torch": "2.11.0+cu128",
+    "rounds": 3,
+    "samples_per_block": 4,
+    "warmups_per_variant": 3,
+    "seed": 4713,
+    "heads": 12,
+    "kv_heads": 2,
+    "head_dim": 128,
+    "input_dtypes": "q/lq/k/v/lv fp16; cos/sin fp32; rows int64; cu lengths int32",
+    "timing": "whole RoPE producer, native attention, real output, and backward to q/lq/k/v/lv; CUDA events plus synchronized wall",
+    "memory": "extra allocated PyTorch peak, not reserved/NVML/training peak",
+    "ordering": "3 rounds, each original->packed then packed->original",
+    "preparation_excluded": "only synthetic inputs/upstream, rows, cumulative boundaries and dense mask constants; no candidate gather or pack copies",
+    "original_policy": "GQA native math path when no padding; explicit repeated heads and dense causal+padding mask otherwise",
+    "candidate_policy": "explicit equal heads, direct native efficient varlen with both max lengths and causal custom_mask_type1",
+    "training_score_claim": false,
+    "sources": {
+      "unpad.py": "c098290e1c47bb76e92ef41203d7ab15f6deeba7a2d5e4c26bddad090da12fe4",
+      "benchmark_packed_integration.py": "e15787cbc88059765978d97ca8d57c64051b0f13a0742f3b96529d36a3619853",
+      "test_packed_integration.py": "606cc31cca4cd5a7e85bc84d79ef015d58420b5429ca8aaf9c35ae390456c23a"
+    },
+    "cases": [
+      {
+        "lengths": [
+          512,
+          128,
+          96,
+          64
+        ],
+        "batch": 4,
+        "sequence": 512,
+        "real_tokens": 800,
+        "all_full": false,
+        "rounds": [
+          {
+            "round": 1,
+            "blocks": [
+              {
+                "order": [
+                  "original",
+                  "packed"
+                ],
+                "measurements": {
+                  "original": {
+                    "cuda_event": {
+                      "samples": 4,
+                      "median_ms": 3.450767993927002,
+                      "q25_ms": 3.449191927909851,
+                      "q75_ms": 3.451800048351288,
+                      "minimum_ms": 3.4447999000549316,
+                      "maximum_ms": 3.4545600414276123
+                    },
+                    "wall": {
+                      "samples": 4,
+                      "median_ms": 3.4809949999896617,
+                      "q25_ms": 3.477904999968473,
+                      "q75_ms": 3.4870825000155037,
+                      "minimum_ms": 3.477647000011075,
+                      "maximum_ms": 3.496332999986862
+                    },
+                    "cuda_event_values_ms": [
+                      3.4447999000549316,
+                      3.4545600414276123,
+                      3.450655937194824,
+                      3.4508800506591797
+                    ],
+                    "wall_values_ms": [
+                      3.496332999986862,
+                      3.483999000025051,
+                      3.477647000011075,
+                      3.4779909999542724
+                    ]
+                  },
+                  "packed": {
+                    "cuda_event": {
+                      "samples": 4,
+                      "median_ms": 0.9983839988708496,
+                      "q25_ms": 0.9940159767866135,
+                      "q75_ms": 1.0135120153427124,
+                      "minimum_ms": 0.9912319779396057,
+                      "maximum_ms": 1.0485759973526
+                    },
+                    "wall": {
+                      "samples": 4,
+                      "median_ms": 1.02483799997799,
+                      "q25_ms": 1.02138099995841,
+                      "q75_ms": 1.0388810000137028,
+                      "minimum_ms": 1.0180329999798232,
+                      "maximum_ms": 1.0739870000406881
+                    },
+                    "cuda_event_values_ms": [
+                      0.9912319779396057,
+                      1.0018240213394165,
+                      0.9949439764022827,
+                      1.0485759973526
+                    ],
+                    "wall_values_ms": [
+                      1.0224969999512723,
+                      1.0271790000047076,
+                      1.0180329999798232,
+                      1.0739870000406881
+                    ]
+                  }
+                }
+              },
+              {
+                "order": [
+                  "packed",
+                  "original"
+                ],
+                "measurements": {
+                  "packed": {
+                    "cuda_event": {
+                      "samples": 4,
+                      "median_ms": 0.9917759895324707,
+                      "q25_ms": 0.9824160039424896,
+                      "q75_ms": 1.0112079977989197,
+                      "minimum_ms": 0.9772800207138062,
+                      "maximum_ms": 1.0465600490570068
+                    },
+                    "wall": {
+                      "samples": 4,
+                      "median_ms": 1.0210539999775392,
+                      "q25_ms": 1.0080607499958205,
+                      "q75_ms": 1.042463249959269,
+                      "minimum_ms": 1.0020629999871744,
+                      "maximum_ms": 1.0737089999679483
+                    },
+                    "cuda_event_values_ms": [
+                      0.9994239807128906,
+                      0.9772800207138062,
+                      0.9841279983520508,
+                      1.0465600490570068
+                    ],
+                    "wall_values_ms": [
+                      1.0320479999563759,
+                      1.0020629999871744,
+                      1.0100599999987026,
+                      1.0737089999679483
+                    ]
+                  },
+                  "original": {
+                    "cuda_event": {
+                      "samples": 4,
+                      "median_ms": 3.503216028213501,
+                      "q25_ms": 3.4926079511642456,
+                      "q75_ms": 3.506640076637268,
+                      "minimum_ms": 3.4633278846740723,
+                      "maximum_ms": 3.5143680572509766
+                    },
+                    "wall": {
+                      "samples": 4,
+                      "median_ms": 3.5338350000131413,
+                      "q25_ms": 3.5226657500260217,
+                      "q75_ms": 3.536696750003898,
+                      "minimum_ms": 3.4918640000114465,
+                      "maximum_ms": 3.542576000029385
+                    },
+                    "cuda_event_values_ms": [
+                      3.5040640830993652,
+                      3.4633278846740723,
+                      3.5143680572509766,
+                      3.5023679733276367
+                    ],
+                    "wall_values_ms": [
+                      3.5347369999954026,
+                      3.4918640000114465,
+                      3.542576000029385,
+                      3.53293300003088
+                    ]
+                  }
+                }
+              }
+            ],
+            "cuda_event_speedup": 3.494309440498875,
+            "wall_speedup": 3.4287986502507293
+          },
+          {
+            "round": 2,
+            "blocks": [
+              {
+                "order": [
+                  "original",
+                  "packed"
+                ],
+                "measurements": {
+                  "original": {
+                    "cuda_event": {
+                      "samples": 4,
+                      "median_ms": 3.583216071128845,
+                      "q25_ms": 3.4841920733451843,
+                      "q75_ms": 3.6806720495224,
+                      "minimum_ms": 3.447904109954834,
+                      "maximum_ms": 3.7122559547424316
+                    },
+                    "wall": {
+                      "samples": 4,
+                      "median_ms": 3.625903499994365,
+                      "q25_ms": 3.5191232500295655,
+                      "q75_ms": 3.734636249959067,
+                      "minimum_ms": 3.493207000019538,
+                      "maximum_ms": 3.7664099999688005
+                    },
+                    "cuda_event_values_ms": [
+                      3.447904109954834,
+                      3.7122559547424316,
+                      3.6701440811157227,
+                      3.4962880611419678
+                    ],
+                    "wall_values_ms": [
+                      3.493207000019538,
+                      3.7664099999688005,
+                      3.7240449999558223,
+                      3.527762000032908
+                    ]
+                  },
+                  "packed": {
+                    "cuda_event": {
+                      "samples": 4,
+                      "median_ms": 1.015712022781372,
+                      "q25_ms": 1.0125280320644379,
+                      "q75_ms": 1.019216001033783,
+                      "minimum_ms": 1.0032639503479004,
+                      "maximum_ms": 1.0294400453567505
+                    },
+                    "wall": {
+                      "samples": 4,
+                      "median_ms": 1.062664499983157,
+                      "q25_ms": 1.058560749982007,
+                      "q75_ms": 1.0629527499901315,
+                      "minimum_ms": 1.0470309999845995,
+                      "maximum_ms": 1.0630360000050132
+                    },
+                    "cuda_event_values_ms": [
+                      1.0156160593032837,
+                      1.0032639503479004,
+                      1.0294400453567505,
+                      1.0158079862594604
+                    ],
+                    "wall_values_ms": [
+                      1.0630360000050132,
+                      1.0470309999845995,
+                      1.0629249999851709,
+                      1.062403999981143
+                    ]
+                  }
+                }
+              },
+              {
+                "order": [
+                  "packed",
+                  "original"
+                ],
+                "measurements": {
+                  "packed": {
+                    "cuda_event": {
+                      "samples": 4,
+                      "median_ms": 0.9656320214271545,
+                      "q25_ms": 0.9635200053453445,
+                      "q75_ms": 0.9779360145330429,
+                      "minimum_ms": 0.9602559804916382,
+                      "maximum_ms": 1.0117759704589844
+                    },
+                    "wall": {
+                      "samples": 4,
+                      "median_ms": 0.9933220000277743,
+                      "q25_ms": 0.9904580000323904,
+                      "q75_ms": 1.005157250020261,
+                      "minimum_ms": 0.983570000016698,
+                      "maximum_ms": 1.038959000027262
+                    },
+                    "cuda_event_values_ms": [
+                      0.9646080136299133,
+                      0.9666560292243958,
+                      1.0117759704589844,
+                      0.9602559804916382
+                    ],
+                    "wall_values_ms": [
+                      0.9938900000179274,
+                      0.9927540000376212,
+                      1.038959000027262,
+                      0.983570000016698
+                    ]
+                  },
+                  "original": {
+                    "cuda_event": {
+                      "samples": 4,
+                      "median_ms": 3.470815896987915,
+                      "q25_ms": 3.4522879123687744,
+                      "q75_ms": 3.485607922077179,
+                      "minimum_ms": 3.4302079677581787,
+                      "maximum_ms": 3.4964799880981445
+                    },
+                    "wall": {
+                      "samples": 4,
+                      "median_ms": 3.500822500001277,
+                      "q25_ms": 3.4820732499696305,
+                      "q75_ms": 3.5164402500242886,
+                      "minimum_ms": 3.4603479999759656,
+                      "maximum_ms": 3.528770999992048
+                    },
+                    "cuda_event_values_ms": [
+                      3.4819839000701904,
+                      3.4302079677581787,
+                      3.4964799880981445,
+                      3.4596478939056396
+                    ],
+                    "wall_values_ms": [
+                      3.5123300000350355,
+                      3.4603479999759656,
+                      3.528770999992048,
+                      3.489314999967519
+                    ]
+                  }
+                }
+              }
+            ],
+            "cuda_event_speedup": 3.561066854650797,
+            "wall_speedup": 3.4682224756369626
+          },
+          {
+            "round": 3,
+            "blocks": [
+              {
+                "order": [
+                  "original",
+                  "packed"
+                ],
+                "measurements": {
+                  "original": {
+                    "cuda_event": {
+                      "samples": 4,
+                      "median_ms": 3.506224036216736,
+                      "q25_ms": 3.4842079877853394,
+                      "q75_ms": 3.52156001329422,
+                      "minimum_ms": 3.4611198902130127,
+                      "maximum_ms": 3.5246078968048096
+                    },
+                    "wall": {
+                      "samples": 4,
+                      "median_ms": 3.5389655000130915,
+                      "q25_ms": 3.5150220000446097,
+                      "q75_ms": 3.5565064999758533,
+                      "minimum_ms": 3.4912230000259115,
+                      "maximum_ms": 3.5610979999773917
+                    },
+                    "cuda_event_values_ms": [
+                      3.5205440521240234,
+                      3.5246078968048096,
+                      3.4919040203094482,
+                      3.4611198902130127
+                    ],
+                    "wall_values_ms": [
+                      3.5549759999753405,
+                      3.5610979999773917,
+                      3.5229550000508425,
+                      3.4912230000259115
+                    ]
+                  },
+                  "packed": {
+                    "cuda_event": {
+                      "samples": 4,
+                      "median_ms": 1.0291199684143066,
+                      "q25_ms": 1.0276079773902893,
+                      "q75_ms": 1.0331359803676605,
+                      "minimum_ms": 1.026144027709961,
+                      "maximum_ms": 1.0421119928359985
+                    },
+                    "wall": {
+                      "samples": 4,
+                      "median_ms": 1.0600825000040004,
+                      "q25_ms": 1.0577015000023948,
+                      "q75_ms": 1.0628714999967315,
+                      "minimum_ms": 1.0543249999841464,
+                      "maximum_ms": 1.0674719999883564
+                    },
+                    "cuda_event_values_ms": [
+                      1.0280959606170654,
+                      1.0421119928359985,
+                      1.026144027709961,
+                      1.0301439762115479
+                    ],
+                    "wall_values_ms": [
+                      1.0613379999995232,
+                      1.0674719999883564,
+                      1.0543249999841464,
+                      1.0588270000084776
+                    ]
+                  }
+                }
+              },
+              {
+                "order": [
+                  "packed",
+                  "original"
+                ],
+                "measurements": {
+                  "packed": {
+                    "cuda_event": {
+                      "samples": 4,
+                      "median_ms": 1.0465279817581177,
+                      "q25_ms": 1.0265519618988037,
+                      "q75_ms": 1.081847995519638,
+                      "minimum_ms": 1.0219199657440186,
+                      "maximum_ms": 1.1325119733810425
+                    },
+                    "wall": {
+                      "samples": 4,
+                      "median_ms": 1.0778324999876077,
+                      "q25_ms": 1.063097999960405,
+                      "q75_ms": 1.1111915000157069,
+                      "minimum_ms": 1.0599959999808561,
+                      "maximum_ms": 1.1701669999979458
+                    },
+                    "cuda_event_values_ms": [
+                      1.0280959606170654,
+                      1.0219199657440186,
+                      1.06496000289917,
+                      1.1325119733810425
+                    ],
+                    "wall_values_ms": [
+                      1.0599959999808561,
+                      1.064131999953588,
+                      1.0915330000216272,
+                      1.1701669999979458
+                    ]
+                  },
+                  "original": {
+                    "cuda_event": {
+                      "samples": 4,
+                      "median_ms": 3.5016160011291504,
+                      "q25_ms": 3.492967963218689,
+                      "q75_ms": 3.5066720843315125,
+                      "minimum_ms": 3.477440118789673,
+                      "maximum_ms": 3.5114240646362305
+                    },
+                    "wall": {
+                      "samples": 4,
+                      "median_ms": 3.5371350000161783,
+                      "q25_ms": 3.5260205000327005,
+                      "q75_ms": 3.5453592499976594,
+                      "minimum_ms": 3.508235000026616,
+                      "maximum_ms": 3.5544739999977537
+                    },
+                    "cuda_event_values_ms": [
+                      3.4981439113616943,
+                      3.5050880908966064,
+                      3.477440118789673,
+                      3.5114240646362305
+                    ],
+                    "wall_values_ms": [
+                      3.5319490000347287,
+                      3.5544739999977537,
+                      3.508235000026616,
+                      3.542320999997628
+                    ]
+                  }
+                }
+              }
+            ],
+            "cuda_event_speedup": 3.376474145994841,
+            "wall_speedup": 3.3100490414855126
+          }
+        ],
+        "memory": {
+          "original": {
+            "allocated_start_bytes": 25369600,
+            "allocated_peak_bytes": 99333120,
+            "extra_allocated_peak_bytes": 73963520,
+            "end_with_result_bytes": 33971200,
+            "after_result_release_bytes": 25369600
+          },
+          "packed": {
+            "allocated_start_bytes": 25369600,
+            "allocated_peak_bytes": 55298560,
+            "extra_allocated_peak_bytes": 29928960,
+            "end_with_result_bytes": 33971200,
+            "after_result_release_bytes": 25369600
+          }
+        },
+        "rope_mapping_bitwise_equal": true,
+        "parity": {
+          "output": {
+            "dtype": "torch.float16",
+            "reference_dtype": "torch.float16",
+            "shape": [
+              800,
+              1536
+            ],
+            "all_finite": true,
+            "relative_l2": 0.0,
+            "max_abs_difference": 0.0
+          },
+          "gradients": {
+            "q": {
+              "dtype": "torch.float16",
+              "reference_dtype": "torch.float16",
+              "shape": [
+                800,
+                1536
+              ],
+              "all_finite": true,
+              "relative_l2": 5.075845365354326e-06,
+              "max_abs_difference": 7.62939453125e-06
+            },
+            "lq": {
+              "dtype": "torch.float16",
+              "reference_dtype": "torch.float16",
+              "shape": [
+                800,
+                1536
+              ],
+              "all_finite": true,
+              "relative_l2": 5.075845365354326e-06,
+              "max_abs_difference": 7.62939453125e-06
+            },
+            "k": {
+              "dtype": "torch.float16",
+              "reference_dtype": "torch.float16",
+              "shape": [
+                800,
+                256
+              ],
+              "all_finite": true,
+              "relative_l2": 5.684872121491935e-06,
+              "max_abs_difference": 7.62939453125e-06
+            },
+            "v": {
+              "dtype": "torch.float16",
+              "reference_dtype": "torch.float16",
+              "shape": [
+                800,
+                256
+              ],
+              "all_finite": true,
+              "relative_l2": 5.4790211834188085e-06,
+              "max_abs_difference": 0.000244140625
+            },
+            "lv": {
+              "dtype": "torch.float16",
+              "reference_dtype": "torch.float16",
+              "shape": [
+                800,
+                256
+              ],
+              "all_finite": true,
+              "relative_l2": 5.4790211834188085e-06,
+              "max_abs_difference": 0.000244140625
+            }
+          },
+          "passed": true
+        },
+        "original_backend": {
+          "choice": 2,
+          "name": "efficient",
+          "q_shape": [
+            4,
+            12,
+            512,
+            128
+          ],
+          "k_shape": [
+            4,
+            12,
+            512,
+            128
+          ],
+          "mask_shape": [
+            4,
+            1,
+            512,
+            512
+          ]
+        },
+        "packed_backend": "direct_native_efficient_Cutlass_varlen",
+        "aggregate": {
+          "original": {
+            "cuda_event": {
+              "samples": 24,
+              "median_ms": 3.494096040725708,
+              "q25_ms": 3.458375930786133,
+              "q75_ms": 3.5066720843315125,
+              "minimum_ms": 3.4302079677581787,
+              "maximum_ms": 3.7122559547424316
+            },
+            "wall": {
+              "samples": 24,
+              "median_ms": 3.5253585000418752,
+              "q25_ms": 3.4917037500150627,
+              "q75_ms": 3.542384750005567,
+              "minimum_ms": 3.4603479999759656,
+              "maximum_ms": 3.7664099999688005
+            }
+          },
+          "packed": {
+            "cuda_event": {
+              "samples": 24,
+              "median_ms": 1.015712022781372,
+              "q25_ms": 0.9940159767866135,
+              "q75_ms": 1.0296160280704498,
+              "minimum_ms": 0.9602559804916382,
+              "maximum_ms": 1.1325119733810425
+            },
+            "wall": {
+              "samples": 24,
+              "median_ms": 1.056575999996312,
+              "q25_ms": 1.02138099995841,
+              "q75_ms": 1.063309999992157,
+              "minimum_ms": 0.983570000016698,
+              "maximum_ms": 1.1701669999979458
+            }
+          }
+        },
+        "inputs_unchanged": true,
+        "rng_unchanged": true,
+        "status": "qualified_diagnostic_only"
+      },
+      {
+        "lengths": [
+          512,
+          512,
+          512,
+          512
+        ],
+        "batch": 4,
+        "sequence": 512,
+        "real_tokens": 2048,
+        "all_full": true,
+        "rounds": [
+          {
+            "round": 1,
+            "blocks": [
+              {
+                "order": [
+                  "original",
+                  "packed"
+                ],
+                "measurements": {
+                  "original": {
+                    "cuda_event": {
+                      "samples": 4,
+                      "median_ms": 9.503632068634033,
+                      "q25_ms": 9.487679719924927,
+                      "q75_ms": 9.522712230682373,
+                      "minimum_ms": 9.486335754394531,
+                      "maximum_ms": 9.533439636230469
+                    },
+                    "wall": {
+                      "samples": 4,
+                      "median_ms": 9.540486999981113,
+                      "q25_ms": 9.52548099996875,
+                      "q75_ms": 9.57093175000523,
+                      "minimum_ms": 9.517012000003433,
+                      "maximum_ms": 9.625717000005807
+                    },
+                    "cuda_event_values_ms": [
+                      9.533439636230469,
+                      9.486335754394531,
+                      9.519136428833008,
+                      9.488127708435059
+                    ],
+                    "wall_values_ms": [
+                      9.625717000005807,
+                      9.528303999957188,
+                      9.552670000005037,
+                      9.517012000003433
+                    ]
+                  },
+                  "packed": {
+                    "cuda_event": {
+                      "samples": 4,
+                      "median_ms": 2.287600040435791,
+                      "q25_ms": 2.2853200435638428,
+                      "q75_ms": 2.291375994682312,
+                      "minimum_ms": 2.2785279750823975,
+                      "maximum_ms": 2.3026559352874756
+                    },
+                    "wall": {
+                      "samples": 4,
+                      "median_ms": 2.3189599999966504,
+                      "q25_ms": 2.3112435000172127,
+                      "q75_ms": 2.3253642499838634,
+                      "minimum_ms": 2.303606999987551,
+                      "maximum_ms": 2.329064000036851
+                    },
+                    "cuda_event_values_ms": [
+                      2.287584066390991,
+                      2.287616014480591,
+                      2.3026559352874756,
+                      2.2785279750823975
+                    ],
+                    "wall_values_ms": [
+                      2.3241309999662008,
+                      2.3137890000271,
+                      2.329064000036851,
+                      2.303606999987551
+                    ]
+                  }
+                }
+              },
+              {
+                "order": [
+                  "packed",
+                  "original"
+                ],
+                "measurements": {
+                  "packed": {
+                    "cuda_event": {
+                      "samples": 4,
+                      "median_ms": 2.285248041152954,
+                      "q25_ms": 2.280087947845459,
+                      "q75_ms": 2.2943280935287476,
+                      "minimum_ms": 2.2759358882904053,
+                      "maximum_ms": 2.3102400302886963
+                    },
+                    "wall": {
+                      "samples": 4,
+                      "median_ms": 2.31774549996544,
+                      "q25_ms": 2.3089464999941356,
+                      "q75_ms": 2.328880749956852,
+                      "minimum_ms": 2.3059360000274864,
+                      "maximum_ms": 2.3388999999838234
+                    },
+                    "cuda_event_values_ms": [
+                      2.2759358882904053,
+                      2.2890241146087646,
+                      2.3102400302886963,
+                      2.2814719676971436
+                    ],
+                    "wall_values_ms": [
+                      2.3059360000274864,
+                      2.3255409999478616,
+                      2.3388999999838234,
+                      2.3099499999830186
+                    ]
+                  },
+                  "original": {
+                    "cuda_event": {
+                      "samples": 4,
+                      "median_ms": 9.47609567642212,
+                      "q25_ms": 9.46790361404419,
+                      "q75_ms": 9.490823745727539,
+                      "minimum_ms": 9.461759567260742,
+                      "maximum_ms": 9.516575813293457
+                    },
+                    "wall": {
+                      "samples": 4,
+                      "median_ms": 9.51054799998019,
+                      "q25_ms": 9.499529249993088,
+                      "q75_ms": 9.528954999979078,
+                      "minimum_ms": 9.491502000003038,
+                      "maximum_ms": 9.559147000004486
+                    },
+                    "cuda_event_values_ms": [
+                      9.482239723205566,
+                      9.469951629638672,
+                      9.461759567260742,
+                      9.516575813293457
+                    ],
+                    "wall_values_ms": [
+                      9.518890999970608,
+                      9.502204999989772,
+                      9.491502000003038,
+                      9.559147000004486
+                    ]
+                  }
+                }
+              }
+            ],
+            "cuda_event_speedup": 4.150524632428796,
+            "wall_speedup": 4.108742395910522
+          },
+          {
+            "round": 2,
+            "blocks": [
+              {
+                "order": [
+                  "original",
+                  "packed"
+                ],
+                "measurements": {
+                  "original": {
+                    "cuda_event": {
+                      "samples": 4,
+                      "median_ms": 9.497183799743652,
+                      "q25_ms": 9.489167928695679,
+                      "q75_ms": 9.505919933319092,
+                      "minimum_ms": 9.480192184448242,
+                      "maximum_ms": 9.517056465148926
+                    },
+                    "wall": {
+                      "samples": 4,
+                      "median_ms": 9.536806500022976,
+                      "q25_ms": 9.527872500015633,
+                      "q75_ms": 9.542270500020322,
+                      "minimum_ms": 9.512970000002952,
+                      "maximum_ms": 9.546763000003011
+                    },
+                    "cuda_event_values_ms": [
+                      9.480192184448242,
+                      9.50220775604248,
+                      9.517056465148926,
+                      9.492159843444824
+                    ],
+                    "wall_values_ms": [
+                      9.512970000002952,
+                      9.53284000001986,
+                      9.546763000003011,
+                      9.540773000026093
+                    ]
+                  },
+                  "packed": {
+                    "cuda_event": {
+                      "samples": 4,
+                      "median_ms": 2.2894400358200073,
+                      "q25_ms": 2.284336030483246,
+                      "q75_ms": 2.3014400601387024,
+                      "minimum_ms": 2.2758400440216064,
+                      "maximum_ms": 2.3306241035461426
+                    },
+                    "wall": {
+                      "samples": 4,
+                      "median_ms": 2.3158050000233743,
+                      "q25_ms": 2.3107610000465684,
+                      "q75_ms": 2.331915249996541,
+                      "minimum_ms": 2.3021840000296834,
+                      "maximum_ms": 2.373691000002509
+                    },
+                    "cuda_event_values_ms": [
+                      2.3306241035461426,
+                      2.287168025970459,
+                      2.2758400440216064,
+                      2.2917120456695557
+                    ],
+                    "wall_values_ms": [
+                      2.373691000002509,
+                      2.3136200000521967,
+                      2.3021840000296834,
+                      2.317989999994552
+                    ]
+                  }
+                }
+              },
+              {
+                "order": [
+                  "packed",
+                  "original"
+                ],
+                "measurements": {
+                  "packed": {
+                    "cuda_event": {
+                      "samples": 4,
+                      "median_ms": 2.2908639907836914,
+                      "q25_ms": 2.251968026161194,
+                      "q75_ms": 2.3050959706306458,
+                      "minimum_ms": 2.174976110458374,
+                      "maximum_ms": 2.308095932006836
+                    },
+                    "wall": {
+                      "samples": 4,
+                      "median_ms": 2.3208435000015015,
+                      "q25_ms": 2.28171274997635,
+                      "q75_ms": 2.333415250021176,
+                      "minimum_ms": 2.2011410000004616,
+                      "maximum_ms": 2.3343099999806327
+                    },
+                    "cuda_event_values_ms": [
+                      2.277631998062134,
+                      2.304095983505249,
+                      2.308095932006836,
+                      2.174976110458374
+                    ],
+                    "wall_values_ms": [
+                      2.308569999968313,
+                      2.33311700003469,
+                      2.3343099999806327,
+                      2.2011410000004616
+                    ]
+                  },
+                  "original": {
+                    "cuda_event": {
+                      "samples": 4,
+                      "median_ms": 9.059888362884521,
+                      "q25_ms": 9.0004403591156,
+                      "q75_ms": 9.106640100479126,
+                      "minimum_ms": 8.962016105651855,
+                      "maximum_ms": 9.106975555419922
+                    },
+                    "wall": {
+                      "samples": 4,
+                      "median_ms": 9.08901149998087,
+                      "q25_ms": 9.03006925000227,
+                      "q75_ms": 9.135332749977465,
+                      "minimum_ms": 8.9914330000056,
+                      "maximum_ms": 9.136106000028121
+                    },
+                    "cuda_event_values_ms": [
+                      9.106528282165527,
+                      9.013248443603516,
+                      8.962016105651855,
+                      9.106975555419922
+                    ],
+                    "wall_values_ms": [
+                      9.136106000028121,
+                      9.04294800000116,
+                      8.9914330000056,
+                      9.13507499996058
+                    ]
+                  }
+                }
+              }
+            ],
+            "cuda_event_speedup": 4.051523610153296,
+            "wall_speedup": 4.017196170791197
+          },
+          {
+            "round": 3,
+            "blocks": [
+              {
+                "order": [
+                  "original",
+                  "packed"
+                ],
+                "measurements": {
+                  "original": {
+                    "cuda_event": {
+                      "samples": 4,
+                      "median_ms": 9.233407974243164,
+                      "q25_ms": 9.190135717391968,
+                      "q75_ms": 9.257384300231934,
+                      "minimum_ms": 9.112544059753418,
+                      "maximum_ms": 9.277088165283203
+                    },
+                    "wall": {
+                      "samples": 4,
+                      "median_ms": 9.26251100000286,
+                      "q25_ms": 9.2221720000083,
+                      "q75_ms": 9.288376750006933,
+                      "minimum_ms": 9.152812000024824,
+                      "maximum_ms": 9.314317000018946
+                    },
+                    "cuda_event_values_ms": [
+                      9.112544059753418,
+                      9.215999603271484,
+                      9.250816345214844,
+                      9.277088165283203
+                    ],
+                    "wall_values_ms": [
+                      9.152812000024824,
+                      9.245292000002792,
+                      9.279730000002928,
+                      9.314317000018946
+                    ]
+                  },
+                  "packed": {
+                    "cuda_event": {
+                      "samples": 4,
+                      "median_ms": 2.2406240701675415,
+                      "q25_ms": 2.234000027179718,
+                      "q75_ms": 2.2458000779151917,
+                      "minimum_ms": 2.220031976699829,
+                      "maximum_ms": 2.2554240226745605
+                    },
+                    "wall": {
+                      "samples": 4,
+                      "median_ms": 2.2706999999684285,
+                      "q25_ms": 2.268111249975391,
+                      "q75_ms": 2.2746332499821165,
+                      "minimum_ms": 2.2612060000142264,
+                      "maximum_ms": 2.2855720000052315
+                    },
+                    "cuda_event_values_ms": [
+                      2.220031976699829,
+                      2.2554240226745605,
+                      2.2425920963287354,
+                      2.2386560440063477
+                    ],
+                    "wall_values_ms": [
+                      2.2612060000142264,
+                      2.2855720000052315,
+                      2.2709869999744114,
+                      2.2704129999624456
+                    ]
+                  }
+                }
+              },
+              {
+                "order": [
+                  "packed",
+                  "original"
+                ],
+                "measurements": {
+                  "packed": {
+                    "cuda_event": {
+                      "samples": 4,
+                      "median_ms": 2.223568081855774,
+                      "q25_ms": 2.206376016139984,
+                      "q75_ms": 2.2426000833511353,
+                      "minimum_ms": 2.1994879245758057,
+                      "maximum_ms": 2.2550079822540283
+                    },
+                    "wall": {
+                      "samples": 4,
+                      "median_ms": 2.2575860000131343,
+                      "q25_ms": 2.2443097500115528,
+                      "q75_ms": 2.271243000009804,
+                      "minimum_ms": 2.2290150000117137,
+                      "maximum_ms": 2.287679999994907
+                    },
+                    "cuda_event_values_ms": [
+                      2.2550079822540283,
+                      2.238464117050171,
+                      2.1994879245758057,
+                      2.208672046661377
+                    ],
+                    "wall_values_ms": [
+                      2.287679999994907,
+                      2.2657640000147694,
+                      2.2290150000117137,
+                      2.249408000011499
+                    ]
+                  },
+                  "original": {
+                    "cuda_event": {
+                      "samples": 4,
+                      "median_ms": 9.154943943023682,
+                      "q25_ms": 9.12228798866272,
+                      "q75_ms": 9.184855937957764,
+                      "minimum_ms": 9.111488342285156,
+                      "maximum_ms": 9.187423706054688
+                    },
+                    "wall": {
+                      "samples": 4,
+                      "median_ms": 9.185475499975837,
+                      "q25_ms": 9.151841749968526,
+                      "q75_ms": 9.21697974999347,
+                      "minimum_ms": 9.141317000000981,
+                      "maximum_ms": 9.22111599999198
+                    },
+                    "cuda_event_values_ms": [
+                      9.184000015258789,
+                      9.187423706054688,
+                      9.111488342285156,
+                      9.125887870788574
+                    ],
+                    "wall_values_ms": [
+                      9.215600999993967,
+                      9.22111599999198,
+                      9.141317000000981,
+                      9.155349999957707
+                    ]
+                  }
+                }
+              }
+            ],
+            "cuda_event_speedup": 4.119070131112891,
+            "wall_speedup": 4.0739295453272435
+          }
+        ],
+        "memory": {
+          "original": {
+            "allocated_start_bytes": 64242176,
+            "allocated_peak_bytes": 309608960,
+            "extra_allocated_peak_bytes": 245366784,
+            "end_with_result_bytes": 86262272,
+            "after_result_release_bytes": 64242176
+          },
+          "packed": {
+            "allocated_start_bytes": 64242176,
+            "allocated_peak_bytes": 121068032,
+            "extra_allocated_peak_bytes": 56825856,
+            "end_with_result_bytes": 86262272,
+            "after_result_release_bytes": 64242176
+          }
+        },
+        "rope_mapping_bitwise_equal": true,
+        "parity": {
+          "output": {
+            "dtype": "torch.float16",
+            "reference_dtype": "torch.float16",
+            "shape": [
+              2048,
+              1536
+            ],
+            "all_finite": true,
+            "relative_l2": 0.0002402501559117809,
+            "max_abs_difference": 0.000244140625
+          },
+          "gradients": {
+            "q": {
+              "dtype": "torch.float16",
+              "reference_dtype": "torch.float16",
+              "shape": [
+                2048,
+                1536
+              ],
+              "all_finite": true,
+              "relative_l2": 0.0004340656741987914,
+              "max_abs_difference": 6.103515625e-05
+            },
+            "lq": {
+              "dtype": "torch.float16",
+              "reference_dtype": "torch.float16",
+              "shape": [
+                2048,
+                1536
+              ],
+              "all_finite": true,
+              "relative_l2": 0.0004340656741987914,
+              "max_abs_difference": 6.103515625e-05
+            },
+            "k": {
+              "dtype": "torch.float16",
+              "reference_dtype": "torch.float16",
+              "shape": [
+                2048,
+                256
+              ],
+              "all_finite": true,
+              "relative_l2": 0.0005004699341952801,
+              "max_abs_difference": 0.000244140625
+            },
+            "v": {
+              "dtype": "torch.float16",
+              "reference_dtype": "torch.float16",
+              "shape": [
+                2048,
+                256
+              ],
+              "all_finite": true,
+              "relative_l2": 0.0003954230051022023,
+              "max_abs_difference": 0.0078125
+            },
+            "lv": {
+              "dtype": "torch.float16",
+              "reference_dtype": "torch.float16",
+              "shape": [
+                2048,
+                256
+              ],
+              "all_finite": true,
+              "relative_l2": 0.0003954230051022023,
+              "max_abs_difference": 0.0078125
+            }
+          },
+          "passed": true
+        },
+        "original_backend": {
+          "choice": 0,
+          "name": "math",
+          "q_shape": [
+            4,
+            12,
+            512,
+            128
+          ],
+          "k_shape": [
+            4,
+            2,
+            512,
+            128
+          ],
+          "mask_shape": null
+        },
+        "packed_backend": "direct_native_efficient_Cutlass_varlen",
+        "aggregate": {
+          "original": {
+            "cuda_event": {
+              "samples": 24,
+              "median_ms": 9.369423866271973,
+              "q25_ms": 9.122551918029785,
+              "q75_ms": 9.4891357421875,
+              "minimum_ms": 8.962016105651855,
+              "maximum_ms": 9.533439636230469
+            },
+            "wall": {
+              "samples": 24,
+              "median_ms": 9.402909500010992,
+              "q25_ms": 9.154715499974486,
+              "q75_ms": 9.529437999972856,
+              "minimum_ms": 8.9914330000056,
+              "maximum_ms": 9.625717000005807
+            }
+          },
+          "packed": {
+            "cuda_event": {
+              "samples": 24,
+              "median_ms": 2.2780799865722656,
+              "q25_ms": 2.2416080832481384,
+              "q75_ms": 2.2896960973739624,
+              "minimum_ms": 2.174976110458374,
+              "maximum_ms": 2.3306241035461426
+            },
+            "wall": {
+              "samples": 24,
+              "median_ms": 2.3072529999978997,
+              "q25_ms": 2.27084349997142,
+              "q75_ms": 2.324483499961616,
+              "minimum_ms": 2.2011410000004616,
+              "maximum_ms": 2.373691000002509
+            }
+          }
+        },
+        "inputs_unchanged": true,
+        "rng_unchanged": true,
+        "status": "qualified_diagnostic_only"
+      },
+      {
+        "lengths": [
+          256,
+          192,
+          128,
+          96
+        ],
+        "batch": 4,
+        "sequence": 256,
+        "real_tokens": 672,
+        "all_full": false,
+        "rounds": [
+          {
+            "round": 1,
+            "blocks": [
+              {
+                "order": [
+                  "original",
+                  "packed"
+                ],
+                "measurements": {
+                  "original": {
+                    "cuda_event": {
+                      "samples": 4,
+                      "median_ms": 1.2600640058517456,
+                      "q25_ms": 1.2444000244140625,
+                      "q75_ms": 1.272055983543396,
+                      "minimum_ms": 1.2080639600753784,
+                      "maximum_ms": 1.297376036643982
+                    },
+                    "wall": {
+                      "samples": 4,
+                      "median_ms": 1.2894150000022364,
+                      "q25_ms": 1.2790147499970317,
+                      "q75_ms": 1.2997377500028051,
+                      "minimum_ms": 1.2531419999959326,
+                      "maximum_ms": 1.3253779999899962
+                    },
+                    "cuda_event_values_ms": [
+                      1.2080639600753784,
+                      1.297376036643982,
+                      1.2636159658432007,
+                      1.2565120458602905
+                    ],
+                    "wall_values_ms": [
+                      1.2531419999959326,
+                      1.3253779999899962,
+                      1.287638999997398,
+                      1.2911910000070748
+                    ]
+                  },
+                  "packed": {
+                    "cuda_event": {
+                      "samples": 4,
+                      "median_ms": 0.79926398396492,
+                      "q25_ms": 0.7811919748783112,
+                      "q75_ms": 0.8196080029010773,
+                      "minimum_ms": 0.7720959782600403,
+                      "maximum_ms": 0.8355200290679932
+                    },
+                    "wall": {
+                      "samples": 4,
+                      "median_ms": 0.8264445000065734,
+                      "q25_ms": 0.8084207500189677,
+                      "q75_ms": 0.8476382499793544,
+                      "minimum_ms": 0.7966299999679904,
+                      "maximum_ms": 0.8689389999858577
+                    },
+                    "cuda_event_values_ms": [
+                      0.8355200290679932,
+                      0.7842239737510681,
+                      0.7720959782600403,
+                      0.814303994178772
+                    ],
+                    "wall_values_ms": [
+                      0.8689389999858577,
+                      0.8123510000359602,
+                      0.7966299999679904,
+                      0.8405379999771867
+                    ]
+                  }
+                }
+              },
+              {
+                "order": [
+                  "packed",
+                  "original"
+                ],
+                "measurements": {
+                  "packed": {
+                    "cuda_event": {
+                      "samples": 4,
+                      "median_ms": 0.814079999923706,
+                      "q25_ms": 0.7866799831390381,
+                      "q75_ms": 0.8357840180397034,
+                      "minimum_ms": 0.7627519965171814,
+                      "maximum_ms": 0.8426240086555481
+                    },
+                    "wall": {
+                      "samples": 4,
+                      "median_ms": 0.843016499999294,
+                      "q25_ms": 0.8114379999994981,
+                      "q75_ms": 0.8674199999916254,
+                      "minimum_ms": 0.785904999986542,
+                      "maximum_ms": 0.8714279999821883
+                    },
+                    "cuda_event_values_ms": [
+                      0.8335040211677551,
+                      0.8426240086555481,
+                      0.794655978679657,
+                      0.7627519965171814
+                    ],
+                    "wall_values_ms": [
+                      0.8660839999947711,
+                      0.8714279999821883,
+                      0.8199490000038168,
+                      0.785904999986542
+                    ]
+                  },
+                  "original": {
+                    "cuda_event": {
+                      "samples": 4,
+                      "median_ms": 1.2833279967308044,
+                      "q25_ms": 1.2608719766139984,
+                      "q75_ms": 1.3545440137386322,
+                      "minimum_ms": 1.1973439455032349,
+                      "maximum_ms": 1.564352035522461
+                    },
+                    "wall": {
+                      "samples": 4,
+                      "median_ms": 1.3097284999901149,
+                      "q25_ms": 1.2869150000085483,
+                      "q75_ms": 1.381613499987111,
+                      "minimum_ms": 1.2254360000270026,
+                      "maximum_ms": 1.5903070000149455
+                    },
+                    "cuda_event_values_ms": [
+                      1.1973439455032349,
+                      1.284608006477356,
+                      1.564352035522461,
+                      1.282047986984253
+                    ],
+                    "wall_values_ms": [
+                      1.2254360000270026,
+                      1.3120489999778329,
+                      1.5903070000149455,
+                      1.3074080000023969
+                    ]
+                  }
+                }
+              }
+            ],
+            "cuda_event_speedup": 1.5764727686985691,
+            "wall_speedup": 1.556908470956122
+          },
+          {
+            "round": 2,
+            "blocks": [
+              {
+                "order": [
+                  "original",
+                  "packed"
+                ],
+                "measurements": {
+                  "original": {
+                    "cuda_event": {
+                      "samples": 4,
+                      "median_ms": 1.2807999849319458,
+                      "q25_ms": 1.250471979379654,
+                      "q75_ms": 1.313071995973587,
+                      "minimum_ms": 1.2123839855194092,
+                      "maximum_ms": 1.3569920063018799
+                    },
+                    "wall": {
+                      "samples": 4,
+                      "median_ms": 1.3172830000200975,
+                      "q25_ms": 1.2850165000060088,
+                      "q75_ms": 1.3471987500111027,
+                      "minimum_ms": 1.236516999995274,
+                      "maximum_ms": 1.3886459999525869
+                    },
+                    "cuda_event_values_ms": [
+                      1.3569920063018799,
+                      1.2631679773330688,
+                      1.2984319925308228,
+                      1.2123839855194092
+                    ],
+                    "wall_values_ms": [
+                      1.3886459999525869,
+                      1.301183000009587,
+                      1.333383000030608,
+                      1.236516999995274
+                    ]
+                  },
+                  "packed": {
+                    "cuda_event": {
+                      "samples": 4,
+                      "median_ms": 0.7925440073013306,
+                      "q25_ms": 0.7586880028247833,
+                      "q75_ms": 0.8284160047769547,
+                      "minimum_ms": 0.7434239983558655,
+                      "maximum_ms": 0.849727988243103
+                    },
+                    "wall": {
+                      "samples": 4,
+                      "median_ms": 0.8178455000233953,
+                      "q25_ms": 0.7833870000268917,
+                      "q75_ms": 0.8555045000093742,
+                      "minimum_ms": 0.7675080000240087,
+                      "maximum_ms": 0.8809849999806829
+                    },
+                    "cuda_event_values_ms": [
+                      0.849727988243103,
+                      0.8213120102882385,
+                      0.7637760043144226,
+                      0.7434239983558655
+                    ],
+                    "wall_values_ms": [
+                      0.8809849999806829,
+                      0.8470110000189379,
+                      0.7886800000278527,
+                      0.7675080000240087
+                    ]
+                  }
+                }
+              },
+              {
+                "order": [
+                  "packed",
+                  "original"
+                ],
+                "measurements": {
+                  "packed": {
+                    "cuda_event": {
+                      "samples": 4,
+                      "median_ms": 0.81836798787117,
+                      "q25_ms": 0.7745520025491714,
+                      "q75_ms": 0.8439599871635437,
+                      "minimum_ms": 0.7139520049095154,
+                      "maximum_ms": 0.849888026714325
+                    },
+                    "wall": {
+                      "samples": 4,
+                      "median_ms": 0.8515600000293944,
+                      "q25_ms": 0.8113162500080762,
+                      "q75_ms": 0.8704025000270121,
+                      "minimum_ms": 0.7409159999838266,
+                      "maximum_ms": 0.8765989999801604
+                    },
+                    "cuda_event_values_ms": [
+                      0.7139520049095154,
+                      0.7947520017623901,
+                      0.849888026714325,
+                      0.84198397397995
+                    ],
+                    "wall_values_ms": [
+                      0.7409159999838266,
+                      0.8347830000161593,
+                      0.8765989999801604,
+                      0.8683370000426294
+                    ]
+                  },
+                  "original": {
+                    "cuda_event": {
+                      "samples": 4,
+                      "median_ms": 1.2809439897537231,
+                      "q25_ms": 1.2515679597854614,
+                      "q75_ms": 1.3137600123882294,
+                      "minimum_ms": 1.237023949623108,
+                      "maximum_ms": 1.3386240005493164
+                    },
+                    "wall": {
+                      "samples": 4,
+                      "median_ms": 1.3073645000076795,
+                      "q25_ms": 1.2774600000255987,
+                      "q75_ms": 1.3410437499885575,
+                      "minimum_ms": 1.2648960000092302,
+                      "maximum_ms": 1.3649320000013176
+                    },
+                    "cuda_event_values_ms": [
+                      1.237023949623108,
+                      1.2564159631729126,
+                      1.3386240005493164,
+                      1.3054720163345337
+                    ],
+                    "wall_values_ms": [
+                      1.2648960000092302,
+                      1.2816480000310548,
+                      1.3649320000013176,
+                      1.333080999984304
+                    ]
+                  }
+                }
+              }
+            ],
+            "cuda_event_speedup": 1.5906518572372055,
+            "wall_speedup": 1.5729664320983274
+          },
+          {
+            "round": 3,
+            "blocks": [
+              {
+                "order": [
+                  "original",
+                  "packed"
+                ],
+                "measurements": {
+                  "original": {
+                    "cuda_event": {
+                      "samples": 4,
+                      "median_ms": 1.3169600367546082,
+                      "q25_ms": 1.2908880412578583,
+                      "q75_ms": 1.3533600270748138,
+                      "minimum_ms": 1.2436800003051758,
+                      "maximum_ms": 1.4315520524978638
+                    },
+                    "wall": {
+                      "samples": 4,
+                      "median_ms": 1.3427094999940437,
+                      "q25_ms": 1.316393749988265,
+                      "q75_ms": 1.3806810000005498,
+                      "minimum_ms": 1.2706520000165256,
+                      "maximum_ms": 1.4613899999744717
+                    },
+                    "cuda_event_values_ms": [
+                      1.4315520524978638,
+                      1.3272960186004639,
+                      1.2436800003051758,
+                      1.3066240549087524
+                    ],
+                    "wall_values_ms": [
+                      1.4613899999744717,
+                      1.3537780000092425,
+                      1.2706520000165256,
+                      1.3316409999788448
+                    ]
+                  },
+                  "packed": {
+                    "cuda_event": {
+                      "samples": 4,
+                      "median_ms": 0.7654879987239838,
+                      "q25_ms": 0.7544320225715637,
+                      "q75_ms": 0.79264797270298,
+                      "minimum_ms": 0.7536640167236328,
+                      "maximum_ms": 0.8417279720306396
+                    },
+                    "wall": {
+                      "samples": 4,
+                      "median_ms": 0.7902995000108604,
+                      "q25_ms": 0.7789302499929818,
+                      "q75_ms": 0.819164000020578,
+                      "minimum_ms": 0.7787270000108037,
+                      "maximum_ms": 0.8718529999782731
+                    },
+                    "cuda_event_values_ms": [
+                      0.8417279720306396,
+                      0.754688024520874,
+                      0.7762879729270935,
+                      0.7536640167236328
+                    ],
+                    "wall_values_ms": [
+                      0.8718529999782731,
+                      0.7789979999870411,
+                      0.8016010000346796,
+                      0.7787270000108037
+                    ]
+                  }
+                }
+              },
+              {
+                "order": [
+                  "packed",
+                  "original"
+                ],
+                "measurements": {
+                  "packed": {
+                    "cuda_event": {
+                      "samples": 4,
+                      "median_ms": 0.8022719919681549,
+                      "q25_ms": 0.7932880073785782,
+                      "q75_ms": 0.8215359896421432,
+                      "minimum_ms": 0.7814080119132996,
+                      "maximum_ms": 0.8642560243606567
+                    },
+                    "wall": {
+                      "samples": 4,
+                      "median_ms": 0.8452380000107951,
+                      "q25_ms": 0.8305262499987975,
+                      "q75_ms": 0.862652000023445,
+                      "minimum_ms": 0.8075740000208498,
+                      "maximum_ms": 0.8937110000033499
+                    },
+                    "cuda_event_values_ms": [
+                      0.8072959780693054,
+                      0.8642560243606567,
+                      0.7972480058670044,
+                      0.7814080119132996
+                    ],
+                    "wall_values_ms": [
+                      0.8381769999914468,
+                      0.8937110000033499,
+                      0.8522990000301434,
+                      0.8075740000208498
+                    ]
+                  },
+                  "original": {
+                    "cuda_event": {
+                      "samples": 4,
+                      "median_ms": 1.2471680045127869,
+                      "q25_ms": 1.2425679862499237,
+                      "q75_ms": 1.2668720185756683,
+                      "minimum_ms": 1.237887978553772,
+                      "maximum_ms": 1.316864013671875
+                    },
+                    "wall": {
+                      "samples": 4,
+                      "median_ms": 1.272274999990941,
+                      "q25_ms": 1.2678580000056172,
+                      "q75_ms": 1.29305174998251,
+                      "minimum_ms": 1.2674380000134988,
+                      "maximum_ms": 1.3425509999933638
+                    },
+                    "cuda_event_values_ms": [
+                      1.237887978553772,
+                      1.2502080202102661,
+                      1.316864013671875,
+                      1.2441279888153076
+                    ],
+                    "wall_values_ms": [
+                      1.2674380000134988,
+                      1.2765519999788921,
+                      1.3425509999933638,
+                      1.26799800000299
+                    ]
+                  }
+                }
+              }
+            ],
+            "cuda_event_speedup": 1.6374820170318007,
+            "wall_speedup": 1.60210754925758
+          }
+        ],
+        "memory": {
+          "original": {
+            "allocated_start_bytes": 35592192,
+            "allocated_peak_bytes": 72885248,
+            "extra_allocated_peak_bytes": 37293056,
+            "end_with_result_bytes": 42817536,
+            "after_result_release_bytes": 35592192
+          },
+          "packed": {
+            "allocated_start_bytes": 35592192,
+            "allocated_peak_bytes": 56418816,
+            "extra_allocated_peak_bytes": 20826624,
+            "end_with_result_bytes": 42817536,
+            "after_result_release_bytes": 35592192
+          }
+        },
+        "rope_mapping_bitwise_equal": true,
+        "parity": {
+          "output": {
+            "dtype": "torch.float16",
+            "reference_dtype": "torch.float16",
+            "shape": [
+              672,
+              1536
+            ],
+            "all_finite": true,
+            "relative_l2": 0.0,
+            "max_abs_difference": 0.0
+          },
+          "gradients": {
+            "q": {
+              "dtype": "torch.float16",
+              "reference_dtype": "torch.float16",
+              "shape": [
+                672,
+                1536
+              ],
+              "all_finite": true,
+              "relative_l2": 3.306633288957528e-06,
+              "max_abs_difference": 7.62939453125e-06
+            },
+            "lq": {
+              "dtype": "torch.float16",
+              "reference_dtype": "torch.float16",
+              "shape": [
+                672,
+                1536
+              ],
+              "all_finite": true,
+              "relative_l2": 3.306633288957528e-06,
+              "max_abs_difference": 7.62939453125e-06
+            },
+            "k": {
+              "dtype": "torch.float16",
+              "reference_dtype": "torch.float16",
+              "shape": [
+                672,
+                256
+              ],
+              "all_finite": true,
+              "relative_l2": 4.667910616262816e-06,
+              "max_abs_difference": 7.62939453125e-06
+            },
+            "v": {
+              "dtype": "torch.float16",
+              "reference_dtype": "torch.float16",
+              "shape": [
+                672,
+                256
+              ],
+              "all_finite": true,
+              "relative_l2": 2.4110713638947345e-06,
+              "max_abs_difference": 0.0001220703125
+            },
+            "lv": {
+              "dtype": "torch.float16",
+              "reference_dtype": "torch.float16",
+              "shape": [
+                672,
+                256
+              ],
+              "all_finite": true,
+              "relative_l2": 2.4110713638947345e-06,
+              "max_abs_difference": 0.0001220703125
+            }
+          },
+          "passed": true
+        },
+        "original_backend": {
+          "choice": 2,
+          "name": "efficient",
+          "q_shape": [
+            4,
+            12,
+            256,
+            128
+          ],
+          "k_shape": [
+            4,
+            12,
+            256,
+            128
+          ],
+          "mask_shape": [
+            4,
+            1,
+            256,
+            256
+          ]
+        },
+        "packed_backend": "direct_native_efficient_Cutlass_varlen",
+        "aggregate": {
+          "original": {
+            "cuda_event": {
+              "samples": 24,
+              "median_ms": 1.2728319764137268,
+              "q25_ms": 1.2440159916877747,
+              "q75_ms": 1.309184044599533,
+              "minimum_ms": 1.1973439455032349,
+              "maximum_ms": 1.564352035522461
+            },
+            "wall": {
+              "samples": 24,
+              "median_ms": 1.304295500005992,
+              "q25_ms": 1.2699885000131417,
+              "q75_ms": 1.335675000021297,
+              "minimum_ms": 1.2254360000270026,
+              "maximum_ms": 1.5903070000149455
+            }
+          },
+          "packed": {
+            "cuda_event": {
+              "samples": 24,
+              "median_ms": 0.7960000038146973,
+              "q25_ms": 0.7700159847736359,
+              "q75_ms": 0.8370720148086548,
+              "minimum_ms": 0.7139520049095154,
+              "maximum_ms": 0.8642560243606567
+            },
+            "wall": {
+              "samples": 24,
+              "median_ms": 0.8364800000038031,
+              "q25_ms": 0.794642499982956,
+              "q75_ms": 0.8684875000284364,
+              "minimum_ms": 0.7409159999838266,
+              "maximum_ms": 0.8937110000033499
+            }
+          }
+        },
+        "inputs_unchanged": true,
+        "rng_unchanged": true,
+        "status": "qualified_diagnostic_only"
+      },
+      {
+        "lengths": [
+          128,
+          64,
+          32,
+          16
+        ],
+        "batch": 4,
+        "sequence": 128,
+        "real_tokens": 240,
+        "all_full": false,
+        "rounds": [
+          {
+            "round": 1,
+            "blocks": [
+              {
+                "order": [
+                  "original",
+                  "packed"
+                ],
+                "measurements": {
+                  "original": {
+                    "cuda_event": {
+                      "samples": 4,
+                      "median_ms": 1.0102880001068115,
+                      "q25_ms": 0.9749280214309692,
+                      "q75_ms": 1.0528239905834198,
+                      "minimum_ms": 0.9707520008087158,
+                      "maximum_ms": 1.0785280466079712
+                    },
+                    "wall": {
+                      "samples": 4,
+                      "median_ms": 1.0504304999869873,
+                      "q25_ms": 0.9987530000188372,
+                      "q75_ms": 1.1013177499563653,
+                      "minimum_ms": 0.9948140000233252,
+                      "maximum_ms": 1.1028859999555607
+                    },
+                    "cuda_event_values_ms": [
+                      1.0442559719085693,
+                      1.0785280466079712,
+                      0.9763200283050537,
+                      0.9707520008087158
+                    ],
+                    "wall_values_ms": [
+                      1.1007949999566335,
+                      1.1028859999555607,
+                      1.0000660000173411,
+                      0.9948140000233252
+                    ]
+                  },
+                  "packed": {
+                    "cuda_event": {
+                      "samples": 4,
+                      "median_ms": 0.7371200025081635,
+                      "q25_ms": 0.7243839800357819,
+                      "q75_ms": 0.7552560269832611,
+                      "minimum_ms": 0.7106559872627258,
+                      "maximum_ms": 0.7851840257644653
+                    },
+                    "wall": {
+                      "samples": 4,
+                      "median_ms": 0.7620564999797352,
+                      "q25_ms": 0.7500544999743397,
+                      "q75_ms": 0.7811367499925836,
+                      "minimum_ms": 0.7339250000200082,
+                      "maximum_ms": 0.8185009999692738
+                    },
+                    "cuda_event_values_ms": [
+                      0.7289599776268005,
+                      0.7851840257644653,
+                      0.7452800273895264,
+                      0.7106559872627258
+                    ],
+                    "wall_values_ms": [
+                      0.7554309999591169,
+                      0.8185009999692738,
+                      0.7686820000003536,
+                      0.7339250000200082
+                    ]
+                  }
+                }
+              },
+              {
+                "order": [
+                  "packed",
+                  "original"
+                ],
+                "measurements": {
+                  "packed": {
+                    "cuda_event": {
+                      "samples": 4,
+                      "median_ms": 0.7805280089378357,
+                      "q25_ms": 0.7288240045309067,
+                      "q75_ms": 0.8337120115756989,
+                      "minimum_ms": 0.7265920042991638,
+                      "maximum_ms": 0.8403840065002441
+                    },
+                    "wall": {
+                      "samples": 4,
+                      "median_ms": 0.8064005000107954,
+                      "q25_ms": 0.7521237500185407,
+                      "q75_ms": 0.8615092500008359,
+                      "minimum_ms": 0.7500259999915215,
+                      "maximum_ms": 0.8661030000212122
+                    },
+                    "cuda_event_values_ms": [
+                      0.8314880132675171,
+                      0.8403840065002441,
+                      0.7295680046081543,
+                      0.7265920042991638
+                    ],
+                    "wall_values_ms": [
+                      0.8599779999940438,
+                      0.8661030000212122,
+                      0.7528230000275471,
+                      0.7500259999915215
+                    ]
+                  },
+                  "original": {
+                    "cuda_event": {
+                      "samples": 4,
+                      "median_ms": 1.0521599650382996,
+                      "q25_ms": 0.9943679571151733,
+                      "q75_ms": 1.110159993171692,
+                      "minimum_ms": 0.9707520008087158,
+                      "maximum_ms": 1.1344000101089478
+                    },
+                    "wall": {
+                      "samples": 4,
+                      "median_ms": 1.0782190000213632,
+                      "q25_ms": 1.0193067500239295,
+                      "q75_ms": 1.1381995000050438,
+                      "minimum_ms": 0.9951349999823833,
+                      "maximum_ms": 1.1655760000053306
+                    },
+                    "cuda_event_values_ms": [
+                      1.1344000101089478,
+                      0.9707520008087158,
+                      1.0022399425506592,
+                      1.10207998752594
+                    ],
+                    "wall_values_ms": [
+                      1.1655760000053306,
+                      0.9951349999823833,
+                      1.0273640000377782,
+                      1.1290740000049482
+                    ]
+                  }
+                }
+              }
+            ],
+            "cuda_event_speedup": 1.359299374001095,
+            "wall_speedup": 1.3577459075550815
+          },
+          {
+            "round": 2,
+            "blocks": [
+              {
+                "order": [
+                  "original",
+                  "packed"
+                ],
+                "measurements": {
+                  "original": {
+                    "cuda_event": {
+                      "samples": 4,
+                      "median_ms": 1.0028000175952911,
+                      "q25_ms": 0.9464799910783768,
+                      "q75_ms": 1.060088038444519,
+                      "minimum_ms": 0.939903974533081,
+                      "maximum_ms": 1.0695680379867554
+                    },
+                    "wall": {
+                      "samples": 4,
+                      "median_ms": 1.028639500020745,
+                      "q25_ms": 0.9712705000026745,
+                      "q75_ms": 1.090971000039076,
+                      "minimum_ms": 0.9635680000315006,
+                      "maximum_ms": 1.1135610000110319
+                    },
+                    "cuda_event_values_ms": [
+                      1.0695680379867554,
+                      0.9486719965934753,
+                      0.939903974533081,
+                      1.056928038597107
+                    ],
+                    "wall_values_ms": [
+                      1.1135610000110319,
+                      0.9738379999930658,
+                      0.9635680000315006,
+                      1.083441000048424
+                    ]
+                  },
+                  "packed": {
+                    "cuda_event": {
+                      "samples": 4,
+                      "median_ms": 0.9829760193824768,
+                      "q25_ms": 0.9453600198030472,
+                      "q75_ms": 1.0230160057544708,
+                      "minimum_ms": 0.8511360287666321,
+                      "maximum_ms": 1.124511957168579
+                    },
+                    "wall": {
+                      "samples": 4,
+                      "median_ms": 1.023726999989094,
+                      "q25_ms": 0.9808082500057935,
+                      "q75_ms": 1.0674084999777733,
+                      "minimum_ms": 0.8832970000298701,
+                      "maximum_ms": 1.1672079999698326
+                    },
+                    "cuda_event_values_ms": [
+                      0.8511360287666321,
+                      0.9767680168151855,
+                      1.124511957168579,
+                      0.9891840219497681
+                    ],
+                    "wall_values_ms": [
+                      0.8832970000298701,
+                      1.013311999997768,
+                      1.1672079999698326,
+                      1.0341419999804202
+                    ]
+                  }
+                }
+              },
+              {
+                "order": [
+                  "packed",
+                  "original"
+                ],
+                "measurements": {
+                  "packed": {
+                    "cuda_event": {
+                      "samples": 4,
+                      "median_ms": 0.850383996963501,
+                      "q25_ms": 0.8072640001773834,
+                      "q75_ms": 0.9563120007514954,
+                      "minimum_ms": 0.749567985534668,
+                      "maximum_ms": 1.2024320363998413
+                    },
+                    "wall": {
+                      "samples": 4,
+                      "median_ms": 0.8754774999886195,
+                      "q25_ms": 0.831267999984675,
+                      "q75_ms": 0.9870482499962918,
+                      "minimum_ms": 0.7740610000155357,
+                      "maximum_ms": 1.246338999976615
+                    },
+                    "cuda_event_values_ms": [
+                      1.2024320363998413,
+                      0.8742719888687134,
+                      0.749567985534668,
+                      0.8264960050582886
+                    ],
+                    "wall_values_ms": [
+                      1.246338999976615,
+                      0.9006180000028507,
+                      0.7740610000155357,
+                      0.8503369999743882
+                    ]
+                  },
+                  "original": {
+                    "cuda_event": {
+                      "samples": 4,
+                      "median_ms": 1.01841601729393,
+                      "q25_ms": 0.9611520022153854,
+                      "q75_ms": 1.0892640054225922,
+                      "minimum_ms": 0.9523199796676636,
+                      "maximum_ms": 1.1388479471206665
+                    },
+                    "wall": {
+                      "samples": 4,
+                      "median_ms": 1.04317250000463,
+                      "q25_ms": 0.9846239999831141,
+                      "q75_ms": 1.1172495000266736,
+                      "minimum_ms": 0.9762779999960003,
+                      "maximum_ms": 1.172181000015371
+                    },
+                    "cuda_event_values_ms": [
+                      1.1388479471206665,
+                      1.0727360248565674,
+                      0.9640960097312927,
+                      0.9523199796676636
+                    ],
+                    "wall_values_ms": [
+                      1.172181000015371,
+                      1.098939000030441,
+                      0.9874059999788187,
+                      0.9762779999960003
+                    ]
+                  }
+                }
+              }
+            ],
+            "cuda_event_speedup": 1.1088813951180487,
+            "wall_speedup": 1.0981727706755202
+          },
+          {
+            "round": 3,
+            "blocks": [
+              {
+                "order": [
+                  "original",
+                  "packed"
+                ],
+                "measurements": {
+                  "original": {
+                    "cuda_event": {
+                      "samples": 4,
+                      "median_ms": 1.0980960130691528,
+                      "q25_ms": 1.0518559962511063,
+                      "q75_ms": 1.1405200064182281,
+                      "minimum_ms": 0.9664639830589294,
+                      "maximum_ms": 1.2144639492034912
+                    },
+                    "wall": {
+                      "samples": 4,
+                      "median_ms": 1.1236654999891016,
+                      "q25_ms": 1.0781219999955738,
+                      "q75_ms": 1.1663507499832804,
+                      "minimum_ms": 0.994472999991558,
+                      "maximum_ms": 1.241424999989249
+                    },
+                    "cuda_event_values_ms": [
+                      0.9664639830589294,
+                      1.2144639492034912,
+                      1.0803200006484985,
+                      1.1158720254898071
+                    ],
+                    "wall_values_ms": [
+                      0.994472999991558,
+                      1.241424999989249,
+                      1.1060049999969124,
+                      1.1413259999812908
+                    ]
+                  },
+                  "packed": {
+                    "cuda_event": {
+                      "samples": 4,
+                      "median_ms": 0.787663996219635,
+                      "q25_ms": 0.7849439829587936,
+                      "q75_ms": 0.8112720102071762,
+                      "minimum_ms": 0.7802879810333252,
+                      "maximum_ms": 0.8785920143127441
+                    },
+                    "wall": {
+                      "samples": 4,
+                      "median_ms": 0.8132049999858282,
+                      "q25_ms": 0.8115034999747195,
+                      "q75_ms": 0.8369117499995582,
+                      "minimum_ms": 0.8108779999815852,
+                      "maximum_ms": 0.9035530000005565
+                    },
+                    "cuda_event_values_ms": [
+                      0.7802879810333252,
+                      0.7864959836006165,
+                      0.8785920143127441,
+                      0.7888320088386536
+                    ],
+                    "wall_values_ms": [
+                      0.8117119999724309,
+                      0.8108779999815852,
+                      0.9035530000005565,
+                      0.8146979999992254
+                    ]
+                  }
+                }
+              },
+              {
+                "order": [
+                  "packed",
+                  "original"
+                ],
+                "measurements": {
+                  "packed": {
+                    "cuda_event": {
+                      "samples": 4,
+                      "median_ms": 0.8232640027999878,
+                      "q25_ms": 0.8081759810447693,
+                      "q75_ms": 0.8411680161952972,
+                      "minimum_ms": 0.7937279939651489,
+                      "maximum_ms": 0.8640639781951904
+                    },
+                    "wall": {
+                      "samples": 4,
+                      "median_ms": 0.8490040000026511,
+                      "q25_ms": 0.8341480000098045,
+                      "q75_ms": 0.8671377499922528,
+                      "minimum_ms": 0.8216979999815521,
+                      "maximum_ms": 0.8894210000107705
+                    },
+                    "cuda_event_values_ms": [
+                      0.7937279939651489,
+                      0.8129919767379761,
+                      0.8640639781951904,
+                      0.8335360288619995
+                    ],
+                    "wall_values_ms": [
+                      0.8216979999815521,
+                      0.838298000019222,
+                      0.8894210000107705,
+                      0.8597099999860802
+                    ]
+                  },
+                  "original": {
+                    "cuda_event": {
+                      "samples": 4,
+                      "median_ms": 1.0559839606285095,
+                      "q25_ms": 1.0440319776535034,
+                      "q75_ms": 1.0813839435577393,
+                      "minimum_ms": 1.0105279684066772,
+                      "maximum_ms": 1.1552319526672363
+                    },
+                    "wall": {
+                      "samples": 4,
+                      "median_ms": 1.0812715000270146,
+                      "q25_ms": 1.0705140000197844,
+                      "q75_ms": 1.1068235000237792,
+                      "minimum_ms": 1.0405950000063058,
+                      "maximum_ms": 1.181126000005861
+                    },
+                    "cuda_event_values_ms": [
+                      1.0105279684066772,
+                      1.0551999807357788,
+                      1.1552319526672363,
+                      1.0567679405212402
+                    ],
+                    "wall_values_ms": [
+                      1.0405950000063058,
+                      1.0804870000242772,
+                      1.181126000005861,
+                      1.0820560000297519
+                    ]
+                  }
+                }
+              }
+            ],
+            "cuda_event_speedup": 1.3383984673683893,
+            "wall_speedup": 1.3276752090264927
+          }
+        ],
+        "memory": {
+          "original": {
+            "allocated_start_bytes": 24087040,
+            "allocated_peak_bytes": 42307584,
+            "extra_allocated_peak_bytes": 18220544,
+            "end_with_result_bytes": 26667520,
+            "after_result_release_bytes": 24087040
+          },
+          "packed": {
+            "allocated_start_bytes": 24087040,
+            "allocated_peak_bytes": 32431616,
+            "extra_allocated_peak_bytes": 8344576,
+            "end_with_result_bytes": 26667520,
+            "after_result_release_bytes": 24087040
+          }
+        },
+        "rope_mapping_bitwise_equal": true,
+        "parity": {
+          "output": {
+            "dtype": "torch.float16",
+            "reference_dtype": "torch.float16",
+            "shape": [
+              240,
+              1536
+            ],
+            "all_finite": true,
+            "relative_l2": 0.0,
+            "max_abs_difference": 0.0
+          },
+          "gradients": {
+            "q": {
+              "dtype": "torch.float16",
+              "reference_dtype": "torch.float16",
+              "shape": [
+                240,
+                1536
+              ],
+              "all_finite": true,
+              "relative_l2": 6.736342470503587e-07,
+              "max_abs_difference": 1.9073486328125e-06
+            },
+            "lq": {
+              "dtype": "torch.float16",
+              "reference_dtype": "torch.float16",
+              "shape": [
+                240,
+                1536
+              ],
+              "all_finite": true,
+              "relative_l2": 6.736342470503587e-07,
+              "max_abs_difference": 1.9073486328125e-06
+            },
+            "k": {
+              "dtype": "torch.float16",
+              "reference_dtype": "torch.float16",
+              "shape": [
+                240,
+                256
+              ],
+              "all_finite": true,
+              "relative_l2": 0.0,
+              "max_abs_difference": 0.0
+            },
+            "v": {
+              "dtype": "torch.float16",
+              "reference_dtype": "torch.float16",
+              "shape": [
+                240,
+                256
+              ],
+              "all_finite": true,
+              "relative_l2": 0.0,
+              "max_abs_difference": 0.0
+            },
+            "lv": {
+              "dtype": "torch.float16",
+              "reference_dtype": "torch.float16",
+              "shape": [
+                240,
+                256
+              ],
+              "all_finite": true,
+              "relative_l2": 0.0,
+              "max_abs_difference": 0.0
+            }
+          },
+          "passed": true
+        },
+        "original_backend": {
+          "choice": 2,
+          "name": "efficient",
+          "q_shape": [
+            4,
+            12,
+            128,
+            128
+          ],
+          "k_shape": [
+            4,
+            12,
+            128,
+            128
+          ],
+          "mask_shape": [
+            4,
+            1,
+            128,
+            128
+          ]
+        },
+        "packed_backend": "direct_native_efficient_Cutlass_varlen",
+        "aggregate": {
+          "original": {
+            "cuda_event": {
+              "samples": 24,
+              "median_ms": 1.0559839606285095,
+              "q25_ms": 0.9707520008087158,
+              "q75_ms": 1.0857599973678589,
+              "minimum_ms": 0.939903974533081,
+              "maximum_ms": 1.2144639492034912
+            },
+            "wall": {
+              "samples": 24,
+              "median_ms": 1.082748500039088,
+              "q25_ms": 0.9950547499926188,
+              "q75_ms": 1.117439250009511,
+              "minimum_ms": 0.9635680000315006,
+              "maximum_ms": 1.241424999989249
+            }
+          },
+          "packed": {
+            "cuda_event": {
+              "samples": 24,
+              "median_ms": 0.8197439908981323,
+              "q25_ms": 0.7726079821586609,
+              "q75_ms": 0.8666159808635712,
+              "minimum_ms": 0.7106559872627258,
+              "maximum_ms": 1.2024320363998413
+            },
+            "wall": {
+              "samples": 24,
+              "median_ms": 0.844317499996805,
+              "q25_ms": 0.8016737499900728,
+              "q75_ms": 0.8922202500087906,
+              "minimum_ms": 0.7339250000200082,
+              "maximum_ms": 1.246338999976615
+            }
+          }
+        },
+        "inputs_unchanged": true,
+        "rng_unchanged": true,
+        "status": "qualified_diagnostic_only"
+      }
+    ],
+    "elapsed_s": 1.4365755410000247,
+    "status": "completed_diagnostic_only"
+  },
+  "completed": true,
+  "elapsed_s": 1.44171895300002
+}

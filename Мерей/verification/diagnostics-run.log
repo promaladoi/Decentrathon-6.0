@@ -1,0 +1,186 @@
+Kagglev15 363864828 snapshot60f69a0d2fc464c4163ea542b81fa9c020f6bf36e14d6764823c7e3ef3d2c227 TIME TAB LINE TAB BODY
+8.1s	1	0.00s - Debugger warning: It seems that frozen modules are being used, which may
+
+8.1s	2	0.00s - make the debugger miss breakpoints. Please pass -Xfrozen_modules=off
+
+8.1s	3	0.00s - to python to disable frozen modules.
+
+8.1s	4	0.00s - Note: Debugging will proceed. Set PYDEVD_DISABLE_FILE_VALIDATION=1 to disable this validation.
+
+8.7s	5	0.00s - Debugger warning: It seems that frozen modules are being used, which may
+
+8.7s	6	0.00s - make the debugger miss breakpoints. Please pass -Xfrozen_modules=off
+
+8.7s	7	0.00s - to python to disable frozen modules.
+
+8.7s	8	0.00s - Note: Debugging will proceed. Set PYDEVD_DISABLE_FILE_VALIDATION=1 to disable this validation.
+
+9.9s	9	{'kind': 'team_optimized', 'snapshot_sha256': '60f69a0d2fc464c4163ea542b81fa9c020f6bf36e14d6764823c7e3ef3d2c227', 'team_source_commit': '987da36e1efa90652e1a7f8c48afef50685dbc40'}
+
+10.1s	10	Tesla T4
+
+10.1s	11	Tesla T4
+
+10.1s	12	
+
+10.8s	13	Found existing installation: torchao 0.10.0
+
+10.9s	14	Uninstalling torchao-0.10.0:
+
+11.3s	15	  Successfully uninstalled torchao-0.10.0
+
+18.6s	16	{'source': 'development snapshot', 'sha256': '60f69a0d2fc464c4163ea542b81fa9c020f6bf36e14d6764823c7e3ef3d2c227', 'starter_commit': 'c7c2fcd15972ce8b898d8d3ff732ee192c817ceb', 'files': 46}
+
+18.7s	17	{'soup-cli': '0.77.0', 'torch': '2.11.0+cu128', 'triton': '3.6.0', 'transformers': '5.16.1', 'peft': '0.20.0', 'trl': '0.29.1', 'bitsandbytes': '0.50.2', 'accelerate': '1.14.0'}
+
+18.7s	18	SOLUTION_UNIT_TESTS_BEGIN
+
+72.6s	19	................................................................................................................................. [ 57%]
+
+72.8s	20	.................. [ 57%]
+
+84.6s	21	......................................................................................................                    [100%]
+
+84.6s	22	=============================== warnings summary ===============================
+
+84.6s	23	solution/test_kernels.py: 14 warnings
+
+84.6s	24	  /usr/local/lib/python3.13/dist-packages/torch/jit/_script.py:365: DeprecationWarning: `torch.jit.script_method` is deprecated. Please switch to `torch.compile` or `torch.export`.
+
+84.6s	25	    warnings.warn(
+
+84.6s	26	
+
+84.6s	27	-- Docs: https://docs.pytest.org/en/stable/how-to/capture-warnings.html
+
+84.6s	28	125 passed, 14 warnings in 64.43s (0:01:04)
+
+84.8s	29	.                    [100%]
+
+84.8s	30	=============================== warnings summary ===============================
+
+84.8s	31	solution/test_kernels.py: 14 warnings
+
+84.8s	32	  /usr/local/lib/python3.13/dist-packages/torch/jit/_script.py:365: DeprecationWarning: `torch.jit.script_method` is deprecated. Please switch to `torch.compile` or `torch.export`.
+
+84.8s	33	    warnings.warn(
+
+84.8s	34	
+
+84.8s	35	-- Docs: https://docs.pytest.org/en/stable/how-to/capture-warnings.html
+
+84.8s	36	125 passed, 14 warnings in 64.43s (0:01:04)
+
+91.0s	37	SOUP_REGRESSION_TESTS_BEGIN
+
+102.5s	38	.......................................................................................................................... [ 91%]
+
+102.5s	39	.......                                                                  [100%]
+
+102.5s	40	=============================== warnings summary ===============================
+
+102.5s	41	../../../usr/local/lib/python3.13/dist-packages/torch/jit/_script.py:365: 14 warnings
+
+102.5s	42	  /usr/local/lib/python3.13/dist-packages/torch/jit/_script.py:365: DeprecationWarning: `torch.jit.script_method` is deprecated. Please switch to `torch.compile` or `torch.export`.
+
+102.5s	43	    warnings.warn(
+
+102.5s	44	
+
+102.5s	45	-- Docs: https://docs.pytest.org/en/stable/how-to/capture-warnings.html
+
+102.5s	46	79 passed, 14 warnings in 0.96s
+
+102.6s	47	...................... [ 91%]
+
+102.6s	48	.......                                                                  [100%]
+
+102.6s	49	=============================== warnings summary ===============================
+
+102.6s	50	../../../usr/local/lib/python3.13/dist-packages/torch/jit/_script.py:365: 14 warnings
+
+102.6s	51	  /usr/local/lib/python3.13/dist-packages/torch/jit/_script.py:365: DeprecationWarning: `torch.jit.script_method` is deprecated. Please switch to `torch.compile` or `torch.export`.
+
+102.6s	52	    warnings.warn(
+
+102.6s	53	
+
+102.6s	54	-- Docs: https://docs.pytest.org/en/stable/how-to/capture-warnings.html
+
+102.6s	55	79 passed, 14 warnings in 0.96s
+
+110.0s	56	{
+
+110.0s	57	  "name": "benchmark_dropout",
+
+110.0s	58	  "completed": true,
+
+110.0s	59	  "elapsed_s": 2.881182988999967
+
+110.0s	60	}
+
+110.1s	61	/kaggle/working/repo/solution/benchmark_attention_rows.py:56: UserWarning: Converting a tensor with requires_grad=True to a scalar may lead to unexpected behavior.
+
+110.1s	62	Consider using tensor.detach() first. (Triggered internally at /pytorch/torch/csrc/autograd/generated/python_variable_methods.cpp:836.)
+
+110.1s	63	  'relative_l2':float(rel),'all_finite':bool(finite.all()),
+
+110.2s	64	{
+
+110.2s	65	  "name": "benchmark_dropout",
+
+110.2s	66	  "completed": true,
+
+110.2s	67	  "elapsed_s": 2.881182988999967
+
+110.2s	68	}
+
+110.3s	69	/kaggle/working/repo/solution/benchmark_attention_rows.py:56: UserWarning: Converting a tensor with requires_grad=True to a scalar may lead to unexpected behavior.
+
+110.3s	70	Consider using tensor.detach() first. (Triggered internally at /pytorch/torch/csrc/autograd/generated/python_variable_methods.cpp:836.)
+
+110.3s	71	  'relative_l2':float(rel),'all_finite':bool(finite.all()),
+
+110.3s	72	
+
+110.3s	73	/kaggle/working/repo/solution/benchmark_attention_rows.py:56: UserWarning: Converting a tensor with requires_grad=True to a scalar may lead to unexpected behavior.
+
+110.3s	74	Consider using tensor.detach() first. (Triggered internally at /pytorch/torch/csrc/autograd/generated/python_variable_methods.cpp:836.)
+
+110.3s	75	  'relative_l2':float(rel),'all_finite':bool(finite.all()),
+
+114.0s	76	{
+
+114.0s	77	  "name": "benchmark_attention_rows",
+
+114.0s	78	  "completed": true,
+
+114.0s	79	  "elapsed_s": 4.018625291000035
+
+114.0s	80	}
+
+114.2s	81	{
+
+114.2s	82	  "name": "benchmark_attention_rows",
+
+114.2s	83	  "completed": true,
+
+114.2s	84	  "elapsed_s": 4.018625291000035
+
+114.2s	85	}
+
+117.1s	86	/usr/local/lib/python3.13/dist-packages/mistune.py:435: SyntaxWarning: invalid escape sequence '\|'
+
+117.1s	87	  cells[i][c] = re.sub('\\\\\|', '|', cell)
+
+117.3s	88	/usr/local/lib/python3.13/dist-packages/nbconvert/filters/filter_links.py:36: SyntaxWarning: invalid escape sequence '\_'
+
+117.3s	89	  text = re.sub(r'_', '\_', text) # Escape underscores in display text
+
+118.0s	90	[NbConvertApp] Converting notebook __notebook__.ipynb to notebook
+
+118.1s	91	[NbConvertApp] Writing 186464 bytes to __notebook__.ipynb
+
+120.5s	92	[NbConvertApp] Converting notebook __notebook__.ipynb to html
+
+121.2s	93	[NbConvertApp] Writing 483105 bytes to __results__.html

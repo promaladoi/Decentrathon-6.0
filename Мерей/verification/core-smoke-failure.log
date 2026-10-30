@@ -1,0 +1,308 @@
+Kagglev14 363860917 snapshot665d6ad13623614487bf5672b29bc8acbf177131a5bc55054d67d61b8307b800 TIME TAB LINE TAB BODY
+7.9s	1	0.00s - Debugger warning: It seems that frozen modules are being used, which may
+
+7.9s	2	0.00s - make the debugger miss breakpoints. Please pass -Xfrozen_modules=off
+
+7.9s	3	0.00s - to python to disable frozen modules.
+
+7.9s	4	0.00s - Note: Debugging will proceed. Set PYDEVD_DISABLE_FILE_VALIDATION=1 to disable this validation.
+
+8.5s	5	0.00s - Debugger warning: It seems that frozen modules are being used, which may
+
+8.5s	6	0.00s - make the debugger miss breakpoints. Please pass -Xfrozen_modules=off
+
+8.5s	7	0.00s - to python to disable frozen modules.
+
+8.5s	8	0.00s - Note: Debugging will proceed. Set PYDEVD_DISABLE_FILE_VALIDATION=1 to disable this validation.
+
+9.7s	9	{'kind': 'team_optimized', 'snapshot_sha256': '665d6ad13623614487bf5672b29bc8acbf177131a5bc55054d67d61b8307b800', 'team_source_commit': '987da36e1efa90652e1a7f8c48afef50685dbc40'}
+
+9.9s	10	Tesla T4
+
+9.9s	11	Tesla T4
+
+9.9s	12	
+
+10.6s	13	Found existing installation: torchao 0.10.0
+
+10.7s	14	Uninstalling torchao-0.10.0:
+
+11.2s	15	  Successfully uninstalled torchao-0.10.0
+
+19.0s	16	{'source': 'development snapshot', 'sha256': '665d6ad13623614487bf5672b29bc8acbf177131a5bc55054d67d61b8307b800', 'starter_commit': 'c7c2fcd15972ce8b898d8d3ff732ee192c817ceb', 'files': 39}
+
+19.1s	17	{'soup-cli': '0.77.0', 'torch': '2.11.0+cu128', 'triton': '3.6.0', 'transformers': '5.16.1', 'peft': '0.20.0', 'trl': '0.29.1', 'bitsandbytes': '0.50.2', 'accelerate': '1.14.0'}
+
+19.1s	18	SOLUTION_UNIT_TESTS_BEGIN
+
+72.3s	19	............................................................................................................................................... [ 75%]
+
+72.5s	20	...... [ 75%]
+
+83.5s	21	..............F.F.........................                                                 [100%]
+
+83.5s	22	=================================== FAILURES ===================================
+
+83.5s	23	_ test_add_rmsnorm_preserves_both_gradient_branches[residual_dtype0-delta_dtype0] _
+
+83.5s	24	
+
+83.5s	25	residual_dtype = torch.float16, delta_dtype = torch.float16
+
+83.5s	26	
+
+83.5s	27	    @pytest.mark.parametrize('residual_dtype,delta_dtype', [
+
+83.5s	28	        (torch.float16, torch.float16), (torch.float32, torch.float16),
+
+83.5s	29	        (torch.float32, torch.float32)])
+
+83.5s	30	    def test_add_rmsnorm_preserves_both_gradient_branches(residual_dtype, delta_dtype):
+
+83.5s	31	        from solution.rmsnorm import add_rmsnorm
+
+83.5s	32	    
+
+83.5s	33	        torch.manual_seed(575)
+
+83.5s	34	        shape = (2, 17, 64)
+
+83.5s	35	        residual = torch.ones(shape, device='cuda', dtype=residual_dtype, requires_grad=True)
+
+83.5s	36	        delta = torch.zeros(shape, device='cuda', dtype=delta_dtype, requires_grad=True)
+
+83.5s	37	        weight = torch.randn(64, device='cuda', dtype=torch.float32)
+
+83.5s	38	        h = residual + delta
+
+83.5s	39	        y = weight * (h.float() * torch.rsqrt(h.float().square().mean(-1, keepdim=True))).to(h.dtype)
+
+83.5s	40	        gh, gy = torch.randn_like(h), torch.randn_like(y)
+
+83.5s	41	        expected = torch.autograd.grad((h, y), (residual, delta), (gh, gy))
+
+83.5s	42	        actual_h, actual_y = add_rmsnorm(residual, delta, weight, 0.0)
+
+83.5s	43	        actual = torch.autograd.grad((actual_h, actual_y), (residual, delta), (gh, gy))
+
+83.5s	44	        torch.testing.assert_close(actual_h, h, rtol=0, atol=0)
+
+83.5s	45	        torch.testing.assert_close(actual_y, y, rtol=0, atol=0)
+
+83.5s	46	        # All-half inputs exercise the exact CastBackward→branch-join boundary.
+
+83.5s	47	        tolerance = 0.0 if residual_dtype == delta_dtype == torch.float16 else 1e-5
+
+83.5s	48	        for value, reference in zip(actual, expected):
+
+83.5s	49	>           torch.testing.assert_close(value, reference, rtol=tolerance, atol=tolerance)
+
+83.5s	50	E           AssertionError: Tensor-likes are not equal!
+
+83.5s	51	E           
+
+83.5s	52	E           Mismatched elements: 647 / 2176 (29.7%)
+
+83.5s	53	E           Greatest absolute difference: 0.0078125 at index (0, 2, 41)
+
+83.5s	54	E           Greatest relative difference: 0.0555419921875 at index (1, 3, 18)
+
+83.5s	55	
+
+83.5s	56	solution/test_numerics.py:156: AssertionError
+
+83.5s	57	=============================== warnings summary ===============================
+
+83.5s	58	solution/test_kernels.py: 14 warnings
+
+83.5s	59	  /usr/local/lib/python3.13/dist-packages/torch/jit/_script.py:365: DeprecationWarning: `torch.jit.script_method` is deprecated. Please switch to `torch.compile` or `torch.export`.
+
+83.5s	60	    warnings.warn(
+
+83.5s	61	
+
+83.5s	62	-- Docs: https://docs.pytest.org/en/stable/how-to/capture-warnings.html
+
+83.5s	63	=========================== short test summary info ============================
+
+83.5s	64	FAILED solution/test_numerics.py::test_add_rmsnorm_preserves_both_gradient_branches[residual_dtype0-delta_dtype0]
+
+83.5s	65	1 failed, 95 passed, 14 warnings in 62.95s (0:01:02)
+
+83.7s	66	.                                                 [100%]
+
+83.7s	67	=================================== FAILURES ===================================
+
+83.7s	68	_ test_add_rmsnorm_preserves_both_gradient_branches[residual_dtype0-delta_dtype0] _
+
+83.7s	69	
+
+83.7s	70	residual_dtype = torch.float16, delta_dtype = torch.float16
+
+83.7s	71	
+
+83.7s	72	    @pytest.mark.parametrize('residual_dtype,delta_dtype', [
+
+83.7s	73	        (torch.float16, torch.float16), (torch.float32, torch.float16),
+
+83.7s	74	        (torch.float32, torch.float32)])
+
+83.7s	75	    def test_add_rmsnorm_preserves_both_gradient_branches(residual_dtype, delta_dtype):
+
+83.7s	76	        from solution.rmsnorm import add_rmsnorm
+
+83.7s	77	    
+
+83.7s	78	        torch.manual_seed(575)
+
+83.7s	79	        shape = (2, 17, 64)
+
+83.7s	80	        residual = torch.ones(shape, device='cuda', dtype=residual_dtype, requires_grad=True)
+
+83.7s	81	        delta = torch.zeros(shape, device='cuda', dtype=delta_dtype, requires_grad=True)
+
+83.7s	82	        weight = torch.randn(64, device='cuda', dtype=torch.float32)
+
+83.7s	83	        h = residual + delta
+
+83.7s	84	        y = weight * (h.float() * torch.rsqrt(h.float().square().mean(-1, keepdim=True))).to(h.dtype)
+
+83.7s	85	        gh, gy = torch.randn_like(h), torch.randn_like(y)
+
+83.7s	86	        expected = torch.autograd.grad((h, y), (residual, delta), (gh, gy))
+
+83.7s	87	        actual_h, actual_y = add_rmsnorm(residual, delta, weight, 0.0)
+
+83.7s	88	        actual = torch.autograd.grad((actual_h, actual_y), (residual, delta), (gh, gy))
+
+83.7s	89	        torch.testing.assert_close(actual_h, h, rtol=0, atol=0)
+
+83.7s	90	        torch.testing.assert_close(actual_y, y, rtol=0, atol=0)
+
+83.7s	91	        # All-half inputs exercise the exact CastBackward→branch-join boundary.
+
+83.7s	92	        tolerance = 0.0 if residual_dtype == delta_dtype == torch.float16 else 1e-5
+
+83.7s	93	        for value, reference in zip(actual, expected):
+
+83.7s	94	>           torch.testing.assert_close(value, reference, rtol=tolerance, atol=tolerance)
+
+83.7s	95	E           AssertionError: Tensor-likes are not equal!
+
+83.7s	96	E           
+
+83.7s	97	E           Mismatched elements: 647 / 2176 (29.7%)
+
+83.7s	98	E           Greatest absolute difference: 0.0078125 at index (0, 2, 41)
+
+83.7s	99	E           Greatest relative difference: 0.0555419921875 at index (1, 3, 18)
+
+83.7s	100	
+
+83.7s	101	solution/test_numerics.py:156: AssertionError
+
+83.7s	102	=============================== warnings summary ===============================
+
+83.7s	103	solution/test_kernels.py: 14 warnings
+
+83.7s	104	  /usr/local/lib/python3.13/dist-packages/torch/jit/_script.py:365: DeprecationWarning: `torch.jit.script_method` is deprecated. Please switch to `torch.compile` or `torch.export`.
+
+83.7s	105	    warnings.warn(
+
+83.7s	106	
+
+83.7s	107	-- Docs: https://docs.pytest.org/en/stable/how-to/capture-warnings.html
+
+83.7s	108	=========================== short test summary info ============================
+
+83.7s	109	FAILED solution/test_numerics.py::test_add_rmsnorm_preserves_both_gradient_branches[residual_dtype0-delta_dtype0]
+
+83.7s	110	1 failed, 95 passed, 14 warnings in 62.95s (0:01:02)
+
+89.9s	111	Traceback (most recent call last):
+
+89.9s	112	  File "<string>", line 1, in <module>
+
+89.9s	113	    import sys;import papermill as pm;pm.execute_notebook("__notebook__.ipynb","__notebook__.ipynb",progress_bar=False,log_output=True,stdout_file=sys.stdout,stderr_file=sys.stderr,allow_errors=False,timeout=43200)
+
+89.9s	114	                                      ~~~~~~~~~~~~~~~~~~~^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+
+89.9s	115	  File "/usr/local/lib/python3.13/dist-packages/papermill/execute.py", line 131, in execute_notebook
+
+89.9s	116	    raise_for_execution_errors(nb, output_path)
+
+89.9s	117	    ~~~~~~~~~~~~~~~~~~~~~~~~~~^^^^^^^^^^^^^^^^^
+
+89.9s	118	  File "/usr/local/lib/python3.13/dist-packages/papermill/execute.py", line 251, in raise_for_execution_errors
+
+89.9s	119	    raise error
+
+89.9s	120	papermill.exceptions.PapermillExecutionError: 
+
+89.9s	121	---------------------------------------------------------------------------
+
+89.9s	122	Exception encountered at "In [5]":
+
+89.9s	123	---------------------------------------------------------------------------
+
+89.9s	124	CalledProcessError                        Traceback (most recent call last)
+
+89.9s	125	/tmp/ipykernel_24/4221085112.py in <cell line: 0>()
+
+89.9s	126	      1 print("SOLUTION_UNIT_TESTS_BEGIN", flush=True)
+
+89.9s	127	----> 2 run_repo(["-m","pytest","solution","-q"])
+
+89.9s	128	      3 print("SOUP_REGRESSION_TESTS_BEGIN", flush=True)
+
+89.9s	129	      4 run_repo(["-m","pytest","tests","-q"],SOUP_APPLY_SOLUTION="1")
+
+89.9s	130	
+
+89.9s	131	/tmp/ipykernel_24/2329573584.py in run_repo(arguments, **overrides)
+
+89.9s	132	      5 def run_repo(arguments, **overrides):
+
+89.9s	133	      6     environment = dict(ENV, **overrides)
+
+89.9s	134	----> 7     subprocess.run([sys.executable, *arguments], cwd="/kaggle/working/repo",
+
+89.9s	135	      8                    env=environment, check=True)
+
+89.9s	136	      9 
+
+89.9s	137	
+
+89.9s	138	/usr/lib/python3.13/subprocess.py in run(input, capture_output, timeout, check, *popenargs, **kwargs)
+
+89.9s	139	    575         retcode = process.poll()
+
+89.9s	140	    576         if check and retcode:
+
+89.9s	141	--> 577             raise CalledProcessError(retcode, process.args,
+
+89.9s	142	    578                                      output=stdout, stderr=stderr)
+
+89.9s	143	    579     return CompletedProcess(process.args, retcode, stdout, stderr)
+
+89.9s	144	
+
+89.9s	145	CalledProcessError: Command '['/usr/bin/python3', '-m', 'pytest', 'solution', '-q']' returned non-zero exit status 1.
+
+89.9s	146	
+
+92.1s	147	/usr/local/lib/python3.13/dist-packages/mistune.py:435: SyntaxWarning: invalid escape sequence '\|'
+
+92.1s	148	  cells[i][c] = re.sub('\\\\\|', '|', cell)
+
+92.3s	149	/usr/local/lib/python3.13/dist-packages/nbconvert/filters/filter_links.py:36: SyntaxWarning: invalid escape sequence '\_'
+
+92.3s	150	  text = re.sub(r'_', '\_', text) # Escape underscores in display text
+
+93.1s	151	[NbConvertApp] Converting notebook __notebook__.ipynb to notebook
+
+93.1s	152	[NbConvertApp] Writing 164812 bytes to __notebook__.ipynb
+
+95.6s	153	[NbConvertApp] Converting notebook __notebook__.ipynb to html
+
+96.2s	154	[NbConvertApp] Writing 459206 bytes to __results__.html

@@ -1,19 +1,71 @@
 {
-  "snapshot_sha256": "ddc7740aa180e81cbdafa886d4fa44c1698cd2f79ae1cc45e63dbd45bedb033b",
-  "solution_sha256": "698b33301c9a191f3b8bfadc502a0c15d7a08870579c465cfed119a06a2d4d77",
-  "result_sha256": "eecdceb5343a87742d4bf2b1b87e497cd9cd072c52d39dfeb744e532ecf8bb8b",
+  "kind": "completed_final_source_and_evidence_audit",
+  "snapshot_sha256": "1916a1eab83d5ad80877937c6dc1203b63c10e7a151a64d49ca9beb89401403c",
+  "solution_sha256": "60216a16a1f993117f90e6028e93e4096fbacc4fb21afefbccd3f7f3a2e3a7f0",
+  "result_sha256": "53b72beee7141c1b18cb2b7d6b6ea60f796ecbdd23dbb8b05c1b945b9c8b8a7b",
+  "kaggle_version": 363884710,
   "all10_checks_passed": true,
-  "protected_files_byte_identical_to_verified_v9": 15,
   "source_matches_measured_snapshot": true,
+  "manifest_all_file_hashes_exact": true,
+  "embedded_notebook_source_zip_exact": true,
+  "candidate_current_files_exact_to_snapshot": 51,
+  "solution_python_files": 27,
+  "protected_files_byte_identical_to_verified_v12_and_teammate_reference": 15,
+  "protected_files": {
+    "harness/_train.py": "1b04cb7f8d17af2edf553fc90eb61d571e11e2dc0aba7dd8873a43efcbc52152",
+    "harness/check_rules.py": "804ad852922014dcafecad764a481745b09b75beada7955b58800b0d8770c8fb",
+    "harness/common.py": "13a3cd3f11bc79f473ce07b456247b100e6a463986007cfc59ec3bac6d653793",
+    "harness/eval_adapter.py": "5e2e8c9b6bcb3506ab6b8a554343d9cd68a77cda8da7f4b98f43e1591d408983",
+    "harness/example_reference.py": "649212bbfc863d75b40601bf2e4f685cf8f3c0ec1e3faecf7c573de5e3ec0688",
+    "harness/run_task.py": "b163ce21d85daac0f08bc2fcbf0c35928a7b13e6b5d10bd1d18c61a14a6880bf",
+    "harness/score.py": "368772b023dd7df12c6550e2faa2d9947a0ccb53b2798ce83c7c27083614610a",
+    "task/prepare_data.py": "ba9e5df102f421d75b0a5b31592fcd551424bb767d92807cd63bb4e9315cce7e",
+    "task/task.yaml": "f9ee01ac910f493549cd0552eddf500df8008a5a392bfb1991a170932f2083f1",
+    "tests/conftest.py": "7a3bd62d757d71c2940edf8f3be168c30baccd98948eaaaa183f2e94aae1e0d7",
+    "tests/test_callback.py": "18592316abbf9b51b65b0d76c1748c6783c0583d632d7fd41529737d07e2cebb",
+    "tests/test_config.py": "dabc14fec257a80b9604c518fadb065c83241847875b70fac190eac9e5f26e95",
+    "tests/test_formats.py": "6abcee9ea08b5a0fd5bcf9ea0eeae65dacefa5ec4cd9798fc46566ff38c49752",
+    "tests/test_loader.py": "4b0ed5eb162cab4042c907198b3ff99ed3da56e39a78d6b44f27707f32dfb12d",
+    "tests/test_trainer_init.py": "3246b10cf9901717e64691855073de00a5ed5f8182a10ae055cb1fdbe05505db"
+  },
+  "non_solution_parent_bytes_unchanged": true,
+  "additional_development_comparison_helpers": [
+    "verification/benchmark_controller.py",
+    "verification/comparison_sources/reference.zip"
+  ],
   "own_kernels": {
-    "soup_nf4_unpack_kernel": "solution\\nf4.py",
-    "soup_rmsnorm_forward_kernel": "solution\\rmsnorm.py",
-    "soup_rmsnorm_backward_kernel": "solution\\rmsnorm.py",
-    "soup_rope_forward_kernel": "solution\\rope.py",
-    "soup_rope_backward_kernel": "solution\\rope.py",
-    "vocabulary_partials_kernel": "solution\\vocab.py",
-    "vocabulary_finish_kernel": "solution\\vocab.py",
-    "vocabulary_gradient_kernel": "solution\\vocab.py"
+    "real_dropout_gather_kernel": "solution/dropout.py",
+    "real_dropout_backward_kernel": "solution/dropout.py",
+    "lm_ce_kernel": "solution/lmhead.py",
+    "lm_scale_gradient_kernel": "solution/lmhead.py",
+    "nf4_dequant_kernel": "solution/nf4.py",
+    "rmsnorm_fwd_kernel": "solution/rmsnorm.py",
+    "rmsnorm_bwd_kernel": "solution/rmsnorm.py",
+    "add_rmsnorm_fwd_kernel": "solution/rmsnorm.py",
+    "add_rmsnorm_bwd_kernel": "solution/rmsnorm.py",
+    "_rotate_heads": "solution/rope.py",
+    "rope_kernel": "solution/rope.py",
+    "rope_pad_fwd_kernel": "solution/unpad.py",
+    "rope_pad_bwd_kernel": "solution/unpad.py",
+    "heads_rows_kernel": "solution/unpad.py"
+  },
+  "active_own_kernels": {
+    "add_rmsnorm_bwd_kernel": "solution/rmsnorm.py",
+    "add_rmsnorm_fwd_kernel": "solution/rmsnorm.py",
+    "lm_ce_kernel": "solution/lmhead.py",
+    "lm_scale_gradient_kernel": "solution/lmhead.py",
+    "nf4_dequant_kernel": "solution/nf4.py",
+    "real_dropout_backward_kernel": "solution/dropout.py",
+    "real_dropout_gather_kernel": "solution/dropout.py",
+    "rope_pad_bwd_kernel": "solution/unpad.py",
+    "rope_pad_fwd_kernel": "solution/unpad.py"
+  },
+  "inactive_fallback_or_internal_jit_functions": {
+    "rmsnorm_fwd_kernel": "solution/rmsnorm.py",
+    "rmsnorm_bwd_kernel": "solution/rmsnorm.py",
+    "_rotate_heads": "solution/rope.py",
+    "rope_kernel": "solution/rope.py",
+    "heads_rows_kernel": "solution/unpad.py"
   },
   "excluded_starter_kernels": [
     "example_swiglu_fwd_kernel",
@@ -22,92 +74,178 @@
   "banned_imports": [],
   "lookalikes": [],
   "parse_errors": [],
-  "changed_solution_files_from_v9": [
-    "solution/benchmark_frozen_head.py",
-    "solution/benchmark_mlp_variants.py",
-    "solution/compressed_swiglu.py",
-    "solution/frozen_head.py",
-    "solution/half_metrics.py",
-    "solution/narrow_mlp.py",
-    "solution/patches.py",
-    "solution/private_logits.py",
-    "solution/run_diagnostics.py",
-    "solution/strided_accuracy.py",
-    "solution/test_compressed_swiglu.py",
-    "solution/test_frozen_head.py",
-    "solution/test_half_metrics.py",
-    "solution/test_narrow_mlp.py",
-    "solution/test_private_logits.py",
-    "solution/test_strided_accuracy.py"
+  "own_kernel_measurements": [
+    {
+      "run": "solution_1",
+      "timed_loop_s": 27.07,
+      "milliseconds": {
+        "add_rmsnorm_bwd_kernel": 351.399,
+        "add_rmsnorm_fwd_kernel": 313.852,
+        "lm_ce_kernel": 156.293,
+        "lm_scale_gradient_kernel": 84.412,
+        "nf4_dequant_kernel": 2132.904,
+        "real_dropout_backward_kernel": 339.959,
+        "real_dropout_gather_kernel": 465.191,
+        "rope_pad_bwd_kernel": 123.545,
+        "rope_pad_fwd_kernel": 155.952
+      },
+      "shares": {
+        "add_rmsnorm_bwd_kernel": 1.2981123014407092,
+        "add_rmsnorm_fwd_kernel": 1.1594089397857406,
+        "lm_ce_kernel": 0.5773660879202069,
+        "lm_scale_gradient_kernel": 0.3118285925378648,
+        "nf4_dequant_kernel": 7.879216845216106,
+        "real_dropout_backward_kernel": 1.2558514961211673,
+        "real_dropout_gather_kernel": 1.718474325821943,
+        "rope_pad_bwd_kernel": 0.456390838566679,
+        "rope_pad_fwd_kernel": 0.5761063908385667
+      },
+      "total": 15.232755818248982
+    },
+    {
+      "run": "solution_2",
+      "timed_loop_s": 27.223,
+      "milliseconds": {
+        "add_rmsnorm_bwd_kernel": 349.846,
+        "add_rmsnorm_fwd_kernel": 312.49,
+        "lm_ce_kernel": 158.399,
+        "lm_scale_gradient_kernel": 84.359,
+        "nf4_dequant_kernel": 2113.91,
+        "real_dropout_backward_kernel": 343.834,
+        "real_dropout_gather_kernel": 466.624,
+        "rope_pad_bwd_kernel": 123.613,
+        "rope_pad_fwd_kernel": 152.339
+      },
+      "shares": {
+        "add_rmsnorm_bwd_kernel": 1.28511185394703,
+        "add_rmsnorm_fwd_kernel": 1.147889652132388,
+        "lm_ce_kernel": 0.5818572530580759,
+        "lm_scale_gradient_kernel": 0.3098813503287661,
+        "nf4_dequant_kernel": 7.765161811703339,
+        "real_dropout_backward_kernel": 1.263027586966903,
+        "real_dropout_gather_kernel": 1.714080005877383,
+        "rope_pad_bwd_kernel": 0.4540755978400617,
+        "rope_pad_fwd_kernel": 0.5595966645850935
+      },
+      "total": 15.08068177643904
+    }
   ],
+  "minimum_own_kernel_share_pct": 15.08068177643904,
+  "minimum_own_share_by_active_kernel_pct": {
+    "add_rmsnorm_bwd_kernel": 1.28511185394703,
+    "add_rmsnorm_fwd_kernel": 1.147889652132388,
+    "lm_ce_kernel": 0.5773660879202069,
+    "lm_scale_gradient_kernel": 0.3098813503287661,
+    "nf4_dequant_kernel": 7.765161811703339,
+    "real_dropout_backward_kernel": 1.2558514961211673,
+    "real_dropout_gather_kernel": 1.714080005877383,
+    "rope_pad_bwd_kernel": 0.4540755978400617,
+    "rope_pad_fwd_kernel": 0.5595966645850935
+  },
+  "test_results": {
+    "solution_passed": 181,
+    "solution_skipped": 0,
+    "solution_seconds": 63.85,
+    "soup_passed": 79,
+    "soup_initial_seconds": 1.05,
+    "soup_rule_seconds": 0.85,
+    "ordered_log_phases": {
+      "solution": {
+        "passed": 181,
+        "skipped": 0,
+        "seconds": 63.85,
+        "raw_summary": "181 passed, 14 warnings in 63.85s (0:01:03)",
+        "line": 30,
+        "time": "83.6s"
+      },
+      "soup": {
+        "passed": 79,
+        "skipped": 0,
+        "seconds": 1.05,
+        "raw_summary": "79 passed, 14 warnings in 1.05s",
+        "line": 48,
+        "time": "101.7s"
+      }
+    },
+    "soup_rule_detail": "79 passed, 14 warnings in 0.85s"
+  },
   "summary": {
     "base": {
       "ok": true,
       "runs": 2,
-      "wall_s": 88.74,
+      "wall_s": 82.19,
       "gpu_peak_mib": 14345,
-      "train_loop_s": 61.87,
-      "eval_loss": 2.04964
+      "train_loop_s": 58.83,
+      "eval_loss": 2.04962
     },
     "solution": {
       "ok": true,
       "runs": 2,
-      "wall_s": 78.18,
-      "gpu_peak_mib": 7381,
-      "train_loop_s": 55.34,
-      "eval_loss": 2.04964
+      "wall_s": 56.09,
+      "gpu_peak_mib": 5275,
+      "train_loop_s": 31.78,
+      "eval_loss": 2.04965
     },
     "ratios": {
-      "speedup": 1.1351,
-      "memory_ratio": 1.9435,
-      "quality_delta_pct": 0.0
+      "speedup": 1.4653,
+      "memory_ratio": 2.7194,
+      "quality_delta_pct": 0.001
     }
   },
-  "own_kernel_measurements": [
-    {
-      "run": "solution_1",
-      "timed_loop_s": 47.497,
-      "own_kernel_ms": {
-        "soup_rmsnorm_forward_kernel": 289.835,
-        "soup_rope_forward_kernel": 277.173,
-        "example_swiglu_fwd_kernel": 543.64,
-        "vocabulary_partials_kernel": 459.213,
-        "vocabulary_finish_kernel": 257.428,
-        "vocabulary_gradient_kernel": 245.719,
-        "soup_rmsnorm_backward_kernel": 391.912,
-        "soup_nf4_unpack_kernel": 998.758,
-        "example_swiglu_bwd_kernel": 925.396,
-        "soup_rope_backward_kernel": 212.553
+  "same_session_comparison": {
+    "raw_sha256": "6d6f778620a8d35e67834a594a7c78cd6777d2adb566c71b1075ce0f421aa801",
+    "candidate_restored_after_both_phases": true,
+    "restored_phases": [
+      "before",
+      "after"
+    ],
+    "raw_restoration_log_occurrences": [
+      "before",
+      "before",
+      "after",
+      "after"
+    ],
+    "raw_candidate_runs_equal_official_runs": true,
+    "summary": {
+      "reference": {
+        "wall_s": 59.655,
+        "gpu_peak_mib": 5641,
+        "train_loop_s": 30.79
+      },
+      "candidate": {
+        "wall_s": 56.095,
+        "gpu_peak_mib": 5275,
+        "train_loop_s": 31.78
+      },
+      "ratios": {
+        "reference_time_over_candidate": 1.0634637668241376,
+        "reference_peak_over_candidate": 1.0693838862559242
       }
     },
-    {
-      "run": "solution_2",
-      "timed_loop_s": 47.107,
-      "own_kernel_ms": {
-        "soup_rmsnorm_forward_kernel": 290.511,
-        "soup_rope_forward_kernel": 277.148,
-        "example_swiglu_fwd_kernel": 543.721,
-        "vocabulary_partials_kernel": 457.314,
-        "vocabulary_finish_kernel": 247.466,
-        "vocabulary_gradient_kernel": 245.731,
-        "soup_rmsnorm_backward_kernel": 391.705,
-        "soup_nf4_unpack_kernel": 997.158,
-        "example_swiglu_bwd_kernel": 925.52,
-        "soup_rope_backward_kernel": 215.589
-      }
-    }
+    "kind": "same_session_solution_version_ABBA_diagnostic_not_contest_score"
+  },
+  "changed_solution_files_from_teammate_reference": [
+    "solution/__init__.py",
+    "solution/attention_rows.py",
+    "solution/benchmark_attention_rows.py",
+    "solution/benchmark_dropout.py",
+    "solution/benchmark_packed_integration.py",
+    "solution/dropout.py",
+    "solution/lmhead.py",
+    "solution/mlp.py",
+    "solution/nf4.py",
+    "solution/private_scope.py",
+    "solution/rmsnorm.py",
+    "solution/run_diagnostics.py",
+    "solution/test_attention_rows.py",
+    "solution/test_dropout.py",
+    "solution/test_dropout_integration.py",
+    "solution/test_lmhead_scaled.py",
+    "solution/test_numerics.py",
+    "solution/test_packed_integration.py",
+    "solution/test_private_streaming.py",
+    "solution/unpad.py",
+    "solution/warmup.py"
   ],
-  "note": "Evidence relates to immutable embedded-source snapshot. Documentation and GitHub receipts are prepared after successful measurement. Head recomputation and compressed-only SwiGLU are diagnostics, disabled in training.",
-  "kaggle_version": 363837033,
-  "code_commit": "b7c406dea7dbdc379149910efe044dccf155d083",
-  "test_results": {
-    "solution_passed": 241,
-    "solution_skipped": 1,
-    "solution_seconds": 76.39,
-    "soup_passed": 79,
-    "soup_initial_seconds": 8.52,
-    "soup_rule_seconds": 8.08,
-    "CPU_passed": 28,
-    "CPU_skipped": 214
-  }
+  "note": "Counts and shares derive from actual official rule3 plus per-run runtime measurements. Native direct packed attention/dropout component diagnostics are separate from official training score. This audit does not claim hidden-row quality, jury admission or final contest submission."
 }
