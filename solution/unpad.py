@@ -593,7 +593,7 @@ class _Batch:
         self.packed_metadata = packed_metadata
         self._padded = {}
 
-    def dropout(self, dropout, x):
+    def dropout(self, dropout, x, *, cast_half=False):
         """dropout(x) of the real tokens, drawn on the (batch, seq_len, features) tensor of the
         base run, so the random masks are the same."""
         if type(dropout) is torch.nn.Identity:
@@ -620,7 +620,8 @@ class _Batch:
                 and _real_dropout_supported(x, self.rows, self.batch, self.seq_len,
                                              dropout.p, True, True)):
             return real_row_dropout(x, self.rows, self.batch, self.seq_len,
-                                    dropout.p, rows_from_nonzero=True)
+                                    dropout.p, rows_from_nonzero=True,
+                                    output_dtype=torch.float16 if cast_half else None)
         key = id(x)
         if key not in self._padded:
             full = x.new_zeros((self.batch * self.seq_len, x.shape[-1]))
@@ -637,7 +638,18 @@ def _lora_out(parts, x, step, *, apply_scale=True):
     base, lora_a, lora_b, dropout, scaling = parts
     if lora_a is None:
         return None
-    output = lora_b(lora_a(step.dropout(dropout, x)))
+    # Native Linear under FP16 autocast would immediately cast this FP32
+    # dropout result. Fold only that final cast into its producer; preserve
+    # module calls, exact native RNG and FP32 dropout input-gradient rounding.
+    cast_half = (step.packed_metadata is not None and x.dtype == torch.float32
+                 and torch.is_autocast_enabled('cuda')
+                 and torch.get_autocast_dtype('cuda') == torch.float16
+                 and type(lora_a) is torch.nn.Linear
+                 and getattr(lora_a.forward, '__func__', None) is torch.nn.Linear.forward
+                 and _no_hooks(lora_a))
+    dropped = (step.dropout(dropout, x, cast_half=True) if cast_half
+               else step.dropout(dropout, x))
+    output = lora_b(lora_a(dropped))
     return output * scaling if apply_scale else output
 
 
