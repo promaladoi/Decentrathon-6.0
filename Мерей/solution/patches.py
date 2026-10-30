@@ -138,6 +138,14 @@ def patch_soup_setup():
             install_model_patches()
             from .half_loss import install
             install(self.model)
+            from .private_logits import install as install_private
+            install_private()
+            if torch.cuda.is_available():
+                from .narrow_mlp import patch_qwen2_mlp as narrow_mlp
+                narrow_mlp()
+            from .strided_accuracy import install as install_accuracy
+            install_accuracy()
+
         return result
 
     setup._soup_solution_patch = True
