@@ -50,10 +50,13 @@ time against a different experiment. Use the paired speedup ratio.
 Experimental code `12b9f58` avoids a redundant float32 decoded-weight buffer
 when the existing linear operation already uses CUDA fp16 autocast. Additional
 tests compare forward values and input gradients with the original backend,
-with and without autocast. Its T4 validation is in progress; it has not replaced
-the validated v3 candidate.
+with and without autocast. T4 validation finished: **37 kernel tests, 79 Soup
+tests and 10/10 checks passed**. Paired medians: **86.17 s base / 83.18 s v4**;
+speedup **1.0359x**, memory ratio **1.1583x**, own-kernel share **7.1%**.
+This does not demonstrate a meaningful speed gain over v3. See
+`CODEX_V4_EXPERIMENT.md`; all original raw reports are committed under
+`03_validation/reports/`. The final team version has not been selected.
 
-Verify the unchanged public starter directly, then investigate remaining
-training-time bottlenecks. Record each finished experiment, including failures,
+Investigate remaining training-time bottlenecks. Record each finished experiment, including failures,
 with its exact code commit and original benchmark/check reports. Compare other
 team members' versions before choosing the final submission.
