@@ -37,3 +37,22 @@ python -m unittest discover -s Анаис -p test_report.py -v
 Оптимизированные ядра: **Владимир**, сохранённый вариант `Владимир/saved/v2-d080f2b/solution`, snapshot commit `2d77f774725a18c2b16f86d76fe6ec481fe61562`. Работа Анаис: независимое тестирование, воспроизведение, оценка качества, инструменты отчётности и презентация. Harness, task и tests не менялись.
 
 Это публичные данные и один парный замер оптимизации. Устойчивость на другом seed и скрытых данных не подтверждена. Финальный допуск определяет жюри. Финальная отправка на платформу хакатона не выполнялась.
+
+
+## Полный проект из исходного архива
+
+В эту папку добавлены исходные `harness/`, `task/`, `tests/`, `templates/`, четыре рабочие папки этапов, LICENSE и NOTICE. Их содержимое сохранено. Оригинальный README находится в [STARTER_README.md](STARTER_README.md), исходный пример решения — в `starter_solution/`.
+
+Рабочая `solution/` содержит проверенный вариант Владимира с результатом **59,34 с и 10/10 PASS**. Её SHA256 совпадает с `candidate-checks.json`. В исходной конфигурации и измерителе изменений нет.
+
+После клонирования репозитория перейти в папку `Анаис` и выполнять:
+
+```bash
+python task/prepare_data.py
+python -m pytest solution -q
+python harness/run_task.py --repeats 2
+python harness/check_rules.py
+python benchmark_report.py --result runs/result.json --out reports/latest
+```
+
+Окружение и закреплённые зависимости устанавливаются notebook. Для запуска через Kaggle импортировать `kaggle_optimized_candidate.ipynb` или `templates/anais_optimized.ipynb`.
