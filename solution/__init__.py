@@ -11,6 +11,8 @@ def apply():
     if _applied:
         return
     _applied = True
+    from .lazy_train_cli import patch_lazy_train_cli
+    patch_lazy_train_cli()
     from .team_vladimir import apply as apply_team
     from .parallel_head import patch_parallel_head
     from .compact_dropout import patch_compact_dropout

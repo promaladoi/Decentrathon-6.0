@@ -106,6 +106,14 @@ def main():
                     z.write(f, f.name)
             for f in sorted((repo/'solution').rglob('*.py')):
                 z.write(f, f.relative_to(repo).as_posix())
+            # Preserve the real startup/compile logs as well as the summary.
+            # This happens after all measured processes and checks have exited.
+            for run_dir in sorted(out.iterdir()):
+                if run_dir.is_dir() and run_dir.name.startswith(('base_', 'solution_')):
+                    for name in ('train.log', 'metrics.json'):
+                        f = run_dir/name
+                        if f.is_file():
+                            z.write(f, 'runs/'+run_dir.name+'/'+name)
             for name in ('adapter_config.json', 'adapter_model.safetensors'):
                 f = out/'solution_1/adapter'/name
                 if f.exists():
