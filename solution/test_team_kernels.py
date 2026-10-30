@@ -31,14 +31,15 @@ pytestmark = pytest.mark.skipif(not torch.cuda.is_available(), reason="needs CUD
 
 @pytest.mark.parametrize("vocab", [1031, 8192, 151936])
 @pytest.mark.parametrize("reduction", ["none", "sum", "mean"])
-def test_vocabulary_loss_and_gradient(vocab, reduction):
+@pytest.mark.parametrize("dtype", [torch.float16, torch.float32])
+def test_vocabulary_loss_and_gradient(vocab, reduction, dtype):
     from solution.vocab import token_cross_entropy
 
     torch.manual_seed(19)
-    x = torch.randn((7, vocab), device="cuda", requires_grad=True)
+    x = torch.randn((7, vocab), device="cuda", dtype=dtype, requires_grad=True)
     labels = torch.randint(vocab, (7,), device="cuda")
     labels[1] = -100
-    reference = F.cross_entropy(x, labels, reduction=reduction)
+    reference = F.cross_entropy(x.float(), labels, reduction=reduction)
     upstream = torch.randn_like(reference)
     reference.backward(upstream)
     reference_gradient = x.grad.clone()
@@ -46,7 +47,9 @@ def test_vocabulary_loss_and_gradient(vocab, reduction):
     actual = token_cross_entropy(x, labels, reduction=reduction)
     actual.backward(upstream)
     torch.testing.assert_close(actual, reference, rtol=2e-5, atol=2e-5)
-    torch.testing.assert_close(x.grad, reference_gradient, rtol=5e-5, atol=2e-7)
+    torch.testing.assert_close(x.grad, reference_gradient,
+                               rtol=2e-3 if dtype == torch.float16 else 5e-5,
+                               atol=2e-6 if dtype == torch.float16 else 2e-7)
 
 
 def test_ignored_and_strided_rows():
@@ -63,16 +66,41 @@ def test_ignored_and_strided_rows():
 
 
 @pytest.mark.parametrize("vocab,scale", [(1031, 1.0), (151936, 1.0), (4099, 30.0)])
-def test_entropy(vocab, scale):
+@pytest.mark.parametrize("dtype", [torch.float16, torch.float32])
+def test_entropy(vocab, scale, dtype):
     from solution.vocab import token_entropy
 
     torch.manual_seed(23)
-    x = torch.randn((2, 3, vocab), device="cuda") * scale
-    log_probs = x.log_softmax(-1)
+    x = (torch.randn((2, 3, vocab), device="cuda") * scale).to(dtype)
+    log_probs = x.float().log_softmax(-1)
     expected = -(log_probs.exp() * log_probs).sum(-1)
     with torch.no_grad():
         actual = token_entropy(x)
     torch.testing.assert_close(actual, expected, rtol=1e-4, atol=3e-5)
+
+
+def test_output_precision_preserves_values_fields_and_loss_gradient():
+    from accelerate.utils.operations import convert_to_fp32
+    from transformers.modeling_outputs import CausalLMOutputWithPast
+    from solution.output_precision import convert_outputs
+
+    logits = torch.randn(2, 5, 1031, device='cuda', dtype=torch.float16, requires_grad=True)
+    loss = logits.float().square().mean()
+    hidden = torch.randn(2, 5, 16, device='cuda', dtype=torch.float16)
+    source = CausalLMOutputWithPast(loss=loss, logits=logits, hidden_states=(hidden,))
+    expected = convert_to_fp32(source)
+    actual = convert_outputs(source, convert_to_fp32)
+    assert type(actual) is type(source)
+    assert list(actual.keys()) == list(expected.keys())
+    assert actual.logits is logits and source.logits is logits
+    torch.testing.assert_close(actual.logits.float(), expected.logits, rtol=0, atol=0)
+    torch.testing.assert_close(actual.hidden_states[0], expected.hidden_states[0], rtol=0, atol=0)
+    expected_grad, = torch.autograd.grad(expected.loss, logits, retain_graph=True)
+    actual_grad, = torch.autograd.grad(actual.loss, logits)
+    torch.testing.assert_close(actual_grad, expected_grad, rtol=0, atol=0)
+    plain = {'value': hidden}
+    fallback = convert_outputs(plain, convert_to_fp32)
+    torch.testing.assert_close(fallback['value'], hidden.float(), rtol=0, atol=0)
 
 
 @pytest.mark.parametrize("dtype", [torch.float16, torch.float32])
