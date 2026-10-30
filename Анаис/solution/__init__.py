@@ -28,6 +28,8 @@ WARMUP = True
 # The training forward on real tokens only, with the chunked lm_head + loss (unpad.py, lmhead.py).
 # False keeps the layer-level patches below, which are also its fallback.
 UNPAD = True
+# Stage timestamps in train.log (timeline.py), to see where the time outside the steps goes.
+TIMELINE = False
 
 _applied = False
 
@@ -47,3 +49,8 @@ def apply():
     patch_bnb_matmul_4bit()  # ours: one-launch NF4 (double-quant) dequantization for 4-bit layers
     if UNPAD:
         patch_qwen2_causal_lm()  # ours: real tokens only, padded only for attention; fused loss
+        from .private_scope import install as install_private_scope
+        install_private_scope()
+    if TIMELINE:
+        from . import timeline
+        timeline.install()  # stage timestamps in train.log; observes only
