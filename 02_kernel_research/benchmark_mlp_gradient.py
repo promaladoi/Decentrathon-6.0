@@ -8,12 +8,12 @@ import zipfile
 
 def main():
     repo=Path(__file__).resolve().parents[1]
-    sys.path.insert(0,str(repo))
+    sys.path.insert(0,str(Path(__file__).resolve().parent))
     if subprocess.check_output(['nvidia-smi','--query-compute-apps=pid','--format=csv,noheader'],text=True).strip():
         raise RuntimeError('Wait for all measured GPU jobs to finish')
     import torch
     import triton
-    from solution.fused_mlp_gradient import fused_gradient
+    from fused_mlp_gradient import fused_gradient
     assert torch.cuda.get_device_capability()==(7,5)
     code=subprocess.check_output(['git','rev-parse','HEAD'],cwd=repo,text=True).strip()
     rows=[]
@@ -43,7 +43,7 @@ def main():
     report.write_text(json.dumps(doc,indent=2)+'\n')
     with zipfile.ZipFile(report.with_suffix('.zip'),'w',zipfile.ZIP_DEFLATED) as z:
         z.write(report,report.name)
-        z.write(repo/'solution/fused_mlp_gradient.py','solution/fused_mlp_gradient.py')
+        z.write(repo/'02_kernel_research/fused_mlp_gradient.py','02_kernel_research/fused_mlp_gradient.py')
     print('MLP_GRAD_DIAGNOSTIC_COMPLETE',flush=True)
 
 

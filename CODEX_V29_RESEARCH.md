@@ -25,3 +25,10 @@ length. No training or performance claim follows from this test correction.
 Prepared v30/v31 include the earlier inactive research tests; their queued
 executions were aborted after this research-cell error. They were never admitted.
 New exact snapshots are required before running the corrected full suite.
+
+The revised per-entry oracle also failed (8 cases in the full suite). The kernel
+remains rejected for production use; no standalone speed claim is available.
+Implementation, strict failing tests and microbenchmark are kept together under
+`02_kernel_research/`, not imported by `solution.apply()`. v32/v33 stopped before
+training. Production candidates continue using native PyTorch GEMM. This is a
+separation of unused research, not removal of an active-kernel regression test.

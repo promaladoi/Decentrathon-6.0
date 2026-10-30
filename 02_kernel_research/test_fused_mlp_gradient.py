@@ -1,5 +1,8 @@
 import pytest
 import torch
+import sys
+from pathlib import Path
+sys.path.insert(0,str(Path(__file__).resolve().parent))
 
 pytestmark=pytest.mark.skipif(not torch.cuda.is_available(),reason='T4 CUDA required')
 
@@ -7,7 +10,7 @@ pytestmark=pytest.mark.skipif(not torch.cuda.is_available(),reason='T4 CUDA requ
 @pytest.mark.parametrize('shape',[(1,37,19),(23,128,256),(127,384,1024),(833,1536,8960)])
 @pytest.mark.parametrize('config',[(32,64,32,4),(32,64,64,4),(64,64,64,4),(32,128,64,4)])
 def test_independent_half_rounding_and_fp32_sum(shape,config):
-    from .fused_mlp_gradient import fused_gradient
+    from fused_mlp_gradient import fused_gradient
     m,n,k=shape
     torch.manual_seed(17)
     dg,du=[torch.randn((m,k),device='cuda',dtype=torch.float16)*.1 for _ in range(2)]
@@ -33,7 +36,7 @@ def test_independent_half_rounding_and_fp32_sum(shape,config):
 
 
 def test_round_each_partial_before_sum_instead_of_rounding_combined_dot():
-    from .fused_mlp_gradient import fused_gradient
+    from fused_mlp_gradient import fused_gradient
     g=torch.tensor([[1.0,0.0003]],device='cuda',dtype=torch.float16)
     u=torch.tensor([[-1.0,0.0003]],device='cuda',dtype=torch.float16)
     w=torch.ones((2,1),device='cuda',dtype=torch.float16)
