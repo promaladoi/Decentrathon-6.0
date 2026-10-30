@@ -1,0 +1,15 @@
+{
+  "source_commit": "d8ac0224b47c67e92fa9e7e2798cf7840e65314e",
+  "kind": "CPU cache contracts; CUDA cases skipped",
+  "passed": 14,
+  "skipped_cuda": 4,
+  "elapsed_seconds": 2.14,
+  "torch": "2.11.0+cpu",
+  "command": "python -m pytest solution/test_frozen_weight_cache.py -q",
+  "gpu_performance_verified": false,
+  "training_quality_verified": false,
+  "source_sha256": {
+    "solution/frozen_weight_cache.py": "de12c422c08c27d8c6c6088a1f687b8fa3cb935c4bd016ab485c6ba7f24ad303",
+    "solution/test_frozen_weight_cache.py": "2d3187094d8c7172280b9a3abec74f5009a53c232b701647d4122bbd96c30eee"
+  }
+}

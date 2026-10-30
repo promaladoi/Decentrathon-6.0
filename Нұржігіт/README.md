@@ -1,30 +1,27 @@
 # Нұржігіт — Codex нұсқасы
 
 Команда мүшесінің жұмыс папкасы. Бұл жерде код, notebook және нақты өлшеу есептері бар.
-Платформа репозиторийінен алынған snapshot: `d8ac0224b47c67e92fa9e7e2798cf7840e65314e`.
+Платформа репозиторийінен алынған snapshot: `2a0ba2a444ff8e10ddaeea45823bda517bfd3abb`.
 Kaggle ноутбугындағы бекітілген COMMIT қай код өлшенгенін анықтайды.
 Бүкіл commit тарихы `codex/kernel-v1` branch-інде сақталады.
 
 # IVNEX: Soup Kernel Challenge
 
-Latest fully collected and verified candidate: [v16 result](CODEX_V16_RESULT.md),
-**1.4082x speedup (29.0% less total runtime)**, **61.0% less GPU memory**, **10/10 PASS**.
-Two paired runs: **85.07 → 60.41 s**, **14345 → 5601 MiB**.
-Public eval loss **2.04966 → 2.04968 (+0.001%, passes 0.5% limit)**.
-Code: `4a5cfd2`. **115 kernel tests + 79 Soup tests**, own-kernel share **12.9%**.
-Exact source/report hashes and raw archive verified locally.
-[Reproduce v16](templates/codex_v16.ipynb) · [Pinned candidate](templates/codex_candidate.ipynb).
+Fastest fully collected paired result: **v17r1, 84.28 → 54.19 seconds**, **1.5553x**,
+**35.7% less total time**, **10/10 PASS**, eval loss **-0.002%**.
+Lowest collected memory: **v20r1, 4467 MiB**, **68.9% less than its base**,
+**10/10 PASS**, 55.81 seconds. [Verified r1 comparison](CODEX_R1_RESULTS.md).
+Exact source/report hashes and adapter archives have been verified for all three r1 jobs.
 
-**Branch-tip code is experimental.** The pinned v16 notebook above selects the
-fully verified source. New work: [v17 NF4](CODEX_V17_EXPERIMENT.md),
-[v18 lossless tied storage](CODEX_V18_EXPERIMENT.md) and
-[v20 compact mask bits](CODEX_V20_EXPERIMENT.md). Local checks pass (104 NF4
-layout cases, 15 CPU storage contracts, 124 mask-layout cases); GPU validation
-is pending. The [one-cell finite coordinator](templates/run_experiments_cell.py)
-runs v17, v18 and v20 serially after its initial launch in the existing Kaggle session.
-No coordinator start or new GPU result is claimed yet.
+**Branch-tip code is an experiment.** v21 is console-admitted awaiting collection;
+[v22 startup imports](CODEX_V22_EXPERIMENT.md) and
+[v23 frozen-weight reuse](CODEX_V23_EXPERIMENT.md) are being measured serially in Kaggle.
+The original [v16 fallback](CODEX_V16_RESULT.md) remains archived separately.
 [Current status](CURRENT_STATUS.md) · [All variants](03_validation/VERSION_COMPARISON.md).
-The final team submission is not selected; no 70–90% time reduction or victory is claimed.
+
+The explicit target is **20–30 seconds for the complete unchanged command**.
+This target and a first-place result have not been achieved. No final team
+submission has been selected; only candidates passing all ten rules are admitted.
 
 ## Earlier v3 candidate (archive)
 

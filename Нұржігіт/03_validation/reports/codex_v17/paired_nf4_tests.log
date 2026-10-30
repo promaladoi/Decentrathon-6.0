@@ -1,0 +1,130 @@
+............FFFFFFFFFF.                                                  [100%]
+=================================== FAILURES ===================================
+__________ test_real_nf4_weights_equal_original[dtype0-False-shape0] ___________
+
+shape = (256, 1536), nested = False, dtype = torch.float16
+
+    @pytest.mark.parametrize('shape', [(256, 1536), (8960, 1536)])
+    @pytest.mark.parametrize('nested', [False, True])
+    @pytest.mark.parametrize('dtype', [torch.float16, torch.float32])
+    def test_real_nf4_weights_equal_original(shape, nested, dtype):
+>       import bitsandbytes.functional as bnbf
+E       ModuleNotFoundError: No module named 'bitsandbytes'
+
+solution/test_paired_nf4.py:41: ModuleNotFoundError
+__________ test_real_nf4_weights_equal_original[dtype0-False-shape1] ___________
+
+shape = (8960, 1536), nested = False, dtype = torch.float16
+
+    @pytest.mark.parametrize('shape', [(256, 1536), (8960, 1536)])
+    @pytest.mark.parametrize('nested', [False, True])
+    @pytest.mark.parametrize('dtype', [torch.float16, torch.float32])
+    def test_real_nf4_weights_equal_original(shape, nested, dtype):
+>       import bitsandbytes.functional as bnbf
+E       ModuleNotFoundError: No module named 'bitsandbytes'
+
+solution/test_paired_nf4.py:41: ModuleNotFoundError
+___________ test_real_nf4_weights_equal_original[dtype0-True-shape0] ___________
+
+shape = (256, 1536), nested = True, dtype = torch.float16
+
+    @pytest.mark.parametrize('shape', [(256, 1536), (8960, 1536)])
+    @pytest.mark.parametrize('nested', [False, True])
+    @pytest.mark.parametrize('dtype', [torch.float16, torch.float32])
+    def test_real_nf4_weights_equal_original(shape, nested, dtype):
+>       import bitsandbytes.functional as bnbf
+E       ModuleNotFoundError: No module named 'bitsandbytes'
+
+solution/test_paired_nf4.py:41: ModuleNotFoundError
+___________ test_real_nf4_weights_equal_original[dtype0-True-shape1] ___________
+
+shape = (8960, 1536), nested = True, dtype = torch.float16
+
+    @pytest.mark.parametrize('shape', [(256, 1536), (8960, 1536)])
+    @pytest.mark.parametrize('nested', [False, True])
+    @pytest.mark.parametrize('dtype', [torch.float16, torch.float32])
+    def test_real_nf4_weights_equal_original(shape, nested, dtype):
+>       import bitsandbytes.functional as bnbf
+E       ModuleNotFoundError: No module named 'bitsandbytes'
+
+solution/test_paired_nf4.py:41: ModuleNotFoundError
+__________ test_real_nf4_weights_equal_original[dtype1-False-shape0] ___________
+
+shape = (256, 1536), nested = False, dtype = torch.float32
+
+    @pytest.mark.parametrize('shape', [(256, 1536), (8960, 1536)])
+    @pytest.mark.parametrize('nested', [False, True])
+    @pytest.mark.parametrize('dtype', [torch.float16, torch.float32])
+    def test_real_nf4_weights_equal_original(shape, nested, dtype):
+>       import bitsandbytes.functional as bnbf
+E       ModuleNotFoundError: No module named 'bitsandbytes'
+
+solution/test_paired_nf4.py:41: ModuleNotFoundError
+__________ test_real_nf4_weights_equal_original[dtype1-False-shape1] ___________
+
+shape = (8960, 1536), nested = False, dtype = torch.float32
+
+    @pytest.mark.parametrize('shape', [(256, 1536), (8960, 1536)])
+    @pytest.mark.parametrize('nested', [False, True])
+    @pytest.mark.parametrize('dtype', [torch.float16, torch.float32])
+    def test_real_nf4_weights_equal_original(shape, nested, dtype):
+>       import bitsandbytes.functional as bnbf
+E       ModuleNotFoundError: No module named 'bitsandbytes'
+
+solution/test_paired_nf4.py:41: ModuleNotFoundError
+___________ test_real_nf4_weights_equal_original[dtype1-True-shape0] ___________
+
+shape = (256, 1536), nested = True, dtype = torch.float32
+
+    @pytest.mark.parametrize('shape', [(256, 1536), (8960, 1536)])
+    @pytest.mark.parametrize('nested', [False, True])
+    @pytest.mark.parametrize('dtype', [torch.float16, torch.float32])
+    def test_real_nf4_weights_equal_original(shape, nested, dtype):
+>       import bitsandbytes.functional as bnbf
+E       ModuleNotFoundError: No module named 'bitsandbytes'
+
+solution/test_paired_nf4.py:41: ModuleNotFoundError
+___________ test_real_nf4_weights_equal_original[dtype1-True-shape1] ___________
+
+shape = (8960, 1536), nested = True, dtype = torch.float32
+
+    @pytest.mark.parametrize('shape', [(256, 1536), (8960, 1536)])
+    @pytest.mark.parametrize('nested', [False, True])
+    @pytest.mark.parametrize('dtype', [torch.float16, torch.float32])
+    def test_real_nf4_weights_equal_original(shape, nested, dtype):
+>       import bitsandbytes.functional as bnbf
+E       ModuleNotFoundError: No module named 'bitsandbytes'
+
+solution/test_paired_nf4.py:41: ModuleNotFoundError
+__________ test_frozen_linear_output_and_input_gradient_equal[False] ___________
+
+nested = False
+
+    @pytest.mark.parametrize('nested', [False, True])
+    def test_frozen_linear_output_and_input_gradient_equal(nested):
+>       import bitsandbytes.functional as bnbf
+E       ModuleNotFoundError: No module named 'bitsandbytes'
+
+solution/test_paired_nf4.py:53: ModuleNotFoundError
+___________ test_frozen_linear_output_and_input_gradient_equal[True] ___________
+
+nested = True
+
+    @pytest.mark.parametrize('nested', [False, True])
+    def test_frozen_linear_output_and_input_gradient_equal(nested):
+>       import bitsandbytes.functional as bnbf
+E       ModuleNotFoundError: No module named 'bitsandbytes'
+
+solution/test_paired_nf4.py:53: ModuleNotFoundError
+=========================== short test summary info ============================
+FAILED solution/test_paired_nf4.py::test_real_nf4_weights_equal_original[dtype0-False-shape0]
+FAILED solution/test_paired_nf4.py::test_real_nf4_weights_equal_original[dtype0-False-shape1]
+FAILED solution/test_paired_nf4.py::test_real_nf4_weights_equal_original[dtype0-True-shape0]
+FAILED solution/test_paired_nf4.py::test_real_nf4_weights_equal_original[dtype0-True-shape1]
+FAILED solution/test_paired_nf4.py::test_real_nf4_weights_equal_original[dtype1-False-shape0]
+FAILED solution/test_paired_nf4.py::test_real_nf4_weights_equal_original[dtype1-False-shape1]
+FAILED solution/test_paired_nf4.py::test_real_nf4_weights_equal_original[dtype1-True-shape0]
+FAILED solution/test_paired_nf4.py::test_real_nf4_weights_equal_original[dtype1-True-shape1]
+FAILED solution/test_paired_nf4.py::test_frozen_linear_output_and_input_gradient_equal[False]
+FAILED solution/test_paired_nf4.py::test_frozen_linear_output_and_input_gradient_equal[True]
+10 failed, 13 passed in 5.28s

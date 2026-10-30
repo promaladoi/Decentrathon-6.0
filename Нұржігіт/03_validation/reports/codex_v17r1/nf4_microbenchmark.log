@@ -1,0 +1,5 @@
+{"shape": [1536, 1536], "layers_per_block": 2, "bitwise_equal": true, "event_median_ms": {"reference": 0.09833600372076035, "paired": 0.09603200107812881}, "wall_median_ms": {"reference": 0.11934200006180617, "paired": 0.11709800003245618}, "decoder_speedup": 1.023992029914664}
+{"shape": [256, 1536], "layers_per_block": 2, "bitwise_equal": true, "event_median_ms": {"reference": 0.07353600114583969, "paired": 0.07161600142717361}, "wall_median_ms": {"reference": 0.09405299999798444, "paired": 0.0928020000401375}, "decoder_speedup": 1.0268096470118975}
+{"shape": [8960, 1536], "layers_per_block": 2, "bitwise_equal": true, "event_median_ms": {"reference": 0.27487999200820923, "paired": 0.29280000925064087}, "wall_median_ms": {"reference": 0.2983269999958793, "paired": 0.31659799992667104}, "decoder_speedup": 0.9387977572531705}
+{"shape": [1536, 8960], "layers_per_block": 1, "bitwise_equal": true, "event_median_ms": {"reference": 0.2621760070323944, "paired": 0.2874239981174469}, "wall_median_ms": {"reference": 0.28420900002856797, "paired": 0.31100100000003295}, "decoder_speedup": 0.9121576790719622}
+Decoder-only weighted ratio: 0.9564353648826085
