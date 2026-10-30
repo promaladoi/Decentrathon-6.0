@@ -1,6 +1,6 @@
 # Current experiment
 
-Code e19b464 (v10) preserves half logits at the Accelerate output boundary and
-uses float32 loss/entropy reductions. GPU tests and the paired benchmark are pending.
-This is not yet an accepted improvement. The pinned candidate notebook still
-runs validated v9 (57182a2, 10/10 checks, 1.1075x speedup).
+v11 code 9e104d4 adds a frozen output-head cast cache and skips exactly zero
+upstream-gradient rows in its backward GEMM. Tests and paired validation are pending.
+v10 e19b464 passed 54 kernel tests and 79 Soup tests; paired measurement is running.
+The pinned candidate notebook still runs validated v9, not these experiments.

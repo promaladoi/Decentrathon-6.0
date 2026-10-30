@@ -1,5 +1,5 @@
 {
-  "source_commit": "e19b464b824bb1eb910217cac22b830a25207e39",
+  "source_commit": "9e104d4ed8d4bc7416cc0d22ebde078c6233fcda",
   "source_repo": "BAITC-Hacks/hack-a5a4072f-wither-ai",
   "files": [
     ".gitattributes",
@@ -53,11 +53,13 @@
     "harness/score.py",
     "solution/__init__.py",
     "solution/causal_loss.py",
+    "solution/frozen_head.py",
     "solution/mlp_precision.py",
     "solution/nf4.py",
     "solution/output_precision.py",
     "solution/rmsnorm.py",
     "solution/swiglu.py",
+    "solution/test_frozen_head.py",
     "solution/test_kernels.py",
     "solution/test_team_kernels.py",
     "solution/vocab.py",
