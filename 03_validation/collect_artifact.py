@@ -47,7 +47,8 @@ def collect(archive, commit, version, repo, outputs=None):
         if outcome['status'] == 'accepted' and not accepted:
             raise ValueError('accepted outcome lacks ten verified checks')
         evidence = {n: z.read(n) for n in z.namelist()
-                    if len(Path(n).parts) == 1 and n.endswith(('.json', '.log'))}
+                    if (len(Path(n).parts) == 1 and n.endswith(('.json', '.log'))) or
+                       re.fullmatch(r'runs/(base|solution)_[0-9]+/(train\.log|metrics\.json)', n)}
     report = {'version': version, 'source_commit': commit, 'source_files_verified': len(expected),
               'solution_sha256': digest.hexdigest(), 'status': outcome['status'],
               'checks_passed': passed, 'accepted': accepted, 'summary': summary,
@@ -55,6 +56,7 @@ def collect(archive, commit, version, repo, outputs=None):
     dest = repo/'03_validation/reports'/('codex_'+version)
     dest.mkdir(parents=True, exist_ok=True)
     for name, raw in evidence.items():
+        (dest/name).parent.mkdir(parents=True, exist_ok=True)
         (dest/name).write_bytes(raw)
     (dest/'collection_proof.json').write_text(json.dumps(report, indent=2)+'\n', encoding='utf-8')
     if accepted and outputs is not None:
