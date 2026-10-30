@@ -1,4 +1,4 @@
-"""Bounded, process-local reuse of decoded frozen NF4 MLP weights.
+"""Bounded, process-local reuse of decoded frozen NF4 projection weights.
 
 This trades some of the saved VRAM for fewer repeated decodes/allocations. The
 packed model parameters and quantization settings remain untouched. No decoded
@@ -9,8 +9,8 @@ import weakref
 
 import torch
 
-MAX_BYTES = 2_400_000_000
-MIN_ELEMENTS = 4_194_304
+MAX_BYTES = 2_800_000_000
+MIN_ELEMENTS = 262_144
 
 
 def _snapshot(packed, state, dtype):
@@ -36,7 +36,7 @@ def _snapshot(packed, state, dtype):
 
 
 class FrozenWeightCache:
-    """Mutation-aware tensor cache; routing to the CUDA MLP case is separate."""
+    """Mutation-aware tensor cache; routing to eligible CUDA matrices is separate."""
     def __init__(self, decoder, max_bytes=MAX_BYTES):
         self.decoder, self.max_bytes = decoder, max_bytes
         self.entries, self.bytes = {}, 0
