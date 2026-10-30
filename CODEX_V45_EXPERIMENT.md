@@ -1,3 +1,8 @@
+# Measured update
+
+v45 now has a locally source/hash-verified T4 result: 45.03 s / 4135 MiB, 10/10.
+See CODEX_V45_RESULT.md. The design-time notes below describe the earlier pending state.
+
 # v45: reduce transient head overlap and prepare the storage kernel earlier
 
 Candidate only. v44 is pinned to its own source/queue and is unaffected by this
