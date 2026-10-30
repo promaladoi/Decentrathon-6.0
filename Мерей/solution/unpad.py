@@ -38,6 +38,7 @@ from .nf4 import MatMulNF4, dequantize_nf4, supported as nf4_supported, _linear_
 from . import warmup as _warmup
 from .rmsnorm import add_rmsnorm
 from .dropout import real_row_dropout, _supported as _real_dropout_supported
+from .batch_metadata import compact_batch_metadata
 
 # Static candidate configuration: no harness/test/environment-dependent switch.
 REAL_ROW_DROPOUT = True
@@ -505,6 +506,9 @@ def _batch_metadata(input_ids, attention_mask, labels):
             or input_ids.shape[0] == 0 or input_ids.shape[1] == 0):
         return None
     sequence = input_ids.shape[1]
+    compact = compact_batch_metadata(attention_mask, labels)
+    if compact is not NotImplemented:
+        return compact
     binary = ((attention_mask == 0) | (attention_mask == 1)).all()
     valid = attention_mask != 0
     counts = valid.sum(dim=-1, dtype=torch.int32)
@@ -630,7 +634,9 @@ def fast_forward(model, meta, input_ids, attention_mask, labels, num_items_in_ba
     _warmup.wait()  # a kernel still compiling in the warm-up thread: wait, do not compile twice
     inner = model.model
     batch, seq_len = input_ids.shape
-    rows = attention_mask.reshape(-1).nonzero().squeeze(1)
+    rows = packed_metadata.get("rows")
+    if rows is None:
+        rows = attention_mask.reshape(-1).nonzero().squeeze(1)
     step = _Batch(rows, batch, seq_len, packed_metadata=packed_metadata)
 
     h = inner.embed_tokens(input_ids.reshape(-1).index_select(0, rows))
@@ -724,6 +730,8 @@ def warmup(parts=("fwd", "bwd"), hq=12, hk=2, dim=128):
                   PACKED=True,
                   HAS_LQ=True, HAS_LK=False, HAS_LV=True, num_warps=4, enable_fp_fusion=False)
     if "fwd" in parts:
+        from .batch_metadata import warmup as warmup_batch_metadata
+        warmup_batch_metadata()
         rope_pad_fwd_kernel.warmup(f16, f16, f16, f16, f16, f16, f32, f32, i64, f16, f16, f16,
                                    n, n, n, n, n, n, 7, grid=(1,), **common)
     if "bwd" in parts:
