@@ -1,0 +1,20 @@
+Participant-supplied console; original raw ZIP not yet collected locally.
+
+=== V41 RESULT ===
+base: 80.72 секунд, 14345 MiB, loss 2.04967
+solution: 44.61 секунд, 7011 MiB, loss 2.04965
+
+=== CHECKS ===
+PASS 1. every base and solution run finished
+PASS 2. no ready-made kernel libraries
+PASS 3. own @triton.jit kernels in solution/ run in training
+PASS 4. own kernels together take >= 5% of the training time
+PASS 5. same task and Soup outputs (steps, adapter, settings, tokens, metrics, rewind)
+PASS 6. loss curve follows the base
+PASS 7. quality: eval loss at most 0.5% above the base
+PASS 8. not worse than the base on time or memory (10% margin)
+PASS 9. clean measurement (a T4, idle GPUs, one GPU, harness allocator, peaks agree)
+PASS 10. Soup regression tests with your patches
+
+Жад шегі сақталды: True
+Барлық 10 тексеру өтті: True

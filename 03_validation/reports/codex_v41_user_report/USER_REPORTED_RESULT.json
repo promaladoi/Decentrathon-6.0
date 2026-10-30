@@ -1,0 +1,14 @@
+{
+  "version": "v41",
+  "source_commit": "db4908e8b486874fda8c6eacc230166116ccad01",
+  "evidence_kind": "participant-supplied console from the provided verification cell",
+  "raw_archive_collected_locally": false,
+  "complete_source_bytes_verified_locally": false,
+  "base": {"wall_s": 80.72, "gpu_peak_mib": 14345, "eval_loss": 2.04967},
+  "solution": {"wall_s": 44.61, "gpu_peak_mib": 7011, "eval_loss": 2.04965},
+  "reported_original_checks_passed": 10,
+  "reported_all_solution_runs_within_7151_mib": true,
+  "reported_eval_loss_nonincreasing": true,
+  "target_30_seconds_achieved": false,
+  "selected_production_replaced": false
+}
