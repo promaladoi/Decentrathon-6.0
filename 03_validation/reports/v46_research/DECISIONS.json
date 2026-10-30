@@ -1,0 +1,13 @@
+{
+  "status": "profiling_and_screens_complete; v46 full validation pending",
+  "baseline": "7a3db8fd5e24bbcb58affb475007a5cf93c56f07",
+  "nf4_screen_source": "a32bf0b",
+  "head_screen_source": "6b3973a",
+  "decisions": {
+    "nf4_launch_tuning": "not selected: small/inconsistent gains",
+    "smaller_head_chunks": "not selected: rejected gradient cases and slower qualifying cases",
+    "v46_dropout_half": "eight native-equivalence CUDA tests passed; full admission pending"
+  },
+  "cpu_profile_limitation": "cProfile with Triton background compilation produced inconsistent cumulative call totals; not used for individual startup savings claims",
+  "production_before_validation": "v45,45.03s,4135MiB,10/10"
+}
