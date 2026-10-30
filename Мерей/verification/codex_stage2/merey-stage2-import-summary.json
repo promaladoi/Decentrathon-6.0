@@ -1,0 +1,284 @@
+{
+  "kind": "import_timing_diagnostic_not_training_score",
+  "runtime": "ae2e0887a5179ed602b6e8bc7b7538f518791a31",
+  "profile_steps": 24,
+  "top_self": [
+    {
+      "self_us": 2811177,
+      "cumulative_us": 2811177,
+      "module": "trl.import_utils"
+    },
+    {
+      "self_us": 2333104,
+      "cumulative_us": 2333661,
+      "module": "transformers.utils.import_utils"
+    },
+    {
+      "self_us": 350066,
+      "cumulative_us": 3118760,
+      "module": "transformers"
+    },
+    {
+      "self_us": 342750,
+      "cumulative_us": 342750,
+      "module": "transformers.models"
+    },
+    {
+      "self_us": 319383,
+      "cumulative_us": 385269,
+      "module": "torch._C"
+    },
+    {
+      "self_us": 265755,
+      "cumulative_us": 265755,
+      "module": "typer._click.parser"
+    },
+    {
+      "self_us": 252303,
+      "cumulative_us": 297783,
+      "module": "transformers.processing_utils"
+    },
+    {
+      "self_us": 248705,
+      "cumulative_us": 1567747,
+      "module": "torch"
+    },
+    {
+      "self_us": 172799,
+      "cumulative_us": 240431,
+      "module": "soup_cli.config.schema"
+    },
+    {
+      "self_us": 163976,
+      "cumulative_us": 163976,
+      "module": "torch._inductor.decomposition"
+    },
+    {
+      "self_us": 152879,
+      "cumulative_us": 154857,
+      "module": "torch._prims"
+    },
+    {
+      "self_us": 120569,
+      "cumulative_us": 120569,
+      "module": "numpy.random._generator"
+    },
+    {
+      "self_us": 99330,
+      "cumulative_us": 354994,
+      "module": "torch._meta_registrations"
+    },
+    {
+      "self_us": 97398,
+      "cumulative_us": 452601,
+      "module": "torch._inductor.lowering"
+    },
+    {
+      "self_us": 77910,
+      "cumulative_us": 77910,
+      "module": "bitsandbytes._ops"
+    },
+    {
+      "self_us": 77834,
+      "cumulative_us": 80772,
+      "module": "peft.utils.constants"
+    },
+    {
+      "self_us": 69776,
+      "cumulative_us": 83825,
+      "module": "scipy.stats._continuous_distns"
+    },
+    {
+      "self_us": 69126,
+      "cumulative_us": 72020,
+      "module": "triton.backends"
+    },
+    {
+      "self_us": 67178,
+      "cumulative_us": 1223385,
+      "module": "bitsandbytes"
+    },
+    {
+      "self_us": 65554,
+      "cumulative_us": 65554,
+      "module": "torchvision._meta_registrations"
+    },
+    {
+      "self_us": 62599,
+      "cumulative_us": 70252,
+      "module": "fsspec"
+    },
+    {
+      "self_us": 60463,
+      "cumulative_us": 256564,
+      "module": "networkx"
+    },
+    {
+      "self_us": 58522,
+      "cumulative_us": 58522,
+      "module": "networkx.utils.backends"
+    },
+    {
+      "self_us": 56679,
+      "cumulative_us": 58731,
+      "module": "aiohttp.connector"
+    },
+    {
+      "self_us": 55039,
+      "cumulative_us": 55039,
+      "module": "rich.terminal_theme"
+    },
+    {
+      "self_us": 54766,
+      "cumulative_us": 89070,
+      "module": "wandb.sdk.wandb_settings"
+    },
+    {
+      "self_us": 52051,
+      "cumulative_us": 52051,
+      "module": "torch._dynamo._trace_wrapped_higher_order_op"
+    },
+    {
+      "self_us": 49199,
+      "cumulative_us": 258005,
+      "module": "scipy.stats._stats_py"
+    },
+    {
+      "self_us": 47464,
+      "cumulative_us": 88038,
+      "module": "torch._inductor.kernel.flex.flex_attention"
+    },
+    {
+      "self_us": 45674,
+      "cumulative_us": 63059,
+      "module": "torch._refs"
+    },
+    {
+      "self_us": 44142,
+      "cumulative_us": 44142,
+      "module": "torch.utils._debug_mode"
+    },
+    {
+      "self_us": 38546,
+      "cumulative_us": 46293,
+      "module": "pyarrow.compute"
+    },
+    {
+      "self_us": 37856,
+      "cumulative_us": 45124,
+      "module": "torch._inductor.ir"
+    },
+    {
+      "self_us": 37233,
+      "cumulative_us": 192090,
+      "module": "torch._decomp.decompositions"
+    },
+    {
+      "self_us": 35560,
+      "cumulative_us": 35560,
+      "module": "torch.utils._cxx_pytree"
+    }
+  ],
+  "top_cumulative": [
+    {
+      "self_us": 350066,
+      "cumulative_us": 3118760,
+      "module": "transformers"
+    },
+    {
+      "self_us": 1080,
+      "cumulative_us": 2816617,
+      "module": "trl"
+    },
+    {
+      "self_us": 4125,
+      "cumulative_us": 2815301,
+      "module": "trl._compat"
+    },
+    {
+      "self_us": 2811177,
+      "cumulative_us": 2811177,
+      "module": "trl.import_utils"
+    },
+    {
+      "self_us": 11837,
+      "cumulative_us": 2768535,
+      "module": "transformers.dependency_versions_check"
+    },
+    {
+      "self_us": 173,
+      "cumulative_us": 2756498,
+      "module": "transformers.utils.versions"
+    },
+    {
+      "self_us": 601,
+      "cumulative_us": 2756325,
+      "module": "transformers.utils"
+    },
+    {
+      "self_us": 5100,
+      "cumulative_us": 2604218,
+      "module": "transformers.utils.auto_docstring"
+    },
+    {
+      "self_us": 2630,
+      "cumulative_us": 2590364,
+      "module": "transformers.utils.generic"
+    },
+    {
+      "self_us": 2333104,
+      "cumulative_us": 2333661,
+      "module": "transformers.utils.import_utils"
+    },
+    {
+      "self_us": 248705,
+      "cumulative_us": 1567747,
+      "module": "torch"
+    },
+    {
+      "self_us": 67178,
+      "cumulative_us": 1223385,
+      "module": "bitsandbytes"
+    },
+    {
+      "self_us": 15395,
+      "cumulative_us": 1060315,
+      "module": "bitsandbytes.backends.default.ops"
+    },
+    {
+      "self_us": 1473,
+      "cumulative_us": 940087,
+      "module": "transformers.generation.candidate_generator"
+    },
+    {
+      "self_us": 492,
+      "cumulative_us": 937941,
+      "module": "sklearn.metrics"
+    },
+    {
+      "self_us": 445,
+      "cumulative_us": 879248,
+      "module": "sklearn"
+    },
+    {
+      "self_us": 1627,
+      "cumulative_us": 876518,
+      "module": "sklearn.base"
+    },
+    {
+      "self_us": 38,
+      "cumulative_us": 873505,
+      "module": "sklearn.utils._estimator_html_repr"
+    },
+    {
+      "self_us": 556,
+      "cumulative_us": 873467,
+      "module": "sklearn.utils"
+    },
+    {
+      "self_us": 226,
+      "cumulative_us": 838788,
+      "module": "sklearn.utils._chunking"
+    }
+  ]
+}

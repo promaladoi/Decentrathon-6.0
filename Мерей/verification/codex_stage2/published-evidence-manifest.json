@@ -1,0 +1,103 @@
+{
+  "full_bundle": {
+    "name": "merey-stage2-final-evidence.zip",
+    "bytes": 585422,
+    "sha256": "a50fe778671adde95a9ddf541c2fe42e26d3fdf20563d6afe93b0faafd4178b1",
+    "measurement_files": 196
+  },
+  "note": "Repository contains the selected primary evidence; the full bundle also records rejected experiments and an exact Solution snapshot.",
+  "published_files": {
+    "final-result.json": {
+      "bytes": 238583,
+      "sha256": "c7639ddfc699cc42e2c5fe64b2a053094c423aea8309eb0a37f27c4ef765b699"
+    },
+    "final-checks.json": {
+      "bytes": 2654,
+      "sha256": "59df32c2df4a71294c5e8c4f69e3e871ca4b1615f1518739a5a54d8e137ef50b"
+    },
+    "source-proof.json": {
+      "bytes": 9871,
+      "sha256": "bd4dec2fd1c1d9c639504541c3a453e4eaf1636a1d7105c8b19e2cb12a6d788b"
+    },
+    "merey-stage2-snapshot_late-ab.json": {
+      "bytes": 220889,
+      "sha256": "8ca42549a905d4baf6f390433787c0cfd096b1b9990193b4d2f35845ba43b040"
+    },
+    "merey-stage2-latecpu-snapshot_late_parity.log": {
+      "bytes": 984,
+      "sha256": "64a1e6b498c4560741fa00ef37d72455079f0e53f6d3a932724e19b4f98f97af"
+    },
+    "merey-stage2-latecpu-solution_tests.log": {
+      "bytes": 837,
+      "sha256": "aa98f07d0ed248f2e7a9da6218d5cfcca45207d6bb24de215e75c467a0af9c0f"
+    },
+    "merey-stage2-latecpu-soup_tests.log": {
+      "bytes": 635,
+      "sha256": "60ca241db93ed787f7ec33ff9dd37be5ed602c78d222ab020a64403a64de14f7"
+    },
+    "merey-stage2-official_run.log": {
+      "bytes": 741,
+      "sha256": "fa726c637cede6766f9ec743cfc7f944ce618a0c6cd7c4171a5dd6191e5e420b"
+    },
+    "merey-stage2-official_checks.log": {
+      "bytes": 2151,
+      "sha256": "96ae39f9d7bbd8453907ee5f9f3f4d99dbad2bbdd3dfbbe53725c7565646f4a9"
+    },
+    "merey-stage2-profile.json": {
+      "bytes": 72174,
+      "sha256": "ed4520e49c3db10e8aef09016a03337e37476d469426fc34c1196ee7d9a1fd31"
+    },
+    "merey-stage2-head-tiles.json": {
+      "bytes": 14477,
+      "sha256": "3e01bb1a07223d2bb051b548f6c5de9c7c298c9e3cba1098e9d85950af3b9d01"
+    },
+    "merey-stage2-meta-ab.json": {
+      "bytes": 220762,
+      "sha256": "f76447f389c4283401ef279547449056c05f4f10a27c9d28bcf580c7c644ab6f"
+    },
+    "merey-stage2-aligned-ab.json": {
+      "bytes": 220765,
+      "sha256": "410fb1bb1b853dea797c20f93878a0db50fb77b3ff35641d0e71aeaaa656433b"
+    },
+    "merey-stage2-snapshot-ab.json": {
+      "bytes": 220796,
+      "sha256": "bc78b329fbfda72e22c6f3991da9314ce2df9fc00c5f5e48755ea83615dfa26b"
+    },
+    "merey-stage2-mma-summary.json": {
+      "bytes": 11921,
+      "sha256": "f502d0775bf85838825e45a3ddb3708a0b35f22f3bfafd061d93d02caadeab89"
+    },
+    "merey-stage2-mma-precision.json": {
+      "bytes": 27441,
+      "sha256": "52546a3e42b17a530bda493e6a388b1cb8a41921ead978375ea1f29469bc585d"
+    },
+    "merey-stage2-nf4-decode-tiles.json": {
+      "bytes": 9182,
+      "sha256": "35bda60d4dec1991223d7b4211045fac8c459b9ca3b1dc55ff20c047ecb420f4"
+    },
+    "merey-stage2-import-summary.json": {
+      "bytes": 6103,
+      "sha256": "d4e6022f1607a066d69a9278e7e34bc8f1b5339ba4a3581a55ca55f58adf3f59"
+    },
+    "merey-stage2-metadata-access.json": {
+      "bytes": 6061,
+      "sha256": "c7c604c7b2f2a42452dcc33ceca9c17c270ed4a5423ddde81d6d9e3830afc1a0"
+    },
+    "official/base_1/train.log": {
+      "bytes": 29425,
+      "sha256": "38340f1d99cdf9843bd4898b63ed4e2f9ba4185e1ae158511a44302a14026b78"
+    },
+    "official/solution_1/train.log": {
+      "bytes": 29960,
+      "sha256": "1f138312ff4ed3cb3d2021ebbc2ba4d18758eaf2f7567c86568aa8b734309585"
+    },
+    "official/solution_2/train.log": {
+      "bytes": 29962,
+      "sha256": "93e8c51f66695a9d534dace4b492f03ef595e7ff0e2a7115bb746aaa567eed25"
+    },
+    "official/base_2/train.log": {
+      "bytes": 29426,
+      "sha256": "036745c119dc12309921ebcfe894fafefaffe03a1a26130b1eb88916fb51a18e"
+    }
+  }
+}

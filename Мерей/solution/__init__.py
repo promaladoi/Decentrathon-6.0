@@ -51,3 +51,7 @@ def apply():
         install_private_scope()
         from .tokenization_map import install as install_tokenization_map
         install_tokenization_map()
+        # Soup imports TRL later in setup(). Preserve that import order and
+        # reuse the native same-process metadata only around the real call.
+        from .package_metadata_snapshot import install as install_package_metadata
+        install_package_metadata()

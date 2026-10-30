@@ -1,0 +1,189 @@
+{
+  "kind": "cpu_first_native_trl_mapping_access",
+  "status": "complete",
+  "first_access_events": [
+    {
+      "operation": "__getitem__",
+      "stack_innermost_first": [
+        {
+          "module": "_traced_lazy_metadata_helper",
+          "function": "__getitem__",
+          "file": "/kaggle/working/merey-stage2-lazy-29da51c1a9a7/\u041c\u0435\u0440\u0435\u0439/solution/lazy_package_metadata.py",
+          "line": 46
+        },
+        {
+          "module": "trl.import_utils",
+          "function": "_is_package_available",
+          "file": "/usr/local/lib/python3.13/dist-packages/trl/import_utils.py",
+          "line": 38,
+          "package_probe": "transformers",
+          "return_version": true
+        },
+        {
+          "module": "trl._compat",
+          "function": "_is_package_version_at_least",
+          "file": "/usr/local/lib/python3.13/dist-packages/trl/_compat.py",
+          "line": 67
+        },
+        {
+          "module": "trl._compat",
+          "function": "_patch_vllm_cached_tokenizer",
+          "file": "/usr/local/lib/python3.13/dist-packages/trl/_compat.py",
+          "line": 119
+        },
+        {
+          "module": "trl._compat",
+          "function": "<module>",
+          "file": "/usr/local/lib/python3.13/dist-packages/trl/_compat.py",
+          "line": 217
+        },
+        {
+          "module": "importlib._bootstrap",
+          "function": "_call_with_frames_removed",
+          "file": "<frozen importlib._bootstrap>",
+          "line": 488
+        },
+        {
+          "module": "importlib._bootstrap_external",
+          "function": "exec_module",
+          "file": "<frozen importlib._bootstrap_external>",
+          "line": 1023
+        },
+        {
+          "module": "importlib._bootstrap",
+          "function": "_load_unlocked",
+          "file": "<frozen importlib._bootstrap>",
+          "line": 935
+        },
+        {
+          "module": "importlib._bootstrap",
+          "function": "_find_and_load_unlocked",
+          "file": "<frozen importlib._bootstrap>",
+          "line": 1331
+        },
+        {
+          "module": "importlib._bootstrap",
+          "function": "_find_and_load",
+          "file": "<frozen importlib._bootstrap>",
+          "line": 1360
+        },
+        {
+          "module": "importlib._bootstrap",
+          "function": "_call_with_frames_removed",
+          "file": "<frozen importlib._bootstrap>",
+          "line": 488
+        },
+        {
+          "module": "importlib._bootstrap",
+          "function": "_handle_fromlist",
+          "file": "<frozen importlib._bootstrap>",
+          "line": 1423
+        },
+        {
+          "module": "trl",
+          "function": "<module>",
+          "file": "/usr/local/lib/python3.13/dist-packages/trl/__init__.py",
+          "line": 19
+        },
+        {
+          "module": "importlib._bootstrap",
+          "function": "_call_with_frames_removed",
+          "file": "<frozen importlib._bootstrap>",
+          "line": 488
+        },
+        {
+          "module": "importlib._bootstrap_external",
+          "function": "exec_module",
+          "file": "<frozen importlib._bootstrap_external>",
+          "line": 1023
+        },
+        {
+          "module": "importlib._bootstrap",
+          "function": "_load_unlocked",
+          "file": "<frozen importlib._bootstrap>",
+          "line": 935
+        },
+        {
+          "module": "importlib._bootstrap",
+          "function": "_find_and_load_unlocked",
+          "file": "<frozen importlib._bootstrap>",
+          "line": 1331
+        },
+        {
+          "module": "importlib._bootstrap",
+          "function": "_find_and_load",
+          "file": "<frozen importlib._bootstrap>",
+          "line": 1360
+        },
+        {
+          "module": "importlib._bootstrap",
+          "function": "_gcd_import",
+          "file": "<frozen importlib._bootstrap>",
+          "line": 1395
+        },
+        {
+          "module": "importlib._bootstrap",
+          "function": "_call_with_frames_removed",
+          "file": "<frozen importlib._bootstrap>",
+          "line": 488
+        },
+        {
+          "module": "importlib._bootstrap",
+          "function": "_find_and_load_unlocked",
+          "file": "<frozen importlib._bootstrap>",
+          "line": 1310
+        },
+        {
+          "module": "importlib._bootstrap",
+          "function": "_find_and_load",
+          "file": "<frozen importlib._bootstrap>",
+          "line": 1360
+        },
+        {
+          "module": "importlib._bootstrap",
+          "function": "_gcd_import",
+          "file": "<frozen importlib._bootstrap>",
+          "line": 1395
+        },
+        {
+          "module": "importlib",
+          "function": "import_module",
+          "file": "/usr/lib/python3.13/importlib/__init__.py",
+          "line": 88
+        },
+        {
+          "module": "__main__",
+          "function": "main",
+          "file": "<string>",
+          "line": 97
+        },
+        {
+          "module": "__main__",
+          "function": "<module>",
+          "file": "<string>",
+          "line": 128
+        }
+      ],
+      "native_result_type": "dict",
+      "native_mapping_entries": 978,
+      "materialize_seconds": 2.1813225320001948
+    }
+  ],
+  "all_materialize_operation_counts": {
+    "__getitem__": 3
+  },
+  "helper": "/kaggle/working/merey-stage2-lazy-29da51c1a9a7/\u041c\u0435\u0440\u0435\u0439/solution/lazy_package_metadata.py",
+  "helper_sha256": "69e7435e1829ec5fcfa69508140f56307dbecd5dad1cd998009ea088ccbd69e0",
+  "trl_distribution_version": "0.29.1",
+  "native_function_guard": true,
+  "guarded_origin": "/usr/local/lib/python3.13/dist-packages/trl/import_utils.py",
+  "installed_trl_import_utils_sha256": "3385456c144681cae474200ac1140358f128a12252216be4e2bd9cea46d59817",
+  "context_active": true,
+  "native_import_seconds": 2.190582003000145,
+  "mapping_type": "_LazyPackageMapping",
+  "mapping_is_our_lazy_class": true,
+  "materialized_during_import": true,
+  "materialized_entries": 978,
+  "cuda_initialized": false,
+  "native_function_restored": true
+}

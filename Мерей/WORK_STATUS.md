@@ -1,6 +1,35 @@
 # Мерей — состояние работы
 
-## Последний runtime: 29419f43
+## Этап 2: ещё −3.7% полного времени при прежних 5175 MiB
+
+В новой парной серии Kaggle T4 текущий Мерей (`ae2e088`) и выбранный
+runtime `766d0a39` дали **48.005 → 46.21 с по медиане**, GPU peak —
+**5175 → 5175 MiB**. Старые запуски: 46.28 / 49.73 с; новые:
+45.74 / 46.68 с. Порядок: старый → новый → новый → старый.
+Timed steps 3–64: 24.895 → 24.9475 с — ускорение самих шагов не установлено.
+Выигрыш получен на подготовке полного запуска: повторный поиск метаданных
+TRL заменён независимой копией уже вычисленной штатной таблицы Transformers
+в том же процессе. Проверки доступности пакетов и версий сохранены.
+
+**352 solution tests PASS + отдельный native setup-prefix test PASS;
+79 Soup tests PASS.** Официальные проверки: **10/10 PASS**.
+
+Измеренный и опубликованный runtime:
+[766d0a39fe8394be8a1cd280401af1adde6d5206](https://github.com/promaladoi/Decentrathon-6.0/commit/766d0a39fe8394be8a1cd280401af1adde6d5206).
+[Отчёт этапа 2](verification/codex_stage2/optimization-report.md) ·
+[A/B](verification/codex_stage2/merey-stage2-snapshot_late-ab.json) ·
+[Official checks](verification/codex_stage2/final-checks.json) ·
+[Source proof](verification/codex_stage2/source-proof.json) ·
+[Чистый reproduction notebook](templates/stage2_optimization_validation.ipynb).
+
+Весь `solution/` публикуется побайтно из измеренного runtime. Новые отчёты
+и notebook находятся снаружи `solution/`, поэтому его официальный SHA256
+не меняется после замера. `harness/`, `task/` и `tests/` сохранены.
+Исследованные более медленные GPU-варианты в runtime не включены.
+Ниже сохранены результаты предыдущих этапов; их секунды не смешиваются
+с новой парной серией. Платформенная сдача остаётся отдельным этапом.
+
+## Этап 1 — история: runtime 29419f43
 
 [Выбранный source](https://github.com/promaladoi/Decentrathon-6.0/commit/29419f43d9b9173d1ba5d6824a31589ad3b84df7):
 **339 solution tests + 79 Soup tests PASS** на T4. Текущий Мерей и новая
