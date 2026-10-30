@@ -17,11 +17,13 @@
 | Codex v7 | a044007 | 10 PASS | 0.9995x | 1.3869x | -0.002% | LoRA fusion rejected: slower; 2 paired runs |
 | Codex v8 | 7435a92 | 10 PASS | 1.0144x | 1.5690x | +0.002% | Direct causal loss; slow LoRA still included; 2 paired runs |
 | Codex v9 | 57182a2 | 10 PASS | 1.1075x | 1.5652x | -0.001% | Earlier candidate: 41 tests, own kernels 7.3%; 2 paired runs |
-| Codex v10 | e19b464 | 10 PASS | 1.1156x | 1.9425x | -0.001% | Current validated candidate: 54 tests, own kernels 7.0%; 2 paired runs |
+| Codex v10 | e19b464 | 10 PASS | 1.1156x | 1.9425x | -0.001% | Earlier validated candidate: 54 tests, own kernels 7.0%; 2 paired runs |
 | Codex v11 | 9e104d4 | No complete report | — | — | — | Superseded by v12; rerun hit concurrent-process OOM, no accepted measurement |
-| Codex v12 | bd2b49a | Pending | — | — | — | 64 kernel tests passed on clean T4; paired benchmark running |
+| Codex v12 | bd2b49a | 10 PASS | 1.1608x | 1.9425x | -0.000% | Latest complete report; 64 kernel tests, own share 8.1%; 2 paired runs |
+| Combined v13 | 13eaa8a | 10 PASS (participant console) | 1.398x | 2.490x | -0.001% | 106 tests; own share 11.3%; 2 paired runs; raw archive pending download |
+| Combined v14 | fd5e482 | Pending | — | — | — | Compact dropout; launch not confirmed, fresh notebook prepared |
 | Анаис | әлі берілмеген | әлі берілмеген | жоқ | жоқ | жоқ | |
-| Владимир | әлі берілмеген | әлі берілмеген | жоқ | жоқ | жоқ | |
+| Владимир (user-reported) | main/d080f2b component | Full checks not supplied | 1.468x | 2.543x | -0.0% | User summary: 93.2 / 63.5 s, 14345 / 5641 MiB; not independently validated here |
 | Мерей | әлі берілмеген | әлі берілмеген | жоқ | жоқ | жоқ | |
 
 Әр нұсқа үшін жинау керек:

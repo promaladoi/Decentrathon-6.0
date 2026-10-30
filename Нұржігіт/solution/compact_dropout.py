@@ -9,8 +9,8 @@ import triton
 import triton.language as tl
 
 
-@triton.jit
-def compact_dropout_rows(X, MASK, ROWS, OUT, N: tl.constexpr, H: tl.constexpr,
+@triton.jit(do_not_specialize=['N'])
+def compact_dropout_rows(X, MASK, ROWS, OUT, N, H: tl.constexpr,
                          SCALE: tl.constexpr, BLOCK: tl.constexpr):
     i = tl.program_id(0) * BLOCK + tl.arange(0, BLOCK)
     row = i // H

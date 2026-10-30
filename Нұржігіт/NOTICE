@@ -16,3 +16,9 @@ Model: Qwen/Qwen2.5-1.5B-Instruct on Hugging Face, Apache-2.0 license.
 solution/causal_loss.py adapts causal-shifting and normalization semantics from
 Transformers 5.16.1, transformers/loss/loss_utils.py, Copyright 2024 The HuggingFace
 Team, Apache-2.0. Vocabulary reductions use this team's Triton kernels.
+
+solution/team_vladimir/ contains teammate Vladimir's shared challenge solution,
+imported from promaladoi/Decentrathon-6.0 at commit
+6436ef5683892692b9e41f2c5fe6bb563107a128, directory Владимир/solution.
+Only test imports were relocated. See TEAM_INTEGRATION.md for component credits.
+The original organizer SwiGLU remains attributed and is excluded from own kernels.
