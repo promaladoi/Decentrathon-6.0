@@ -1,7 +1,7 @@
 # Нұржігіт — Codex нұсқасы
 
 Команда мүшесінің жұмыс папкасы. Бұл жерде код, notebook және нақты өлшеу есептері бар.
-Платформа репозиторийінен алынған snapshot: `3016d555b15f6625d61f0c19806c916b128e5b1a`.
+Платформа репозиторийінен алынған snapshot: `389f037ce1cee63a759eb52384b5c28839d2bc4a`.
 Kaggle ноутбугындағы бекітілген COMMIT қай код өлшенгенін анықтайды.
 Бүкіл commit тарихы `codex/kernel-v1` branch-інде сақталады.
 
@@ -14,10 +14,10 @@ Code: `13eaa8a`. **106 kernel tests + 79 Soup tests**, own-kernel share **11.3%*
 The participant supplied the final console output; the raw archive still needs
 local download/hash verification. [Reproduce v13](templates/codex_v13.ipynb).
 
-The branch tip is the **unverified v14 compact-dropout experiment**.
-[Run v14](templates/codex_v14.ipynb) in a fresh Kaggle notebook with T4 x2 and Internet On.
-Browser control disconnected before its launch was confirmed; the participant
-reported that no v14 cell was present. Do not claim that v14 has run or passed.
+The branch tip contains the **unverified v15 repair + startup compilation experiment**.
+[Experiment details](CODEX_V15_EXPERIMENT.md). The original v14 failed four exact
+dropout tests and stopped before training. The repaired version uses the original
+dropout operator and retains zero-tolerance equivalence tests. No v15 speedup is claimed.
 [Fully archived v12 fallback](CODEX_V12_RESULT.md) · [Current status](CURRENT_STATUS.md) ·
 [Component credits](TEAM_INTEGRATION.md) · [All variants](03_validation/VERSION_COMPARISON.md).
 The final team submission is not selected.

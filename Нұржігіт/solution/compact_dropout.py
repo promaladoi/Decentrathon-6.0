@@ -56,6 +56,15 @@ def compact_dropout(x, rows, batch, seq_len, p):
     return _CompactDropout.apply(x, rows, batch, seq_len, p)
 
 
+def warmup(hidden=1536, p=.05):
+    """Compile both production storage types with a runtime token count."""
+    for dtype in (torch.float16, torch.float32):
+        compact_dropout_rows.warmup(
+            dtype, torch.bool, torch.int64, dtype, 16 * hidden,
+            hidden, 1.0 / (1.0 - p), 1024, grid=(1,), num_warps=4,
+            enable_fp_fusion=False)
+
+
 def patch_compact_dropout():
     from .team_vladimir.unpad import _Batch
     original = _Batch.dropout

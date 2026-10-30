@@ -13,7 +13,9 @@ def apply():
     _applied = True
     from .team_vladimir import apply as apply_team
     from .parallel_head import patch_parallel_head
-    apply_team()
-    patch_parallel_head()
     from .compact_dropout import patch_compact_dropout
+    # Register the active head and compile signatures before the shared
+    # apply() starts its model-loading-time compilation thread.
+    patch_parallel_head()
     patch_compact_dropout()
+    apply_team()
