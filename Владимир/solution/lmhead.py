@@ -31,14 +31,12 @@ BLOCK_V = 4096
 GRAD_SCALE = 1024.0  # keeps small probabilities out of fp16 subnormals; divided out in backward
 
 
-@triton.jit
-def lm_ce_kernel(LOGITS, TARGET, ENT, AMAX, CE, stride, V, grad_scale, BLOCK_V: tl.constexpr,
-                 WITH_GRAD: tl.constexpr):
+@triton.jit(do_not_specialize=["with_grad"])  # one compiled variant for both uses
+def lm_ce_kernel(LOGITS, TARGET, ENT, AMAX, CE, stride, V, grad_scale, with_grad,
+                 BLOCK_V: tl.constexpr):
     row = tl.program_id(0)
     ptr = LOGITS + row.to(tl.int64) * stride
-    target = -1
-    if WITH_GRAD:
-        target = tl.load(TARGET + row).to(tl.int32)
+    target = tl.load(TARGET + row).to(tl.int32)  # -100 for a token without a label
     m = -1e30  # running max
     s = 0.0  # sum of exp(z - m)
     u = 0.0  # sum of exp(z - m) * (z - m), for the entropy
@@ -60,14 +58,13 @@ def lm_ce_kernel(LOGITS, TARGET, ENT, AMAX, CE, stride, V, grad_scale, BLOCK_V: 
         u = alpha * (u + s * (m - new_m)) + tl.sum(e * (z - new_m), axis=0)
         s = alpha * s + tl.sum(e, axis=0)
         m = new_m
-        if WITH_GRAD:
-            zt += tl.sum(tl.where(cols == target, z, 0.0), axis=0)
+        zt += tl.sum(tl.where(cols == target, z, 0.0), axis=0)
     log_s = tl.log(s)
     tl.store(ENT + row, log_s - u / s)  # -sum(p * log p)
     tl.store(AMAX + row, best_i.to(tl.int64))
-    if WITH_GRAD:
-        lse = m + log_s
-        tl.store(CE + row, lse - zt)
+    lse = m + log_s
+    tl.store(CE + row, lse - zt)  # read only for labelled tokens
+    if with_grad:
         for start in range(0, V, BLOCK_V):  # d(CE)/dz = softmax - one_hot, in place
             cols = start + tl.arange(0, BLOCK_V)
             mask = cols < V
@@ -77,21 +74,20 @@ def lm_ce_kernel(LOGITS, TARGET, ENT, AMAX, CE, stride, V, grad_scale, BLOCK_V: 
             tl.store(ptr + cols, g.to(LOGITS.dtype.element_ty), mask=mask)
 
 
-def _stats(x16, w16, idx, targets, ent, amax, ce, grad_x):
-    """Fill the statistics (and, with targets, the hidden-state gradient) of tokens `idx`."""
-    with_grad = targets is not None
+def _stats(x16, w16, idx, targets, ent, amax, ce, grad_x, with_grad):
+    """Fill the statistics (and, with_grad, the CE and hidden-state gradient) of tokens idx."""
     vocab = w16.shape[0]
     if idx.numel() == 0:
         return
     for chunk in idx.split(CHUNK):
         n = chunk.numel()
         logits = torch.mm(x16.index_select(0, chunk), w16.t())
-        tgt = targets.index_select(0, chunk) if with_grad else chunk
+        tgt = targets.index_select(0, chunk)
         e, a = torch.empty(n, device=x16.device), torch.empty(n, device=x16.device,
                                                                dtype=torch.int64)
         c = torch.empty(n, device=x16.device)
         lm_ce_kernel[(n,)](logits, tgt, e, a, c, logits.stride(0), vocab, GRAD_SCALE,
-                           BLOCK_V=BLOCK_V, WITH_GRAD=with_grad, num_warps=8)
+                           1 if with_grad else 0, BLOCK_V=BLOCK_V, num_warps=8)
         ent.index_copy_(0, chunk, e)
         amax.index_copy_(0, chunk, a)
         if with_grad:
@@ -114,8 +110,8 @@ class LMHeadLoss(torch.autograd.Function):
         ce = torch.zeros(tokens, device=x.device)
         grad_x = torch.zeros(tokens, hidden, device=x.device)
         valid = targets != -100
-        _stats(x16, w16, valid.nonzero().squeeze(1), targets, ent, amax, ce, grad_x)
-        _stats(x16, w16, (~valid).nonzero().squeeze(1), None, ent, amax, ce, grad_x)
+        _stats(x16, w16, valid.nonzero().squeeze(1), targets, ent, amax, ce, grad_x, True)
+        _stats(x16, w16, (~valid).nonzero().squeeze(1), targets, ent, amax, ce, grad_x, False)
         del w16, x16
         stats.update(entropy=ent, argmax=amax, ce=ce, valid=valid)
         ctx.save_for_backward(grad_x, denom)
@@ -241,8 +237,7 @@ def patch_metric_readers():
 
 
 def warmup(vocab=151936):
-    """Compile the two variants of lm_ce_kernel; see warmup.py."""
+    """Compile lm_ce_kernel as the training step launches it; see warmup.py."""
     f16, f32, i64 = torch.float16, torch.float32, torch.int64
-    for with_grad in (True, False):
-        lm_ce_kernel.warmup(f16, i64, f32, i64, f32, vocab, vocab, GRAD_SCALE, grid=(1,),
-                            BLOCK_V=BLOCK_V, WITH_GRAD=with_grad, num_warps=8)
+    lm_ce_kernel.warmup(f16, i64, f32, i64, f32, vocab, vocab, GRAD_SCALE, 1, grid=(1,),
+                        BLOCK_V=BLOCK_V, num_warps=8)

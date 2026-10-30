@@ -213,15 +213,21 @@ def patch_qwen2_rmsnorm():
     cls.forward = make_rmsnorm_forward(cls.forward)
 
 
-def warmup(n=1536):
+def warmup(n=1536, parts=("fwd", "bwd", "add_fwd", "add_bwd", "add_bwd_no_dh")):
     """Compile the variants Qwen2.5-1.5B launches (fp32 hidden state, fp32 weights, fp16
     attention output) ahead of the first step; see warmup.py."""
     f32, f16 = torch.float32, torch.float16
     block, warps = _launch_config(n)
     cfg = dict(grid=(1,), BLOCK_N=block, num_warps=warps)
-    rmsnorm_fwd_kernel.warmup(f32, f32, f32, f32, n, n, n, 1e-6, **cfg)
-    add_rmsnorm_fwd_kernel.warmup(f32, f16, f32, f32, f32, f32, n, n, n, n, n, 1e-6, **cfg)
-    rmsnorm_bwd_kernel.warmup(f32, f32, f32, f32, f32, n, n, n, n, **cfg)
-    for has_dh in (True, False):  # False: the final norm, whose residual output is unused
+    if "fwd" in parts:
+        rmsnorm_fwd_kernel.warmup(f32, f32, f32, f32, n, n, n, 1e-6, **cfg)
+    if "add_fwd" in parts:
+        add_rmsnorm_fwd_kernel.warmup(f32, f16, f32, f32, f32, f32, n, n, n, n, n, 1e-6, **cfg)
+    if "bwd" in parts:
+        rmsnorm_bwd_kernel.warmup(f32, f32, f32, f32, f32, n, n, n, n, **cfg)
+    if "add_bwd" in parts:
         add_rmsnorm_bwd_kernel.warmup(f32, f32, f32, f32, f32, f32, f16, n, n, n, n, n, n,
-                                      HAS_DH=has_dh, **cfg)
+                                      HAS_DH=True, **cfg)
+    if "add_bwd_no_dh" in parts:  # an unused residual output (autograd usually passes zeros)
+        add_rmsnorm_bwd_kernel.warmup(f32, f32, f32, f32, f32, f32, f16, n, n, n, n, n, n,
+                                      HAS_DH=False, **cfg)
