@@ -46,7 +46,7 @@ def test_scatter_matches_dense_statistics_without_touching_other_rows(
     lm_ce_scatter_kernel[(count,)](
         logits, targets, rows, entropy, argmax, ce, lse, logits.stride(0),
         rows.stride(0), targets.stride(0), vocabulary, BLOCK_V=BLOCK_V,
-        WRITE_CE=write_ce, num_warps=8)
+        num_warps=8)
 
     selected = torch.zeros(tokens, device="cuda", dtype=torch.bool)
     selected[rows] = True
@@ -62,6 +62,37 @@ def test_scatter_matches_dense_statistics_without_touching_other_rows(
     else:
         assert torch.all(ce == -7).item()
         assert torch.all(lse == -7).item()
+
+
+@pytest.mark.parametrize("vocabulary", [3, 4103])
+def test_prompt_loss_pointers_can_alias_entropy_without_writing_it(vocabulary):
+    from solution.lmhead import BLOCK_V, lm_ce_kernel, lm_ce_scatter_kernel
+
+    torch.manual_seed(329)
+    rows = torch.tensor([6, 0, 4], device="cuda", dtype=torch.int64)
+    count, tokens = rows.numel(), 7
+    logits = torch.randn((count, vocabulary), device="cuda", dtype=torch.float16)
+    targets = torch.full((tokens,), -100, device="cuda", dtype=torch.int64)
+    reference_entropy = torch.empty(count, device="cuda")
+    reference_argmax = torch.empty(count, device="cuda", dtype=torch.int64)
+    reference_ce, reference_lse = torch.empty_like(reference_entropy), torch.empty_like(reference_entropy)
+    lm_ce_kernel[(count,)](
+        logits, targets.index_select(0, rows), reference_entropy, reference_argmax,
+        reference_ce, reference_lse, logits.stride(0), vocabulary,
+        BLOCK_V=BLOCK_V, num_warps=8)
+    entropy = torch.full((tokens,), -7.0, device="cuda")
+    argmax = torch.full((tokens,), -7, device="cuda", dtype=torch.int64)
+    # This is the production prompt call: no CE/LSE buffers exist. The masked
+    # loss stores must not race with or overwrite any row's entropy output.
+    lm_ce_scatter_kernel[(count,)](
+        logits, targets, rows, entropy, argmax, entropy, entropy,
+        logits.stride(0), rows.stride(0), targets.stride(0), vocabulary,
+        BLOCK_V=BLOCK_V, num_warps=8)
+    expected_entropy = torch.full_like(entropy, -7.0)
+    expected_argmax = torch.full_like(argmax, -7)
+    expected_entropy[rows], expected_argmax[rows] = reference_entropy, reference_argmax
+    torch.testing.assert_close(entropy, expected_entropy, rtol=0, atol=0)
+    assert torch.equal(argmax, expected_argmax)
 
 
 @pytest.mark.parametrize("expected_scale", [None, 65536.0])

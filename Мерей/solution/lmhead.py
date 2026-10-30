@@ -74,20 +74,18 @@ def lm_ce_kernel(LOGITS, TARGET, ENT, AMAX, CE, LSE, stride, V,
 @triton.jit
 def lm_ce_scatter_kernel(LOGITS, TARGET, ROWS, ENT, AMAX, CE, LSE,
                          stride, row_stride, target_stride, V,
-                         BLOCK_V: tl.constexpr, WRITE_CE: tl.constexpr):
-    """Write each unique real-token row directly; only labelled rows need CE/LSE."""
+                         BLOCK_V: tl.constexpr):
+    """One signature for all rows; ignored targets never write CE/LSE storage."""
     row = tl.program_id(0)
     output_row = tl.load(ROWS + row.to(tl.int64) * row_stride)
-    target = -100
-    if WRITE_CE:
-        target = tl.load(TARGET + output_row * target_stride).to(tl.int32)
+    target = tl.load(TARGET + output_row * target_stride).to(tl.int32)
     entropy, best, ce, lse = _lm_ce_statistics(
-        LOGITS, target, stride, V, BLOCK_V, WRITE_CE)
+        LOGITS, target, stride, V, BLOCK_V, True)
     tl.store(ENT + output_row, entropy)
     tl.store(AMAX + output_row, best)
-    if WRITE_CE:
-        tl.store(CE + output_row, ce)
-        tl.store(LSE + row, lse)
+    labelled = target != -100
+    tl.store(CE + output_row, ce, mask=labelled)
+    tl.store(LSE + row, lse, mask=labelled)
 
 
 @triton.jit
@@ -144,7 +142,8 @@ def _stats(x16, w16, idx, targets, entropy, argmax, ce, saved_chunks=None,
         logits = torch.mm(x16.index_select(0, chunk), w16.t())
         # Each index occurs once. Scatter the statistics in the same launch
         # that computes them, avoiding chunk temporaries and index_copy calls.
-        # Prompt rows need neither their ignored targets nor CE/LSE storage.
+        # Prompt rows use the same compiled kernel, whose ignored-target mask
+        # leaves CE/LSE untouched. Their unused pointers may alias entropy.
         lse = (torch.empty(count, device=x16.device, dtype=torch.float32)
                if ce is not None else None)
         lm_ce_scatter_kernel[(count,)](
@@ -152,7 +151,7 @@ def _stats(x16, w16, idx, targets, entropy, argmax, ce, saved_chunks=None,
             ce if ce is not None else entropy,
             lse if lse is not None else entropy,
             logits.stride(0), chunk.stride(0), targets.stride(0), vocabulary,
-            BLOCK_V=BLOCK_V, WRITE_CE=ce is not None, num_warps=8)
+            BLOCK_V=BLOCK_V, num_warps=8)
         if saved_chunks is not None:
             # Keep the exact original half GEMM output. No clone/index_copy of
             # this vocabulary-sized tensor and no in-place gradient overwrite.
@@ -370,9 +369,8 @@ def patch_metric_readers():
 def warmup(vocab=151936):
     """Compile the production scatter statistics and actual-scale backward."""
     f16, f32, i64 = torch.float16, torch.float32, torch.int64
-    for write_ce in (True, False):
-        lm_ce_scatter_kernel.warmup(
-            f16, i64, i64, f32, i64, f32, f32, vocab, 1, 1, vocab,
-            grid=(1,), BLOCK_V=BLOCK_V, WRITE_CE=write_ce, num_warps=8)
+    lm_ce_scatter_kernel.warmup(
+        f16, i64, i64, f32, i64, f32, f32, vocab, 1, 1, vocab,
+        grid=(1,), BLOCK_V=BLOCK_V, num_warps=8)
     lm_scale_gradient_kernel.warmup(f16, f32, i64, f32, f16, vocab, vocab,
                                     grid=(1, 1), BLOCK=GRAD_BLOCK, num_warps=4)
