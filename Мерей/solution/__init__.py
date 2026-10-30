@@ -49,3 +49,5 @@ def apply():
         patch_qwen2_causal_lm()  # ours: real tokens only, padded only for attention; fused loss
         from .private_scope import install as install_private_scope
         install_private_scope()
+        from .tokenization_map import install as install_tokenization_map
+        install_tokenization_map()
