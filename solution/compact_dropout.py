@@ -1,8 +1,9 @@
-"""Keep PyTorch's public full-shape dropout operation and compact its backward.
+"""Keep PyTorch's full-shape CUDA dropout draw and compact its backward.
 
-The padded ones tensor draws its mask via the same functional.dropout as the base.
-Only the useful rows are multiplied and saved through autograd. No custom RNG,
-changed dropout probability, cross-batch packing or skipped random draws.
+The native operator is the CUDA implementation functional.dropout dispatches to.
+Retain its boolean mask directly instead of filling ones and inferring a second
+mask from the discarded scaled output. Only real rows are multiplied and saved.
+No custom RNG, changed probability, batch packing or skipped random draws.
 """
 import torch
 import triton
@@ -30,13 +31,7 @@ class _CompactDropout(torch.autograd.Function):
         # and retain that same index tensor for backward. Production nonzero()
         # rows already have unit stride, so this is normally a no-op.
         rows = rows.contiguous()
-        # Keep the original public dropout operation, dtype and full shape.
-        # Ones expose the boolean mask. Ignore their rounded fp16 scale and
-        # apply the original fp32 scale in our elementwise kernel below.
-        dummy = torch.ones((batch, seq_len, x.shape[-1]), device=x.device, dtype=x.dtype)
-        dropped = torch.nn.functional.dropout(dummy, p=p, training=True)
-        mask = dropped.ne(0)
-        del dropped, dummy
+        mask = _draw_full_shape_mask(x, batch, seq_len, p)
         out = torch.empty_like(x)
         compact_dropout_rows[(triton.cdiv(x.numel(), 1024),)](
             x, mask, rows, out, x.numel(), x.shape[-1], 1.0 / (1.0 - p),
@@ -58,6 +53,16 @@ class _CompactDropout(torch.autograd.Function):
 
 def compact_dropout(x, rows, batch, seq_len, p):
     return _CompactDropout.apply(x, rows, batch, seq_len, p)
+
+
+def _draw_full_shape_mask(x, batch, seq_len, p):
+    # CUDA native_dropout's mask/RNG depend on shape, dtype and layout, not
+    # input values. Its numeric output is discarded. Use the same contiguous
+    # full padded layout and normal PyTorch allocator as functional.dropout.
+    dummy = torch.empty((batch, seq_len, x.shape[-1]), device=x.device, dtype=x.dtype)
+    discarded, mask = torch.ops.aten.native_dropout.default(dummy, p, True)
+    del discarded, dummy
+    return mask
 
 
 def warmup(hidden=1536, p=.05):
