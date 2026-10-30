@@ -1,0 +1,15 @@
+{
+  "source_commit": "7a8b38fe3e91331f79583e15d84b56e7a6c737ee",
+  "kind": "CPU contracts with real installed Soup CLI parser",
+  "passed": 7,
+  "elapsed_seconds": 3.95,
+  "soup_cli": "0.77.0",
+  "python": "3.12.10",
+  "command": "python -m pytest solution/test_lazy_train_cli.py -q",
+  "gpu_performance_verified": false,
+  "training_quality_verified": false,
+  "source_sha256": {
+    "solution/lazy_train_cli.py": "5d51fd7d29e2185cf326f5412cdbe763ab08e50411496981255068e0c2e4ba3c",
+    "solution/test_lazy_train_cli.py": "195679ab1acc6a3cf1d652293ad831194b7d274d7b2cef25f0ddd72a0da44183"
+  }
+}
