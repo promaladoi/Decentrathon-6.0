@@ -1,0 +1,5 @@
+﻿group,side,runs,wall_s,gpu_peak_mib,eval_loss
+starter,base,2,84.345,14345,2.04966
+starter,solution,2,85.32,12385,2.04967
+candidate,base,1,81.26,14345,2.04965
+candidate,solution,1,59.34,5641,2.04964
