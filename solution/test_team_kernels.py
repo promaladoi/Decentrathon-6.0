@@ -2,6 +2,23 @@
 
 import pytest
 import torch
+
+
+@pytest.mark.parametrize('dtype', [torch.float16, torch.float32])
+@pytest.mark.parametrize('scale', [0.5, 1.0, 2.0])
+def test_lora_scale_add_exact_forward_backward(dtype, scale):
+    from solution.lora_add import scale_add
+    torch.manual_seed(41)
+    base = torch.randn(3, 1031, device='cuda', requires_grad=True)
+    update = torch.randn(3, 1031, device='cuda', dtype=dtype, requires_grad=True)
+    expected = base + update * scale
+    actual = scale_add(base, update, scale)
+    grad = torch.randn_like(expected)
+    eg = torch.autograd.grad(expected, (base, update), grad)
+    ag = torch.autograd.grad(actual, (base, update), grad)
+    torch.testing.assert_close(actual, expected, rtol=0, atol=0)
+    for left, right in zip(ag, eg):
+        torch.testing.assert_close(left, right, rtol=0, atol=0)
 import torch.nn.functional as F
 
 pytestmark = pytest.mark.skipif(not torch.cuda.is_available(), reason="needs CUDA")

@@ -27,3 +27,5 @@ def apply():
     patch_nf4_decoder()
     from .mlp_precision import patch_mlp_intermediates
     patch_mlp_intermediates()
+    from .lora_add import patch_lora_add
+    patch_lora_add()
