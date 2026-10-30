@@ -1,3 +1,11 @@
+# Latest update
+
+v10 passed all 10 checks: 1.1156x speedup, 48.5% less peak memory.
+The v11/v12 code is committed before GPU verification, clearly experimental.
+v12 has passed 64 kernel tests and is receiving a clean two-pair benchmark.
+Work and reports are mirrored to the collaboration repository main branch under
+`Нұржігіт/`. Raw reports are never edited to pass checks.
+
 # Codex work visible to the team
 
 The team's request is to commit and push each completed code change and each
