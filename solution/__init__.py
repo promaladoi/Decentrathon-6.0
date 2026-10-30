@@ -25,3 +25,5 @@ def apply():
     patch_vocabulary_reductions()
     patch_frozen_rmsnorm()
     patch_nf4_decoder()
+    from .mlp_precision import patch_mlp_intermediates
+    patch_mlp_intermediates()
