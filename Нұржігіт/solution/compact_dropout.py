@@ -11,8 +11,8 @@ import triton.language as tl
 
 
 @triton.jit(do_not_specialize=['N'])
-def compact_dropout_rows(X, MASK, ROWS, OUT, N, H: tl.constexpr,
-                         SCALE: tl.constexpr, BLOCK: tl.constexpr):
+def compact_dropout_pack_rows(X, MASK, ROWS, OUT, PACKED, N, H: tl.constexpr,
+                              SCALE: tl.constexpr, BLOCK: tl.constexpr):
     i = tl.program_id(0) * BLOCK + tl.arange(0, BLOCK)
     row = i // H
     col = i % H
@@ -20,6 +20,21 @@ def compact_dropout_rows(X, MASK, ROWS, OUT, N, H: tl.constexpr,
     mask = tl.load(MASK + original_row * H + col, i < N, other=0).to(tl.float32)
     value = tl.load(X + i, i < N, other=0.0).to(tl.float32)
     tl.store(OUT + i, (value * mask) * SCALE, i < N)
+    # Save only useful mask bits, eight per byte, instead of the padded mask.
+    bits = tl.reshape(mask.to(tl.int32), (BLOCK // 8, 8))
+    byte = tl.sum(bits * (1 << tl.arange(0, 8)[None, :]), 1)
+    byte_index = tl.program_id(0) * (BLOCK // 8) + tl.arange(0, BLOCK // 8)
+    tl.store(PACKED + byte_index, byte.to(tl.uint8), byte_index < (N + 7) // 8)
+
+
+@triton.jit(do_not_specialize=['N'])
+def compact_dropout_unpack_gradient(GRAD, PACKED, OUT, N,
+                                    SCALE: tl.constexpr, BLOCK: tl.constexpr):
+    i = tl.program_id(0) * BLOCK + tl.arange(0, BLOCK)
+    byte = tl.load(PACKED + i // 8, i < N, other=0).to(tl.int32)
+    mask = ((byte >> (i % 8)) & 1).to(tl.float32)
+    grad = tl.load(GRAD + i, i < N, other=0.0).to(tl.float32)
+    tl.store(OUT + i, (grad * mask) * SCALE, i < N)
 
 
 class _CompactDropout(torch.autograd.Function):
@@ -33,20 +48,21 @@ class _CompactDropout(torch.autograd.Function):
         rows = rows.contiguous()
         mask = _draw_full_shape_mask(x, batch, seq_len, p)
         out = torch.empty_like(x)
-        compact_dropout_rows[(triton.cdiv(x.numel(), 1024),)](
-            x, mask, rows, out, x.numel(), x.shape[-1], 1.0 / (1.0 - p),
+        packed = torch.empty(triton.cdiv(x.numel(), 8), device=x.device, dtype=torch.uint8)
+        compact_dropout_pack_rows[(triton.cdiv(x.numel(), 1024),)](
+            x, mask, rows, out, packed, x.numel(), x.shape[-1], 1.0 / (1.0 - p),
             1024, num_warps=4, enable_fp_fusion=False)
-        ctx.save_for_backward(mask, rows)
+        ctx.save_for_backward(packed)
         ctx.p = p
         return out
 
     @staticmethod
     def backward(ctx, grad):
-        mask, rows = ctx.saved_tensors
+        packed, = ctx.saved_tensors
         grad = grad.contiguous()
         dx = torch.empty_like(grad)
-        compact_dropout_rows[(triton.cdiv(grad.numel(), 1024),)](
-            grad, mask, rows, dx, grad.numel(), grad.shape[-1], 1.0 / (1.0 - ctx.p),
+        compact_dropout_unpack_gradient[(triton.cdiv(grad.numel(), 1024),)](
+            grad, packed, dx, grad.numel(), 1.0 / (1.0 - ctx.p),
             1024, num_warps=4, enable_fp_fusion=False)
         return dx, None, None, None, None
 
@@ -68,10 +84,13 @@ def _draw_full_shape_mask(x, batch, seq_len, p):
 def warmup(hidden=1536, p=.05):
     """Compile both production storage types with a runtime token count."""
     for dtype in (torch.float16, torch.float32):
-        compact_dropout_rows.warmup(
-            dtype, torch.bool, torch.int64, dtype, 16 * hidden,
+        compact_dropout_pack_rows.warmup(
+            dtype, torch.bool, torch.int64, dtype, torch.uint8, 16 * hidden,
             hidden, 1.0 / (1.0 - p), 1024, grid=(1,), num_warps=4,
             enable_fp_fusion=False)
+        compact_dropout_unpack_gradient.warmup(
+            dtype, torch.uint8, dtype, 16 * hidden, 1.0 / (1.0 - p),
+            1024, grid=(1,), num_warps=4, enable_fp_fusion=False)
 
 
 def patch_compact_dropout():

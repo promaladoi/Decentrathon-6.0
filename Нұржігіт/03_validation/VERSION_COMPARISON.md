@@ -26,6 +26,9 @@
 | Combined v15 | 389f037 | 6 unit tests FAIL | — | — | — | No training; downloaded source matches Git; row-stride bug identified |
 | Combined v16 | 4a5cfd2 | 10 PASS | 1.4082x | 2.5611x | +0.001% | Fully archived; 115 tests, own share 12.9%; 2 paired runs |
 | Combined v17 | 7c5f6d8 | Pending | — | — | — | 104 CPU layout cases; 23 new GPU cases, paired-byte decoder |
+| Combined v18 | d01b2d8 | Pending | — | — | — | Lossless frozen storage; 15 CPU tests / 5 CUDA skips, 158 full GPU cases |
+| Combined v19 | 1e2fe4b | Not independently measured | — | — | — | Direct native mask intermediate; included in v20 |
+| Combined v20 | 22ff279 | Pending | — | — | — | Packed real-token mask; 124 CPU layout cases, 174 full GPU cases |
 | Анаис | әлі берілмеген | әлі берілмеген | жоқ | жоқ | жоқ | |
 | Владимир (user-reported) | main/d080f2b component | Full checks not supplied | 1.468x | 2.543x | -0.0% | User summary: 93.2 / 63.5 s, 14345 / 5641 MiB; not independently validated here |
 | Мерей | әлі берілмеген | әлі берілмеген | жоқ | жоқ | жоқ | |
