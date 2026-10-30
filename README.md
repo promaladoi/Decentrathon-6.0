@@ -1,5 +1,10 @@
 # IVNEX: Soup Kernel Challenge
 
+Latest validated improvement: [v5 result](CODEX_V5_RESULT.md), **1.0636x speedup**
+(about **6.0% less training time**), **27.9% less GPU memory**, **10/10 checks**.
+Code: `58c7378`. [Pinned notebook](templates/codex_v5.ipynb).
+Earlier results below remain for comparison. v6 is currently under measurement.
+
 ## Codex candidate: тексерілген жеке нұсқа
 
 Code commit: `8f82109fdec5f239c0cd4df21ed27fded849cd18`, branch `codex/kernel-v1`.
