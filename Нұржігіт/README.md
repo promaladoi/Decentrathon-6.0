@@ -1,3 +1,10 @@
+# Нұржігіт — Codex нұсқасы
+
+Команда мүшесінің жұмыс папкасы. Бұл жерде код, notebook және нақты өлшеу есептері бар.
+Платформа репозиторийінен алынған snapshot: `994743ff6860ce6409a2e9bd0b237746569540bd`.
+Kaggle ноутбугындағы бекітілген COMMIT қай код өлшенгенін анықтайды.
+Бүкіл commit тарихы `codex/kernel-v1` branch-інде сақталады.
+
 # IVNEX: Soup Kernel Challenge
 
 Latest validated candidate: [v10 result](CODEX_V10_RESULT.md), **1.1156x speedup**
