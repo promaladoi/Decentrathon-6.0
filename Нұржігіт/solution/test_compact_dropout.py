@@ -5,6 +5,23 @@ pytestmark = pytest.mark.skipif(not torch.cuda.is_available(), reason='needs CUD
 
 
 @pytest.mark.parametrize('dtype', [torch.float16, torch.float32])
+@pytest.mark.parametrize('seq_len', [23, 127, 512])
+def test_native_producer_preserves_full_mask_and_rng(dtype, seq_len):
+    from solution.compact_dropout import _draw_full_shape_mask
+    batch, hidden = 3, 1536
+    ones = torch.ones(batch, seq_len, hidden, dtype=dtype, device='cuda')
+    torch.cuda.manual_seed(193)
+    start = torch.cuda.get_rng_state()
+    expected = torch.nn.functional.dropout(ones, .05, training=True).ne(0)
+    end = torch.cuda.get_rng_state()
+    torch.cuda.set_rng_state(start)
+    actual = _draw_full_shape_mask(ones.view(-1, hidden), batch, seq_len, .05)
+    assert actual.dtype == torch.bool
+    assert torch.equal(actual, expected)
+    assert torch.equal(torch.cuda.get_rng_state(), end)
+
+
+@pytest.mark.parametrize('dtype', [torch.float16, torch.float32])
 @pytest.mark.parametrize('p', [0.05, 0.25])
 def test_same_dropout_values_gradients_and_rng(dtype, p):
     from solution.compact_dropout import compact_dropout
