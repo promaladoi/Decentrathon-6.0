@@ -124,5 +124,5 @@
   "exact_equal_files": 11,
   "protected_remote_files_match_platform_source_git_blobs": 15,
   "platform_source_commit": "fc44fd2d2bf23f624e95cef655f03fecbd87ec46",
-  "note": "Remote code was not modified by the documentation/evidence update. Three unchanged starter files have LF in GitHub and CRLF in the measured local snapshot. The measured snapshot and solution SHA256 are not claimed as byte hashes of the newline-normalized GitHub copy. This audit does not rerun GPU tests."
+  "note": "Remote code was not modified by the documentation/evidence update. Three files have LF in GitHub and CRLF in the measured local snapshot. The measured snapshot and solution SHA256 are not claimed as byte hashes of the newline-normalized GitHub copy. This audit does not rerun GPU tests."
 }

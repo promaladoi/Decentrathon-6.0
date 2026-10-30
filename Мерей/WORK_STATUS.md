@@ -12,7 +12,7 @@
 - Бұрынғы 5-кернелдік нұсқа 9/10 ережеден өткен, үлесі 4.4% болған. Ол тарихи нәтиже; қазіргі қорытынды оның орнына берілген.
 - [Сақталған Kaggle development нұсқасы №363806584](https://www.kaggle.com/code/promaladoi/soup-kaggle-development?scriptVersionId=363806584) әзірге **private** және embedded source snapshot қолданады. Source snapshot SHA256: `eaa4e00672e0f2133bcbb1452ae73652c8e9dbaa3c1dc89b280725d0e9f80308`.
 - Дәлелдер: [result.json](verification/t4-result.json), [checks.json](verification/t4-checks.json), [microbenchmark](verification/t4-microbenchmark-final.json), [іске қосу логы](verification/kaggle-t4-eight-kernel-run.log). Microbenchmark — толық уақыттан бөлек синтетикалық өлшем.
-- GitHub-көшірмедегі 14 solution Python файлы өлшенген snapshot-пен жолсоңдарын CRLF/LF қалыпқа келтіргенде сәйкес келеді; 11-і байт бойынша бірдей. Үш өзгермеген starter-файл GitHub-та LF, өлшенген snapshot-та CRLF қолданады. Snapshot хеші бүкіл GitHub-көшірменің байттық хеші ретінде көрсетілмейді. [Көшірме аудиті](verification/github-working-copy-audit.json).
+- GitHub-көшірмедегі 14 solution Python файлы өлшенген snapshot-пен жолсоңдарын CRLF/LF қалыпқа келтіргенде сәйкес келеді; 11-і байт бойынша бірдей. Үш файлдың GitHub-тағы көшірмесі LF, өлшенген snapshot-тағысы CRLF қолданады. Snapshot хеші бүкіл GitHub-көшірменің байттық хеші ретінде көрсетілмейді. [Көшірме аудиті](verification/github-working-copy-audit.json).
 - Толық түсіндірме: [README](README.md), [LOCAL_VERIFICATION](LOCAL_VERIFICATION.md), [SUBMISSION](SUBMISSION.md). Команданың бастапқы README-і: `docs/TEAM_STARTER_README.md`; бастапқы Мерей README-і: `docs/MEREY_ORIGINAL_README.md`.
 
 ## Іске қосу

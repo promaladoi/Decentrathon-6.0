@@ -185,8 +185,8 @@ GPU unit/integration tests: **165 passed, 1 skipped**. Soup с патчами:
 Подробности и история: [LOCAL_VERIFICATION.md](LOCAL_VERIFICATION.md).
 GitHub-копия `solution/` проверена отдельно: все 14 Python-файлов совпадают
 с измеренным snapshot после нормализации CRLF/LF; 11 совпадают побайтно.
-Три неизменённых starter-файла (`__init__.py`, `swiglu.py`, `test_kernels.py`)
-в GitHub используют LF вместо CRLF измеренного snapshot. Поэтому хеши
+В GitHub-копиях трёх файлов (`__init__.py`, `swiglu.py`, `test_kernels.py`)
+используются LF, а в измеренном snapshot — CRLF. Поэтому хеши
 snapshot и `solution_sha256` выше относятся к измеренным исходникам,
 а не объявляются побайтным хешем всей GitHub-копии. [Аудит копии](verification/github-working-copy-audit.json).
 
