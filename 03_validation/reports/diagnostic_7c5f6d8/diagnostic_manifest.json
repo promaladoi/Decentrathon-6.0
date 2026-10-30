@@ -1,0 +1,6 @@
+{
+  "code_commit": "7c5f6d83a5499886d749128832925e27bf1533d8",
+  "kind": "diagnostic only, not an admitted paired result",
+  "gpu_active_steps": 16,
+  "cpu_profile": true
+}

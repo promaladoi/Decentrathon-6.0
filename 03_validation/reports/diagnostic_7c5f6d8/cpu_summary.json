@@ -1,0 +1,1607 @@
+{
+  "total_profiled_s": 84.66254323400096,
+  "top_self": [
+    {
+      "file": "/usr/local/lib/python3.13/dist-packages/triton/compiler/code_generator.py",
+      "line": 1517,
+      "function": "visit",
+      "calls": 225,
+      "self_s": 4.936402346,
+      "cumulative_s": 0.0
+    },
+    {
+      "file": "~",
+      "line": 0,
+      "function": "<method 'acquire' of '_thread.lock' objects>",
+      "calls": 324,
+      "self_s": 3.911963247,
+      "cumulative_s": 5.8049000000000006e-05
+    },
+    {
+      "file": "~",
+      "line": 0,
+      "function": "<built-in method posix.waitpid>",
+      "calls": 38,
+      "self_s": 2.834280424,
+      "cumulative_s": 2.8344015270000003
+    },
+    {
+      "file": "~",
+      "line": 0,
+      "function": "<method 'nonzero' of 'torch._C.TensorBase' objects>",
+      "calls": 192,
+      "self_s": 2.663480981,
+      "cumulative_s": 2.663480981
+    },
+    {
+      "file": "/usr/local/lib/python3.13/dist-packages/torch/_library/custom_ops.py",
+      "line": 607,
+      "function": "_register_to_dispatcher",
+      "calls": 138,
+      "self_s": 2.205219232,
+      "cumulative_s": 2.18895938
+    },
+    {
+      "file": "~",
+      "line": 0,
+      "function": "<method 'to' of 'torch._C.TensorBase' objects>",
+      "calls": 61902,
+      "self_s": 2.193312768,
+      "cumulative_s": 2.193885373
+    },
+    {
+      "file": "~",
+      "line": 0,
+      "function": "<method 'run_backward' of 'torch._C._EngineBase' objects>",
+      "calls": 64,
+      "self_s": 1.980575431,
+      "cumulative_s": 11.012605885000001
+    },
+    {
+      "file": "/usr/lib/python3.13/pickle.py",
+      "line": 532,
+      "function": "save",
+      "calls": 759274,
+      "self_s": 1.7911649310000002,
+      "cumulative_s": 7.792763016
+    },
+    {
+      "file": "~",
+      "line": 0,
+      "function": "<built-in method torch._C._nn.linear>",
+      "calls": 19712,
+      "self_s": 1.5241607460000002,
+      "cumulative_s": 1.5241607460000002
+    },
+    {
+      "file": "~",
+      "line": 0,
+      "function": "<built-in method posix.stat>",
+      "calls": 179711,
+      "self_s": 1.3152592810000001,
+      "cumulative_s": 2.1271485230000002
+    },
+    {
+      "file": "/usr/lib/python3.13/pathlib/_local.py",
+      "line": 257,
+      "function": "_parse_path",
+      "calls": 306093,
+      "self_s": 1.2788493090000002,
+      "cumulative_s": 2.2241110600000003
+    },
+    {
+      "file": "~",
+      "line": 0,
+      "function": "<built-in method builtins.isinstance>",
+      "calls": 5115693,
+      "self_s": 1.0463652110000001,
+      "cumulative_s": 1.2434383800000002
+    },
+    {
+      "file": "/usr/local/lib/python3.13/dist-packages/triton/runtime/jit.py",
+      "line": 695,
+      "function": "run",
+      "calls": 50366,
+      "self_s": 0.96828168,
+      "cumulative_s": 0.061718264
+    },
+    {
+      "file": "~",
+      "line": 0,
+      "function": "<function Event.record at 0x7ea82ff78d60>",
+      "calls": 97562,
+      "self_s": 0.944802066,
+      "cumulative_s": 0.944802066
+    },
+    {
+      "file": "/usr/local/lib/python3.13/dist-packages/torch/nn/modules/module.py",
+      "line": 2837,
+      "function": "named_modules",
+      "calls": 2343283,
+      "self_s": 0.89021861,
+      "cumulative_s": 1.044955753
+    },
+    {
+      "file": "~",
+      "line": 0,
+      "function": "<built-in method marshal.loads>",
+      "calls": 5780,
+      "self_s": 0.780714731,
+      "cumulative_s": 0.780714731
+    },
+    {
+      "file": "/kaggle/working/codex_analysis_e604f0c3/harness/_train.py",
+      "line": 60,
+      "function": "run",
+      "calls": 50366,
+      "self_s": 0.7590767740000001,
+      "cumulative_s": 0.081750916
+    },
+    {
+      "file": "/usr/lib/python3.13/pickle.py",
+      "line": 863,
+      "function": "save_str",
+      "calls": 455131,
+      "self_s": 0.747533227,
+      "cumulative_s": 1.413216277
+    },
+    {
+      "file": "~",
+      "line": 0,
+      "function": "<built-in method builtins.getattr>",
+      "calls": 2627609,
+      "self_s": 0.7446362200000001,
+      "cumulative_s": 1.6366628760000002
+    },
+    {
+      "file": "~",
+      "line": 0,
+      "function": "<built-in method builtins.id>",
+      "calls": 1469201,
+      "self_s": 0.699688539,
+      "cumulative_s": 0.6997237430000001
+    },
+    {
+      "file": "~",
+      "line": 0,
+      "function": "<built-in method builtins.exec>",
+      "calls": 7560,
+      "self_s": 0.676688352,
+      "cumulative_s": 0.0
+    },
+    {
+      "file": "<frozen posixpath>",
+      "line": 72,
+      "function": "join",
+      "calls": 164147,
+      "self_s": 0.6486366060000001,
+      "cumulative_s": 0.8835584940000001
+    },
+    {
+      "file": "~",
+      "line": 0,
+      "function": "<built-in method torch.empty>",
+      "calls": 51273,
+      "self_s": 0.645498777,
+      "cumulative_s": 0.0
+    },
+    {
+      "file": "~",
+      "line": 0,
+      "function": "<built-in method torch.matmul>",
+      "calls": 12352,
+      "self_s": 0.640968973,
+      "cumulative_s": 0.640968973
+    },
+    {
+      "file": "~",
+      "line": 0,
+      "function": "<built-in method sys.intern>",
+      "calls": 2380879,
+      "self_s": 0.6281178660000001,
+      "cumulative_s": 0.6281178660000001
+    },
+    {
+      "file": "/usr/lib/python3.13/pathlib/_local.py",
+      "line": 117,
+      "function": "__init__",
+      "calls": 452599,
+      "self_s": 0.6184587730000001,
+      "cumulative_s": 1.0008383920000001
+    },
+    {
+      "file": "/usr/local/lib/python3.13/dist-packages/datasets/utils/_dill.py",
+      "line": 31,
+      "function": "save",
+      "calls": 759274,
+      "self_s": 0.57131705,
+      "cumulative_s": 7.793055625
+    },
+    {
+      "file": "/usr/local/lib/python3.13/dist-packages/triton/compiler/code_generator.py",
+      "line": 436,
+      "function": "_maybe_set_loc_to_name",
+      "calls": 117,
+      "self_s": 0.5698704760000001,
+      "cumulative_s": 0.0
+    },
+    {
+      "file": "~",
+      "line": 0,
+      "function": "<built-in method __new__ of type object at 0x9ba920>",
+      "calls": 808246,
+      "self_s": 0.5491320550000001,
+      "cumulative_s": 0.609645325
+    },
+    {
+      "file": "/usr/lib/python3.13/pathlib/_local.py",
+      "line": 289,
+      "function": "drive",
+      "calls": 452006,
+      "self_s": 0.5467816560000001,
+      "cumulative_s": 3.995085473
+    },
+    {
+      "file": "/usr/local/lib/python3.13/dist-packages/dill/_dill.py",
+      "line": 376,
+      "function": "save",
+      "calls": 759274,
+      "self_s": 0.5392272330000001,
+      "cumulative_s": 7.7929171550000005
+    },
+    {
+      "file": "~",
+      "line": 0,
+      "function": "<method 'get' of 'dict' objects>",
+      "calls": 1603087,
+      "self_s": 0.517920958,
+      "cumulative_s": 0.53780022
+    },
+    {
+      "file": "/kaggle/working/codex_analysis_e604f0c3/solution/paired_nf4.py",
+      "line": 41,
+      "function": "dequantize_pairs",
+      "calls": 24896,
+      "self_s": 0.489405607,
+      "cumulative_s": 6.970402041000001
+    },
+    {
+      "file": "~",
+      "line": 0,
+      "function": "<built-in method apply>",
+      "calls": 16256,
+      "self_s": 0.457748211,
+      "cumulative_s": 14.832300400000001
+    },
+    {
+      "file": "~",
+      "line": 0,
+      "function": "<built-in method triton._C.libtriton.native_specialize_impl>",
+      "calls": 443904,
+      "self_s": 0.43714076500000004,
+      "cumulative_s": 0.532962747
+    },
+    {
+      "file": "~",
+      "line": 0,
+      "function": "<built-in method _imp.create_dynamic>",
+      "calls": 256,
+      "self_s": 0.436656129,
+      "cumulative_s": 0.56093614
+    },
+    {
+      "file": "~",
+      "line": 0,
+      "function": "<method 'startswith' of 'str' objects>",
+      "calls": 2419802,
+      "self_s": 0.43364993900000004,
+      "cumulative_s": 0.43364993900000004
+    },
+    {
+      "file": "/usr/local/lib/python3.13/dist-packages/transformers/utils/import_utils.py",
+      "line": 2916,
+      "function": "fetch__all__",
+      "calls": 3072,
+      "self_s": 0.42540812400000005,
+      "cumulative_s": 0.8273108330000001
+    },
+    {
+      "file": "/kaggle/working/codex_analysis_e604f0c3/solution/paired_nf4.py",
+      "line": 74,
+      "function": "decode",
+      "calls": 24896,
+      "self_s": 0.39544421500000004,
+      "cumulative_s": 7.668983047
+    },
+    {
+      "file": "/usr/lib/python3.13/pathlib/_local.py",
+      "line": 227,
+      "function": "__str__",
+      "calls": 165970,
+      "self_s": 0.386650879,
+      "cumulative_s": 3.391115349
+    },
+    {
+      "file": "~",
+      "line": 0,
+      "function": "<method 'item' of 'torch._C.TensorBase' objects>",
+      "calls": 15229,
+      "self_s": 0.37704850500000003,
+      "cumulative_s": 0.37704850500000003
+    },
+    {
+      "file": "/usr/local/lib/python3.13/dist-packages/torch/cuda/__init__.py",
+      "line": 1178,
+      "function": "current_stream",
+      "calls": 97562,
+      "self_s": 0.371854096,
+      "cumulative_s": 3.456182574
+    },
+    {
+      "file": "~",
+      "line": 0,
+      "function": "<method 'append' of 'list' objects>",
+      "calls": 1786701,
+      "self_s": 0.362058231,
+      "cumulative_s": 0.362058231
+    },
+    {
+      "file": "~",
+      "line": 0,
+      "function": "<built-in method builtins.len>",
+      "calls": 2075091,
+      "self_s": 0.35545057700000005,
+      "cumulative_s": 0.36026332
+    },
+    {
+      "file": "/usr/lib/python3.13/pickle.py",
+      "line": 886,
+      "function": "save_tuple",
+      "calls": 151608,
+      "self_s": 0.350840619,
+      "cumulative_s": 7.671701784000001
+    },
+    {
+      "file": "/usr/local/lib/python3.13/dist-packages/triton/runtime/jit.py",
+      "line": 1074,
+      "function": "__call__",
+      "calls": 53848,
+      "self_s": 0.342647664,
+      "cumulative_s": 0.624171661
+    },
+    {
+      "file": "/usr/lib/python3.13/importlib/metadata/__init__.py",
+      "line": 529,
+      "function": "skip_missing_files",
+      "calls": 608,
+      "self_s": 0.325252694,
+      "cumulative_s": 7.813417627000001
+    },
+    {
+      "file": "/usr/lib/python3.13/pickle.py",
+      "line": 211,
+      "function": "commit_frame",
+      "calls": 759355,
+      "self_s": 0.32277523900000005,
+      "cumulative_s": 0.47827638000000006
+    },
+    {
+      "file": "/usr/lib/python3.13/pickle.py",
+      "line": 235,
+      "function": "write",
+      "calls": 912219,
+      "self_s": 0.322429978,
+      "cumulative_s": 0.5024182730000001
+    },
+    {
+      "file": "~",
+      "line": 0,
+      "function": "<built-in method torch._C._disabled_torch_function_impl>",
+      "calls": 158268,
+      "self_s": 0.320749296,
+      "cumulative_s": 0.320749296
+    },
+    {
+      "file": "/usr/lib/python3.13/pathlib/_abc.py",
+      "line": 130,
+      "function": "with_segments",
+      "calls": 305103,
+      "self_s": 0.32013191900000004,
+      "cumulative_s": 1.4539289160000002
+    },
+    {
+      "file": "~",
+      "line": 0,
+      "function": "<method 'float' of 'torch._C.TensorBase' objects>",
+      "calls": 84005,
+      "self_s": 0.319309614,
+      "cumulative_s": 0.319309614
+    },
+    {
+      "file": "~",
+      "line": 0,
+      "function": "<built-in method _io.open>",
+      "calls": 16219,
+      "self_s": 0.315539067,
+      "cumulative_s": 0.678736968
+    },
+    {
+      "file": "/usr/lib/python3.13/importlib/metadata/__init__.py",
+      "line": 514,
+      "function": "make_file",
+      "calls": 145868,
+      "self_s": 0.315041768,
+      "cumulative_s": 0.8493870720000001
+    },
+    {
+      "file": "/usr/lib/python3.13/email/feedparser.py",
+      "line": 218,
+      "function": "_parsegen",
+      "calls": 6154,
+      "self_s": 0.30003779,
+      "cumulative_s": 1.6347653830000002
+    },
+    {
+      "file": "~",
+      "line": 0,
+      "function": "<built-in method gc.collect>",
+      "calls": 1,
+      "self_s": 0.297860314,
+      "cumulative_s": 0.297860314
+    },
+    {
+      "file": "/usr/local/lib/python3.13/dist-packages/torch/cuda/_utils.py",
+      "line": 517,
+      "function": "_get_device_index",
+      "calls": 97873,
+      "self_s": 0.29428313500000003,
+      "cumulative_s": 2.386548136
+    },
+    {
+      "file": "~",
+      "line": 0,
+      "function": "<built-in method torch._C._nn.scaled_dot_product_attention>",
+      "calls": 1792,
+      "self_s": 0.293743221,
+      "cumulative_s": 0.293743221
+    },
+    {
+      "file": "~",
+      "line": 0,
+      "function": "<method 'split' of 'str' objects>",
+      "calls": 681525,
+      "self_s": 0.293585777,
+      "cumulative_s": 0.293585777
+    },
+    {
+      "file": "~",
+      "line": 0,
+      "function": "<method 'commit' of 'sqlite3.Connection' objects>",
+      "calls": 72,
+      "self_s": 0.291309906,
+      "cumulative_s": 0.291309906
+    },
+    {
+      "file": "~",
+      "line": 0,
+      "function": "<method 'save' of 'tokenizers.Tokenizer' objects>",
+      "calls": 3,
+      "self_s": 0.290981195,
+      "cumulative_s": 0.290981195
+    },
+    {
+      "file": "/usr/lib/python3.13/email/feedparser.py",
+      "line": 79,
+      "function": "readline",
+      "calls": 541754,
+      "self_s": 0.28482861200000004,
+      "cumulative_s": 0.36799847100000005
+    },
+    {
+      "file": "~",
+      "line": 0,
+      "function": "<method 'encode_batch' of 'tokenizers.Tokenizer' objects>",
+      "calls": 1024,
+      "self_s": 0.276790117,
+      "cumulative_s": 0.276790117
+    },
+    {
+      "file": "~",
+      "line": 0,
+      "function": "<method 'reshape' of 'torch._C.TensorBase' objects>",
+      "calls": 64448,
+      "self_s": 0.276673581,
+      "cumulative_s": 0.516154525
+    },
+    {
+      "file": "/usr/lib/python3.13/pathlib/_local.py",
+      "line": 277,
+      "function": "_raw_path",
+      "calls": 306113,
+      "self_s": 0.270880131,
+      "cumulative_s": 1.22641317
+    },
+    {
+      "file": "/usr/lib/python3.13/pathlib/_local.py",
+      "line": 498,
+      "function": "__init__",
+      "calls": 306708,
+      "self_s": 0.269580472,
+      "cumulative_s": 0.955586648
+    },
+    {
+      "file": "/usr/local/lib/python3.13/dist-packages/torch/cuda/streams.py",
+      "line": 37,
+      "function": "__new__",
+      "calls": 97562,
+      "self_s": 0.263653342,
+      "cumulative_s": 0.46900318500000004
+    },
+    {
+      "file": "/usr/lib/python3.13/importlib/metadata/__init__.py",
+      "line": 334,
+      "function": "__new__",
+      "calls": 9507,
+      "self_s": 0.253572016,
+      "cumulative_s": 0.45821764600000003
+    },
+    {
+      "file": "/usr/lib/python3.13/pickle.py",
+      "line": 488,
+      "function": "memoize",
+      "calls": 151909,
+      "self_s": 0.251466122,
+      "cumulative_s": 0.525471849
+    },
+    {
+      "file": "<frozen os>",
+      "line": 712,
+      "function": "__getitem__",
+      "calls": 102874,
+      "self_s": 0.245614974,
+      "cumulative_s": 0.422576098
+    },
+    {
+      "file": "~",
+      "line": 0,
+      "function": "<built-in method _imp.exec_dynamic>",
+      "calls": 256,
+      "self_s": 0.24173744800000002,
+      "cumulative_s": 0.362188145
+    },
+    {
+      "file": "~",
+      "line": 0,
+      "function": "<built-in method builtins.__build_class__>",
+      "calls": 13930,
+      "self_s": 0.23212954600000002,
+      "cumulative_s": 0.791468986
+    },
+    {
+      "file": "/usr/local/lib/python3.13/dist-packages/triton/runtime/jit.py",
+      "line": 563,
+      "function": "compute_cache_key",
+      "calls": 50369,
+      "self_s": 0.23092862700000003,
+      "cumulative_s": 0.32983793
+    },
+    {
+      "file": "/usr/local/lib/python3.13/dist-packages/torch/serialization.py",
+      "line": 1184,
+      "function": "_save",
+      "calls": 1,
+      "self_s": 0.22771955000000002,
+      "cumulative_s": 0.227780646
+    },
+    {
+      "file": "/usr/local/lib/python3.13/dist-packages/bitsandbytes/nn/modules.py",
+      "line": 446,
+      "function": "__torch_function__",
+      "calls": 158268,
+      "self_s": 0.22623763900000002,
+      "cumulative_s": 0.5469869350000001
+    },
+    {
+      "file": "/usr/local/lib/python3.13/dist-packages/datasets/exceptions.py",
+      "line": 1,
+      "function": "<module>",
+      "calls": 1,
+      "self_s": 0.22584858600000002,
+      "cumulative_s": 0.229077474
+    },
+    {
+      "file": "/usr/local/lib/python3.13/dist-packages/torch/nn/modules/module.py",
+      "line": 2646,
+      "function": "_named_members",
+      "calls": 95037,
+      "self_s": 0.21675570500000002,
+      "cumulative_s": 1.2393913250000002
+    },
+    {
+      "file": "/usr/local/lib/python3.13/dist-packages/torch/_utils.py",
+      "line": 847,
+      "function": "_get_device_index",
+      "calls": 97695,
+      "self_s": 0.215434696,
+      "cumulative_s": 1.9894268130000001
+    },
+    {
+      "file": "~",
+      "line": 0,
+      "function": "<method 'join' of 'str' objects>",
+      "calls": 541635,
+      "self_s": 0.213945152,
+      "cumulative_s": 0.251548367
+    },
+    {
+      "file": "~",
+      "line": 0,
+      "function": "<method 'read' of '_io.TextIOWrapper' objects>",
+      "calls": 9219,
+      "self_s": 0.211421769,
+      "cumulative_s": 0.290012828
+    },
+    {
+      "file": "/usr/lib/python3.13/email/feedparser.py",
+      "line": 129,
+      "function": "__next__",
+      "calls": 541754,
+      "self_s": 0.20611038,
+      "cumulative_s": 0.5741088510000001
+    },
+    {
+      "file": "~",
+      "line": 0,
+      "function": "<method 'encode' of 'str' objects>",
+      "calls": 565178,
+      "self_s": 0.20477782500000002,
+      "cumulative_s": 0.20521062
+    },
+    {
+      "file": "~",
+      "line": 0,
+      "function": "<method 'splitlines' of 'str' objects>",
+      "calls": 21039,
+      "self_s": 0.20467131900000002,
+      "cumulative_s": 0.20467131900000002
+    },
+    {
+      "file": "/usr/local/lib/python3.13/dist-packages/datasets/utils/_dill.py",
+      "line": 83,
+      "function": "memoize",
+      "calls": 607040,
+      "self_s": 0.20118027000000002,
+      "cumulative_s": 0.726652119
+    },
+    {
+      "file": "/usr/local/lib/python3.13/dist-packages/triton/compiler/code_generator.py",
+      "line": 245,
+      "function": "serialize",
+      "calls": 3,
+      "self_s": 0.19974724000000002,
+      "cumulative_s": 0.0
+    },
+    {
+      "file": "/usr/lib/python3.13/pathlib/_local.py",
+      "line": 329,
+      "function": "parent",
+      "calls": 146371,
+      "self_s": 0.186913032,
+      "cumulative_s": 1.2714454700000002
+    },
+    {
+      "file": "/usr/local/lib/python3.13/dist-packages/torch/cuda/streams.py",
+      "line": 199,
+      "function": "record",
+      "calls": 97562,
+      "self_s": 0.18572373,
+      "cumulative_s": 4.586210397
+    },
+    {
+      "file": "/usr/local/lib/python3.13/dist-packages/triton/runtime/jit.py",
+      "line": 370,
+      "function": "<lambda>",
+      "calls": 50351,
+      "self_s": 0.18564085700000002,
+      "cumulative_s": 13.624860230000001
+    },
+    {
+      "file": "~",
+      "line": 0,
+      "function": "<method 'write' of '_io.BytesIO' objects>",
+      "calls": 912512,
+      "self_s": 0.181851971,
+      "cumulative_s": 0.181851971
+    },
+    {
+      "file": "/usr/local/lib/python3.13/dist-packages/triton/compiler/compiler.py",
+      "line": 479,
+      "function": "launch_metadata",
+      "calls": 50351,
+      "self_s": 0.181516644,
+      "cumulative_s": 3.8689980250000002
+    },
+    {
+      "file": "/usr/local/lib/python3.13/dist-packages/triton/backends/nvidia/driver.py",
+      "line": 700,
+      "function": "__call__",
+      "calls": 50351,
+      "self_s": 0.181350286,
+      "cumulative_s": 1.13513789
+    },
+    {
+      "file": "/usr/local/lib/python3.13/dist-packages/transformers/utils/import_utils.py",
+      "line": 2958,
+      "function": "create_import_structure_from_path",
+      "calls": 1028,
+      "self_s": 0.180628599,
+      "cumulative_s": 0.710620421
+    },
+    {
+      "file": "/usr/local/lib/python3.13/dist-packages/torch/nn/modules/module.py",
+      "line": 1972,
+      "function": "__setattr__",
+      "calls": 66884,
+      "self_s": 0.178946029,
+      "cumulative_s": 0.48791215400000004
+    },
+    {
+      "file": "/usr/lib/python3.13/importlib/metadata/__init__.py",
+      "line": 531,
+      "function": "<lambda>",
+      "calls": 145868,
+      "self_s": 0.17872749200000002,
+      "cumulative_s": 6.638777861
+    },
+    {
+      "file": "~",
+      "line": 0,
+      "function": "<method 'add' of 'set' objects>",
+      "calls": 469217,
+      "self_s": 0.175118458,
+      "cumulative_s": 0.242182696
+    },
+    {
+      "file": "~",
+      "line": 0,
+      "function": "<built-in method triton._C.libtriton.llvm.link_extern_libs>",
+      "calls": 4,
+      "self_s": 0.17290539500000002,
+      "cumulative_s": 0.17290539500000002
+    },
+    {
+      "file": "/usr/local/lib/python3.13/dist-packages/soup_cli/data/loss_mask.py",
+      "line": 48,
+      "function": "_coerce_int_list",
+      "calls": 1280,
+      "self_s": 0.17055877,
+      "cumulative_s": 0.27812826500000004
+    },
+    {
+      "file": "/usr/lib/python3.13/pathlib/_local.py",
+      "line": 237,
+      "function": "_format_parsed_parts",
+      "calls": 306095,
+      "self_s": 0.165656725,
+      "cumulative_s": 0.283225288
+    },
+    {
+      "file": "~",
+      "line": 0,
+      "function": "<built-in method _ctypes.dlopen>",
+      "calls": 29,
+      "self_s": 0.163299947,
+      "cumulative_s": 0.163299947
+    },
+    {
+      "file": "/usr/local/lib/python3.13/dist-packages/torch/_utils.py",
+      "line": 805,
+      "function": "_get_device_attr",
+      "calls": 97693,
+      "self_s": 0.16190210400000002,
+      "cumulative_s": 1.619530903
+    }
+  ],
+  "top_cumulative": [
+    {
+      "file": "/usr/local/lib/python3.13/dist-packages/trl/trainer/sft_trainer.py",
+      "line": 1336,
+      "function": "training_step",
+      "calls": 64,
+      "self_s": 0.049615728000000005,
+      "cumulative_s": 29.721881869
+    },
+    {
+      "file": "/usr/local/lib/python3.13/dist-packages/transformers/trainer.py",
+      "line": 1901,
+      "function": "training_step",
+      "calls": 64,
+      "self_s": 0.00371614,
+      "cumulative_s": 29.672234303000003
+    },
+    {
+      "file": "/usr/local/lib/python3.13/dist-packages/soup_cli/trainer/rewind_hf.py",
+      "line": 307,
+      "function": "compute_loss",
+      "calls": 64,
+      "self_s": 0.0021276190000000003,
+      "cumulative_s": 17.35090659
+    },
+    {
+      "file": "/usr/local/lib/python3.13/dist-packages/trl/trainer/sft_trainer.py",
+      "line": 1200,
+      "function": "compute_loss",
+      "calls": 64,
+      "self_s": 0.017171414,
+      "cumulative_s": 17.30909284
+    },
+    {
+      "file": "/usr/local/lib/python3.13/dist-packages/transformers/trainer.py",
+      "line": 1974,
+      "function": "compute_loss",
+      "calls": 64,
+      "self_s": 0.004844585,
+      "cumulative_s": 17.099189576
+    },
+    {
+      "file": "/usr/local/lib/python3.13/dist-packages/torch/nn/modules/module.py",
+      "line": 1775,
+      "function": "_wrapped_call_impl",
+      "calls": 7424,
+      "self_s": 0.020175071000000003,
+      "cumulative_s": 17.093058235
+    },
+    {
+      "file": "/usr/local/lib/python3.13/dist-packages/torch/nn/modules/module.py",
+      "line": 1783,
+      "function": "_call_impl",
+      "calls": 7424,
+      "self_s": 0.028611952000000003,
+      "cumulative_s": 17.092782853000003
+    },
+    {
+      "file": "/usr/local/lib/python3.13/dist-packages/accelerate/utils/operations.py",
+      "line": 942,
+      "function": "forward",
+      "calls": 64,
+      "self_s": 0.000347574,
+      "cumulative_s": 17.092014927
+    },
+    {
+      "file": "/usr/local/lib/python3.13/dist-packages/accelerate/utils/operations.py",
+      "line": 930,
+      "function": "__call__",
+      "calls": 64,
+      "self_s": 0.000476633,
+      "cumulative_s": 17.091667353000002
+    },
+    {
+      "file": "/usr/local/lib/python3.13/dist-packages/torch/amp/autocast_mode.py",
+      "line": 41,
+      "function": "decorate_autocast",
+      "calls": 64,
+      "self_s": 0.0006429350000000001,
+      "cumulative_s": 17.079888713000003
+    },
+    {
+      "file": "/usr/local/lib/python3.13/dist-packages/peft/peft_model.py",
+      "line": 2066,
+      "function": "forward",
+      "calls": 64,
+      "self_s": 0.0017497180000000001,
+      "cumulative_s": 17.076174343
+    },
+    {
+      "file": "/usr/local/lib/python3.13/dist-packages/peft/tuners/tuners_utils.py",
+      "line": 332,
+      "function": "forward",
+      "calls": 64,
+      "self_s": 0.00048167,
+      "cumulative_s": 17.068574278
+    },
+    {
+      "file": "/kaggle/working/codex_analysis_e604f0c3/solution/team_vladimir/unpad.py",
+      "line": 512,
+      "function": "forward",
+      "calls": 64,
+      "self_s": 0.001997505,
+      "cumulative_s": 17.067765937
+    },
+    {
+      "file": "/kaggle/working/codex_analysis_e604f0c3/solution/team_vladimir/unpad.py",
+      "line": 466,
+      "function": "fast_forward",
+      "calls": 64,
+      "self_s": 0.10261874600000001,
+      "cumulative_s": 16.955333886000002
+    },
+    {
+      "file": "/usr/local/lib/python3.13/dist-packages/torch/autograd/function.py",
+      "line": 580,
+      "function": "apply",
+      "calls": 16256,
+      "self_s": 0.092709686,
+      "cumulative_s": 15.433982005
+    },
+    {
+      "file": "~",
+      "line": 0,
+      "function": "<built-in method apply>",
+      "calls": 16256,
+      "self_s": 0.457748211,
+      "cumulative_s": 14.832300400000001
+    },
+    {
+      "file": "/usr/local/lib/python3.13/dist-packages/triton/runtime/jit.py",
+      "line": 370,
+      "function": "<lambda>",
+      "calls": 50351,
+      "self_s": 0.18564085700000002,
+      "cumulative_s": 13.624860230000001
+    },
+    {
+      "file": "/usr/lib/python3.13/importlib/metadata/__init__.py",
+      "line": 1033,
+      "function": "packages_distributions",
+      "calls": 2,
+      "self_s": 0.020806023,
+      "cumulative_s": 11.960426391
+    },
+    {
+      "file": "/usr/local/lib/python3.13/dist-packages/soup_cli/trainer/sft.py",
+      "line": 731,
+      "function": "setup",
+      "calls": 1,
+      "self_s": 0.000368792,
+      "cumulative_s": 11.4535792
+    },
+    {
+      "file": "/usr/local/lib/python3.13/dist-packages/accelerate/accelerator.py",
+      "line": 2818,
+      "function": "backward",
+      "calls": 64,
+      "self_s": 0.0046193070000000004,
+      "cumulative_s": 11.396480066
+    },
+    {
+      "file": "/usr/local/lib/python3.13/dist-packages/torch/_tensor.py",
+      "line": 576,
+      "function": "backward",
+      "calls": 64,
+      "self_s": 0.0008457810000000001,
+      "cumulative_s": 11.389595208000001
+    },
+    {
+      "file": "/usr/local/lib/python3.13/dist-packages/torch/autograd/__init__.py",
+      "line": 253,
+      "function": "backward",
+      "calls": 64,
+      "self_s": 0.0015644080000000002,
+      "cumulative_s": 11.018565839
+    },
+    {
+      "file": "/usr/local/lib/python3.13/dist-packages/torch/autograd/graph.py",
+      "line": 860,
+      "function": "_engine_run_backward",
+      "calls": 64,
+      "self_s": 0.000717679,
+      "cumulative_s": 11.013472932
+    },
+    {
+      "file": "~",
+      "line": 0,
+      "function": "<method 'run_backward' of 'torch._C._EngineBase' objects>",
+      "calls": 64,
+      "self_s": 1.980575431,
+      "cumulative_s": 11.012605885000001
+    },
+    {
+      "file": "/usr/lib/python3.13/importlib/metadata/__init__.py",
+      "line": 1087,
+      "function": "_top_level_inferred",
+      "calls": 618,
+      "self_s": 0.09602560700000001,
+      "cumulative_s": 9.490248844
+    },
+    {
+      "file": "/usr/local/lib/python3.13/dist-packages/torch/autograd/function.py",
+      "line": 302,
+      "function": "apply",
+      "calls": 16000,
+      "self_s": 0.08692073700000001,
+      "cumulative_s": 9.326299223000001
+    },
+    {
+      "file": "/usr/local/lib/python3.13/dist-packages/datasets/arrow_dataset.py",
+      "line": 559,
+      "function": "wrapper",
+      "calls": 3,
+      "self_s": 0.00011699300000000001,
+      "cumulative_s": 8.899904164
+    },
+    {
+      "file": "/usr/local/lib/python3.13/dist-packages/datasets/arrow_dataset.py",
+      "line": 3212,
+      "function": "map",
+      "calls": 3,
+      "self_s": 0.0004975120000000001,
+      "cumulative_s": 8.89920491
+    },
+    {
+      "file": "/usr/local/lib/python3.13/dist-packages/soup_cli/trainer/sft.py",
+      "line": 143,
+      "function": "_map_text_sft_rows",
+      "calls": 1,
+      "self_s": 3.6026000000000004e-05,
+      "cumulative_s": 8.796273094
+    },
+    {
+      "file": "/kaggle/working/codex_analysis_e604f0c3/solution/team_vladimir/unpad.py",
+      "line": 440,
+      "function": "_attention",
+      "calls": 1792,
+      "self_s": 0.049821266,
+      "cumulative_s": 8.196602732
+    },
+    {
+      "file": "/usr/lib/python3.13/importlib/metadata/__init__.py",
+      "line": 498,
+      "function": "files",
+      "calls": 618,
+      "self_s": 0.003238064,
+      "cumulative_s": 7.922195713000001
+    },
+    {
+      "file": "/usr/lib/python3.13/importlib/metadata/_functools.py",
+      "line": 99,
+      "function": "wrapper",
+      "calls": 7837,
+      "self_s": 0.008628402,
+      "cumulative_s": 7.8717022960000005
+    },
+    {
+      "file": "/usr/lib/python3.13/importlib/metadata/__init__.py",
+      "line": 529,
+      "function": "skip_missing_files",
+      "calls": 608,
+      "self_s": 0.325252694,
+      "cumulative_s": 7.813417627000001
+    },
+    {
+      "file": "/usr/local/lib/python3.13/dist-packages/datasets/fingerprint.py",
+      "line": 216,
+      "function": "update",
+      "calls": 78,
+      "self_s": 0.00026203200000000004,
+      "cumulative_s": 7.806667646
+    },
+    {
+      "file": "/usr/local/lib/python3.13/dist-packages/datasets/fingerprint.py",
+      "line": 212,
+      "function": "hash",
+      "calls": 78,
+      "self_s": 0.000134986,
+      "cumulative_s": 7.806319667
+    },
+    {
+      "file": "/usr/local/lib/python3.13/dist-packages/datasets/utils/_dill.py",
+      "line": 116,
+      "function": "dumps",
+      "calls": 78,
+      "self_s": 0.000122545,
+      "cumulative_s": 7.80474928
+    },
+    {
+      "file": "/usr/local/lib/python3.13/dist-packages/datasets/utils/_dill.py",
+      "line": 111,
+      "function": "dump",
+      "calls": 78,
+      "self_s": 0.009646805000000001,
+      "cumulative_s": 7.804606099000001
+    },
+    {
+      "file": "/usr/local/lib/python3.13/dist-packages/datasets/fingerprint.py",
+      "line": 253,
+      "function": "update_fingerprint",
+      "calls": 10,
+      "self_s": 8.505800000000001e-05,
+      "cumulative_s": 7.795017248000001
+    },
+    {
+      "file": "/usr/local/lib/python3.13/dist-packages/dill/_dill.py",
+      "line": 427,
+      "function": "dump",
+      "calls": 78,
+      "self_s": 0.00011408100000000001,
+      "cumulative_s": 7.794454583
+    },
+    {
+      "file": "/usr/lib/python3.13/pickle.py",
+      "line": 473,
+      "function": "dump",
+      "calls": 78,
+      "self_s": 0.000305264,
+      "cumulative_s": 7.794092902
+    },
+    {
+      "file": "/usr/local/lib/python3.13/dist-packages/datasets/utils/_dill.py",
+      "line": 31,
+      "function": "save",
+      "calls": 759274,
+      "self_s": 0.57131705,
+      "cumulative_s": 7.793055625
+    },
+    {
+      "file": "/usr/local/lib/python3.13/dist-packages/dill/_dill.py",
+      "line": 376,
+      "function": "save",
+      "calls": 759274,
+      "self_s": 0.5392272330000001,
+      "cumulative_s": 7.7929171550000005
+    },
+    {
+      "file": "/usr/lib/python3.13/pickle.py",
+      "line": 532,
+      "function": "save",
+      "calls": 759274,
+      "self_s": 1.7911649310000002,
+      "cumulative_s": 7.792763016
+    },
+    {
+      "file": "/usr/local/lib/python3.13/dist-packages/dill/_dill.py",
+      "line": 1961,
+      "function": "save_function",
+      "calls": 21,
+      "self_s": 0.00022035400000000003,
+      "cumulative_s": 7.781179173000001
+    },
+    {
+      "file": "/usr/lib/python3.13/pickle.py",
+      "line": 619,
+      "function": "save_reduce",
+      "calls": 170,
+      "self_s": 0.000619724,
+      "cumulative_s": 7.674018365
+    },
+    {
+      "file": "/usr/lib/python3.13/pickle.py",
+      "line": 886,
+      "function": "save_tuple",
+      "calls": 151608,
+      "self_s": 0.350840619,
+      "cumulative_s": 7.671701784000001
+    },
+    {
+      "file": "/kaggle/working/codex_analysis_e604f0c3/solution/paired_nf4.py",
+      "line": 74,
+      "function": "decode",
+      "calls": 24896,
+      "self_s": 0.39544421500000004,
+      "cumulative_s": 7.668983047
+    },
+    {
+      "file": "/usr/local/lib/python3.13/dist-packages/dill/_dill.py",
+      "line": 1112,
+      "function": "_save_with_postproc",
+      "calls": 5,
+      "self_s": 0.000106997,
+      "cumulative_s": 7.664064001000001
+    },
+    {
+      "file": "/usr/local/lib/python3.13/dist-packages/datasets/utils/_dill.py",
+      "line": 72,
+      "function": "_batch_setitems",
+      "calls": 68,
+      "self_s": 0.006519457,
+      "cumulative_s": 7.5616573240000005
+    },
+    {
+      "file": "/usr/lib/python3.13/pickle.py",
+      "line": 988,
+      "function": "_batch_setitems",
+      "calls": 68,
+      "self_s": 0.133260173,
+      "cumulative_s": 7.56153101
+    },
+    {
+      "file": "/usr/local/lib/python3.13/dist-packages/dill/_dill.py",
+      "line": 1244,
+      "function": "save_module_dict",
+      "calls": 63,
+      "self_s": 0.000299385,
+      "cumulative_s": 7.5601079900000006
+    },
+    {
+      "file": "/usr/lib/python3.13/pickle.py",
+      "line": 977,
+      "function": "save_dict",
+      "calls": 63,
+      "self_s": 0.016178455,
+      "cumulative_s": 7.559775245000001
+    },
+    {
+      "file": "/usr/local/lib/python3.13/dist-packages/datasets/utils/_dill.py",
+      "line": 214,
+      "function": "_save_transformersPreTrainedTokenizerBase",
+      "calls": 1,
+      "self_s": 2.0499e-05,
+      "cumulative_s": 7.548744558
+    },
+    {
+      "file": "/usr/local/lib/python3.13/dist-packages/transformers/__init__.py",
+      "line": 1,
+      "function": "<module>",
+      "calls": 1,
+      "self_s": 0.001048343,
+      "cumulative_s": 7.181068441000001
+    },
+    {
+      "file": "/kaggle/working/codex_analysis_e604f0c3/solution/paired_nf4.py",
+      "line": 41,
+      "function": "dequantize_pairs",
+      "calls": 24896,
+      "self_s": 0.489405607,
+      "cumulative_s": 6.970402041000001
+    },
+    {
+      "file": "/usr/lib/python3.13/importlib/metadata/__init__.py",
+      "line": 531,
+      "function": "<lambda>",
+      "calls": 145868,
+      "self_s": 0.17872749200000002,
+      "cumulative_s": 6.638777861
+    },
+    {
+      "file": "/usr/local/lib/python3.13/dist-packages/transformers/dependency_versions_check.py",
+      "line": 1,
+      "function": "<module>",
+      "calls": 1,
+      "self_s": 8.917900000000001e-05,
+      "cumulative_s": 6.495644080000001
+    },
+    {
+      "file": "/usr/local/lib/python3.13/dist-packages/transformers/utils/__init__.py",
+      "line": 1,
+      "function": "<module>",
+      "calls": 1,
+      "self_s": 0.000218387,
+      "cumulative_s": 6.465163142000001
+    },
+    {
+      "file": "/usr/local/lib/python3.13/dist-packages/transformers/utils/auto_docstring.py",
+      "line": 1,
+      "function": "<module>",
+      "calls": 1,
+      "self_s": 0.00012899500000000002,
+      "cumulative_s": 6.221244794
+    },
+    {
+      "file": "/usr/local/lib/python3.13/dist-packages/transformers/utils/generic.py",
+      "line": 1,
+      "function": "<module>",
+      "calls": 1,
+      "self_s": 0.00011683800000000001,
+      "cumulative_s": 6.196421553
+    },
+    {
+      "file": "/usr/local/lib/python3.13/dist-packages/trl/__init__.py",
+      "line": 1,
+      "function": "<module>",
+      "calls": 1,
+      "self_s": 6.909200000000001e-05,
+      "cumulative_s": 6.062535651
+    },
+    {
+      "file": "/usr/local/lib/python3.13/dist-packages/trl/_compat.py",
+      "line": 1,
+      "function": "<module>",
+      "calls": 1,
+      "self_s": 8.2942e-05,
+      "cumulative_s": 6.0595963600000005
+    },
+    {
+      "file": "/usr/local/lib/python3.13/dist-packages/trl/import_utils.py",
+      "line": 1,
+      "function": "<module>",
+      "calls": 1,
+      "self_s": 3.2317e-05,
+      "cumulative_s": 6.0474382460000005
+    },
+    {
+      "file": "/usr/local/lib/python3.13/dist-packages/transformers/utils/import_utils.py",
+      "line": 1,
+      "function": "<module>",
+      "calls": 1,
+      "self_s": 0.00034354300000000003,
+      "cumulative_s": 5.915504616000001
+    },
+    {
+      "file": "/usr/lib/python3.13/pickle.py",
+      "line": 937,
+      "function": "save_list",
+      "calls": 37,
+      "self_s": 6.9632e-05,
+      "cumulative_s": 4.717371215
+    },
+    {
+      "file": "/usr/lib/python3.13/pickle.py",
+      "line": 950,
+      "function": "_batch_appends",
+      "calls": 37,
+      "self_s": 0.061294271000000004,
+      "cumulative_s": 4.717295523000001
+    },
+    {
+      "file": "/usr/local/lib/python3.13/dist-packages/torch/cuda/streams.py",
+      "line": 199,
+      "function": "record",
+      "calls": 97562,
+      "self_s": 0.18572373,
+      "cumulative_s": 4.586210397
+    },
+    {
+      "file": "/usr/lib/python3.13/pathlib/_abc.py",
+      "line": 442,
+      "function": "exists",
+      "calls": 145871,
+      "self_s": 0.101292822,
+      "cumulative_s": 4.252237361000001
+    },
+    {
+      "file": "/usr/lib/python3.13/pathlib/_local.py",
+      "line": 510,
+      "function": "stat",
+      "calls": 145882,
+      "self_s": 0.061117028000000004,
+      "cumulative_s": 4.151191897
+    },
+    {
+      "file": "/usr/lib/python3.13/subprocess.py",
+      "line": 1275,
+      "function": "wait",
+      "calls": 76,
+      "self_s": 0.002931536,
+      "cumulative_s": 4.0231719
+    },
+    {
+      "file": "/usr/lib/python3.13/pathlib/_local.py",
+      "line": 289,
+      "function": "drive",
+      "calls": 452006,
+      "self_s": 0.5467816560000001,
+      "cumulative_s": 3.995085473
+    },
+    {
+      "file": "/kaggle/working/codex_analysis_e604f0c3/solution/team_vladimir/lmhead.py",
+      "line": 132,
+      "function": "lm_head_loss",
+      "calls": 64,
+      "self_s": 0.00048095600000000005,
+      "cumulative_s": 3.9774969340000004
+    },
+    {
+      "file": "/usr/local/lib/python3.13/dist-packages/triton/runtime/build.py",
+      "line": 20,
+      "function": "_build",
+      "calls": 14,
+      "self_s": 0.000506871,
+      "cumulative_s": 3.925418527
+    },
+    {
+      "file": "/usr/lib/python3.13/subprocess.py",
+      "line": 404,
+      "function": "check_call",
+      "calls": 14,
+      "self_s": 0.000167045,
+      "cumulative_s": 3.9165754120000003
+    },
+    {
+      "file": "/usr/lib/python3.13/subprocess.py",
+      "line": 387,
+      "function": "call",
+      "calls": 14,
+      "self_s": 0.00020158300000000002,
+      "cumulative_s": 3.9158906890000003
+    },
+    {
+      "file": "/usr/local/lib/python3.13/dist-packages/triton/compiler/compiler.py",
+      "line": 479,
+      "function": "launch_metadata",
+      "calls": 50351,
+      "self_s": 0.181516644,
+      "cumulative_s": 3.8689980250000002
+    },
+    {
+      "file": "/kaggle/working/codex_analysis_e604f0c3/solution/team_vladimir/lmhead.py",
+      "line": 107,
+      "function": "forward",
+      "calls": 64,
+      "self_s": 0.030514507000000003,
+      "cumulative_s": 3.659084421
+    },
+    {
+      "file": "/usr/local/lib/python3.13/dist-packages/triton/compiler/compiler.py",
+      "line": 436,
+      "function": "_init_handles",
+      "calls": 50351,
+      "self_s": 0.016393841000000003,
+      "cumulative_s": 3.658676579
+    },
+    {
+      "file": "/usr/local/lib/python3.13/dist-packages/triton/backends/nvidia/driver.py",
+      "line": 676,
+      "function": "__init__",
+      "calls": 15,
+      "self_s": 0.0005007340000000001,
+      "cumulative_s": 3.631815377
+    },
+    {
+      "file": "/usr/local/lib/python3.13/dist-packages/triton/runtime/build.py",
+      "line": 74,
+      "function": "compile_module_from_src",
+      "calls": 16,
+      "self_s": 0.001013957,
+      "cumulative_s": 3.6314353080000004
+    },
+    {
+      "file": "/kaggle/working/codex_analysis_e604f0c3/solution/team_vladimir/unpad.py",
+      "line": 294,
+      "function": "_weight",
+      "calls": 10560,
+      "self_s": 0.031314060000000005,
+      "cumulative_s": 3.499274953
+    },
+    {
+      "file": "/usr/lib/python3.13/pathlib/_local.py",
+      "line": 166,
+      "function": "__fspath__",
+      "calls": 158432,
+      "self_s": 0.105256317,
+      "cumulative_s": 3.470538216
+    },
+    {
+      "file": "/usr/local/lib/python3.13/dist-packages/torch/cuda/__init__.py",
+      "line": 1178,
+      "function": "current_stream",
+      "calls": 97562,
+      "self_s": 0.371854096,
+      "cumulative_s": 3.456182574
+    },
+    {
+      "file": "/usr/lib/python3.13/pathlib/_local.py",
+      "line": 227,
+      "function": "__str__",
+      "calls": 165970,
+      "self_s": 0.386650879,
+      "cumulative_s": 3.391115349
+    },
+    {
+      "file": "/kaggle/working/codex_analysis_e604f0c3/solution/team_vladimir/mlp.py",
+      "line": 25,
+      "function": "_weight",
+      "calls": 10752,
+      "self_s": 0.033968239000000004,
+      "cumulative_s": 3.212543353
+    },
+    {
+      "file": "/usr/lib/python3.13/subprocess.py",
+      "line": 2053,
+      "function": "_wait",
+      "calls": 76,
+      "self_s": 0.004412773,
+      "cumulative_s": 2.9032449650000003
+    },
+    {
+      "file": "/usr/lib/python3.13/subprocess.py",
+      "line": 2040,
+      "function": "_try_wait",
+      "calls": 38,
+      "self_s": 0.000354963,
+      "cumulative_s": 2.835298293
+    },
+    {
+      "file": "~",
+      "line": 0,
+      "function": "<built-in method posix.waitpid>",
+      "calls": 38,
+      "self_s": 2.834280424,
+      "cumulative_s": 2.8344015270000003
+    },
+    {
+      "file": "/kaggle/working/codex_analysis_e604f0c3/solution/team_vladimir/mlp.py",
+      "line": 47,
+      "function": "backward",
+      "calls": 1792,
+      "self_s": 0.101571386,
+      "cumulative_s": 2.7723834980000004
+    },
+    {
+      "file": "~",
+      "line": 0,
+      "function": "<method 'nonzero' of 'torch._C.TensorBase' objects>",
+      "calls": 192,
+      "self_s": 2.663480981,
+      "cumulative_s": 2.663480981
+    },
+    {
+      "file": "/usr/local/lib/python3.13/dist-packages/torch/_jit_internal.py",
+      "line": 1046,
+      "function": "_overload",
+      "calls": 12,
+      "self_s": 0.000479446,
+      "cumulative_s": 2.6424034520000004
+    },
+    {
+      "file": "/kaggle/working/codex_analysis_e604f0c3/solution/team_vladimir/unpad.py",
+      "line": 273,
+      "function": "forward",
+      "calls": 1792,
+      "self_s": 0.06131612,
+      "cumulative_s": 2.6327922000000004
+    },
+    {
+      "file": "/kaggle/working/codex_analysis_e604f0c3/solution/team_vladimir/mlp.py",
+      "line": 32,
+      "function": "forward",
+      "calls": 1792,
+      "self_s": 0.047697675,
+      "cumulative_s": 2.628368764
+    },
+    {
+      "file": "/kaggle/working/codex_analysis_e604f0c3/solution/team_vladimir/unpad.py",
+      "line": 433,
+      "function": "_lora_out",
+      "calls": 7168,
+      "self_s": 0.15593163200000001,
+      "cumulative_s": 2.545810248
+    },
+    {
+      "file": "/usr/local/lib/python3.13/dist-packages/torch/cuda/_utils.py",
+      "line": 517,
+      "function": "_get_device_index",
+      "calls": 97873,
+      "self_s": 0.29428313500000003,
+      "cumulative_s": 2.386548136
+    },
+    {
+      "file": "/usr/local/lib/python3.13/dist-packages/soup_cli/trainer/sft.py",
+      "line": 1611,
+      "function": "_setup_transformers",
+      "calls": 1,
+      "self_s": 0.000366445,
+      "cumulative_s": 2.3747989570000003
+    },
+    {
+      "file": "/usr/lib/python3.13/importlib/metadata/__init__.py",
+      "line": 448,
+      "function": "metadata",
+      "calls": 2217,
+      "self_s": 0.020076646,
+      "cumulative_s": 2.3268036370000003
+    },
+    {
+      "file": "/usr/lib/python3.13/pathlib/_local.py",
+      "line": 257,
+      "function": "_parse_path",
+      "calls": 306093,
+      "self_s": 1.2788493090000002,
+      "cumulative_s": 2.2241110600000003
+    },
+    {
+      "file": "/usr/lib/python3.13/importlib/metadata/__init__.py",
+      "line": 319,
+      "function": "locate",
+      "calls": 145868,
+      "self_s": 0.072353521,
+      "cumulative_s": 2.2079874050000003
+    },
+    {
+      "file": "~",
+      "line": 0,
+      "function": "<method 'to' of 'torch._C.TensorBase' objects>",
+      "calls": 61902,
+      "self_s": 2.193312768,
+      "cumulative_s": 2.193885373
+    }
+  ]
+}
