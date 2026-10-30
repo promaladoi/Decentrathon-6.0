@@ -1,5 +1,5 @@
 {
-  "source_commit": "bd2b49ac6914a3b8aa30133b615c1a23ddf34338",
+  "source_commit": "9f1f1890e50669acf227cec0d0cfd14d0c8cd1ab",
   "source_repo": "BAITC-Hacks/hack-a5a4072f-wither-ai",
   "files": [
     ".gitattributes",
@@ -13,6 +13,8 @@
     "03_validation/README.md",
     "03_validation/VERSION_COMPARISON.md",
     "03_validation/compare_variants.py",
+    "03_validation/reports/codex_v10/checks.json",
+    "03_validation/reports/codex_v10/result.json",
     "03_validation/reports/codex_v2/checks.json",
     "03_validation/reports/codex_v2/result.json",
     "03_validation/reports/codex_v3/checks.json",
@@ -34,6 +36,7 @@
     "04_submission/CODEX_PROGRESS.md",
     "04_submission/PLAN.md",
     "04_submission/README.md",
+    "CODEX_V10_RESULT.md",
     "CODEX_V4_EXPERIMENT.md",
     "CODEX_V5_RESULT.md",
     "CODEX_V6_RESULT.md",
@@ -70,6 +73,7 @@
     "templates/SUBMISSION.md",
     "templates/codex_candidate.ipynb",
     "templates/codex_experiment_v4.ipynb",
+    "templates/codex_v10.ipynb",
     "templates/codex_v5.ipynb",
     "templates/codex_v6.ipynb",
     "templates/codex_v8.ipynb",

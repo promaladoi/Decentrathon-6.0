@@ -1,9 +1,8 @@
-# Current experiment
+# Current validation
 
-v12 code bd2b49a adds zero-gradient row removal in the frozen MLP backward.
-The full forward, token order, loss, dropout and task settings remain unchanged.
-Validation is pending; do not treat this snapshot as an accepted improvement.
+v10 (e19b464): 10/10 checks, 54 kernel tests and 79 Soup tests passed.
+Speedup 1.1156x; GPU memory 14345 -> 7385 MiB; eval loss 2.04968 -> 2.04966.
+Read CODEX_V10_RESULT.md and import templates/codex_v10.ipynb to reproduce.
 
-v11 9e104d4: frozen output-head cast cache and sparse backward, queued for validation.
-v10 e19b464: 54 kernel tests and 79 Soup tests passed; paired validation is running.
-The pinned candidate notebook still runs validated v9 (57182a2).
+Current source snapshot includes subsequent v11/v12 experiments with validation
+still pending. The pinned candidate notebook will be updated after comparison.
