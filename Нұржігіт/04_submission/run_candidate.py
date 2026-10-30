@@ -24,6 +24,9 @@ def main():
     repo = Path(__file__).resolve().parents[1]
     if not Path('/kaggle/working').is_dir():
         raise RuntimeError('Run this GPU experiment in the Kaggle notebook')
+    archive = Path('/kaggle/working') / ('codex_' + args.version + '.zip')
+    if archive.exists():
+        raise FileExistsError(f'Preserve the existing {archive}; use a new version')
     out = repo / ('runs_codex_' + args.version)
     if out.exists():
         raise FileExistsError(f'{out} already exists; use a different --version to preserve it')
@@ -60,6 +63,9 @@ def main():
         if active:
             raise RuntimeError('Another GPU process is active. Stop it before measurement.')
         outcome['status'] = 'testing'
+        if (repo/'solution/deferred_metadata.py').is_file():
+            run([sys.executable, '03_validation/verify_startup_metadata.py'],
+                'startup_metadata_parity.log')
         # Regression for the v14 failure is first; do not spend training time
         # until the dropout values, gradients and RNG sequence all match.
         run([sys.executable, '-m', 'pytest', 'solution/test_compact_dropout.py', '-q'],
@@ -87,9 +93,19 @@ def main():
                 'score_console.log', required=False)
             checks = json.loads((out/'checks.json').read_text())['checks']
             accepted = len(checks) == 10 and all(c['ok'] for c in checks)
+            from importlib.util import module_from_spec, spec_from_file_location
+            spec = spec_from_file_location('user_limits', repo/'03_validation/user_constraints.py')
+            policy = module_from_spec(spec)
+            spec.loader.exec_module(policy)
+            limits = policy.evaluate(json.loads((out/'result.json').read_text()),
+                                     json.loads((out/'checks.json').read_text()))
+            (out/'user_constraints.json').write_text(json.dumps(limits, indent=2)+'\n')
+            print('USER CONSTRAINTS', json.dumps(limits), flush=True)
             outcome['status'] = 'accepted' if accepted else 'rejected'
             outcome['checks_passed'] = sum(bool(c['ok']) for c in checks)
-            rc = 0 if accepted else 1
+            outcome['eligible_within_memory_and_quality'] = limits['eligible_within_memory_and_quality']
+            outcome['target_30_seconds_met'] = limits['target_met']
+            rc = 0 if accepted and limits['eligible_within_memory_and_quality'] else 1
         else:
             rc = 0
     except Exception as exc:
@@ -99,8 +115,7 @@ def main():
         print(f'EXPERIMENT STOPPED: {exc}', flush=True)
     finally:
         (out/'experiment_outcome.json').write_text(json.dumps(outcome, indent=2)+'\n')
-        archive = Path('/kaggle/working') / ('codex_' + args.version + '.zip')
-        with zipfile.ZipFile(archive, 'w', zipfile.ZIP_DEFLATED) as z:
+        with zipfile.ZipFile(archive, 'x', zipfile.ZIP_DEFLATED) as z:
             for f in out.iterdir():
                 if f.is_file():
                     z.write(f, f.name)

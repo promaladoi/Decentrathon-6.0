@@ -1,0 +1,3 @@
+solution: train CLI deferred 84 unrelated command bindings
+solution: native TRL metadata snapshot installed after original Soup import
+STARTUP_METADATA_NATIVE_PARITY {"native_mapping_equal": true, "independent_dict_and_lists": true, "active_lazy_cli_coexists": true, "real_deferred_hook_hit": true, "native_setup_calls": 1, "actual_snapshot_returns_to_trl": 1, "native_scans_during_setup": 0, "original_function_restored": true, "stopped_before_seed_and_model": true, "cuda_initialized": false}

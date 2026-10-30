@@ -4,6 +4,11 @@
 Есептер мен бекітілген notebook-тер `bc96e7581d72a1fc42c6f6bd377cc335cb10694e` publication commit-тен алынды.
 Толық source/result тексеруі: [PUBLICATION_PROOF.json](PUBLICATION_PROOF.json).
 
+
+Новый v43 находится только в `experiments/v43/`; полный T4 замер ещё не выполнен.
+[Пакет независимого аудита](04_submission/review/REVIEW_REQUEST.md) и
+[проверки CPU](03_validation/reports/codex_v43_cpu/LOCAL_VALIDATION.json).
+
 # IVNEX: Soup Kernel Challenge
 
 Shortest verified total time: **v34, 78.68 → 43.91 seconds**,

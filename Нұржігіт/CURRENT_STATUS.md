@@ -1,3 +1,23 @@
+# Текущий этап: передача на независимый аудит
+
+Проверенный production: v34, 43.91 с / 7151 MiB, 10/10.
+v41: 44.61 с / 7011 MiB, 10/10 по выводу проверки в Kaggle.
+v42 отклонён до полного обучения. v43: 40 CPU-тестов и native import proof
+прошли; T4 benchmark, память, loss и 10/10 ещё не получены.
+30 секунд пока не достигнуты. Финальный командный вариант и платформенная
+сдача ещё не выполнены.
+
+[Задание для Claude/Codex](04_submission/review/REVIEW_REQUEST.md) ·
+[Готовый текст запроса](04_submission/review/PROMPT_RU.txt) ·
+[v43](CODEX_V43_EXPERIMENT.md) ·
+[Одноразовый запуск v43 в Kaggle](04_submission/kaggle_v43_cell.py).
+
+Корневой solution/ остаётся v34. Историческая таблица ниже включает варианты,
+прошедшие исходные правила, но не всегда более строгие условия пользователя:
+например, v35 с +0.004% reported eval loss не подходит под «сапасы түспесін».
+
+---
+
 # Verified candidate comparison
 
 Shortest collected median total time: **v34, 78.68 → 43.91 seconds**,

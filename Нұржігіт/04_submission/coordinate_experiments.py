@@ -63,6 +63,20 @@ def archived_outcome(path, expected_commit):
         return {'status': outcome['status'], 'accepted': accepted, 'summary': summary}
 
 
+def read_queue(control, queue_commit=None):
+    """Read the pinned manifest when requested, even if the branch has advanced."""
+    ref = 'FETCH_HEAD'
+    if queue_commit is not None:
+        if not re.fullmatch(r'[0-9a-f]{40}', queue_commit):
+            raise ValueError('queue commit must be a complete SHA')
+        subprocess.run(['git', 'merge-base', '--is-ancestor', queue_commit, 'FETCH_HEAD'],
+                       cwd=control, check=True)
+        ref = queue_commit
+    raw = subprocess.check_output(['git', 'show', ref+':04_submission/experiment_queue.json'],
+                                  cwd=control)
+    return parse_queue(raw)
+
+
 def main():
     import fcntl  # Kaggle Linux; module remains importable for CPU schema tests.
     parser = argparse.ArgumentParser()
@@ -70,6 +84,7 @@ def main():
     parser.add_argument('--idle-minutes', type=float, default=10)
     parser.add_argument('--max-minutes', type=float, default=50)
     parser.add_argument('--data-source', default='/kaggle/working/nurzhigit_v14/data')
+    parser.add_argument('--queue-commit', help='Full SHA of an immutable queue manifest')
     args = parser.parse_args()
     if not 1 <= args.max_jobs <= 3 or not 0 <= args.idle_minutes <= 15 or not 1 <= args.max_minutes <= 60:
         raise ValueError('coordinator limits exceeded')
@@ -84,7 +99,8 @@ def main():
     if not all((data/n).is_file() for n in ('train.jsonl', 'eval_public.jsonl')):
         data = control/'data'
         subprocess.run([sys.executable, 'task/prepare_data.py'], cwd=control, check=True)
-    state = {'state': 'starting', 'history': [], 'max_jobs': args.max_jobs}
+    state = {'state': 'starting', 'history': [], 'max_jobs': args.max_jobs,
+             'queue_commit': args.queue_commit}
     status_path = working/'codex_queue_status.json'
     started = last_activity = time.monotonic()
     seen = set()
@@ -107,8 +123,7 @@ def main():
             # runs concurrently with a measured training process.
             subprocess.run(['git', 'fetch', '-q', 'origin', BRANCH], cwd=control,
                            check=True, timeout=120)
-            raw = subprocess.check_output(['git', 'show', 'FETCH_HEAD:04_submission/experiment_queue.json'], cwd=control)
-            jobs = parse_queue(raw)
+            jobs = read_queue(control, args.queue_commit)
             pending = [j for j in jobs if j['version'] not in seen]
             if not pending:
                 state['state'] = 'idle'

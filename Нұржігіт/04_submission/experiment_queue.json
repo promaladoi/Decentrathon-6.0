@@ -1,4 +1,10 @@
 {
   "schema": 1,
-  "jobs": []
+  "jobs": [
+    {
+      "version": "v43",
+      "commit": "458e7a1d7706737f8b3a32a8f795419c2e726f1a",
+      "nf4_analysis": false
+    }
+  ]
 }

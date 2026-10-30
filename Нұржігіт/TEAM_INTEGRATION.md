@@ -52,3 +52,14 @@ from exact source `29419f43d9b9173d1ba5d6824a31589ad3b84df7` under
 adapt warmup/package imports and integrate the metadata with our native varlen
 plan. Ordered FP32 sums use the original native GEMMs; no new dot algorithm is
 enabled. The imported strict tests remain in the production validation suite.
+
+v43 integrates Merei's unchanged `package_metadata_snapshot.py` and
+`test_package_metadata_snapshot.py` from collaboration source
+`6a4f577e95605547b1b713013db1ffc44aa620bd:Мерей/solution/`. Authorship stays
+with Merei and his tools. Their copy SHA256 values are respectively
+`f9fb19d5577f8276aaebaf1df16ecb867f791575b685fdfefddb1b84659ce3d3`
+and `25f4d0892c34d2341e49ae30c4f781ae3dc55a3756136e53e9e7cd1b797276c2`.
+Nurzhigit adds the deferred native-import integration and its independent
+contracts/proof. This CPU helper is never counted as an own Triton kernel.
+It is candidate work pending the combined T4 benchmark, not a transfer of
+Merei's earlier performance claims to this source revision.
