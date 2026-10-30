@@ -1,0 +1,552 @@
+........FFFFFFFF..........FF.FF...FF.................................... [ 41%]
+................................FFFFFFFFFF.....F.FFF.................... [ 82%]
+..............FFFFFFFFFFFFFFFF                                           [100%]
+=================================== FAILURES ===================================
+______________ test_nf4_dequant_matches_bitsandbytes[shape0-True] ______________
+
+nested = True, shape = (8960, 1536)
+
+    @pytest.mark.parametrize("nested", [True, False])
+    @pytest.mark.parametrize("shape", [(8960, 1536), (256, 1536), (96, 200)])
+    def test_nf4_dequant_matches_bitsandbytes(nested, shape):
+>       import bitsandbytes.functional as bnbf
+E       ModuleNotFoundError: No module named 'bitsandbytes'
+
+solution/team_vladimir/test_kernels.py:67: ModuleNotFoundError
+_____________ test_nf4_dequant_matches_bitsandbytes[shape0-False] ______________
+
+nested = False, shape = (8960, 1536)
+
+    @pytest.mark.parametrize("nested", [True, False])
+    @pytest.mark.parametrize("shape", [(8960, 1536), (256, 1536), (96, 200)])
+    def test_nf4_dequant_matches_bitsandbytes(nested, shape):
+>       import bitsandbytes.functional as bnbf
+E       ModuleNotFoundError: No module named 'bitsandbytes'
+
+solution/team_vladimir/test_kernels.py:67: ModuleNotFoundError
+______________ test_nf4_dequant_matches_bitsandbytes[shape1-True] ______________
+
+nested = True, shape = (256, 1536)
+
+    @pytest.mark.parametrize("nested", [True, False])
+    @pytest.mark.parametrize("shape", [(8960, 1536), (256, 1536), (96, 200)])
+    def test_nf4_dequant_matches_bitsandbytes(nested, shape):
+>       import bitsandbytes.functional as bnbf
+E       ModuleNotFoundError: No module named 'bitsandbytes'
+
+solution/team_vladimir/test_kernels.py:67: ModuleNotFoundError
+_____________ test_nf4_dequant_matches_bitsandbytes[shape1-False] ______________
+
+nested = False, shape = (256, 1536)
+
+    @pytest.mark.parametrize("nested", [True, False])
+    @pytest.mark.parametrize("shape", [(8960, 1536), (256, 1536), (96, 200)])
+    def test_nf4_dequant_matches_bitsandbytes(nested, shape):
+>       import bitsandbytes.functional as bnbf
+E       ModuleNotFoundError: No module named 'bitsandbytes'
+
+solution/team_vladimir/test_kernels.py:67: ModuleNotFoundError
+______________ test_nf4_dequant_matches_bitsandbytes[shape2-True] ______________
+
+nested = True, shape = (96, 200)
+
+    @pytest.mark.parametrize("nested", [True, False])
+    @pytest.mark.parametrize("shape", [(8960, 1536), (256, 1536), (96, 200)])
+    def test_nf4_dequant_matches_bitsandbytes(nested, shape):
+>       import bitsandbytes.functional as bnbf
+E       ModuleNotFoundError: No module named 'bitsandbytes'
+
+solution/team_vladimir/test_kernels.py:67: ModuleNotFoundError
+_____________ test_nf4_dequant_matches_bitsandbytes[shape2-False] ______________
+
+nested = False, shape = (96, 200)
+
+    @pytest.mark.parametrize("nested", [True, False])
+    @pytest.mark.parametrize("shape", [(8960, 1536), (256, 1536), (96, 200)])
+    def test_nf4_dequant_matches_bitsandbytes(nested, shape):
+>       import bitsandbytes.functional as bnbf
+E       ModuleNotFoundError: No module named 'bitsandbytes'
+
+solution/team_vladimir/test_kernels.py:67: ModuleNotFoundError
+__________________ test_nf4_matmul_matches_bitsandbytes[True] __________________
+
+bias = True
+
+    @pytest.mark.parametrize("bias", [True, False])
+    def test_nf4_matmul_matches_bitsandbytes(bias):
+>       import bitsandbytes.functional as bnbf
+E       ModuleNotFoundError: No module named 'bitsandbytes'
+
+solution/team_vladimir/test_kernels.py:83: ModuleNotFoundError
+_________________ test_nf4_matmul_matches_bitsandbytes[False] __________________
+
+bias = False
+
+    @pytest.mark.parametrize("bias", [True, False])
+    def test_nf4_matmul_matches_bitsandbytes(bias):
+>       import bitsandbytes.functional as bnbf
+E       ModuleNotFoundError: No module named 'bitsandbytes'
+
+solution/team_vladimir/test_kernels.py:83: ModuleNotFoundError
+______________________ test_mlp_4bit_matches_bitsandbytes ______________________
+
+    def test_mlp_4bit_matches_bitsandbytes():
+>       import bitsandbytes.functional as bnbf
+E       ModuleNotFoundError: No module named 'bitsandbytes'
+
+solution/team_vladimir/test_layer.py:114: ModuleNotFoundError
+_____________________ test_decoder_layer_matches_original ______________________
+
+monkeypatch = <_pytest.monkeypatch.MonkeyPatch object at 0x7d5b928476f0>
+
+    def test_decoder_layer_matches_original(monkeypatch):
+>       import bitsandbytes
+E       ModuleNotFoundError: No module named 'bitsandbytes'
+
+solution/team_vladimir/test_layer.py:166: ModuleNotFoundError
+________________ test_lm_head_loss_matches_cross_entropy[True] _________________
+
+with_num_items = True
+
+    @pytest.mark.parametrize("with_num_items", [True, False])
+    def test_lm_head_loss_matches_cross_entropy(with_num_items):
+>       from trl.trainer.utils import entropy_from_logits
+E       ModuleNotFoundError: No module named 'trl'
+
+solution/team_vladimir/test_unpad.py:19: ModuleNotFoundError
+________________ test_lm_head_loss_matches_cross_entropy[False] ________________
+
+with_num_items = False
+
+    @pytest.mark.parametrize("with_num_items", [True, False])
+    def test_lm_head_loss_matches_cross_entropy(with_num_items):
+>       from trl.trainer.utils import entropy_from_logits
+E       ModuleNotFoundError: No module named 'trl'
+
+solution/team_vladimir/test_unpad.py:19: ModuleNotFoundError
+_________________ test_fast_forward_matches_original[lengths0] _________________
+
+monkeypatch = <_pytest.monkeypatch.MonkeyPatch object at 0x7d5b927b8180>
+lengths = [23, 15, 6]
+
+    @pytest.mark.parametrize("lengths", [[23, 15, 6], [16, 16, 16]])
+    def test_fast_forward_matches_original(monkeypatch, lengths):
+>       import bitsandbytes
+E       ModuleNotFoundError: No module named 'bitsandbytes'
+
+solution/team_vladimir/test_unpad.py:181: ModuleNotFoundError
+_________________ test_fast_forward_matches_original[lengths1] _________________
+
+monkeypatch = <_pytest.monkeypatch.MonkeyPatch object at 0x7d5b9270f770>
+lengths = [16, 16, 16]
+
+    @pytest.mark.parametrize("lengths", [[23, 15, 6], [16, 16, 16]])
+    def test_fast_forward_matches_original(monkeypatch, lengths):
+>       import bitsandbytes
+E       ModuleNotFoundError: No module named 'bitsandbytes'
+
+solution/team_vladimir/test_unpad.py:181: ModuleNotFoundError
+__________ test_real_nf4_weights_equal_original[dtype0-False-shape0] ___________
+
+shape = (256, 1536), nested = False, dtype = torch.float16
+
+    @pytest.mark.parametrize('shape', [(256, 1536), (8960, 1536)])
+    @pytest.mark.parametrize('nested', [False, True])
+    @pytest.mark.parametrize('dtype', [torch.float16, torch.float32])
+    def test_real_nf4_weights_equal_original(shape, nested, dtype):
+>       import bitsandbytes.functional as bnbf
+E       ModuleNotFoundError: No module named 'bitsandbytes'
+
+solution/test_paired_nf4.py:41: ModuleNotFoundError
+__________ test_real_nf4_weights_equal_original[dtype0-False-shape1] ___________
+
+shape = (8960, 1536), nested = False, dtype = torch.float16
+
+    @pytest.mark.parametrize('shape', [(256, 1536), (8960, 1536)])
+    @pytest.mark.parametrize('nested', [False, True])
+    @pytest.mark.parametrize('dtype', [torch.float16, torch.float32])
+    def test_real_nf4_weights_equal_original(shape, nested, dtype):
+>       import bitsandbytes.functional as bnbf
+E       ModuleNotFoundError: No module named 'bitsandbytes'
+
+solution/test_paired_nf4.py:41: ModuleNotFoundError
+___________ test_real_nf4_weights_equal_original[dtype0-True-shape0] ___________
+
+shape = (256, 1536), nested = True, dtype = torch.float16
+
+    @pytest.mark.parametrize('shape', [(256, 1536), (8960, 1536)])
+    @pytest.mark.parametrize('nested', [False, True])
+    @pytest.mark.parametrize('dtype', [torch.float16, torch.float32])
+    def test_real_nf4_weights_equal_original(shape, nested, dtype):
+>       import bitsandbytes.functional as bnbf
+E       ModuleNotFoundError: No module named 'bitsandbytes'
+
+solution/test_paired_nf4.py:41: ModuleNotFoundError
+___________ test_real_nf4_weights_equal_original[dtype0-True-shape1] ___________
+
+shape = (8960, 1536), nested = True, dtype = torch.float16
+
+    @pytest.mark.parametrize('shape', [(256, 1536), (8960, 1536)])
+    @pytest.mark.parametrize('nested', [False, True])
+    @pytest.mark.parametrize('dtype', [torch.float16, torch.float32])
+    def test_real_nf4_weights_equal_original(shape, nested, dtype):
+>       import bitsandbytes.functional as bnbf
+E       ModuleNotFoundError: No module named 'bitsandbytes'
+
+solution/test_paired_nf4.py:41: ModuleNotFoundError
+__________ test_real_nf4_weights_equal_original[dtype1-False-shape0] ___________
+
+shape = (256, 1536), nested = False, dtype = torch.float32
+
+    @pytest.mark.parametrize('shape', [(256, 1536), (8960, 1536)])
+    @pytest.mark.parametrize('nested', [False, True])
+    @pytest.mark.parametrize('dtype', [torch.float16, torch.float32])
+    def test_real_nf4_weights_equal_original(shape, nested, dtype):
+>       import bitsandbytes.functional as bnbf
+E       ModuleNotFoundError: No module named 'bitsandbytes'
+
+solution/test_paired_nf4.py:41: ModuleNotFoundError
+__________ test_real_nf4_weights_equal_original[dtype1-False-shape1] ___________
+
+shape = (8960, 1536), nested = False, dtype = torch.float32
+
+    @pytest.mark.parametrize('shape', [(256, 1536), (8960, 1536)])
+    @pytest.mark.parametrize('nested', [False, True])
+    @pytest.mark.parametrize('dtype', [torch.float16, torch.float32])
+    def test_real_nf4_weights_equal_original(shape, nested, dtype):
+>       import bitsandbytes.functional as bnbf
+E       ModuleNotFoundError: No module named 'bitsandbytes'
+
+solution/test_paired_nf4.py:41: ModuleNotFoundError
+___________ test_real_nf4_weights_equal_original[dtype1-True-shape0] ___________
+
+shape = (256, 1536), nested = True, dtype = torch.float32
+
+    @pytest.mark.parametrize('shape', [(256, 1536), (8960, 1536)])
+    @pytest.mark.parametrize('nested', [False, True])
+    @pytest.mark.parametrize('dtype', [torch.float16, torch.float32])
+    def test_real_nf4_weights_equal_original(shape, nested, dtype):
+>       import bitsandbytes.functional as bnbf
+E       ModuleNotFoundError: No module named 'bitsandbytes'
+
+solution/test_paired_nf4.py:41: ModuleNotFoundError
+___________ test_real_nf4_weights_equal_original[dtype1-True-shape1] ___________
+
+shape = (8960, 1536), nested = True, dtype = torch.float32
+
+    @pytest.mark.parametrize('shape', [(256, 1536), (8960, 1536)])
+    @pytest.mark.parametrize('nested', [False, True])
+    @pytest.mark.parametrize('dtype', [torch.float16, torch.float32])
+    def test_real_nf4_weights_equal_original(shape, nested, dtype):
+>       import bitsandbytes.functional as bnbf
+E       ModuleNotFoundError: No module named 'bitsandbytes'
+
+solution/test_paired_nf4.py:41: ModuleNotFoundError
+__________ test_frozen_linear_output_and_input_gradient_equal[False] ___________
+
+nested = False
+
+    @pytest.mark.parametrize('nested', [False, True])
+    def test_frozen_linear_output_and_input_gradient_equal(nested):
+>       import bitsandbytes.functional as bnbf
+E       ModuleNotFoundError: No module named 'bitsandbytes'
+
+solution/test_paired_nf4.py:53: ModuleNotFoundError
+___________ test_frozen_linear_output_and_input_gradient_equal[True] ___________
+
+nested = True
+
+    @pytest.mark.parametrize('nested', [False, True])
+    def test_frozen_linear_output_and_input_gradient_equal(nested):
+>       import bitsandbytes.functional as bnbf
+E       ModuleNotFoundError: No module named 'bitsandbytes'
+
+solution/test_paired_nf4.py:53: ModuleNotFoundError
+_____________ test_combined_chunked_head_loss_and_hidden_gradient ______________
+
+    def test_combined_chunked_head_loss_and_hidden_gradient():
+        from solution.parallel_head import patch_parallel_head
+        from solution.team_vladimir.test_unpad import test_lm_head_loss_matches_cross_entropy
+        patch_parallel_head()
+        for with_num_items in (True, False):
+>           test_lm_head_loss_matches_cross_entropy(with_num_items)
+
+solution/test_parallel_head.py:35: 
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ 
+
+with_num_items = True
+
+    @pytest.mark.parametrize("with_num_items", [True, False])
+    def test_lm_head_loss_matches_cross_entropy(with_num_items):
+>       from trl.trainer.utils import entropy_from_logits
+E       ModuleNotFoundError: No module named 'trl'
+
+solution/team_vladimir/test_unpad.py:19: ModuleNotFoundError
+___________ test_sparse_mlp_matches_dense_forward_and_backward[all] ____________
+
+active = 'all'
+
+    @pytest.mark.parametrize('active', ['all', 'some', 'none'])
+    def test_sparse_mlp_matches_dense_forward_and_backward(active):
+>       import bitsandbytes as bnb
+E       ModuleNotFoundError: No module named 'bitsandbytes'
+
+solution/test_sparse_mlp.py:9: ModuleNotFoundError
+___________ test_sparse_mlp_matches_dense_forward_and_backward[some] ___________
+
+active = 'some'
+
+    @pytest.mark.parametrize('active', ['all', 'some', 'none'])
+    def test_sparse_mlp_matches_dense_forward_and_backward(active):
+>       import bitsandbytes as bnb
+E       ModuleNotFoundError: No module named 'bitsandbytes'
+
+solution/test_sparse_mlp.py:9: ModuleNotFoundError
+___________ test_sparse_mlp_matches_dense_forward_and_backward[none] ___________
+
+active = 'none'
+
+    @pytest.mark.parametrize('active', ['all', 'some', 'none'])
+    def test_sparse_mlp_matches_dense_forward_and_backward(active):
+>       import bitsandbytes as bnb
+E       ModuleNotFoundError: No module named 'bitsandbytes'
+
+solution/test_sparse_mlp.py:9: ModuleNotFoundError
+________ test_nf4_decoder_matches_bitsandbytes[shape0-64-dtype0-False] _________
+
+nested = False, dtype = torch.float16, shape = (127, 65), blocksize = 64
+
+    @pytest.mark.parametrize("nested", [False, True])
+    @pytest.mark.parametrize("dtype", [torch.float16, torch.float32])
+    @pytest.mark.parametrize("shape,blocksize", [((127, 65), 64), ((128, 256), 256)])
+    def test_nf4_decoder_matches_bitsandbytes(nested, dtype, shape, blocksize):
+>       import bitsandbytes.functional as bnb
+E       ModuleNotFoundError: No module named 'bitsandbytes'
+
+solution/test_team_kernels.py:131: ModuleNotFoundError
+_________ test_nf4_decoder_matches_bitsandbytes[shape0-64-dtype0-True] _________
+
+nested = True, dtype = torch.float16, shape = (127, 65), blocksize = 64
+
+    @pytest.mark.parametrize("nested", [False, True])
+    @pytest.mark.parametrize("dtype", [torch.float16, torch.float32])
+    @pytest.mark.parametrize("shape,blocksize", [((127, 65), 64), ((128, 256), 256)])
+    def test_nf4_decoder_matches_bitsandbytes(nested, dtype, shape, blocksize):
+>       import bitsandbytes.functional as bnb
+E       ModuleNotFoundError: No module named 'bitsandbytes'
+
+solution/test_team_kernels.py:131: ModuleNotFoundError
+________ test_nf4_decoder_matches_bitsandbytes[shape0-64-dtype1-False] _________
+
+nested = False, dtype = torch.float32, shape = (127, 65), blocksize = 64
+
+    @pytest.mark.parametrize("nested", [False, True])
+    @pytest.mark.parametrize("dtype", [torch.float16, torch.float32])
+    @pytest.mark.parametrize("shape,blocksize", [((127, 65), 64), ((128, 256), 256)])
+    def test_nf4_decoder_matches_bitsandbytes(nested, dtype, shape, blocksize):
+>       import bitsandbytes.functional as bnb
+E       ModuleNotFoundError: No module named 'bitsandbytes'
+
+solution/test_team_kernels.py:131: ModuleNotFoundError
+_________ test_nf4_decoder_matches_bitsandbytes[shape0-64-dtype1-True] _________
+
+nested = True, dtype = torch.float32, shape = (127, 65), blocksize = 64
+
+    @pytest.mark.parametrize("nested", [False, True])
+    @pytest.mark.parametrize("dtype", [torch.float16, torch.float32])
+    @pytest.mark.parametrize("shape,blocksize", [((127, 65), 64), ((128, 256), 256)])
+    def test_nf4_decoder_matches_bitsandbytes(nested, dtype, shape, blocksize):
+>       import bitsandbytes.functional as bnb
+E       ModuleNotFoundError: No module named 'bitsandbytes'
+
+solution/test_team_kernels.py:131: ModuleNotFoundError
+________ test_nf4_decoder_matches_bitsandbytes[shape1-256-dtype0-False] ________
+
+nested = False, dtype = torch.float16, shape = (128, 256), blocksize = 256
+
+    @pytest.mark.parametrize("nested", [False, True])
+    @pytest.mark.parametrize("dtype", [torch.float16, torch.float32])
+    @pytest.mark.parametrize("shape,blocksize", [((127, 65), 64), ((128, 256), 256)])
+    def test_nf4_decoder_matches_bitsandbytes(nested, dtype, shape, blocksize):
+>       import bitsandbytes.functional as bnb
+E       ModuleNotFoundError: No module named 'bitsandbytes'
+
+solution/test_team_kernels.py:131: ModuleNotFoundError
+________ test_nf4_decoder_matches_bitsandbytes[shape1-256-dtype0-True] _________
+
+nested = True, dtype = torch.float16, shape = (128, 256), blocksize = 256
+
+    @pytest.mark.parametrize("nested", [False, True])
+    @pytest.mark.parametrize("dtype", [torch.float16, torch.float32])
+    @pytest.mark.parametrize("shape,blocksize", [((127, 65), 64), ((128, 256), 256)])
+    def test_nf4_decoder_matches_bitsandbytes(nested, dtype, shape, blocksize):
+>       import bitsandbytes.functional as bnb
+E       ModuleNotFoundError: No module named 'bitsandbytes'
+
+solution/test_team_kernels.py:131: ModuleNotFoundError
+________ test_nf4_decoder_matches_bitsandbytes[shape1-256-dtype1-False] ________
+
+nested = False, dtype = torch.float32, shape = (128, 256), blocksize = 256
+
+    @pytest.mark.parametrize("nested", [False, True])
+    @pytest.mark.parametrize("dtype", [torch.float16, torch.float32])
+    @pytest.mark.parametrize("shape,blocksize", [((127, 65), 64), ((128, 256), 256)])
+    def test_nf4_decoder_matches_bitsandbytes(nested, dtype, shape, blocksize):
+>       import bitsandbytes.functional as bnb
+E       ModuleNotFoundError: No module named 'bitsandbytes'
+
+solution/test_team_kernels.py:131: ModuleNotFoundError
+________ test_nf4_decoder_matches_bitsandbytes[shape1-256-dtype1-True] _________
+
+nested = True, dtype = torch.float32, shape = (128, 256), blocksize = 256
+
+    @pytest.mark.parametrize("nested", [False, True])
+    @pytest.mark.parametrize("dtype", [torch.float16, torch.float32])
+    @pytest.mark.parametrize("shape,blocksize", [((127, 65), 64), ((128, 256), 256)])
+    def test_nf4_decoder_matches_bitsandbytes(nested, dtype, shape, blocksize):
+>       import bitsandbytes.functional as bnb
+E       ModuleNotFoundError: No module named 'bitsandbytes'
+
+solution/test_team_kernels.py:131: ModuleNotFoundError
+________ test_nf4_forward_fallback_matches_backend[False-dtype0-False] _________
+
+nested = False, dtype = torch.float16, autocast = False
+
+    @pytest.mark.parametrize("nested", [False, True])
+    @pytest.mark.parametrize("dtype", [torch.float16, torch.float32])
+    @pytest.mark.parametrize("autocast", [False, True])
+    def test_nf4_forward_fallback_matches_backend(nested, dtype, autocast):
+>       import bitsandbytes.functional as bnb
+E       ModuleNotFoundError: No module named 'bitsandbytes'
+
+solution/test_team_kernels.py:158: ModuleNotFoundError
+_________ test_nf4_forward_fallback_matches_backend[False-dtype0-True] _________
+
+nested = True, dtype = torch.float16, autocast = False
+
+    @pytest.mark.parametrize("nested", [False, True])
+    @pytest.mark.parametrize("dtype", [torch.float16, torch.float32])
+    @pytest.mark.parametrize("autocast", [False, True])
+    def test_nf4_forward_fallback_matches_backend(nested, dtype, autocast):
+>       import bitsandbytes.functional as bnb
+E       ModuleNotFoundError: No module named 'bitsandbytes'
+
+solution/test_team_kernels.py:158: ModuleNotFoundError
+________ test_nf4_forward_fallback_matches_backend[False-dtype1-False] _________
+
+nested = False, dtype = torch.float32, autocast = False
+
+    @pytest.mark.parametrize("nested", [False, True])
+    @pytest.mark.parametrize("dtype", [torch.float16, torch.float32])
+    @pytest.mark.parametrize("autocast", [False, True])
+    def test_nf4_forward_fallback_matches_backend(nested, dtype, autocast):
+>       import bitsandbytes.functional as bnb
+E       ModuleNotFoundError: No module named 'bitsandbytes'
+
+solution/test_team_kernels.py:158: ModuleNotFoundError
+_________ test_nf4_forward_fallback_matches_backend[False-dtype1-True] _________
+
+nested = True, dtype = torch.float32, autocast = False
+
+    @pytest.mark.parametrize("nested", [False, True])
+    @pytest.mark.parametrize("dtype", [torch.float16, torch.float32])
+    @pytest.mark.parametrize("autocast", [False, True])
+    def test_nf4_forward_fallback_matches_backend(nested, dtype, autocast):
+>       import bitsandbytes.functional as bnb
+E       ModuleNotFoundError: No module named 'bitsandbytes'
+
+solution/test_team_kernels.py:158: ModuleNotFoundError
+_________ test_nf4_forward_fallback_matches_backend[True-dtype0-False] _________
+
+nested = False, dtype = torch.float16, autocast = True
+
+    @pytest.mark.parametrize("nested", [False, True])
+    @pytest.mark.parametrize("dtype", [torch.float16, torch.float32])
+    @pytest.mark.parametrize("autocast", [False, True])
+    def test_nf4_forward_fallback_matches_backend(nested, dtype, autocast):
+>       import bitsandbytes.functional as bnb
+E       ModuleNotFoundError: No module named 'bitsandbytes'
+
+solution/test_team_kernels.py:158: ModuleNotFoundError
+_________ test_nf4_forward_fallback_matches_backend[True-dtype0-True] __________
+
+nested = True, dtype = torch.float16, autocast = True
+
+    @pytest.mark.parametrize("nested", [False, True])
+    @pytest.mark.parametrize("dtype", [torch.float16, torch.float32])
+    @pytest.mark.parametrize("autocast", [False, True])
+    def test_nf4_forward_fallback_matches_backend(nested, dtype, autocast):
+>       import bitsandbytes.functional as bnb
+E       ModuleNotFoundError: No module named 'bitsandbytes'
+
+solution/test_team_kernels.py:158: ModuleNotFoundError
+_________ test_nf4_forward_fallback_matches_backend[True-dtype1-False] _________
+
+nested = False, dtype = torch.float32, autocast = True
+
+    @pytest.mark.parametrize("nested", [False, True])
+    @pytest.mark.parametrize("dtype", [torch.float16, torch.float32])
+    @pytest.mark.parametrize("autocast", [False, True])
+    def test_nf4_forward_fallback_matches_backend(nested, dtype, autocast):
+>       import bitsandbytes.functional as bnb
+E       ModuleNotFoundError: No module named 'bitsandbytes'
+
+solution/test_team_kernels.py:158: ModuleNotFoundError
+_________ test_nf4_forward_fallback_matches_backend[True-dtype1-True] __________
+
+nested = True, dtype = torch.float32, autocast = True
+
+    @pytest.mark.parametrize("nested", [False, True])
+    @pytest.mark.parametrize("dtype", [torch.float16, torch.float32])
+    @pytest.mark.parametrize("autocast", [False, True])
+    def test_nf4_forward_fallback_matches_backend(nested, dtype, autocast):
+>       import bitsandbytes.functional as bnb
+E       ModuleNotFoundError: No module named 'bitsandbytes'
+
+solution/test_team_kernels.py:158: ModuleNotFoundError
+=========================== short test summary info ============================
+FAILED solution/team_vladimir/test_kernels.py::test_nf4_dequant_matches_bitsandbytes[shape0-True]
+FAILED solution/team_vladimir/test_kernels.py::test_nf4_dequant_matches_bitsandbytes[shape0-False]
+FAILED solution/team_vladimir/test_kernels.py::test_nf4_dequant_matches_bitsandbytes[shape1-True]
+FAILED solution/team_vladimir/test_kernels.py::test_nf4_dequant_matches_bitsandbytes[shape1-False]
+FAILED solution/team_vladimir/test_kernels.py::test_nf4_dequant_matches_bitsandbytes[shape2-True]
+FAILED solution/team_vladimir/test_kernels.py::test_nf4_dequant_matches_bitsandbytes[shape2-False]
+FAILED solution/team_vladimir/test_kernels.py::test_nf4_matmul_matches_bitsandbytes[True]
+FAILED solution/team_vladimir/test_kernels.py::test_nf4_matmul_matches_bitsandbytes[False]
+FAILED solution/team_vladimir/test_layer.py::test_mlp_4bit_matches_bitsandbytes
+FAILED solution/team_vladimir/test_layer.py::test_decoder_layer_matches_original
+FAILED solution/team_vladimir/test_unpad.py::test_lm_head_loss_matches_cross_entropy[True]
+FAILED solution/team_vladimir/test_unpad.py::test_lm_head_loss_matches_cross_entropy[False]
+FAILED solution/team_vladimir/test_unpad.py::test_fast_forward_matches_original[lengths0]
+FAILED solution/team_vladimir/test_unpad.py::test_fast_forward_matches_original[lengths1]
+FAILED solution/test_paired_nf4.py::test_real_nf4_weights_equal_original[dtype0-False-shape0]
+FAILED solution/test_paired_nf4.py::test_real_nf4_weights_equal_original[dtype0-False-shape1]
+FAILED solution/test_paired_nf4.py::test_real_nf4_weights_equal_original[dtype0-True-shape0]
+FAILED solution/test_paired_nf4.py::test_real_nf4_weights_equal_original[dtype0-True-shape1]
+FAILED solution/test_paired_nf4.py::test_real_nf4_weights_equal_original[dtype1-False-shape0]
+FAILED solution/test_paired_nf4.py::test_real_nf4_weights_equal_original[dtype1-False-shape1]
+FAILED solution/test_paired_nf4.py::test_real_nf4_weights_equal_original[dtype1-True-shape0]
+FAILED solution/test_paired_nf4.py::test_real_nf4_weights_equal_original[dtype1-True-shape1]
+FAILED solution/test_paired_nf4.py::test_frozen_linear_output_and_input_gradient_equal[False]
+FAILED solution/test_paired_nf4.py::test_frozen_linear_output_and_input_gradient_equal[True]
+FAILED solution/test_parallel_head.py::test_combined_chunked_head_loss_and_hidden_gradient
+FAILED solution/test_sparse_mlp.py::test_sparse_mlp_matches_dense_forward_and_backward[all]
+FAILED solution/test_sparse_mlp.py::test_sparse_mlp_matches_dense_forward_and_backward[some]
+FAILED solution/test_sparse_mlp.py::test_sparse_mlp_matches_dense_forward_and_backward[none]
+FAILED solution/test_team_kernels.py::test_nf4_decoder_matches_bitsandbytes[shape0-64-dtype0-False]
+FAILED solution/test_team_kernels.py::test_nf4_decoder_matches_bitsandbytes[shape0-64-dtype0-True]
+FAILED solution/test_team_kernels.py::test_nf4_decoder_matches_bitsandbytes[shape0-64-dtype1-False]
+FAILED solution/test_team_kernels.py::test_nf4_decoder_matches_bitsandbytes[shape0-64-dtype1-True]
+FAILED solution/test_team_kernels.py::test_nf4_decoder_matches_bitsandbytes[shape1-256-dtype0-False]
+FAILED solution/test_team_kernels.py::test_nf4_decoder_matches_bitsandbytes[shape1-256-dtype0-True]
+FAILED solution/test_team_kernels.py::test_nf4_decoder_matches_bitsandbytes[shape1-256-dtype1-False]
+FAILED solution/test_team_kernels.py::test_nf4_decoder_matches_bitsandbytes[shape1-256-dtype1-True]
+FAILED solution/test_team_kernels.py::test_nf4_forward_fallback_matches_backend[False-dtype0-False]
+FAILED solution/test_team_kernels.py::test_nf4_forward_fallback_matches_backend[False-dtype0-True]
+FAILED solution/test_team_kernels.py::test_nf4_forward_fallback_matches_backend[False-dtype1-False]
+FAILED solution/test_team_kernels.py::test_nf4_forward_fallback_matches_backend[False-dtype1-True]
+FAILED solution/test_team_kernels.py::test_nf4_forward_fallback_matches_backend[True-dtype0-False]
+FAILED solution/test_team_kernels.py::test_nf4_forward_fallback_matches_backend[True-dtype0-True]
+FAILED solution/test_team_kernels.py::test_nf4_forward_fallback_matches_backend[True-dtype1-False]
+FAILED solution/test_team_kernels.py::test_nf4_forward_fallback_matches_backend[True-dtype1-True]
+44 failed, 130 passed in 8.78s

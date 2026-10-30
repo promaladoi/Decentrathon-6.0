@@ -1,0 +1,11 @@
+{
+  "version": "v20",
+  "source_commit": "22ff279a586aa309991957b84ba11597fd342f8b",
+  "source_files_verified": 36,
+  "solution_sha256": "486419f789a54c7079bddfc784c4151982f4f260566d090751f80d32d1bf69a9",
+  "status": "failed",
+  "checks_passed": null,
+  "accepted": false,
+  "summary": null,
+  "archive_sha256": "f9458111a2fdfc06769d5eae3f31d13670a8688504d11d7531682d092c988fe4"
+}
