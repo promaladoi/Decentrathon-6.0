@@ -32,12 +32,15 @@ def load_compiled(compiled):
 
 
 def _steps(unpad):
-    from . import lmhead, mlp, nf4, rmsnorm, rope
+    from . import frozen_storage_kernel, lmhead, mlp, nf4, rmsnorm, rope
     from . import unpad as fast
     from . import dropout as compact_dropout
 
     if unpad:  # the unpadded training step, in order of first use
-        steps = [nf4.warmup,
+        # The exact frozen-storage proof runs at the first model forward,
+        # before the unpadded training path waits for the compilation thread.
+        # Compile it first during native model loading, within this timed run.
+        steps = [frozen_storage_kernel.warmup, nf4.warmup,
                 lambda: rmsnorm.warmup(parts=("add_fwd",)),
                 lambda: fast.warmup(parts=("fwd",)),
                 lambda: mlp.warmup(parts=("fwd",)),
@@ -48,7 +51,7 @@ def _steps(unpad):
         if fast.REAL_ROW_DROPOUT:
             # After QKV projection, before RoPEPad: compile arithmetic only.
             # This callback never invokes native_dropout or consumes RNG.
-            steps.insert(2, compact_dropout.warmup)
+            steps.insert(3, compact_dropout.warmup)
         return steps
     return [nf4.warmup, rmsnorm.warmup, rope.warmup, mlp.warmup]
 

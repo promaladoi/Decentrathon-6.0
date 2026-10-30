@@ -75,3 +75,12 @@ the validation runner. The 42 unchanged imported files have provenance hashes.
 The package initializer is adapted; no performance result is inherited.
 See `CODEX_V44_EXPERIMENT.md`. Older sections describe historical revisions,
 not the current experiment's imports. The public selected solution stays v34.
+
+
+## v45: head lifetimes and storage-proof warm-up
+
+Nurzhigit/Codex adapts the v44 combined path to drop dead temporary
+logits before the next GEMM and compile its exact-storage kernel
+during the existing timed startup. All team arithmetic and tests
+remain; Merei/Vladimir credits are unchanged. See CODEX_V45_EXPERIMENT.md.
+No GPU result is inherited from any older source.

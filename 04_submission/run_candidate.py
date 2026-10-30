@@ -80,6 +80,9 @@ def main():
                  "import os,pytest;os.environ['MEREY_NATIVE_METADATA_SNAPSHOT_PARITY']='1';"
                  "raise SystemExit(pytest.main(['solution/test_package_metadata_snapshot.py',"
                  "'-q','-k','real_native_setup_prefix']))"], 'native_metadata_parity.log')
+        if (repo/'solution/test_head_lifetime.py').is_file():
+            run([sys.executable, '-m', 'pytest', 'solution/test_head_lifetime.py',
+                 'solution/test_lmhead_scaled.py', '-q'], 'head_lifetime_and_gradient_tests.log')
         if args.nf4_analysis:
             run([sys.executable, '-m', 'pytest', 'solution/test_paired_nf4.py', '-q'],
                 'paired_nf4_tests.log')

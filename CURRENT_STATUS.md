@@ -1,3 +1,9 @@
+# v45 candidate pending T4
+
+Head lifetime and own storage-kernel warm-up candidate.
+8 targeted CPU checks passed; 5 CUDA checks skipped. No new GPU result.
+Running v44 remains pinned to its own source and queue.
+
 # v44 candidate pending T4
 
 New combined memory candidate: see CODEX_V44_EXPERIMENT.md.

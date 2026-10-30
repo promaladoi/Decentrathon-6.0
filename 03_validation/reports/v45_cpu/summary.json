@@ -1,0 +1,22 @@
+{
+  "version": "v45",
+  "baseline_candidate": "2d171ddc1f6d43e593f5dd80e1a86731f27ad6f7",
+  "status": "targeted CPU checks passed; CUDA and full-task validation pending",
+  "python_solution_files": 48,
+  "solution_sha256": "8568c6f9abfb6458bfa4248c044cc2cf0169c104a487f8aeb4af4ae67702a787",
+  "tests": {
+    "passed": 8,
+    "skipped": 5,
+    "subtests_passed": 2,
+    "seconds": 6.96
+  },
+  "pytest_log_sha256": "313467690b46b3fdd6a406873655aca1e1cb2b78ad632f1cb24cd3125a79ba39",
+  "head_lifetime_probe_sha256": "c8fb9597f378021308c58a891ddaa4094269c342fe702a6158c72978b83307b8",
+  "environment": "Windows Python 3.12, PyTorch 2.11 CPU; not Kaggle T4",
+  "immutable_organizer_files_verified": 15,
+  "T4_measured": false,
+  "original_ten_checks": null,
+  "time_seconds": null,
+  "peak_mib": null,
+  "eval_loss": null
+}
