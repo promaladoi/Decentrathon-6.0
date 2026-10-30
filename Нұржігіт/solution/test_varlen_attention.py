@@ -2,6 +2,19 @@ import math
 
 import pytest
 import torch
+
+
+def test_dense_mask_elision_requires_all_causal_varlen_layers():
+    from types import SimpleNamespace as S
+    from .varlen_attention import can_skip_dense_mask
+    layers=[(S(self_attn=S(is_causal=True)),None) for _ in range(3)]
+    meta={'dim':128,'layers':layers}
+    assert can_skip_dense_mask(S(_varlen_plan={'cu':'valid'}),meta)
+    assert not can_skip_dense_mask(S(),meta)
+    assert not can_skip_dense_mask(S(_varlen_plan=None),meta)
+    assert not can_skip_dense_mask(S(_varlen_plan={}),dict(meta,dim=256))
+    layers[-1][0].self_attn.is_causal=False
+    assert not can_skip_dense_mask(S(_varlen_plan={}),meta)
 from torch.nn import functional as F
 
 from solution.varlen_attention import attention, make_attention, make_batch_init, make_plan
