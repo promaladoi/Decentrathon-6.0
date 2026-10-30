@@ -30,9 +30,7 @@ def apply():
     patch_parallel_head()
     patch_compact_dropout()
     patch_paired_nf4()
-    # Balanced variant: retain small attention projections, decode the much
-    # larger MLP matrices on demand. Same values, less resident memory.
-    patch_frozen_weight_cache(max_elements=4_194_304,max_bytes=400_000_000)
+    patch_frozen_weight_cache()
     patch_launcher_warmup()
     apply_team()
     patch_frozen_storage()
