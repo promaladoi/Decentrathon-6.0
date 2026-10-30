@@ -11,6 +11,8 @@ import torch
 import triton
 import triton.language as tl
 
+_codebooks = {}
+
 
 @triton.jit
 def decode_nf4_weights(packed, scales, code4, scale_code, scale_absmax,
@@ -48,6 +50,29 @@ def dequantize_nf4(packed, state, out=None):
     return out.t() if packed.shape[0] == 1 else out
 
 
+def nf4_linear_fallback(A, B, shapeB, absmax, blocksize, quant_type,
+                        bias=None, absmax_8bit=None, absmax_code=None,
+                        absmax_offset=None):
+    """Drop-in NF4 decode+linear for bnb's existing CUDA fallback call site."""
+    import bitsandbytes.functional as functional
+
+    key = (A.device.type, A.device.index)
+    if key not in _codebooks:
+        # Only the fixed NF4 format codebook is cached, never model weights.
+        _codebooks[key] = functional.get_4bit_type("nf4", device=A.device)
+    code = _codebooks[key]
+    dense = torch.empty(shapeB, dtype=A.dtype, device=A.device)
+    nested = absmax_8bit is not None
+    decode_nf4_weights[(triton.cdiv(math.prod(shapeB), 1024),)](
+        B, absmax_8bit if nested else absmax, code,
+        absmax_code if nested else code, absmax,
+        absmax_offset if nested else absmax,
+        dense, math.prod(shapeB), blocksize, 256 if nested else 1, nested, 1024,
+        num_warps=4, enable_fp_fusion=False,
+    )
+    return torch.nn.functional.linear(A, dense, bias)
+
+
 def patch_nf4_decoder():
     import bitsandbytes.functional as functional
 
@@ -82,3 +107,23 @@ def patch_nf4_decoder():
 
     dequantize_4bit._soup_team_nf4 = True
     functional.dequantize_4bit = dequantize_4bit
+
+    from bitsandbytes.backends.cuda import ops
+
+    if getattr(ops._dequant_linear_fallback, "_soup_team_nf4", False):
+        return
+    original_linear = ops._dequant_linear_fallback
+
+    def linear(A, B, shapeB, absmax, blocksize, quant_type, bias=None,
+               absmax_8bit=None, absmax_code=None, absmax_offset=None):
+        if (A.is_cuda and A.dtype in (torch.float16, torch.float32)
+                and B.dtype == torch.uint8 and B.is_contiguous()
+                and quant_type == "nf4" and len(shapeB) == 2
+                and math.prod(shapeB) > 0):
+            return nf4_linear_fallback(A, B, shapeB, absmax, blocksize, quant_type,
+                                       bias, absmax_8bit, absmax_code, absmax_offset)
+        return original_linear(A, B, shapeB, absmax, blocksize, quant_type,
+                               bias, absmax_8bit, absmax_code, absmax_offset)
+
+    linear._soup_team_nf4 = True
+    ops._dequant_linear_fallback = linear

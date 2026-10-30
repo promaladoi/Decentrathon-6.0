@@ -95,3 +95,26 @@ def test_nf4_decoder_matches_bitsandbytes(nested, dtype, shape, blocksize):
     torch.testing.assert_close(actual_out, expected, rtol=0, atol=0)
     transposed = dequantize_nf4(packed.t(), state)
     torch.testing.assert_close(transposed, expected.t(), rtol=0, atol=0)
+
+
+@pytest.mark.parametrize("nested", [False, True])
+@pytest.mark.parametrize("dtype", [torch.float16, torch.float32])
+def test_nf4_forward_fallback_matches_backend(nested, dtype):
+    import bitsandbytes.functional as bnb
+    from bitsandbytes.backends.cuda import ops
+    from solution.nf4 import nf4_linear_fallback
+
+    torch.manual_seed(37)
+    weight = torch.randn((128, 64), device="cuda", dtype=torch.float16)
+    packed, state = bnb.quantize_4bit(weight, compress_statistics=nested, quant_type="nf4")
+    x = torch.randn((2, 7, 64), device="cuda", dtype=dtype)
+    bias = torch.randn(128, device="cuda", dtype=dtype)
+    args = (x, packed, state.shape, state.state2.absmax if nested else state.absmax,
+            state.blocksize, "nf4")
+    kwargs = {"bias": bias}
+    if nested:
+        kwargs.update(absmax_8bit=state.absmax, absmax_code=state.state2.code,
+                      absmax_offset=state.offset)
+    expected = ops._dequant_linear_fallback(*args, **kwargs)
+    actual = nf4_linear_fallback(*args, **kwargs)
+    torch.testing.assert_close(actual, expected, rtol=0, atol=0)
