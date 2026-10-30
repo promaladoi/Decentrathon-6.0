@@ -230,3 +230,6 @@ This does not demonstrate a meaningful speed gain over v3. See
 Investigate remaining training-time bottlenecks. Record each finished experiment, including failures,
 with its exact code commit and original benchmark/check reports. Compare other
 team members' versions before choosing the final submission.
+
+
+Latest independently collected result: v28, 80.75/44.43 s, 7153 MiB, all ten checks. Exact source `4aaaade07f255269fb8ef8cf7a6b6007d95120b7`. Original source/result hashes verified, diagnostics kept separate.

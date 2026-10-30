@@ -1,25 +1,19 @@
 # IVNEX: Soup Kernel Challenge
 
-Shortest fully collected absolute wall time: **v23, 80.68 → 52.76 seconds**,
-**1.5292x**, **34.6% less total time**, **10/10 PASS**, eval delta **-0.003%**.
-Its peak is **6747 MiB**. Earlier v17r1 has a higher paired ratio with a colder
-first base; close versions need comparable pairs, not unlike baselines.
-Lowest collected peak: **v20r1/v21/v22, 4467 MiB**. The v22 time is **54.64 s**.
-Exact source, report hashes and raw adapters are verified for v21–v23 as well as
-the [three r1 jobs](CODEX_R1_RESULTS.md).
+Shortest verified total time: **v28, 80.75 → 44.43 seconds**,
+**45.0% less elapsed time**, **1.8175x**, **10/10**.
+Peak **7153 MiB**, eval delta **-0.000%**.
+The lower-memory alternative is **v22: 54.64 seconds,
+4467 MiB**, also **10/10**.
 
-**Branch-tip code is an experiment.** v24 native variable-length attention and
-v25 faster package discovery both show **10/10 in the Kaggle console**; their
-raw archive collection is queued. v25 solution runs took **48.36 / 49.57 s**.
-v26 launcher preparation, v27 wider frozen-weight reuse and v28 tokenizer
-fingerprinting are being tested serially. v29's new fused MLP-gradient research
-kernel is inactive until its separate correctness/performance comparison wins.
-The original [v16 fallback](CODEX_V16_RESULT.md) remains archived separately.
-[Current status](CURRENT_STATUS.md) · [All variants](03_validation/VERSION_COMPARISON.md).
+[Original source/hash-verified comparison](CODEX_LATEST_RESULTS.md) ·
+[Current status](CURRENT_STATUS.md) · [Pinned candidate notebook](templates/codex_candidate.ipynb).
+Use the notebook's exact COMMIT: the development branch can contain later research.
 
-The explicit target is **20–30 seconds for the complete unchanged command**.
-This target and a first-place result have not been achieved. No final team
-submission has been selected; only candidates passing all ten rules are admitted.
+Target: **20–30 seconds for the full unchanged command**. It has not been reached;
+a first-place result is not established. All reported times above are complete
+commands, not just steady training steps. The original [v16](CODEX_V16_RESULT.md)
+and other historical results remain below.
 
 ## Earlier v3 candidate (archive)
 
