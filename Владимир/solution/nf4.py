@@ -96,17 +96,26 @@ class MatMulNF4(torch.autograd.Function):
         return grad_A, None, grad_bias, None
 
 
-def patch_bnb_matmul_4bit():
-    """Route bitsandbytes.matmul_4bit (called by Linear4bit.forward, so by every 4-bit layer and
-    by PEFT's LoRA layers through their base layer) through MatMulNF4."""
-    import bitsandbytes
-
-    original = bitsandbytes.matmul_4bit
-
+def make_matmul_4bit(original):
     def matmul_4bit(A, B, quant_state, out=None, bias=None):
         if out is not None or not A.is_cuda or A.numel() == 0 or not supported(quant_state) or \
                 A.dtype not in (torch.float16, torch.float32) or A.shape[-1] != quant_state.shape[1]:
             return original(A, B, quant_state, out=out, bias=bias)
         return MatMulNF4.apply(A, B, bias, quant_state)
 
-    bitsandbytes.matmul_4bit = matmul_4bit
+    return matmul_4bit
+
+
+def patch_bnb_matmul_4bit():
+    """Route bitsandbytes.matmul_4bit (called by Linear4bit.forward, so by every 4-bit layer and
+    by PEFT's LoRA layers through their base layer) through MatMulNF4."""
+    import bitsandbytes
+
+    bitsandbytes.matmul_4bit = make_matmul_4bit(bitsandbytes.matmul_4bit)
+
+
+def warmup():
+    """Compile the fp16, double-quantized variant every 4-bit layer launches; see warmup.py."""
+    f32, u8 = torch.float32, torch.uint8
+    nf4_dequant_kernel.warmup(u8, f32, u8, f32, f32, f32, torch.float16, 16 * 1536, grid=(1,),
+                              QBLOCK=64, NESTED=True, BLOCK=BLOCK, num_warps=8)

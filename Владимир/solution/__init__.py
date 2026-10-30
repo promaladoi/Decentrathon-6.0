@@ -13,12 +13,31 @@ The rules in short (the README and the task statement have the full ones):
   settings and outputs; no other GPU, no background processes, no tricks with the measurement.
 """
 
+from . import warmup
+from .layer import patch_qwen2_decoder_layer
+from .mlp import patch_qwen2_mlp_4bit
 from .nf4 import patch_bnb_matmul_4bit
 from .rmsnorm import patch_qwen2_rmsnorm
+from .rope import patch_qwen2_rope
 from .swiglu import patch_qwen2_mlp
+
+# Compile our kernels in a thread of this process while Soup starts (warmup.py). It only moves
+# the first-launch compilation earlier; set to False to compile at first launch instead.
+WARMUP = True
+
+_applied = False
 
 
 def apply():
-    patch_qwen2_mlp()  # the example: works out of the box, does not count as your own kernel
+    global _applied
+    if _applied:  # the patches wrap the current methods: applying twice would chain them
+        return
+    _applied = True
+    if WARMUP:
+        warmup.start()
+    patch_qwen2_mlp()  # the example: does not count as ours; stays the fallback of the next one
+    patch_qwen2_mlp_4bit()  # ours: 4-bit MLP with fp16 activations, NF4 kernel + example SwiGLU
     patch_qwen2_rmsnorm()  # ours: fused RMSNorm, forward and backward
+    patch_qwen2_decoder_layer()  # ours: residual add fused into the post-attention RMSNorm
+    patch_qwen2_rope()  # ours: rotary embedding of q and k in one launch each way
     patch_bnb_matmul_4bit()  # ours: one-launch NF4 (double-quant) dequantization for 4-bit layers
