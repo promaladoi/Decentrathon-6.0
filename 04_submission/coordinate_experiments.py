@@ -90,6 +90,9 @@ def main():
     seen = set()
     attempted = 0
     child = None
+    def terminate(signum, frame):
+        raise KeyboardInterrupt('coordinator stopped')
+    signal.signal(signal.SIGTERM, terminate)
 
     def publish():
         state['updated_unix'] = time.time()
