@@ -118,6 +118,7 @@ def warmup(vocab=151936):
     compiles that signature. All ordinary training launches remain unchanged.
     """
     from .compact_dropout import warmup as warmup_dropout
+    from .frozen_storage_kernel import warmup as warmup_storage
     f16, f32, i32, i64 = torch.float16, torch.float32, torch.int32, torch.int64
     parts = triton.cdiv(vocab, TILE)
     head_tile_statistics.warmup(f16, f32, f32, f32, i32, vocab, vocab,
@@ -130,3 +131,4 @@ def warmup(vocab=151936):
     head_gradient_inplace.warmup(f16, i64, f32, vocab, vocab, 1024.0,
                                  TILE, grid=(1, parts), num_warps=4)
     warmup_dropout()
+    warmup_storage()
