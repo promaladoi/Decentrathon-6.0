@@ -13,6 +13,8 @@ def apply():
     _applied = True
     from .metadata_scan import patch_metadata_scan
     patch_metadata_scan()
+    from .tokenizer_fingerprint import patch_tokenizer_fingerprint
+    patch_tokenizer_fingerprint()
     from .launcher_warmup import patch_launcher_warmup
     from .lazy_train_cli import patch_lazy_train_cli
     patch_lazy_train_cli()

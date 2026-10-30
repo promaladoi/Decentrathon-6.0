@@ -1,0 +1,13 @@
+{
+  "kind": "local CPU diagnostic, not a T4 contest score",
+  "platform": "Windows, Python 3.12, Transformers 5.16.1, datasets 4.8.2",
+  "tokenizer": "Qwen/Qwen2.5-1.5B-Instruct",
+  "original_datasets_dill_s": 1.618,
+  "candidate_canonical_c_pickle_s": 0.5969,
+  "original_serialized_bytes": 9950093,
+  "candidate_serialized_bytes": 10372837,
+  "roundtrip_kazakh_and_other_token_ids_identical": true,
+  "deepcopy_fingerprint_bytes_identical": true,
+  "unit_tests": "10 passed in 7.20 s",
+  "gpu_validation": "pending"
+}
