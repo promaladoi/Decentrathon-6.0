@@ -1,5 +1,5 @@
 {
-  "source_commit": "7a8b38fe3e91331f79583e15d84b56e7a6c737ee",
+  "source_commit": "d8ac0224b47c67e92fa9e7e2798cf7840e65314e",
   "source_repo": "BAITC-Hacks/hack-a5a4072f-wither-ai",
   "files": [
     ".gitattributes",
@@ -43,6 +43,7 @@
     "03_validation/reports/codex_v20/experiment_outcome.json",
     "03_validation/reports/codex_v20/kernel_tests.log",
     "03_validation/reports/codex_v20_cpu_layout/layout_report.json",
+    "03_validation/reports/codex_v22_cpu_cli/contract_report.json",
     "03_validation/reports/codex_v3/checks.json",
     "03_validation/reports/codex_v3/result.json",
     "03_validation/reports/codex_v4/checks.json",
@@ -82,6 +83,7 @@
     "CODEX_V20_EXPERIMENT.md",
     "CODEX_V21_EXPERIMENT.md",
     "CODEX_V22_EXPERIMENT.md",
+    "CODEX_V23_EXPERIMENT.md",
     "CODEX_V4_EXPERIMENT.md",
     "CODEX_V5_RESULT.md",
     "CODEX_V6_RESULT.md",
@@ -107,6 +109,7 @@
     "solution/frozen_head.py",
     "solution/frozen_storage.py",
     "solution/frozen_storage_kernel.py",
+    "solution/frozen_weight_cache.py",
     "solution/lazy_train_cli.py",
     "solution/mlp_precision.py",
     "solution/nf4.py",
@@ -132,6 +135,7 @@
     "solution/test_compact_dropout.py",
     "solution/test_frozen_head.py",
     "solution/test_frozen_storage.py",
+    "solution/test_frozen_weight_cache.py",
     "solution/test_kernels.py",
     "solution/test_lazy_train_cli.py",
     "solution/test_paired_nf4.py",
