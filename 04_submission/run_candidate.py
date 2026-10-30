@@ -16,6 +16,8 @@ def main():
     parser = argparse.ArgumentParser()
     parser.add_argument('--version', default='v16')
     parser.add_argument('--tests-only', action='store_true')
+    parser.add_argument('--nf4-analysis', action='store_true',
+                        help='run an independent decoder microbenchmark before the contest harness')
     args = parser.parse_args()
     if not args.version.replace('_', '').isalnum():
         raise ValueError('version must contain only letters, numbers and underscores')
@@ -62,6 +64,9 @@ def main():
         # until the dropout values, gradients and RNG sequence all match.
         run([sys.executable, '-m', 'pytest', 'solution/test_compact_dropout.py', '-q'],
             'dropout_tests.log')
+        if args.nf4_analysis:
+            run([sys.executable, '-m', 'pytest', 'solution/test_paired_nf4.py', '-q'],
+                'paired_nf4_tests.log')
         run([sys.executable, '-m', 'pytest', 'solution', '-q'], 'kernel_tests.log')
         env_command = [sys.executable, '-c',
                        "import os,pytest;os.environ['SOUP_APPLY_SOLUTION']='1';"
@@ -69,6 +74,10 @@ def main():
         run(env_command, 'soup_tests.log')
         outcome['status'] = 'tests_passed'
         if not args.tests_only:
+            if args.nf4_analysis:
+                outcome['status'] = 'decoder_analysis'
+                run([sys.executable, '03_validation/benchmark_nf4_pair.py',
+                     '--output', str(out/'nf4_microbenchmark.json')], 'nf4_microbenchmark.log')
             outcome['status'] = 'benchmarking'
             run([sys.executable, 'harness/run_task.py', '--repeats', '2', '--out', str(out)],
                 'benchmark_console.log')
