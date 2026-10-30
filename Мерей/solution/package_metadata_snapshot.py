@@ -27,6 +27,8 @@ import types
 
 _TRL_MODULE = "trl.import_utils"
 _TF_MODULE = "transformers.utils.import_utils"
+_SOUP_MODULE = "soup_cli.trainer.sft"
+_SETUP_MARKER = "_merey_package_metadata_snapshot_setup"
 _NATIVE_FUNCTION = metadata.packages_distributions
 _CONTEXT_LOCK = threading.RLock()
 
@@ -168,3 +170,60 @@ def reuse_transformers_package_metadata():
             yield True
         finally:
             metadata.packages_distributions = original
+
+
+def _native_soup_setup():
+    """Recognize the already-loaded, unwrapped Soup 0.77 native setup method."""
+    module = sys.modules.get(_SOUP_MODULE)
+    if type(module) is not types.ModuleType:
+        return None
+    try:
+        distribution = metadata.distribution("soup-cli")
+        if distribution.version != "0.77.0":
+            return None
+        namespace = vars(module)
+        spec = namespace.get("__spec__")
+        origin = _canonical(distribution.locate_file("soup_cli/trainer/sft.py"))
+        wrapper_type = namespace.get("SFTTrainerWrapper")
+        if (namespace.get("__name__") != _SOUP_MODULE or spec is None
+                or spec.name != _SOUP_MODULE or type(spec.loader) is not importlib.machinery.SourceFileLoader
+                or _canonical(spec.origin) != origin or _canonical(namespace.get("__file__")) != origin
+                or type(wrapper_type) is not type or wrapper_type.__module__ != _SOUP_MODULE
+                or wrapper_type.__qualname__ != "SFTTrainerWrapper"):
+            return None
+        setup = vars(wrapper_type).get("setup")
+        if (not isinstance(setup, types.FunctionType) or hasattr(setup, "__wrapped__")
+                or getattr(setup, _SETUP_MARKER, False)
+                or setup.__module__ != _SOUP_MODULE or setup.__qualname__ != "SFTTrainerWrapper.setup"
+                or setup.__code__.co_name != "setup" or setup.__code__.co_qualname != "SFTTrainerWrapper.setup"
+                or _canonical(setup.__code__.co_filename) != origin
+                or setup.__globals__ is not namespace
+                or setup.__globals__.get("SFTTrainerWrapper") is not wrapper_type):
+            return None
+        return wrapper_type, setup
+    except (ImportError, AttributeError, TypeError, ValueError, OSError):
+        return None
+
+
+def _make_setup_wrapper(original):
+    @functools.wraps(original)
+    def setup(*args, **kwargs):
+        # Soup imports TRL inside setup(), after solution.apply() has returned.
+        # Keep the original import order, all arguments and the entire native
+        # body; the narrow metadata routing exists only during this invocation.
+        with reuse_transformers_package_metadata():
+            return original(*args, **kwargs)
+
+    setattr(setup, _SETUP_MARKER, True)
+    return setup
+
+
+def install():
+    """Wrap the pinned native setup once, without importing Soup/TRL eagerly."""
+    with _CONTEXT_LOCK:
+        recognized = _native_soup_setup()
+        if recognized is None:
+            return False
+        wrapper_type, original = recognized
+        wrapper_type.setup = _make_setup_wrapper(original)
+        return True

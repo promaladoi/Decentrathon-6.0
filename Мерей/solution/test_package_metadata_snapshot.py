@@ -2,6 +2,7 @@
 
 import importlib.machinery
 import importlib.util
+from contextlib import contextmanager
 import json
 import os
 from pathlib import Path
@@ -52,6 +53,18 @@ def _module_call(function, *, name="trl.import_utils", filename="/native/trl/imp
 
 def _distribution(package, version):
     return types.SimpleNamespace(version=version, locate_file=lambda path: "/native/" + path)
+
+
+def _native_soup():
+    name, filename = "soup_cli.trainer.sft", "/native/soup_cli/trainer/sft.py"
+    module = types.ModuleType(name)
+    module.__file__ = filename
+    module.__spec__ = types.SimpleNamespace(
+        name=name, origin=filename, loader=importlib.machinery.SourceFileLoader(name, filename))
+    exec(compile("class SFTTrainerWrapper:\n"
+                 "    def setup(self, dataset, *, option=None):\n"
+                 "        return self.record(dataset, option=option)\n", filename, "exec"), vars(module))
+    return module
 
 
 class SnapshotRoutingTests(unittest.TestCase):
@@ -227,10 +240,93 @@ class ContextTests(unittest.TestCase):
                     self.assertIs(_snapshot.metadata.packages_distributions, original)
 
 
+class SetupInstallTests(unittest.TestCase):
+    def test_requires_loaded_native_soup_version_file_class_and_unwrapped_setup(self):
+        module = _native_soup()
+        distribution = _distribution("soup-cli", "0.77.0")
+        original = module.SFTTrainerWrapper.setup
+        with mock.patch.dict(sys.modules, {"soup_cli.trainer.sft": module}), \
+                mock.patch.object(_snapshot.metadata, "distribution", return_value=distribution):
+            self.assertEqual(_snapshot._native_soup_setup(), (module.SFTTrainerWrapper, original))
+            distribution.version = "0.76.0"
+            self.assertIsNone(_snapshot._native_soup_setup())
+            distribution.version = "0.77.0"
+            module.__spec__.origin = "/shadow/soup_cli/trainer/sft.py"
+            self.assertIsNone(_snapshot._native_soup_setup())
+            module.__spec__.origin = module.__file__
+            module.__spec__.loader = object()
+            self.assertIsNone(_snapshot._native_soup_setup())
+            module.__spec__.loader = importlib.machinery.SourceFileLoader(module.__name__, module.__file__)
+            module.SFTTrainerWrapper.setup = lambda self, dataset: None
+            self.assertIsNone(_snapshot._native_soup_setup())
+            module.SFTTrainerWrapper.setup = original
+            original.__wrapped__ = lambda: None
+            self.assertIsNone(_snapshot._native_soup_setup())
+            del original.__wrapped__
+            foreign = dict(vars(module))
+            module.SFTTrainerWrapper.setup = types.FunctionType(original.__code__, foreign)
+            self.assertIsNone(_snapshot._native_soup_setup())
+
+    def test_missing_soup_is_not_imported_or_looked_up(self):
+        with mock.patch.dict(sys.modules):
+            sys.modules.pop("soup_cli.trainer.sft", None)
+            with mock.patch.object(_snapshot.metadata, "distribution") as distribution, \
+                    mock.patch.object(_snapshot.importlib, "import_module") as imported:
+                self.assertFalse(_snapshot.install())
+                distribution.assert_not_called()
+                imported.assert_not_called()
+
+    def test_install_is_idempotent_without_eager_import_and_retains_native_identity(self):
+        module = _native_soup()
+        original = module.SFTTrainerWrapper.setup
+        with mock.patch.dict(sys.modules, {"soup_cli.trainer.sft": module}), \
+                mock.patch.object(_snapshot.metadata, "distribution", return_value=_distribution("soup-cli", "0.77.0")), \
+                mock.patch.object(_snapshot.importlib, "import_module") as imported:
+            self.assertTrue(_snapshot.install())
+            installed = module.SFTTrainerWrapper.setup
+            self.assertIs(installed.__wrapped__, original)
+            self.assertTrue(getattr(installed, _snapshot._SETUP_MARKER))
+            self.assertEqual(installed.__qualname__, original.__qualname__)
+            self.assertFalse(_snapshot.install())
+            self.assertIs(module.SFTTrainerWrapper.setup, installed)
+            imported.assert_not_called()
+
+    def test_setup_wrapper_scopes_native_arguments_return_and_exact_exception(self):
+        events = []
+        result, dataset, option = object(), object(), object()
+        sentinel = RuntimeError("original setup failed")
+
+        @contextmanager
+        def scope():
+            events.append("enter")
+            try:
+                yield True
+            finally:
+                events.append("exit")
+
+        def original(self, *args, **kwargs):
+            events.append((self, args, kwargs))
+            if kwargs.pop("fail", False):
+                raise sentinel
+            return result
+
+        wrapped = _snapshot._make_setup_wrapper(original)
+        probe = object()
+        with mock.patch.object(_snapshot, "reuse_transformers_package_metadata", side_effect=scope):
+            self.assertIs(wrapped(probe, dataset, option=option), result)
+            self.assertEqual(events, ["enter", (probe, (dataset,), {"option": option}), "exit"])
+            events.clear()
+            with self.assertRaises(RuntimeError) as failed:
+                wrapped(probe, dataset, fail=True)
+            self.assertIs(failed.exception, sentinel)
+            self.assertEqual(events[0], "enter")
+            self.assertEqual(events[-1], "exit")
+
+
 @unittest.skipUnless(os.environ.get("MEREY_NATIVE_METADATA_SNAPSHOT_PARITY") == "1",
                      "explicit separate CPU diagnostic with installed pinned packages")
 class NativeInstalledTests(unittest.TestCase):
-    def test_native_transformers_snapshot_matches_fresh_scan_and_native_trl_helpers(self):
+    def test_real_native_setup_prefix_hits_snapshot_before_model_seed_and_matches_fresh_scan(self):
         source = r'''
 import importlib
 import importlib.util
@@ -238,6 +334,7 @@ import json
 import sys
 import time
 import transformers
+import soup_cli.trainer.sft as sft
 
 tf = sys.modules["transformers.utils.import_utils"]
 source_mapping = tf.PACKAGE_DISTRIBUTION_MAPPING
@@ -245,25 +342,60 @@ spec = importlib.util.spec_from_file_location("_native_metadata_snapshot_check",
 helper = importlib.util.module_from_spec(spec)
 spec.loader.exec_module(helper)
 assert "trl.import_utils" not in sys.modules
+assert "trl" not in sys.modules, "Soup module import must not have imported TRL eagerly"
 original = helper.metadata.packages_distributions
 native_scan_callers = []
+snapshot_returns = []
+setup_calls = {"wrapper": 0, "native": 0}
+native_setup = sft.SFTTrainerWrapper.setup
+assert not hasattr(native_setup, "__wrapped__")
+assert helper.install(), "pinned native Soup setup guard did not qualify"
+wrapped_setup = sft.SFTTrainerWrapper.setup
+assert wrapped_setup.__wrapped__ is native_setup
+assert not helper.install(), "setup installation must be idempotent"
+assert sft.SFTTrainerWrapper.setup is wrapped_setup
 def profile(frame, event, arg):
     if event == "call" and frame.f_code is original.__code__:
         caller = frame.f_back
         native_scan_callers.append({"module": caller.f_globals.get("__name__"),
                                     "function": caller.f_code.co_name})
+    if event == "call" and frame.f_code is wrapped_setup.__code__:
+        setup_calls["wrapper"] += 1
+    if event == "call" and frame.f_code is native_setup.__code__:
+        setup_calls["native"] += 1
+    if (event == "return" and frame.f_globals is vars(helper)
+            and frame.f_code.co_name == "packages_distributions"
+            and frame.f_back is not None
+            and frame.f_back.f_globals.get("__name__") == "trl.import_utils"):
+        snapshot_returns.append(arg)
+class StopBeforeModel(Exception):
+    pass
+class Probe:
+    @property
+    def config(self):
+        # The unmodified setup imports TrainingArguments and TRL first, then
+        # reads config before apply_training_seed or any model construction.
+        raise StopBeforeModel()
 previous_profile = sys.getprofile()
 started = time.perf_counter()
+stopped = False
 try:
     sys.setprofile(profile)
-    with helper.reuse_transformers_package_metadata() as active:
-        assert active, "pinned native source guards did not qualify"
-        module = importlib.import_module("trl.import_utils")
+    try:
+        sft.SFTTrainerWrapper.setup(Probe(), {})
+    except StopBeforeModel:
+        stopped = True
 finally:
     sys.setprofile(previous_profile)
 import_seconds = time.perf_counter() - started
+assert stopped, "real setup did not reach the native config read"
+assert setup_calls == {"wrapper": 1, "native": 1}, setup_calls
+assert native_scan_callers == [], native_scan_callers
+assert len(snapshot_returns) == 1, "real setup missed the exact TRL replacement call"
 assert helper.metadata.packages_distributions is original
+module = sys.modules["trl.import_utils"]
 mapping = module.PACKAGE_DISTRIBUTION_MAPPING
+assert snapshot_returns[0] is mapping, "profiled replacement result must be TRL's actual mapping"
 assert type(mapping) is dict and mapping is not source_mapping
 assert mapping == source_mapping
 assert all(mapping[key] is not names for key, names in source_mapping.items())
@@ -281,15 +413,16 @@ for package in ("transformers", "torch", "packaging", "sys", "_merey_missing_met
         module.PACKAGE_DISTRIBUTION_MAPPING = mapping
     assert actual == native, package
     lookups[package] = actual
-assert not any(caller["module"] == "trl.import_utils" for caller in native_scan_callers)
 torch = sys.modules.get("torch")
 cuda_initialized = bool(torch is not None and torch.cuda.is_initialized())
 assert not cuda_initialized
 print(json.dumps({"native_mapping_equal": True, "independent_dict_and_lists": True,
                   "entries": len(mapping), "helper_lookups": lookups,
-                  "cuda_initialized": cuda_initialized, "trl_import_seconds": import_seconds,
+                  "cuda_initialized": cuda_initialized, "real_setup_prefix_seconds": import_seconds,
                   "fresh_native_scan_seconds": fresh_scan_seconds,
-                  "native_scan_callers_during_trl_import": native_scan_callers,
+                  "native_scan_callers_during_setup": native_scan_callers,
+                  "actual_snapshot_returns_to_trl": len(snapshot_returns), "setup_calls": setup_calls,
+                  "stopped_before_seed_and_model": stopped, "setup_idempotent": True,
                   "function_restored": helper.metadata.packages_distributions is original}))
 '''
         result = subprocess.run(

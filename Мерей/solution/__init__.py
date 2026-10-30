@@ -47,12 +47,11 @@ def apply():
     patch_bnb_matmul_4bit()  # ours: one-launch NF4 (double-quant) dequantization for 4-bit layers
     if UNPAD:
         patch_qwen2_causal_lm()  # ours: real tokens only, padded only for attention; fused loss
-        from .package_metadata_snapshot import reuse_transformers_package_metadata
-        # Preserve the native import order and package/version lookups. In the
-        # pinned installed environment Transformers already scanned this same
-        # metadata; give TRL an independent copy instead of rescanning it.
-        with reuse_transformers_package_metadata():
-            from .private_scope import install as install_private_scope
-            install_private_scope()
-            from .tokenization_map import install as install_tokenization_map
-            install_tokenization_map()
+        from .private_scope import install as install_private_scope
+        install_private_scope()
+        from .tokenization_map import install as install_tokenization_map
+        install_tokenization_map()
+        # Soup imports TRL later in setup(). Preserve that import order and
+        # reuse the native same-process metadata only around the real call.
+        from .package_metadata_snapshot import install as install_package_metadata
+        install_package_metadata()
