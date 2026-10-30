@@ -1,14 +1,26 @@
-"""Original row-wise Qwen2 RMSNorm for the frozen k-bit norm weights.
+"""Fused RMSNorm for Qwen2, forward and backward in Triton, alone or with the residual add before it.
 
-This fuses the float32 casts, square/mean, scaling, and weight multiplication.
-Backward retains the original input, frozen weight, and one inverse RMS per
-row. The forward has no full-size float32 conversion or elementwise temporaries.
+Residual fusion and integration: teammate Vladimir, source commit
+987da36e1efa90652e1a7f8c48afef50685dbc40. Cast-aware backward arithmetic:
+Merey's original verified kernel, commit b7c406dea7dbdc379149910efe044dccf155d083.
 
-Semantics follow transformers v5.16.1 Qwen2RMSNorm, including the intermediate
-cast *before* multiplying the norm weight. No third-party kernel code is used.
+Qwen2RMSNorm in PyTorch is six launches each way (cast, pow, mean, rsqrt, mul, mul), and every one
+reads and writes the whole fp32 hidden state. Here one program normalizes one row (one token) in
+registers: one read of x and one write of y forward, one read of x and dy and one write of dx
+backward. Only x (which autograd keeps alive anyway as the residual) and one fp32 rstd per row are
+saved for backward, instead of PyTorch's fp32 intermediates.
+
+add_rmsnorm also takes the residual add that precedes the post-attention norm in every decoder
+layer (`h = residual + attn_out; y = norm(h)`): one launch reads both inputs and writes h and y.
+Its backward adds the residual stream's own gradient to the norm's and writes it in both input
+dtypes, which is what autograd does for the add.
+
+The math follows transformers 5.16.1 exactly, rounding included:
+    x_hat = x.float() * rsqrt(mean(x.float()**2) + eps)
+    y = weight * x_hat.to(x.dtype)          # dtype: promote(weight, x), as in PyTorch
+Idea: the standard fused RMSNorm (as in Triton's layer-norm tutorial,
+https://triton-lang.org/main/getting-started/tutorials/05-layer-norm.html); code written by us.
 """
-
-import functools
 
 import torch
 import triton
@@ -16,107 +28,217 @@ import triton.language as tl
 
 
 @triton.jit
-def soup_rmsnorm_forward_kernel(X, W, Y, R, N: tl.constexpr, EPS: tl.constexpr,
-                                BLOCK: tl.constexpr):
+def rmsnorm_fwd_kernel(X, W, Y, RSTD, stride_x, stride_y, N, eps, BLOCK_N: tl.constexpr):
     row = tl.program_id(0)
-    col = tl.arange(0, BLOCK)
-    x = tl.load(X + row * N + col, col < N, 0).to(tl.float32)
-    weight = tl.load(W + col, col < N, 0).to(tl.float32)
-    inverse_rms = tl.rsqrt(tl.sum(x * x, axis=0) / N + EPS)
-    # Qwen casts the normalized value back to the input dtype before the
-    # multiplication, even when k-bit preparation keeps W and Y in float32.
-    normalized = (x * inverse_rms).to(X.dtype.element_ty).to(tl.float32)
-    tl.store(Y + row * N + col, normalized * weight, col < N)
-    tl.store(R + row, inverse_rms)
+    cols = tl.arange(0, BLOCK_N)
+    mask = cols < N
+    x = tl.load(X + row * stride_x + cols, mask=mask, other=0.0).to(tl.float32)
+    rstd = tl.rsqrt(tl.sum(x * x, axis=0) / N + eps)
+    tl.store(RSTD + row, rstd)
+    x_hat = (x * rstd).to(X.dtype.element_ty)  # the .to(input_dtype) of the PyTorch version
+    w = tl.load(W + cols, mask=mask, other=0.0).to(tl.float32)
+    y = w * x_hat.to(tl.float32)
+    tl.store(Y + row * stride_y + cols, y.to(Y.dtype.element_ty), mask=mask)
 
 
 @triton.jit
-def soup_rmsnorm_backward_kernel(DY, X, W, R, DX, N: tl.constexpr,
-                                 BLOCK: tl.constexpr):
+def rmsnorm_bwd_kernel(DY, X, W, RSTD, DX, stride_dy, stride_x, stride_dx, N,
+                       BLOCK_N: tl.constexpr):
     row = tl.program_id(0)
-    col = tl.arange(0, BLOCK)
-    mask = col < N
-    x = tl.load(X + row * N + col, mask, 0).to(tl.float32)
-    weight = tl.load(W + col, mask, 0).to(tl.float32)
-    dy = tl.load(DY + row * N + col, mask, 0).to(tl.float32)
-    inverse_rms = tl.load(R + row)
-    # MulBackward first returns the gradient of the cast activation in its
-    # original dtype. CastBackward then widens it for the float32 RMS graph.
-    g = (dy * weight).to(X.dtype.element_ty).to(tl.float32)
+    cols = tl.arange(0, BLOCK_N)
+    mask = cols < N
+    dy = tl.load(DY + row * stride_dy + cols, mask=mask, other=0.0).to(tl.float32)
+    x = tl.load(X + row * stride_x + cols, mask=mask, other=0.0).to(tl.float32)
+    w = tl.load(W + cols, mask=mask, other=0.0).to(tl.float32)
+    rstd = tl.load(RSTD + row)
+    # Native MulBackward casts the gradient to the normalized input's dtype
+    # before CastBackward widens it into the float32 normalization graph.
+    g = (dy * w).to(X.dtype.element_ty).to(tl.float32)
     projection = tl.sum(g * x, axis=0)
-    variance_grad = projection * (-0.5 * inverse_rms * inverse_rms * inverse_rms)
-    dx = g * inverse_rms + (2.0 * x) * (variance_grad / N)
-    tl.store(DX + row * N + col, dx, mask)
+    variance_grad = projection * (-0.5 * rstd * rstd * rstd)
+    dx = g * rstd + (2.0 * x) * (variance_grad / N)
+    tl.store(DX + row * stride_dx + cols, dx.to(DX.dtype.element_ty), mask=mask)
 
 
-class _FrozenRMSNorm(torch.autograd.Function):
+@triton.jit
+def add_rmsnorm_fwd_kernel(R, D, W, H, Y, RSTD, stride_r, stride_d, stride_h, stride_y, N, eps,
+                           BLOCK_N: tl.constexpr):
+    row = tl.program_id(0)
+    cols = tl.arange(0, BLOCK_N)
+    mask = cols < N
+    r = tl.load(R + row * stride_r + cols, mask=mask, other=0.0).to(tl.float32)
+    d = tl.load(D + row * stride_d + cols, mask=mask, other=0.0).to(tl.float32)
+    h = (r + d).to(H.dtype.element_ty)  # residual + attn_out in their promoted dtype
+    tl.store(H + row * stride_h + cols, h, mask=mask)
+    x = h.to(tl.float32)
+    rstd = tl.rsqrt(tl.sum(x * x, axis=0) / N + eps)
+    tl.store(RSTD + row, rstd)
+    x_hat = (x * rstd).to(H.dtype.element_ty)
+    w = tl.load(W + cols, mask=mask, other=0.0).to(tl.float32)
+    y = w * x_hat.to(tl.float32)
+    tl.store(Y + row * stride_y + cols, y.to(Y.dtype.element_ty), mask=mask)
+
+
+@triton.jit
+def add_rmsnorm_bwd_kernel(DY, DH, X, W, RSTD, DX, DD, stride_dy, stride_dh, stride_x, stride_dx,
+                           stride_dd, N, BLOCK_N: tl.constexpr, HAS_DH: tl.constexpr):
+    row = tl.program_id(0)
+    cols = tl.arange(0, BLOCK_N)
+    mask = cols < N
+    dy = tl.load(DY + row * stride_dy + cols, mask=mask, other=0.0).to(tl.float32)
+    x = tl.load(X + row * stride_x + cols, mask=mask, other=0.0).to(tl.float32)
+    w = tl.load(W + cols, mask=mask, other=0.0).to(tl.float32)
+    rstd = tl.load(RSTD + row)
+    g = (dy * w).to(X.dtype.element_ty).to(tl.float32)
+    projection = tl.sum(g * x, axis=0)
+    variance_grad = projection * (-0.5 * rstd * rstd * rstd)
+    dx = g * rstd + (2.0 * x) * (variance_grad / N)
+    # The norm returns h.dtype before autograd joins h's residual branch.
+    dx = dx.to(X.dtype.element_ty).to(tl.float32)
+    if HAS_DH:  # h also feeds the next residual add: its gradient joins the norm's
+        dx += tl.load(DH + row * stride_dh + cols, mask=mask, other=0.0).to(tl.float32)
+    dx = dx.to(X.dtype.element_ty).to(tl.float32)
+    tl.store(DX + row * stride_dx + cols, dx.to(DX.dtype.element_ty), mask=mask)
+    # the same gradient for the attention output, in its own dtype (autograd's add backward)
+    tl.store(DD + row * stride_dd + cols, dx.to(DD.dtype.element_ty), mask=mask)
+
+
+def _launch_config(n):
+    block = triton.next_power_of_2(n)
+    return block, min(max(block // 256, 1), 16)
+
+
+def _rows(t, n):
+    t2 = t.reshape(-1, n)
+    return t2 if t2.stride(-1) == 1 else t2.contiguous()
+
+
+def supported(*tensors):
+    """The dtypes and sizes these kernels are written for (bf16 has no T4 path here)."""
+    return all(t.is_cuda and t.dtype in (torch.float32, torch.float16) for t in tensors) and \
+        tensors[0].shape[-1] <= 16384
+
+
+class RMSNorm(torch.autograd.Function):
     @staticmethod
     def forward(ctx, x, weight, eps):
-        width = x.shape[-1]
-        rows = x.numel() // width
-        out_dtype = torch.promote_types(x.dtype, weight.dtype)
-        out = torch.empty(x.shape, device=x.device, dtype=out_dtype)
-        inverse_rms = torch.empty((rows,), device=x.device, dtype=torch.float32)
-        block = triton.next_power_of_2(width)
-        warps = 4 if block <= 2048 else 8
-        soup_rmsnorm_forward_kernel[(rows,)](
-            x, weight, out, inverse_rms, width, float(eps), block,
-            num_warps=warps, enable_fp_fusion=False,
-        )
-        ctx.save_for_backward(x, weight, inverse_rms)
-        ctx.width, ctx.block, ctx.warps = width, block, warps
-        return out
+        shape, n = x.shape, x.shape[-1]
+        x2 = x.reshape(-1, n)
+        if x2.stride(-1) != 1:
+            x2 = x2.contiguous()
+        weight = weight.contiguous()
+        y = torch.empty(x2.shape, device=x.device, dtype=torch.promote_types(weight.dtype, x.dtype))
+        rstd = torch.empty(x2.shape[0], device=x.device, dtype=torch.float32)
+        block, warps = _launch_config(n)
+        rmsnorm_fwd_kernel[(x2.shape[0],)](x2, weight, y, rstd, x2.stride(0), y.stride(0), n, eps,
+                                           BLOCK_N=block, num_warps=warps, enable_fp_fusion=False)
+        ctx.save_for_backward(x2, weight, rstd)
+        ctx.shape = shape
+        return y.reshape(shape)
 
     @staticmethod
-    def backward(ctx, grad_out):
-        x, weight, inverse_rms = ctx.saved_tensors
-        grad_x = torch.empty_like(x)
-        soup_rmsnorm_backward_kernel[(x.numel() // ctx.width,)](
-            grad_out.contiguous(), x, weight, inverse_rms, grad_x,
-            ctx.width, ctx.block, num_warps=ctx.warps, enable_fp_fusion=False,
-        )
-        return grad_x, None, None
+    def backward(ctx, dy):
+        x2, weight, rstd = ctx.saved_tensors
+        n = x2.shape[-1]
+        dy2 = dy.reshape(-1, n)
+        if dy2.stride(-1) != 1:
+            dy2 = dy2.contiguous()
+        dx = torch.empty(x2.shape, device=x2.device, dtype=x2.dtype)
+        block, warps = _launch_config(n)
+        rmsnorm_bwd_kernel[(x2.shape[0],)](dy2, x2, weight, rstd, dx, dy2.stride(0), x2.stride(0),
+                                           dx.stride(0), n, BLOCK_N=block, num_warps=warps,
+                                           enable_fp_fusion=False)
+        dw = None
+        if ctx.needs_input_grad[1]:  # frozen under LoRA; kept so the function stays general
+            x_hat = (x2.float() * rstd[:, None]).to(x2.dtype)
+            dw = (dy2.float() * x_hat.float()).sum(0).to(weight.dtype)
+        return dx.reshape(ctx.shape), dw, None
 
 
-def _supported(x, weight):
-    return (
-        isinstance(x, torch.Tensor)
-        and isinstance(weight, torch.Tensor)
-        and x.is_cuda and weight.is_cuda
-        and x.device == weight.device
-        and x.ndim >= 1 and x.numel() > 0
-        and x.is_contiguous() and weight.is_contiguous()
-        and weight.ndim == 1 and weight.numel() == x.shape[-1]
-        and 0 < x.shape[-1] <= 8192
-        and x.dtype in (torch.float16, torch.float32)
-        and weight.dtype in (torch.float16, torch.float32)
-        and not weight.requires_grad
-    )
+class AddRMSNorm(torch.autograd.Function):
+    """(h, y) = (residual + delta, norm(residual + delta)) in one launch each way."""
+
+    @staticmethod
+    def forward(ctx, residual, delta, weight, eps):
+        shape, n = residual.shape, residual.shape[-1]
+        r2, d2 = _rows(residual, n), _rows(delta, n)
+        weight = weight.contiguous()
+        h_dtype = torch.promote_types(residual.dtype, delta.dtype)
+        h = torch.empty(r2.shape, device=r2.device, dtype=h_dtype)
+        y = torch.empty(r2.shape, device=r2.device, dtype=torch.promote_types(weight.dtype, h_dtype))
+        rstd = torch.empty(r2.shape[0], device=r2.device, dtype=torch.float32)
+        block, warps = _launch_config(n)
+        add_rmsnorm_fwd_kernel[(r2.shape[0],)](r2, d2, weight, h, y, rstd, r2.stride(0), d2.stride(0),
+                                               h.stride(0), y.stride(0), n, eps, BLOCK_N=block,
+                                               num_warps=warps, enable_fp_fusion=False)
+        ctx.save_for_backward(h, weight, rstd)
+        ctx.shape, ctx.dtypes = shape, (residual.dtype, delta.dtype)
+        return h.view(shape), y.view(shape)
+
+    @staticmethod
+    def backward(ctx, dh, dy):
+        h, weight, rstd = ctx.saved_tensors
+        n = h.shape[-1]
+        r_dtype, d_dtype = ctx.dtypes
+        if dy is None:  # y unused: the add's gradient only
+            dh = torch.zeros(h.shape, device=h.device, dtype=h.dtype) if dh is None else dh
+            return dh.to(r_dtype).view(ctx.shape), dh.to(d_dtype).view(ctx.shape), None, None
+        dy2 = _rows(dy, n)
+        dh2 = _rows(dh, n) if dh is not None else dy2
+        dx = torch.empty(h.shape, device=h.device, dtype=r_dtype)
+        dd = torch.empty(h.shape, device=h.device, dtype=d_dtype)
+        block, warps = _launch_config(n)
+        add_rmsnorm_bwd_kernel[(h.shape[0],)](dy2, dh2, h, weight, rstd, dx, dd, dy2.stride(0),
+                                              dh2.stride(0), h.stride(0), dx.stride(0), dd.stride(0),
+                                              n, BLOCK_N=block, HAS_DH=dh is not None,
+                                              num_warps=warps, enable_fp_fusion=False)
+        dw = None
+        if ctx.needs_input_grad[2]:
+            x_hat = (h.float() * rstd[:, None]).to(h.dtype)
+            dw = (dy2.float() * x_hat.float()).sum(0).to(weight.dtype)
+        return dx.view(ctx.shape), dd.view(ctx.shape), dw, None
 
 
-def frozen_rmsnorm(x, weight, eps=1e-6):
-    """Match Qwen's RMSNorm; use eager autograd outside the supported path."""
-    if not _supported(x, weight):
-        x_float = x.float()
-        normalized = x_float * torch.rsqrt(x_float.square().mean(-1, keepdim=True) + eps)
-        return weight * normalized.to(x.dtype)
-    return _FrozenRMSNorm.apply(x, weight, eps)
+def rmsnorm(x, weight, eps):
+    return RMSNorm.apply(x, weight, eps)
+
+
+def add_rmsnorm(residual, delta, weight, eps):
+    return AddRMSNorm.apply(residual, delta, weight, eps)
+
+
+def make_rmsnorm_forward(original):
+    def forward(self, hidden_states):
+        if not supported(hidden_states):
+            return original(self, hidden_states)
+        return rmsnorm(hidden_states, self.weight, self.variance_epsilon)
+
+    return forward
 
 
 def patch_qwen2_rmsnorm():
-    """Patch only the real Qwen2 class; repeated apply() calls are harmless."""
-    from transformers.models.qwen2.modeling_qwen2 import Qwen2RMSNorm
+    """Send Qwen2RMSNorm.forward through the fused kernel (a class patch, like the example)."""
+    from transformers.models.qwen2 import modeling_qwen2
 
-    original = Qwen2RMSNorm.forward
-    if getattr(original, "_soup_original_rmsnorm", False):
-        return
+    cls = modeling_qwen2.Qwen2RMSNorm
+    cls.forward = make_rmsnorm_forward(cls.forward)
 
-    @functools.wraps(original)
-    def forward(self, hidden_states):
-        weight = getattr(self, "weight", None)
-        if not _supported(hidden_states, weight):
-            return original(self, hidden_states)
-        return _FrozenRMSNorm.apply(hidden_states, weight, self.variance_epsilon)
 
-    forward._soup_original_rmsnorm = True
-    Qwen2RMSNorm.forward = forward
+def warmup(n=1536, parts=("fwd", "bwd", "add_fwd", "add_bwd", "add_bwd_no_dh")):
+    """Compile the variants Qwen2.5-1.5B launches (fp32 hidden state, fp32 weights, fp16
+    attention output) ahead of the first step; see warmup.py."""
+    f32, f16 = torch.float32, torch.float16
+    block, warps = _launch_config(n)
+    cfg = dict(grid=(1,), BLOCK_N=block, num_warps=warps, enable_fp_fusion=False)
+    if "fwd" in parts:
+        rmsnorm_fwd_kernel.warmup(f32, f32, f32, f32, n, n, n, 1e-6, **cfg)
+    if "add_fwd" in parts:
+        add_rmsnorm_fwd_kernel.warmup(f32, f16, f32, f32, f32, f32, n, n, n, n, n, 1e-6, **cfg)
+    if "bwd" in parts:
+        rmsnorm_bwd_kernel.warmup(f32, f32, f32, f32, f32, n, n, n, n, **cfg)
+    if "add_bwd" in parts:
+        add_rmsnorm_bwd_kernel.warmup(f32, f32, f32, f32, f32, f32, f16, n, n, n, n, n, n,
+                                      HAS_DH=True, **cfg)
+    if "add_bwd_no_dh" in parts:  # an unused residual output (autograd usually passes zeros)
+        add_rmsnorm_bwd_kernel.warmup(f32, f32, f32, f32, f32, f32, f16, n, n, n, n, n, n,
+                                      HAS_DH=False, **cfg)
