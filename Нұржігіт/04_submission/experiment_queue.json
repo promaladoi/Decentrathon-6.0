@@ -2,16 +2,6 @@
   "schema": 1,
   "jobs": [
     {
-      "version": "v23",
-      "commit": "d8ac0224b47c67e92fa9e7e2798cf7840e65314e",
-      "nf4_analysis": false
-    },
-    {
-      "version": "v24",
-      "commit": "053c9c4177b36aa02e7b2d97e8b6bb3e30a82d8b",
-      "nf4_analysis": false
-    },
-    {
       "version": "v25",
       "commit": "fd296f45fac9cb5f10182fe6439941b891bbe65f",
       "nf4_analysis": false
@@ -32,13 +22,13 @@
       "nf4_analysis": false
     },
     {
-      "version": "v30",
-      "commit": "a688908060d6190cc65e75089758cbaf2d284154",
+      "version": "v32",
+      "commit": "b33081a7f73eee21c0101f3ae865581f000fb68a",
       "nf4_analysis": false
     },
     {
-      "version": "v31",
-      "commit": "f417bdc91996cd9522ef2465da2b4e8fa2a9380d",
+      "version": "v33",
+      "commit": "7d70da7438d419be834f51da5aaee3154799519d",
       "nf4_analysis": false
     }
   ]

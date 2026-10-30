@@ -1,0 +1,14 @@
+{
+  "kind": "observed Kaggle research-test output, not a training result",
+  "code_commit": "9b0d96ba1993663d706029b086bfaf128bd3c70f",
+  "tests_passed": 12,
+  "tests_failed": 4,
+  "failing_shape": [833, 1536, 8960],
+  "mismatched_entries_per_configuration": 2,
+  "entries_per_configuration": 1279488,
+  "largest_observed_absolute_error": 0.00390625,
+  "initial_absolute_tolerance": 0.003,
+  "global_relative_l2_bound_passed": 0.001,
+  "kernel_ever_enabled_for_training": false,
+  "next_verification": "retain global L2 bound, check partial-product FP16 ulps, and assert an exact cancellation example that detects combining before rounding"
+}

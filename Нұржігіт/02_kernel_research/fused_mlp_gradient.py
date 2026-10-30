@@ -10,8 +10,8 @@ import triton
 import triton.language as tl
 
 
-@triton.jit
-def mlp_two_product_gradient(DG,DU,WG,WU,DX,M:tl.constexpr,N:tl.constexpr,K:tl.constexpr,
+@triton.jit(do_not_specialize=['M'])
+def mlp_two_product_gradient(DG,DU,WG,WU,DX,M,N:tl.constexpr,K:tl.constexpr,
                              BM:tl.constexpr,BN:tl.constexpr,BK:tl.constexpr,
                              GROUP:tl.constexpr):
     pid=tl.program_id(0)
