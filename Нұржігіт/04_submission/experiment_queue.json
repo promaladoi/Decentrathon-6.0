@@ -25,6 +25,11 @@
       "version": "v27",
       "commit": "7efba21069342a4f1e10e068328f2768e86691f5",
       "nf4_analysis": false
+    },
+    {
+      "version": "v28",
+      "commit": "4aaaade07f255269fb8ef8cf7a6b6007d95120b7",
+      "nf4_analysis": false
     }
   ]
 }
