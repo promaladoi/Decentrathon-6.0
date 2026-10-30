@@ -1,9 +1,47 @@
 {
   "version": "v48",
   "source_commit": "c8dc9959df86f6e839dec9c6b3628b816f1148c9",
-  "status": "GPU validation running; not selected",
-  "production": "verified v45 remains selected",
-  "target_seconds": 30,
-  "max_peak_mib": 7151,
-  "quality": "reported loss may not increase; all ten original checks required"
+  "status": "measured_alternative",
+  "original_checks": 10,
+  "original_archive_locally_verified": true,
+  "summary": {
+    "base": {
+      "ok": true,
+      "runs": 2,
+      "wall_s": 81.01,
+      "gpu_peak_mib": 14345,
+      "train_loop_s": 58.59,
+      "eval_loss": 2.04968
+    },
+    "solution": {
+      "ok": true,
+      "runs": 2,
+      "wall_s": 46.59,
+      "gpu_peak_mib": 4115,
+      "train_loop_s": 26.96,
+      "eval_loss": 2.04964
+    },
+    "ratios": {
+      "speedup": 1.7388,
+      "memory_ratio": 3.486,
+      "quality_delta_pct": -0.002
+    }
+  },
+  "user_constraints": {
+    "original_ten_passed": true,
+    "max_solution_peak_mib": 4115,
+    "memory_limit_mib": 7151,
+    "every_run_within_memory_limit": true,
+    "reported_eval_loss_nonincreasing": true,
+    "base_eval_loss": 2.04968,
+    "solution_eval_loss": 2.04964,
+    "median_total_seconds": 46.59,
+    "target_total_seconds": 30,
+    "target_met": false,
+    "eligible_within_memory_and_quality": true,
+    "all_requested_constraints_met": false,
+    "quality_note": "Compares the reported rounded evaluation loss; original loss-curve checks remain required."
+  },
+  "selected": false,
+  "selection_reference": "../../PUBLICATION_PROOF.json"
 }
