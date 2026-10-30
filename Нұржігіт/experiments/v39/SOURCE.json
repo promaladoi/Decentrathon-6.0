@@ -1,7 +1,7 @@
 {
   "source_commit": "0a05a86188ddb74651ea34291478020dce464d0c",
   "source_branch": "codex/kernel-v1",
-  "status": "experimental; measurement pending",
+  "status": "measured; production not replaced",
   "max_memory_mib": 7151,
   "target_total_seconds": 30,
   "files": [
@@ -59,5 +59,24 @@
     "solution/tokenizer_fingerprint.py",
     "solution/varlen_attention.py",
     "solution/vocab.py"
-  ]
+  ],
+  "measured_source_commit": "c3f4035c5fcfafbae8bb57cf6dc5bbfdfb5617a3",
+  "original_checks_passed": 10,
+  "user_constraints": {
+    "original_ten_passed": true,
+    "max_solution_peak_mib": 7171,
+    "memory_limit_mib": 7151,
+    "every_run_within_memory_limit": false,
+    "reported_eval_loss_nonincreasing": false,
+    "base_eval_loss": 2.04963,
+    "solution_eval_loss": 2.0497,
+    "median_total_seconds": 44.48,
+    "target_total_seconds": 30,
+    "target_met": false,
+    "eligible_within_memory_and_quality": false,
+    "all_requested_constraints_met": false,
+    "quality_note": "Compares the reported rounded evaluation loss; original loss-curve checks remain required.",
+    "result_sha256": "cd137b703e6163bcdf2d1a1ed6aa424ab4ea2976ecdd86583623c5b20454790e",
+    "solution_sha256": "d4d3d65e66e4297a86ffa6fbcebd8320629f0633865a44ba00c2421486628fd4"
+  }
 }
