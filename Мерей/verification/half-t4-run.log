@@ -1,0 +1,771 @@
+Kaggle rendered log table rows; version363823158; snapshot c1b9cba94e65421fc0b204c097b725509edd32587c54db5a4b1a9d28961cc7d4
+Time#Log Message
+11.5s10.00s - Debugger warning: It seems that frozen modules are being used, which may
+
+11.5s20.00s - make the debugger miss breakpoints. Please pass -Xfrozen_modules=off
+
+11.5s30.00s - to python to disable frozen modules.
+
+11.5s40.00s - Note: Debugging will proceed. Set PYDEVD_DISABLE_FILE_VALIDATION=1 to disable this validation.
+
+12.3s50.00s - Debugger warning: It seems that frozen modules are being used, which may
+
+12.3s60.00s - make the debugger miss breakpoints. Please pass -Xfrozen_modules=off
+
+12.3s70.00s - to python to disable frozen modules.
+
+12.3s80.00s - Note: Debugging will proceed. Set PYDEVD_DISABLE_FILE_VALIDATION=1 to disable this validation.
+
+13.6s9{'mode': 'half_input_ce_candidate', 'snapshot_sha256': 'c1b9cba94e65421fc0b204c097b725509edd32587c54db5a4b1a9d28961cc7d4'}
+
+13.8s10Tesla T4
+
+13.8s11Tesla T4
+
+13.8s12
+
+15.0s13Found existing installation: torchao 0.10.0
+
+15.1s14Uninstalling torchao-0.10.0:
+
+15.9s15  Successfully uninstalled torchao-0.10.0
+
+24.0s16{'source': 'development snapshot', 'sha256': 'c1b9cba94e65421fc0b204c097b725509edd32587c54db5a4b1a9d28961cc7d4', 'starter_commit': 'c7c2fcd15972ce8b898d8d3ff732ee192c817ceb', 'files': 39}
+
+24.0s17{'soup-cli': '0.77.0', 'torch': '2.11.0+cu128', 'triton': '3.6.0', 'transformers': '5.16.1', 'peft': '0.20.0', 'trl': '0.29.1', 'bitsandbytes': '0.50.2', 'accelerate': '1.14.0'}
+
+110.7s18.............................................................................................s.s......................................... [ 36%]
+
+110.7s19....... [ 36%]
+
+118.5s20............................................................................................................................................... [ 73%]
+
+118.7s21.. [ 73%]
+
+124.4s22........................................................................................                      [100%]
+
+124.4s23=============================== warnings summary ===============================
+
+124.4s24solution/test_half_loss.py: 14 warnings
+
+124.4s25  /usr/local/lib/python3.13/dist-packages/torch/jit/_script.py:365: DeprecationWarning: `torch.jit.script_method` is deprecated. Please switch to `torch.compile` or `torch.export`.
+
+124.4s26    warnings.warn(
+
+124.4s27
+
+124.4s28-- Docs: https://docs.pytest.org/en/stable/how-to/capture-warnings.html
+
+124.4s29194 passed, 1 skipped, 14 warnings in 98.23s (0:01:38)
+
+124.4s30.............                      [100%]
+
+124.4s31=============================== warnings summary ===============================
+
+124.4s32solution/test_half_loss.py: 14 warnings
+
+124.4s33  /usr/local/lib/python3.13/dist-packages/torch/jit/_script.py:365: DeprecationWarning: `torch.jit.script_method` is deprecated. Please switch to `torch.compile` or `torch.export`.
+
+124.4s34    warnings.warn(
+
+124.4s35
+
+124.4s36-- Docs: https://docs.pytest.org/en/stable/how-to/capture-warnings.html
+
+124.4s37194 passed, 1 skipped, 14 warnings in 98.23s (0:01:38)
+
+144.6s38.......................................................................................................................... [ 91%]
+
+144.6s39.......                                                                  [100%]
+
+144.6s40=============================== warnings summary ===============================
+
+144.6s41../../../usr/local/lib/python3.13/dist-packages/torch/jit/_script.py:365: 14 warnings
+
+144.6s42  /usr/local/lib/python3.13/dist-packages/torch/jit/_script.py:365: DeprecationWarning: `torch.jit.script_method` is deprecated. Please switch to `torch.compile` or `torch.export`.
+
+144.6s43    warnings.warn(
+
+144.6s44
+
+144.6s45-- Docs: https://docs.pytest.org/en/stable/how-to/capture-warnings.html
+
+144.6s4679 passed, 14 warnings in 8.49s
+
+144.7s47...................... [ 91%]
+
+144.7s48.......                                                                  [100%]
+
+144.7s49=============================== warnings summary ===============================
+
+144.7s50../../../usr/local/lib/python3.13/dist-packages/torch/jit/_script.py:365: 14 warnings
+
+144.7s51  /usr/local/lib/python3.13/dist-packages/torch/jit/_script.py:365: DeprecationWarning: `torch.jit.script_method` is deprecated. Please switch to `torch.compile` or `torch.export`.
+
+144.7s52    warnings.warn(
+
+144.7s53
+
+144.7s54-- Docs: https://docs.pytest.org/en/stable/how-to/capture-warnings.html
+
+144.7s5579 passed, 14 warnings in 8.49s
+
+152.7s56{
+
+152.7s57  "kind": "synthetic_microbenchmark_not_training_score",
+
+152.7s58  "device": "Tesla T4",
+
+152.7s59  "torch": "2.11.0+cu128",
+
+152.7s60  "rows": 256,
+
+152.7s61  "vocabulary": 151936,
+
+152.7s62  "repeats": 20,
+
+152.7s63  "timing": "CUDA events after 3 warmups; excludes compilation",
+
+152.7s64  "memory": "extra PyTorch allocated peak, not official nvidia-smi peak",
+
+152.7s65  "cross_entropy_forward_backward": {
+
+152.7s66    "base": {
+
+152.7s67      "median_ms": 5.696799993515015,
+
+152.7s68      "peak_extra_allocated_mib": 445.1259765625
+
+152.7s69    },
+
+152.7s70    "solution": {
+
+152.7s71      "median_ms": 2.2736480236053467,
+
+152.7s72      "peak_extra_allocated_mib": 148.37841796875
+
+152.7s73    }
+
+152.7s74  },
+
+152.7s75  "entropy": {
+
+152.7s76    "base": {
+
+152.7s77      "median_ms": 8.855167865753174,
+
+152.7s78      "peak_extra_allocated_mib": 296.7509765625
+
+152.7s79    },
+
+152.7s80    "solution": {
+
+152.7s81      "median_ms": 0.7059360146522522,
+
+152.7s82      "peak_extra_allocated_mib": 0.1142578125
+
+152.7s83    }
+
+152.7s84  },
+
+152.7s85  "rmsnorm_forward_backward": {
+
+152.7s86    "base": {
+
+152.7s87      "median_ms": 0.5490559935569763,
+
+152.7s88      "peak_extra_allocated_mib": 9.0
+
+152.7s89    },
+
+152.7s90    "solution": {
+
+152.7s91      "median_ms": 0.3638399988412857,
+
+152.7s92      "peak_extra_allocated_mib": 3.0009765625
+
+152.7s93    }
+
+152.7s94  }
+
+152.7s95}
+
+152.9s96{
+
+152.9s97  "kind": "synthetic_microbenchmark_not_training_score",
+
+152.9s98  "device": "Tesla T4",
+
+152.9s99  "torch": "2.11.0+cu128",
+
+152.9s100  "rows": 256,
+
+152.9s101  "vocabulary": 151936,
+
+152.9s102  "repeats": 20,
+
+152.9s103  "timing": "CUDA events after 3 warmups; excludes compilation",
+
+152.9s104  "memory": "extra PyTorch allocated peak, not official nvidia-smi peak",
+
+152.9s105  "cross_entropy_forward_backward": {
+
+152.9s106    "base": {
+
+152.9s107      "median_ms": 5.696799993515015,
+
+152.9s108      "peak_extra_allocated_mib": 445.1259765625
+
+152.9s109    },
+
+152.9s110    "solution": {
+
+152.9s111      "median_ms": 2.2736480236053467,
+
+152.9s112      "peak_extra_allocated_mib": 148.37841796875
+
+152.9s113    }
+
+152.9s114  },
+
+152.9s115  "entropy": {
+
+152.9s116    "base": {
+
+152.9s117      "median_ms": 8.855167865753174,
+
+152.9s118      "peak_extra_allocated_mib": 296.7509765625
+
+152.9s119    },
+
+152.9s120    "solution": {
+
+152.9s121      "median_ms": 0.7059360146522522,
+
+152.9s122      "peak_extra_allocated_mib": 0.1142578125
+
+152.9s123    }
+
+152.9s124  },
+
+152.9s125  "rmsnorm_forward_backward": {
+
+152.9s126    "base": {
+
+152.9s127      "median_ms": 0.5490559935569763,
+
+152.9s128      "peak_extra_allocated_mib": 9.0
+
+152.9s129    },
+
+152.9s130    "solution": {
+
+152.9s131      "median_ms": 0.3638399988412857,
+
+152.9s132      "peak_extra_allocated_mib": 3.0009765625
+
+152.9s133    }
+
+152.9s134  }
+
+152.9s135}
+
+158.9s136{
+
+158.9s137  "kind": "synthetic_half_input_ce_not_training_score",
+
+158.9s138  "device": "Tesla T4",
+
+158.9s139  "memory": "extra PyTorch allocated peak, not full nvidia-smi training peak",
+
+158.9s140  "cases": [
+
+158.9s141    {
+
+158.9s142      "rows": 256,
+
+158.9s143      "vocab": 151936,
+
+158.9s144      "verified_explicit_float_upcast": {
+
+158.9s145        "median_ms": 4.4798078536987305,
+
+158.9s146        "peak_extra_allocated_mib": 296.75341796875
+
+158.9s147      },
+
+158.9s148      "half_input_float32_math": {
+
+158.9s149        "median_ms": 1.2645919919013977,
+
+158.9s150        "peak_extra_allocated_mib": 74.19091796875
+
+158.9s151      }
+
+158.9s152    },
+
+158.9s153    {
+
+158.9s154      "rows": 1024,
+
+158.9s155      "vocab": 151936,
+
+158.9s156      "verified_explicit_float_upcast": {
+
+158.9s157        "median_ms": 16.882176399230957,
+
+158.9s158        "peak_extra_allocated_mib": 1187.00927734375
+
+158.9s159      },
+
+158.9s160      "half_input_float32_math": {
+
+158.9s161        "median_ms": 4.329855918884277,
+
+158.9s162        "peak_extra_allocated_mib": 296.75927734375
+
+158.9s163      }
+
+158.9s164    },
+
+158.9s165    {
+
+158.9s166      "rows": 2048,
+
+158.9s167      "vocab": 151936,
+
+158.9s168      "verified_explicit_float_upcast": {
+
+158.9s169        "median_ms": 32.442543029785156,
+
+158.9s170        "peak_extra_allocated_mib": 2374.01708984375
+
+158.9s171      },
+
+158.9s172      "half_input_float32_math": {
+
+158.9s173        "median_ms": 8.422240257263184,
+
+158.9s174        "peak_extra_allocated_mib": 593.51708984375
+
+158.9s175      }
+
+158.9s176    }
+
+158.9s177  ]
+
+158.9s178}
+
+159.1s179{
+
+159.1s180  "kind": "synthetic_half_input_ce_not_training_score",
+
+159.1s181  "device": "Tesla T4",
+
+159.1s182  "memory": "extra PyTorch allocated peak, not full nvidia-smi training peak",
+
+159.1s183  "cases": [
+
+159.1s184    {
+
+159.1s185      "rows": 256,
+
+159.1s186      "vocab": 151936,
+
+159.1s187      "verified_explicit_float_upcast": {
+
+159.1s188        "median_ms": 4.4798078536987305,
+
+159.1s189        "peak_extra_allocated_mib": 296.75341796875
+
+159.1s190      },
+
+159.1s191      "half_input_float32_math": {
+
+159.1s192        "median_ms": 1.2645919919013977,
+
+159.1s193        "peak_extra_allocated_mib": 74.19091796875
+
+159.1s194      }
+
+159.1s195    },
+
+159.1s196    {
+
+159.1s197      "rows": 1024,
+
+159.1s198      "vocab": 151936,
+
+159.1s199      "verified_explicit_float_upcast": {
+
+159.1s200        "median_ms": 16.882176399230957,
+
+159.1s201        "peak_extra_allocated_mib": 1187.00927734375
+
+159.1s202      },
+
+159.1s203      "half_input_float32_math": {
+
+159.1s204        "median_ms": 4.329855918884277,
+
+159.1s205        "peak_extra_allocated_mib": 296.75927734375
+
+159.1s206      }
+
+159.1s207    },
+
+159.1s208    {
+
+159.1s209      "rows": 2048,
+
+159.1s210      "vocab": 151936,
+
+159.1s211      "verified_explicit_float_upcast": {
+
+159.1s212        "median_ms": 32.442543029785156,
+
+159.1s213        "peak_extra_allocated_mib": 2374.01708984375
+
+159.1s214      },
+
+159.1s215      "half_input_float32_math": {
+
+159.1s216        "median_ms": 8.422240257263184,
+
+159.1s217        "peak_extra_allocated_mib": 593.51708984375
+
+159.1s218      }
+
+159.1s219    }
+
+159.1s220  ]
+
+159.1s221}
+
+161.6s222Warning: You are sending unauthenticated requests to the HF Hub. Please set a HF_TOKEN to enable higher rate limits and faster downloads.
+
+161.8s223Warning: You are sending unauthenticated requests to the HF Hub. Please set a HF_TOKEN to enable higher rate limits and faster downloads.
+
+161.8s224
+
+161.8s225Warning: You are sending unauthenticated requests to the HF Hub. Please set a HF_TOKEN to enable higher rate limits and faster downloads.
+
+163.2s226Generating train split: 0 examples [00:00, ? examples/s]Generating train split: 0 examples [00:00, ? examples/s]
+
+164.9s227Generating train split: 0 examples [00:00, ? examples/s]Generating train split: 52201 examples [00:01, 27101.05 examples/s]Generating train split: 52201 examples [00:01, 26821.35 examples/s]
+
+165.0s228wrote 256 training rows and 256 eval rows to /kaggle/working/repo/data
+
+165.1s229Generating train split: 52201 examples [00:01, 27101.05 examples/s]Generating train split: 52201 examples [00:01, 26821.35 examples/s]
+
+165.1s230
+
+165.1s231Generating train split: 52201 examples [00:01, 27101.05 examples/s]Generating train split: 52201 examples [00:01, 26821.35 examples/s]
+
+165.2s232wrote 256 training rows and 256 eval rows to /kaggle/working/repo/data
+
+189.8s233[run_task] warm-up done in 23.43 s
+
+189.8s234[run_task] base_1: training ...
+
+190.0s235[run_task] warm-up done in 23.43 s
+
+190.0s236[run_task] base_1: training ...
+
+276.0s237[run_task] base_1: ok, 86.09 s, peak 14345 MiB
+
+276.0s238[run_task] solution_1: training ...
+
+276.2s239[run_task] base_1: ok, 86.09 s, peak 14345 MiB
+
+276.2s240[run_task] solution_1: training ...
+
+349.0s241[run_task] solution_1: ok, 72.96 s, peak 11181 MiB
+
+349.0s242[run_task] solution_2: training ...
+
+349.3s243[run_task] solution_1: ok, 72.96 s, peak 11181 MiB
+
+349.3s244[run_task] solution_2: training ...
+
+422.0s245[run_task] solution_2: ok, 72.85 s, peak 11181 MiB
+
+422.0s246[run_task] base_2: training ...
+
+422.2s247[run_task] solution_2: ok, 72.85 s, peak 11181 MiB
+
+422.2s248[run_task] base_2: training ...
+
+498.8s249[run_task] base_2: ok, 76.66 s, peak 14345 MiB
+
+498.8s250[run_task] eval base ...
+
+499.0s251[run_task] base_2: ok, 76.66 s, peak 14345 MiB
+
+499.0s252[run_task] eval base ...
+
+539.4s253[run_task] eval solution ...
+
+539.6s254[run_task] eval solution ...
+
+581.5s255
+
+581.5s256=== result ===
+
+581.5s257base      time     81.4 s   peak  14345 MiB   eval loss 2.04964
+
+581.5s258solution  time     72.9 s   peak  11181 MiB   eval loss 2.04965
+
+581.5s259speedup 1.116x   memory base/solution 1.283x   eval loss vs base 0.0 %
+
+581.5s260written: /kaggle/working/repo/runs/result.json
+
+581.5s261
+
+581.5s262=== result ===
+
+581.5s263base      time     81.4 s   peak  14345 MiB   eval loss 2.04964
+
+581.5s264solution  time     72.9 s   peak  11181 MiB   eval loss 2.04965
+
+581.5s265speedup 1.116x   memory base/solution 1.283x   eval loss vs base 0.0 %
+
+581.5s266written: /kaggle/working/repo/runs/result.json
+
+595.2s267PASS  1. every base and solution run finished                                            2 base and 2 solution runs of 2 each
+
+595.2s268PASS  2. no ready-made kernel libraries                                                  loaded: none; imported in solution/: none; packages changed during the run: none
+
+595.2s269PASS  3. own @triton.jit kernels in solution/ run in training                            soup_nf4_unpack_kernel (solution/nf4.py), soup_rmsnorm_backward_kernel (solution/rmsnorm.py), soup_rmsnorm_forward_kernel (solution/rmsnorm.py), soup_rope_backward_kernel (solution/rope.py), soup_rope_forward_kernel (solution/rope.py), vocabulary_finish_kernel (solution/vocab.py), vocabulary_gradient_kernel (solution/vocab.py), vocabulary_partials_kernel (solution/vocab.py); the example's kernels do not count, under any name: example_swiglu_fwd_kernel, example_swiglu_bwd_kernel
+
+595.2s270PASS  4. own kernels together take >= 5% of the training time                            8.5% of the training time (lowest of 2 runs, steps 3+)
+
+595.2s271PASS  5. same task and Soup outputs (steps, adapter, settings, tokens, metrics, rewind)  identical within tolerance
+
+595.2s272PASS  6. loss curve follows the base                                                     base_2: first step 0.00%, mean of all steps 0.01%; solution_1: first step 0.00%, mean of all steps 0.01%; solution_2: first step 0.00%, mean of all steps 0.01% (max 1% and 3%)
+
+595.2s273PASS  7. quality: eval loss at most 0.5% above the base                                  +0.000%
+
+595.2s274PASS  8. not worse than the base on time or memory (10% margin)                          time x0.896, memory x0.779 of the base
+
+595.2s275PASS  9. clean measurement (a T4, idle GPUs, one GPU, harness allocator, peaks agree)    clean
+
+595.2s276PASS  10. Soup regression tests with your patches                                        79 passed, 14 warnings in 7.85s
+
+595.2s277
+
+595.2s278ALL CHECKS PASSED
+
+595.3s279speedup 1.116x (counts as 1.116), memory base/solution 1.283x (counts as 1.283), eval loss vs base +0.000 %, all checks passed on this result: True
+
+595.3s280Speed and memory points depend on the best admitted team: 35 * ln(s) / ln(best s) and 30 * ln(m) / ln(best m).
+
+595.3s281PASS  1. every base and solution run finished                                            2 base and 2 solution runs of 2 each
+
+595.3s282PASS  2. no ready-made kernel libraries                                                  loaded: none; imported in solution/: none; packages changed during the run: none
+
+595.3s283PASS  3. own @triton.jit kernels in solution/ run in training                            soup_nf4_unpack_kernel (solution/nf4.py), soup_rmsnorm_backward_kernel (solution/rmsnorm.py), soup_rmsnorm_forward_kernel (solution/rmsnorm.py), soup_rope_backward_kernel (solution/rope.py), soup_rope_forward_kernel (solution/rope.py), vocabulary_finish_kernel (solution/vocab.py), vocabulary_gradient_kernel (solution/vocab.py), vocabulary_partials_kernel (solution/vocab.py); the example's kernels do not count, under any name: example_swiglu_fwd_kernel, example_swiglu_bwd_kernel
+
+595.3s284PASS  4. own kernels together take >= 5% of the training time                            8.5% of the training time (lowest of 2 runs, steps 3+)
+
+595.3s285PASS  5. same task and Soup outputs (steps, adapter, settings, tokens, metrics, rewind)  identical within tolerance
+
+595.3s286PASS  6. loss curve follows the base                                                     base_2: first step 0.00%, mean of all steps 0.01%; solution_1: first step 0.00%, mean of all steps 0.01%; solution_2: first step 0.00%, mean of all steps 0.01% (max 1% and 3%)
+
+595.3s287PASS  7. quality: eval loss at most 0.5% above the base                                  +0.000%
+
+595.3s288PASS  8. not worse than the base on time or memory (10% margin)                          time x0.896, memory x0.779 of the base
+
+595.3s289PASS  9. clean measurement (a T4, idle GPUs, one GPU, harness allocator, peaks agree)    clean
+
+595.3s290PASS  10. Soup regression tests with your patches                                        79 passed, 14 warnings in 7.85s
+
+595.3s291
+
+595.3s292ALL CHECKS PASSED
+
+595.3s293speedup 1.116x (counts as 1.116), memory base/solution 1.283x (counts as 1.283), eval loss vs base +0.000 %, all checks passed on this result: True
+
+595.3s294Speed and memory points depend on the best admitted team: 35 * ln(s) / ln(best s) and 30 * ln(m) / ln(best m).
+
+595.3s295{
+
+595.3s296  "snapshot_sha256": "c1b9cba94e65421fc0b204c097b725509edd32587c54db5a4b1a9d28961cc7d4",
+
+595.3s297  "summary": {
+
+595.3s298    "base": {
+
+595.3s299      "ok": true,
+
+595.3s300      "runs": 2,
+
+595.3s301      "wall_s": 81.38,
+
+595.3s302      "gpu_peak_mib": 14345,
+
+595.3s303      "train_loop_s": 54.27,
+
+595.3s304      "eval_loss": 2.04964
+
+595.3s305    },
+
+595.3s306    "solution": {
+
+595.3s307      "ok": true,
+
+595.3s308      "runs": 2,
+
+595.3s309      "wall_s": 72.91,
+
+595.3s310      "gpu_peak_mib": 11181,
+
+595.3s311      "train_loop_s": 50.55,
+
+595.3s312      "eval_loss": 2.04965
+
+595.3s313    },
+
+595.3s314    "ratios": {
+
+595.3s315      "speedup": 1.1162,
+
+595.3s316      "memory_ratio": 1.283,
+
+595.3s317      "quality_delta_pct": 0.0
+
+595.3s318    }
+
+595.3s319  },
+
+595.3s320  "checks": {
+
+595.3s321    "result_sha256": "5f14d4db0f2a4365d165f5587362f9d891e82241d5dc08d7ab7bcc462ae9e6a1",
+
+595.3s322    "solution_sha256": "9d65e00dce6240bdc5fa6de66d6df83c338941585e443ccda57b277efed59f52",
+
+595.3s323    "checks": [
+
+595.3s324      {
+
+595.3s325        "check": "1. every base and solution run finished",
+
+595.3s326        "ok": true,
+
+595.3s327        "detail": "2 base and 2 solution runs of 2 each"
+
+595.3s328      },
+
+595.3s329      {
+
+595.3s330        "check": "2. no ready-made kernel libraries",
+
+595.3s331        "ok": true,
+
+595.3s332        "detail": "loaded: none; imported in solution/: none; packages changed during the run: none"
+
+595.3s333      },
+
+595.3s334      {
+
+595.3s335        "check": "3. own @triton.jit kernels in solution/ run in training",
+
+595.3s336        "ok": true,
+
+595.3s337        "detail": "soup_nf4_unpack_kernel (solution/nf4.py), soup_rmsnorm_backward_kernel (solution/rmsnorm.py), soup_rmsnorm_forward_kernel (solution/rmsnorm.py), soup_rope_backward_kernel (solution/rope.py), soup_rope_forward_kernel (solution/rope.py), vocabulary_finish_kernel (solution/vocab.py), vocabulary_gradient_kernel (solution/vocab.py), vocabulary_partials_kernel (solution/vocab.py); the example's kernels do not count, under any name: example_swiglu_fwd_kernel, example_swiglu_bwd_kernel"
+
+595.3s338      },
+
+595.3s339      {
+
+595.3s340        "check": "4. own kernels together take >= 5% of the training time",
+
+595.3s341        "ok": true,
+
+595.3s342        "detail": "8.5% of the training time (lowest of 2 runs, steps 3+)"
+
+595.3s343      },
+
+595.3s344      {
+
+595.3s345        "check": "5. same task and Soup outputs (steps, adapter, settings, tokens, metrics, rewind)",
+
+595.3s346        "ok": true,
+
+595.3s347        "detail": "identical within tolerance"
+
+595.3s348      },
+
+595.3s349      {
+
+595.3s350        "check": "6. loss curve follows the base",
+
+595.3s351        "ok": true,
+
+595.3s352        "detail": "base_2: first step 0.00%, mean of all steps 0.01%; solution_1: first step 0.00%, mean of all steps 0.01%; solution_2: first step 0.00%, mean of all steps 0.01% (max 1% and 3%)"
+
+595.3s353      },
+
+595.3s354      {
+
+595.3s355        "check": "7. quality: eval loss at most 0.5% above the base",
+
+595.3s356        "ok": true,
+
+595.3s357        "detail": "+0.000%"
+
+595.3s358      },
+
+595.3s359      {
+
+595.3s360        "check": "8. not worse than the base on time or memory (10% margin)",
+
+595.3s361        "ok": true,
+
+595.3s362        "detail": "time x0.896, memory x0.779 of the base"
+
+595.3s363      },
+
+595.3s364      {
+
+595.3s365        "check": "9. clean measurement (a T4, idle GPUs, one GPU, harness allocator, peaks agree)",
+
+595.3s366        "ok": true,
+
+595.3s367        "detail": "clean"
+
+595.3s368      },
+
+595.3s369      {
+
+595.3s370        "check": "10. Soup regression tests with your patches",
+
+595.3s371        "ok": true,
+
+595.3s372        "detail": "79 passed, 14 warnings in 7.85s"
+
+595.3s373      }
+
+595.3s374    ],
+
+595.3s375    "notes": []
+
+595.3s376  }
+
+595.3s377}
+
+597.9s378/usr/local/lib/python3.13/dist-packages/mistune.py:435: SyntaxWarning: invalid escape sequence '\|'
+
+597.9s379  cells[i][c] = re.sub('\\\\\|', '|', cell)
+
+598.1s380/usr/local/lib/python3.13/dist-packages/nbconvert/filters/filter_links.py:36: SyntaxWarning: invalid escape sequence '\_'
+
+598.1s381  text = re.sub(r'_', '\_', text) # Escape underscores in display text
+
+598.9s382[NbConvertApp] Converting notebook __notebook__.ipynb to notebook
+
+599.0s383[NbConvertApp] Writing 154083 bytes to __notebook__.ipynb
+
+601.5s384[NbConvertApp] Converting notebook __notebook__.ipynb to html
+
+602.0s385[NbConvertApp] Writing 445877 bytes to __results__.html

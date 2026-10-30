@@ -1,0 +1,68 @@
+{
+  "kind": "final_source_and_artifact_audit",
+  "kaggle_version": 363823158,
+  "snapshot_sha256": "c1b9cba94e65421fc0b204c097b725509edd32587c54db5a4b1a9d28961cc7d4",
+  "solution_sha256": "9d65e00dce6240bdc5fa6de66d6df83c338941585e443ccda57b277efed59f52",
+  "result_sha256": "5f14d4db0f2a4365d165f5587362f9d891e82241d5dc08d7ab7bcc462ae9e6a1",
+  "code_commit": "60918ea61d91c9995799392dc350344a66e8af3e",
+  "all_10_checks_passed": true,
+  "source_matches_measured_snapshot": true,
+  "protected_files_byte_identical_to_verified_v5": 15,
+  "changed_solution_files_from_v5": [
+    "solution/benchmark_half.py",
+    "solution/half_loss.py",
+    "solution/patches.py",
+    "solution/test_half_loss.py",
+    "solution/vocab.py"
+  ],
+  "python_files_compiled": 31,
+  "own_kernels": {
+    "soup_nf4_unpack_kernel": "solution\\nf4.py",
+    "soup_rmsnorm_forward_kernel": "solution\\rmsnorm.py",
+    "soup_rmsnorm_backward_kernel": "solution\\rmsnorm.py",
+    "soup_rope_forward_kernel": "solution\\rope.py",
+    "soup_rope_backward_kernel": "solution\\rope.py",
+    "vocabulary_partials_kernel": "solution\\vocab.py",
+    "vocabulary_finish_kernel": "solution\\vocab.py",
+    "vocabulary_gradient_kernel": "solution\\vocab.py"
+  },
+  "excluded_starter_kernels": [
+    "example_swiglu_fwd_kernel",
+    "example_swiglu_bwd_kernel"
+  ],
+  "banned_imports": [],
+  "lookalikes": [],
+  "parse_errors": [],
+  "summary": {
+    "base": {
+      "ok": true,
+      "runs": 2,
+      "wall_s": 81.38,
+      "gpu_peak_mib": 14345,
+      "train_loop_s": 54.27,
+      "eval_loss": 2.04964
+    },
+    "solution": {
+      "ok": true,
+      "runs": 2,
+      "wall_s": 72.91,
+      "gpu_peak_mib": 11181,
+      "train_loop_s": 50.55,
+      "eval_loss": 2.04965
+    },
+    "ratios": {
+      "speedup": 1.1162,
+      "memory_ratio": 1.283,
+      "quality_delta_pct": 0.0
+    }
+  },
+  "test_results": {
+    "solution_passed": 194,
+    "solution_skipped": 1,
+    "solution_seconds": 98.23,
+    "soup_passed": 79,
+    "soup_initial_seconds": 8.49,
+    "soup_rule_check_seconds": 7.85
+  },
+  "note": "Documentation is updated after measurement; the solution and protected source match the immutable measured snapshot. The three inherited starter files in GitHub use LF while the Windows measured copy uses CRLF; changed code files were uploaded and reread byte-for-byte."
+}

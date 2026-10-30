@@ -1,11 +1,12 @@
 {
   "repository": "promaladoi/Decentrathon-6.0",
   "directory": "Мерей",
-  "fetched_commit": "3c5efb368b7392ea13b376908006a98b689b636f",
-  "implementation_commit": "3c389e9f1259031123026c99057f78b3ad57b671",
-  "measured_kaggle_version": 363806584,
-  "measured_snapshot_sha256": "eaa4e00672e0f2133bcbb1452ae73652c8e9dbaa3c1dc89b280725d0e9f80308",
-  "local_final_source_audit": "final_source_audit.json",
+  "fetched_commit": "60918ea61d91c9995799392dc350344a66e8af3e",
+  "implementation_commit": "60918ea61d91c9995799392dc350344a66e8af3e",
+  "measured_kaggle_version": 363823158,
+  "measured_snapshot_sha256": "c1b9cba94e65421fc0b204c097b725509edd32587c54db5a4b1a9d28961cc7d4",
+  "measured_solution_sha256": "9d65e00dce6240bdc5fa6de66d6df83c338941585e443ccda57b277efed59f52",
+  "local_source_audit": "half-source-audit.json",
   "solution_python_files": [
     {
       "path": "solution/__init__.py",
@@ -37,7 +38,7 @@
       "newlineNormalizedEqual": true,
       "remoteCRLF": 0,
       "localCRLF": 0,
-      "remoteBlobSha": "b06307487d04b245b1a43efe5dc812dd470c0d9b"
+      "remoteBlobSha": "8f9c649199951b87f3626c9450389f2f622e9a70"
     },
     {
       "path": "solution/rmsnorm.py",
@@ -115,14 +116,45 @@
       "path": "solution/vocab.py",
       "byteIdentical": true,
       "newlineNormalizedEqual": true,
+      "remoteCRLF": 185,
+      "localCRLF": 185,
+      "remoteBlobSha": "47ccc3947c2aa097119652b05a06d348018ed67e"
+    },
+    {
+      "path": "solution/half_loss.py",
+      "byteIdentical": true,
+      "newlineNormalizedEqual": true,
       "remoteCRLF": 0,
       "localCRLF": 0,
-      "remoteBlobSha": "8f7e75d46777c9e7d08e3bf5ceca3fc3b1174eb3"
+      "remoteBlobSha": "c0af96700463ae2feaf99b7368b3c81d114dfd8e"
+    },
+    {
+      "path": "solution/test_half_loss.py",
+      "byteIdentical": true,
+      "newlineNormalizedEqual": true,
+      "remoteCRLF": 0,
+      "localCRLF": 0,
+      "remoteBlobSha": "f43541442d32cd5ae02668729af1f0399e9fc52d"
+    },
+    {
+      "path": "solution/benchmark_half.py",
+      "byteIdentical": true,
+      "newlineNormalizedEqual": true,
+      "remoteCRLF": 0,
+      "localCRLF": 0,
+      "remoteBlobSha": "4a185b6e07ddc457bd74ea8fffcd2adfec50c85e"
     }
   ],
   "all_solution_files_equal_after_newline_normalization": true,
-  "exact_equal_files": 11,
+  "exact_equal_files": 14,
   "protected_remote_files_match_platform_source_git_blobs": 15,
   "platform_source_commit": "fc44fd2d2bf23f624e95cef655f03fecbd87ec46",
-  "note": "Remote code was not modified by the documentation/evidence update. Three files have LF in GitHub and CRLF in the measured local snapshot. The measured snapshot and solution SHA256 are not claimed as byte hashes of the newline-normalized GitHub copy. This audit does not rerun GPU tests."
+  "new_code_files_uploaded_and_read_back_as_exact_bytes": [
+    "solution/vocab.py",
+    "solution/patches.py",
+    "solution/half_loss.py",
+    "solution/test_half_loss.py",
+    "solution/benchmark_half.py"
+  ],
+  "note": "The five new or changed code files were uploaded as base64 blobs and read back byte-for-byte equal to the measured snapshot. The other solution files were read back separately: all 17 match after CRLF/LF normalization; 14 match byte-for-byte. Three files use LF in GitHub and CRLF in the measured local snapshot. The measured snapshot and solution SHA256 are not claimed as byte hashes of the complete GitHub copy. This source audit does not rerun GPU tests."
 }

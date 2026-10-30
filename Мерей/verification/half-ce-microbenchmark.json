@@ -1,0 +1,43 @@
+{
+  "kind": "synthetic_half_input_ce_not_training_score",
+  "device": "Tesla T4",
+  "memory": "extra PyTorch allocated peak, not full nvidia-smi training peak",
+  "cases": [
+    {
+      "rows": 256,
+      "vocab": 151936,
+      "verified_explicit_float_upcast": {
+        "median_ms": 4.4798078536987305,
+        "peak_extra_allocated_mib": 296.75341796875
+      },
+      "half_input_float32_math": {
+        "median_ms": 1.2645919919013977,
+        "peak_extra_allocated_mib": 74.19091796875
+      }
+    },
+    {
+      "rows": 1024,
+      "vocab": 151936,
+      "verified_explicit_float_upcast": {
+        "median_ms": 16.882176399230957,
+        "peak_extra_allocated_mib": 1187.00927734375
+      },
+      "half_input_float32_math": {
+        "median_ms": 4.329855918884277,
+        "peak_extra_allocated_mib": 296.75927734375
+      }
+    },
+    {
+      "rows": 2048,
+      "vocab": 151936,
+      "verified_explicit_float_upcast": {
+        "median_ms": 32.442543029785156,
+        "peak_extra_allocated_mib": 2374.01708984375
+      },
+      "half_input_float32_math": {
+        "median_ms": 8.422240257263184,
+        "peak_extra_allocated_mib": 593.51708984375
+      }
+    }
+  ]
+}

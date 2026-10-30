@@ -1,49 +1,48 @@
 # Мерей — Soup Kernel Challenge
 
-T4-де **10/10 ереже өтті**: solution — **165 passed, 1 skipped**, Soup — **79 passed**. Қайталама өлшем: **86.68 → 81.82 с**, **14345 → 12381 MiB**, жеке кернелдер үлесі кемінде **7.3%**. [Толық күй және дәлелдер](WORK_STATUS.md).
+Kaggle T4-де **10/10 ереже өтті**: solution — **194 passed, 1 skipped**, Soup — **79 passed**. Толық уақыт **81.38 → 72.91 с**, GPU peak **14345 → 11181 MiB**, жеке кернелдер үлесі кемінде **8.5%**. Public eval loss **2.04964 → 2.04965**. [Толық күй және дәлелдер](WORK_STATUS.md).
 
-Жұмысты [Kaggle working notebook](templates/kaggle_working_notebook.ipynb) арқылы жалғастырыңыз; ол жеке репозиторийдің бекітілген кодын `Мерей` ішінен іске қосады. Жергілікті жұмыс үшін репозиторий түбірінен `cd Мерей` жасаңыз. [Тексерілген development нұсқасы №363806584](https://www.kaggle.com/code/promaladoi/soup-kaggle-development?scriptVersionId=363806584) әзірге private; финалдық платформалық commit, public notebook, видео және презентация әлі дайын емес.
-
-Басқа қатысушылардың қалталары және бастапқы платформалық notebook өзгертілмейді.
+Жұмысты [Kaggle working notebook](templates/kaggle_working_notebook.ipynb) арқылы жалғастырыңыз; ол жеке репозиторийдің бекітілген кодын `Мерей` ішінен іске қосады. Жергілікті жұмыс үшін репозиторий түбірінен `cd Мерей` жасаңыз. [Тексерілген development нұсқасы №363823158](https://www.kaggle.com/code/promaladoi/soup-kaggle-development?scriptVersionId=363823158) әзірге private және embedded snapshot қолданады. Финалдық платформалық commit, public notebook, видео және презентация әлі дайын емес. Басқа қатысушылардың қалталары мен платформа репозиторийі өзгертілмейді.
 
 ---
 
-# Soup Kernel Challenge — vocabulary reductions, RMSNorm, RoPE и NF4
+# Soup Kernel Challenge — half-input CE, RMSNorm, RoPE и NF4
 
 Собственные Triton-кернелы для фиксированного обучения Soup 0.77.0 на
-Decentrathon 6.0. На Kaggle T4 пройдены **все 10 проверок harness** на
-публичных данных: ускорение **1.0594×**, отношение памяти база/решение
-**1.1586×**, доля восьми собственных кернелов **7.3%**. Финальная сдача
-ещё не оформлена: сохранённый development notebook пока private и использует
-снимок исходников, а не commit репозитория команды от платформы.
+Decentrathon 6.0. На публичных данных Kaggle T4 пройдены **все 10 проверок**:
+ускорение **1.1162×**, отношение памяти база/решение **1.283×**.
+Сдача ещё не оформлена: текущая Kaggle-версия private и использует снимок
+исходников, а работа по указанию пользователя ведётся в личной папке `Мерей`.
 
-Основа: [стартовый репозиторий](https://github.com/MakazhanAlpamys/soup-kernel-challenge),
-commit `c7c2fcd15972ce8b898d8d3ff732ee192c817ceb`.
+Основа: [starter kit](https://github.com/MakazhanAlpamys/soup-kernel-challenge),
+commit `c7c2fcd15972ce8b898d8d3ff732ee192c817ceb`;
 [ТЗ](https://docs.google.com/document/d/1ws-AXhXpcx2pBBVSf5KO7GB5ZZEkBt3L2BPIuT4owWY/edit).
+Рабочий [коммит кода 60918ea61d91c9995799392dc350344a66e8af3e](https://github.com/promaladoi/Decentrathon-6.0/commit/60918ea61d91c9995799392dc350344a66e8af3e)
+находится в [личной папке Мерей](https://github.com/promaladoi/Decentrathon-6.0/tree/main/%D0%9C%D0%B5%D1%80%D0%B5%D0%B9).
 
-## Что сделано
+## Что изменено
 
-Публичная точка входа — `solution.apply()`. Она устанавливает идемпотентный
-hook после `SFTTrainerWrapper._setup_transformers`. После построения настоящей
-PyTorch/PEFT модели подключаются следующие операции:
+`solution.apply()` устанавливает идемпотентный hook после построения
+настоящей PyTorch/PEFT-модели в `SFTTrainerWrapper._setup_transformers`.
 
-| Операция | Подключение | Изменение вычислений |
+| Операция | Подключение | Реализация |
 |---|---|---|
-| Training cross-entropy | `transformers.loss.loss_utils.fixed_cross_entropy` | Блочные log-sum-exp и CE; вероятности пересчитываются в backward |
-| Энтропия TRL | `trl.trainer.sft_trainer.entropy_from_logits` | Энтропия из частичных сумм, без полной матрицы softmax |
-| Потери строк rewind | `soup_cli.trainer.rewind_hf.row_losses` | Тот же сдвиг, маска, число токенов и среднее по строкам через наш CE |
-| Qwen2 RMSNorm | `Qwen2RMSNorm.forward` | Один row-wise kernel вперёд и один назад для frozen weights |
-| Qwen2 RoPE | `modeling_qwen2.apply_rotary_pos_emb` | Парное вращение Q/K вперёд и назад, без копирования transpose views |
-| NF4 backward | `bitsandbytes.functional.dequantize_4bit` | Распаковка NF4 вместе с восстановлением double-quant scales для градиента входа |
+| Training CE с FP16 входом | `Qwen2ForCausalLM.instance.loss_function` | FP32 вычисления из FP16 загрузок; градиент сразу в FP16 |
+| FP32 CE | `transformers.loss.loss_utils.fixed_cross_entropy` | Блочные log-sum-exp, пересчёт вероятностей в backward |
+| Энтропия TRL | `sft_trainer.entropy_from_logits` | Частичные суммы вместо полной матрицы softmax |
+| Потери строк rewind | `soup_cli.trainer.rewind_hf.row_losses` | Исходный causal shift, маска, token counts и средние |
+| RMSNorm | `Qwen2RMSNorm.forward` | Слитые forward/backward для frozen weights |
+| RoPE | `modeling_qwen2.apply_rotary_pos_emb` | Парное вращение Q/K с исходными strides |
+| NF4 | `bitsandbytes.functional.dequantize_4bit` | NF4 и double-quant scales для `MatMul4Bit.backward` |
 
-Дополнительно подключён неизменённый пример SwiGLU организаторов для
-сокращения временных активаций MLP. Его два кернела **не наши** и не
-учитываются при проверке доли ≥5%; наши восемь кернелов перечислены отдельно.
+Восемь собственных `@triton.jit` находятся в `vocab.py` (3), `rmsnorm.py`
+(2), `rope.py` (2) и `nf4.py` (1). Неизменённый пример SwiGLU организаторов
+также подключён для активаций MLP; его два кернела **не считаются нашими**.
+Half-input CE использует те же три vocabulary-кернела и не добавляет новых.
 
-`solution/vocab.py` делит словарь на блоки по 4096 элементов. Для каждого
-блока вычисляются максимум `m`, сумма `s = sum(exp(z-m))` и, для энтропии,
-центрированный момент `t = sum(exp(z-m)*(z-m))`. Второй кернел объединяет
-блоки с общим максимумом `M`:
+`vocab.py` делит словарь на плитки по 4096 элементов. Для каждой вычисляются
+максимум `m`, сумма `s = sum(exp(z-m))` и для энтропии момент
+`t = sum(exp(z-m)*(z-m))`. Объединение частей с общим максимумом `M`:
 
 ```text
 S = sum(exp(m-M) * s)
@@ -52,86 +51,50 @@ T = sum(exp(m-M) * (t + s*(m-M)))
 H = log(S) - T/S
 ```
 
-В backward используется `exp(z-M)/S - one_hot(target)`, с исходной маской
-`ignore_index` и нормировкой. Сохранены `none`, `sum`, `mean` и поведение
-полностью игнорируемых строк. Удерживается ссылка на исходные логиты и два
-float32 значения на токен; полная матрица log-softmax не сохраняется.
-Объём временной статистики — `O(tokens * ceil(vocab / 4096))`.
-Полные логиты и их градиент по-прежнему нужны.
+Сохраняются входные логиты, targets, count и два FP32 значения на токен;
+полная матрица log-softmax не сохраняется. Вероятности пересчитываются в
+backward; временная статистика имеет объём `O(tokens * ceil(vocab/4096))`.
 
-`solution/rmsnorm.py` сохраняет порядок приведений типов Qwen2: накопление
-в float32, приведение нормализованного значения к типу входа **перед**
-умножением на вес. Это важно для fp16 активаций и fp32 norm weights после
-k-bit подготовки. Backward также учитывает промежуточное округление.
-Сохраняются вход, frozen weight и один inverse RMS на строку.
+`half_loss.py` заменяет `loss_function` только у подходящего экземпляра
+Qwen2 внутри PEFT. Исходный forward и глобальный `LOSS_MAPPING` не меняются.
+Вместо полного `logits.float()` данные FP16 загружаются и приводятся к FP32
+внутри кернела. Loss и вся арифметика нормализации остаются FP32. Градиент
+записывается сразу в FP16, как исходный `CastBackward` после FP32 CE.
+Сохраняются causal shift, `ignore_index`, `num_items_in_batch` и kwargs-семантика HF.
 
-`solution/rope.py` читает Q/K по исходным strides, объединяет попарное
-вращение и сохраняет для backward только cos/sin. Промежуточные fp16
-произведения округляются в том же порядке, что в PyTorch; FMA отключён.
-`solution/nf4.py` объединяет чтение NF4 nibble, lookup codebook,
-восстановление compressed absmax и offset в одном кернеле. Патч покрывает
-именно `MatMul4Bit.backward`: forward bitsandbytes остаётся исходным
-`gemm_4bit`. Dense weight для исходного matmul имеет прежние dtype и форму.
-Эти операции добавлены после реального результата первой версии: её
-полезные кернелы занимали 4.4%, то есть не достигали обязательных 5%.
+Возвращаемые logits не заменяются: Accelerate выполняет прежнее преобразование
+outputs в FP32, поэтому TRL и rewind получают тот же dtype и значения.
+Полные logits для метрик и FP16 вход для backward по-прежнему существуют.
+Кэша логитов и состояния между шагами нет. Полностью игнорируемый mean
+остаётся NaN с нулевым градиентом. Отдельная ветка для бесконечного upstream
+сохраняет native NLL/log-softmax Inf/NaN-семантику, включая нулевой denominator.
 
-Настройки модели, LoRA, dropout, батчи, расписание, оптимизатор и выходы
-Soup задаются исходным кодом. TRL продолжает сам считать token accuracy,
-маски и агрегацию метрик. Rewind сохраняет исходный recorder и порядок строк.
-Файлы `harness/`, `tests/`, `task/` не изменены. Никаких готовых kernel
-libraries, `torch.compile`, скрытых данных или CUDA graphs нет.
+RMSNorm сохраняет FP32 накопление и cast нормализованного значения к dtype
+входа перед умножением на вес. RoPE читает transposed Q/K без dense-копий,
+сохраняет только cos/sin и повторяет промежуточные fp16 округления.
+NF4 объединяет nibble/codebook и восстановление сжатых scales; forward
+bitsandbytes и последующий matmul остаются исходными.
 
-## Файлы
+Модель, LoRA/dropout, батчи и их порядок, число шагов, оптимизатор, schedule
+и выходы Soup не меняются. `harness/`, `tests/`, `task/` сохранены по содержимому.
+Готовые kernel libraries, `torch.compile` и CUDA graphs в обучении не используются.
 
-| Файл | Назначение |
-|---|---|
-| `solution/__init__.py` | `apply()` |
-| `solution/patches.py` | Узкие hooks и eager fallbacks |
-| `solution/vocab.py` | Три собственных Triton-кернела CE/энтропии |
-| `solution/rmsnorm.py` | Два собственных Triton-кернела RMSNorm |
-| `solution/rope.py`, `solution/nf4.py` | Два кернела RoPE и один NF4 decode; собственные GPU-тесты рядом |
-| `solution/test_vocab.py`, `test_rmsnorm.py` | Численные GPU-тесты |
-| `solution/test_integration.py` | Проверки реальных hooks и маленькой случайной PEFT Qwen |
-| `solution/benchmark.py` | Отдельный синтетический microbenchmark на T4 |
-| `solution/swiglu.py`, `test_kernels.py` | Неизменённый пример организаторов; его кернелы не считаются собственными |
+## Как воспроизвести
 
-## Как воспроизвести на Kaggle T4
+1. Импортируйте [working notebook](templates/kaggle_working_notebook.ipynb) в
+   Kaggle, включите **GPU T4 x2** и **Internet**. Он клонирует личный
+   репозиторий с commit `60918ea61d91c9995799392dc350344a66e8af3e` и работает
+   из `/kaggle/working/repo/Мерей`. Локально корень проекта — папка `Мерей`.
+2. Выполните Run All без параллельной GPU-работы. Несовместимый optional
+   `torchao==0.10.0` удаляется до тестов и замеров, одинаково для базы и решения.
+3. Подтверждённые ниже результаты получены из embedded snapshot версии
+   №363823158; этот же текущий снимок находится в
+   `kaggle_notebook_dev.ipynb`. Подготовленный clone-notebook сам ещё не запускался.
+4. Для финальной сдачи нужен исходный `templates/kaggle_notebook.ipynb`
+   с commit **репозитория, созданного платформой**, и публичная сохранённая
+   версия с успешным Run All. Сейчас платформа оставлена без изменений.
 
-Рабочая копия по указанию пользователя находится в папке
-[Мерей личного репозитория](https://github.com/promaladoi/Decentrathon-6.0/tree/main/%D0%9C%D0%B5%D1%80%D0%B5%D0%B9).
-[Коммит кода](https://github.com/promaladoi/Decentrathon-6.0/commit/3c389e9f1259031123026c99057f78b3ad57b671):
-`3c389e9f1259031123026c99057f78b3ad57b671`.
-Репозиторий платформы не изменялся. Для разработки корнем проекта служит
-папка `Мерей`, содержащая `solution/`, `harness/`, `tests/`, `task/`.
-
-1. Для работы в личном репозитории импортируйте
-   [`templates/kaggle_working_notebook.ipynb`](templates/kaggle_working_notebook.ipynb)
-   в Kaggle. Включите `GPU T4 x2` и интернет. Notebook клонирует личный
-   репозиторий, выбирает проверенный commit кода `3c389e9f1259031123026c99057f78b3ad57b671`
-   и переходит в `/kaggle/working/repo/Мерей`; команды запускаются оттуда.
-   Локально сначала выполните `cd Мерей` из корня репозитория.
-2. Выполните Run All. Рабочий notebook удаляет несовместимый optional
-   `torchao` до измерений, сохраняет исходные pinned зависимости и T4-проверку,
-   готовит публичные данные, запускает unit tests, обучение и проверки.
-3. Для двух повторов каждой стороны используйте `--repeats 2`, как ниже.
-   Пока идёт измерение, не запускайте другую работу на GPU.
-4. Для финальной сдачи используйте сохранённый без изменений
-   `templates/kaggle_notebook.ipynb`: укажите **репозиторий, созданный платформой**,
-   и его финальный commit. Личная рабочая папка не заменяет это требование ТЗ.
-   Для закрытого репозитория доступен read-only `GITHUB_TOKEN` через Kaggle Secrets;
-   пароли и токены в notebook не записывайте.
-5. Повторите полный запуск с финальным commit и сохраните публичную версию
-   notebook с выводами. Текущий успешный development запуск использует embedded
-   snapshot; рабочий clone-notebook подготовлен отдельно и сам ещё не запускался.
-
-Окружение ТЗ: Python 3.13, torch 2.11, Triton 3.6.0, Soup 0.77.0,
-transformers 5.16.1, peft 0.20.0, trl 0.29.1, bitsandbytes 0.50.2,
-accelerate 1.14.0. Установка из исходного шаблона:
-
-В текущем Kaggle image обнаружен предустановленный `torchao==0.10.0`,
-который мешает импорту PEFT 0.20.0. Он не используется в задаче NF4;
-перед установкой/тестами и любыми замерами удалите его. Это подготовка
-одинакового окружения для базы и решения, вне измеряемых процессов.
+Python 3.13, torch `2.11.0+cu128`, Triton `3.6.0`; подготовка и команды:
 
 ```bash
 pip uninstall -y torchao
@@ -146,99 +109,85 @@ python harness/check_rules.py
 python harness/score.py runs/result.json
 ```
 
-Диагностика и отдельные микрозамеры:
+Для закрытого репозитория используйте read-only `GITHUB_TOKEN` через Kaggle
+Secrets; токены в notebook не записывайте. Диагностика отдельно:
+`python harness/run_task.py --only solution --out runs_try --profile`.
 
-```bash
-python harness/run_task.py --only solution --out runs_try --profile
-python -m solution.benchmark --rows 256 --out microbench.json
-```
+## Подтверждённый результат на T4
 
-Microbenchmark проверяет CE forward/backward, энтропию и RMSNorm на
-синтетических тензорах. Он сообщает CUDA-event latency после прогрева и
-добавочный PyTorch allocated peak; это **другие показатели**, чем полное
-время команды и nvidia-smi peak из официального harness. Компиляция в
-официальное время входит. Microbenchmark её исключает.
-
-## Проверенные результаты
-
-30 октября 2026 года, Kaggle Tesla T4, публичные строки задачи.
-`python harness/run_task.py --repeats 2`: порядок база, решение, решение,
-база; компиляция входит в полное время. Таблица повторяет `summary` из
-реального [result.json](verification/t4-result.json).
-Harness берёт медиану двух времён и максимум пиков памяти каждой стороны.
+30 октября 2026, публичные строки, порядок база → решение → решение → база.
+Полное время включает компиляцию. Harness берёт медиану двух времён и
+максимальный пик памяти каждой стороны.
 
 | Показатель | База | Решение | Результат |
 |---|---|---|---|
-| Полное время `soup train`, с | 86.68 | 81.82 | 1.0594×; на 5.6% меньше времени |
-| Пик GPU, MiB, nvidia-smi | 14345 | 12381 | база/решение 1.1586×; на 13.7% меньше памяти |
-| Eval loss, публичная выборка | 2.04963 | 2.04969 | +0.003%; предел +0.5% |
-| Доля собственных кернелов, шаги 3+ | — | 7.3% | Минимум двух запусков; требуется ≥5% |
-| Rule checks | — | 10/10 PASS | Включая качество, выходы Soup и чистоту замера |
+| Полное время `soup train`, с | 81.38 | 72.91 | 1.1162×; на 10.4% меньше времени |
+| Пик GPU, MiB, nvidia-smi | 14345 | 11181 | база/решение 1.283×; на 22.1% меньше памяти |
+| Public eval loss | 2.04964 | 2.04965 | Δ в JSON округлено до +0.000%; предел +0.5% |
+| Собственные кернелы, шаги 3+ | — | 8.5% | Минимум двух запусков; требуется ≥5% |
+| Rule checks | — | 10/10 PASS | Включая выходы Soup, качество и чистоту замера |
 
-GPU unit/integration tests: **165 passed, 1 skipped**. Soup с патчами:
-**79 passed**. [Исходный отчёт проверок](verification/t4-checks.json)
-привязан хешем к этому результату; конкурсные баллы зависят от других команд.
+**194 passed, 1 skipped** solution tests; **79 passed** Soup tests с патчами.
+Округлённый `quality_delta_pct=0.0` не означает равенство loss: значения выше
+различаются. Конкурсные баллы зависят от других команд и решения жюри.
 
-[Сохранённая Kaggle development-версия №363806584](https://www.kaggle.com/code/promaladoi/soup-kaggle-development?scriptVersionId=363806584)
-пока **private**, со встроенным ZIP исходников. Проверенный snapshot SHA256:
-`eaa4e00672e0f2133bcbb1452ae73652c8e9dbaa3c1dc89b280725d0e9f80308`.
-Подробности и история: [LOCAL_VERIFICATION.md](LOCAL_VERIFICATION.md).
-GitHub-копия `solution/` проверена отдельно: все 14 Python-файлов совпадают
-с измеренным snapshot после нормализации CRLF/LF; 11 совпадают побайтно.
-В GitHub-копиях трёх файлов (`__init__.py`, `swiglu.py`, `test_kernels.py`)
-используются LF, а в измеренном snapshot — CRLF. Поэтому хеши
-snapshot и `solution_sha256` выше относятся к измеренным исходникам,
-а не объявляются побайтным хешем всей GitHub-копии. [Аудит копии](verification/github-working-copy-audit.json).
+| Запуск | Время, с | Пик, MiB |
+|---|---|---|
+| base_1 | 86.09 | 14345 |
+| solution_1 | 72.96 | 11181 |
+| solution_2 | 72.85 | 11181 |
+| base_2 | 76.66 | 14345 |
 
-Отдельные синтетические замеры:
-[t4-microbenchmark-final.json](verification/t4-microbenchmark-final.json).
+У базы заметный разброс; для итогового сравнения использована именно медиана
+harness. Предыдущая версия имела пик 12381 MiB, новая — 11181 MiB
+(ещё на 1200 MiB, 9.7%, ниже). Старый и новый замеры не являются парным A/B
+в одной сессии; разницу их времён нельзя целиком приписать одному изменению.
 
-Перед финальной сдачей нужны публичный notebook из исходного шаблона с
-commit репозитория платформы, данные команды, демо и презентация. Эти
-артефакты пока не готовы; текущий успешный запуск относится к development
-снимку и публичным данным.
+Доказательства: [result](verification/half-t4-result.json),
+[checks](verification/half-t4-checks.json),
+[журнал из таблицы Kaggle Logs](verification/half-t4-run.log),
+[аудит источников](verification/half-source-audit.json),
+[подробный отчёт](LOCAL_VERIFICATION.md).
+[Сохранённая Kaggle-версия №363823158](https://www.kaggle.com/code/promaladoi/soup-kaggle-development?scriptVersionId=363823158)
+пока **private**. Журнал содержит отображённые строки таблицы Kaggle Logs;
+численные значения в отчёте сверены с исходными result/checks JSON.
+Snapshot SHA256:
+`c1b9cba94e65421fc0b204c097b725509edd32587c54db5a4b1a9d28961cc7d4`.
+Измеренный `solution_sha256`:
+`9d65e00dce6240bdc5fa6de66d6df83c338941585e443ccda57b277efed59f52`.
+Это хеши измеренного снимка; GitHub-копия может отличаться окончаниями CRLF/LF.
 
-## Ограничения
+## Ограничения и оставшаяся сдача
 
-- Все 10 автоматических проверок пройдены на публичных строках. Скрытые
-  строки и другой seed не проверялись; итоговый допуск определяет жюри.
-- 7.3% — измеренный минимум двух solution-запусков. Порог ≥5% и остальные
-  критерии нужно заново подтвердить при финальном запуске с commit.
-- Результат относится ко всему решению вместе с примером SwiGLU. Вклад
-  каждого кернела в полное время и пик памяти отдельно не измерялся.
-  Размеры плиток фиксированы; autotuning не используется.
-- CE/энтропия ускоряются для contiguous float32 logits и int64 targets;
-  остальные входы используют исходный PyTorch. Это соответствует пути CE
-  с upcast в Transformers; GPU smoke tests прошли.
-  Если метрики получают fp16 logits, они сохраняют исходный путь; это
-  потенциальное ограничение экономии памяти и доли собственных кернелов.
-- RMSNorm ускоряется только для CUDA fp16/fp32, frozen weights и ширины
-  до 8192. Trainable norm weights и неподдерживаемые layouts идут в eager.
-- Не реализованы second-order gradients для собственного CE. Они не нужны
-  фиксированному обучению; `once_differentiable` явно запрещает их.
-- На Windows выполнены CPU и статические проверки; полное обучение и
-  конкурсные замеры выполнены удалённо на Kaggle T4. RTX 5060 для них не
-  использовалась.
+- Все проверки относятся к публичным строкам и указанному seed. Скрытая
+  выборка жюри и другие seed не проверялись; итоговый допуск определяет жюри.
+- Half CE ускоряется только для поддерживаемых CUDA FP16 logits и int64 labels.
+  Custom loss, CPU, FP32 и explicit `shift_labels` сохраняют исходный путь.
+  RMSNorm требует frozen weights; неподдерживаемые layouts идут через eager.
+- Полная матрица logits остаётся нужна метрикам. Отдельный
+  [half-CE microbenchmark](verification/half-ce-microbenchmark.json) для
+  256/1024/2048 строк — диагностика, не замена полного обучения.
+  [Обычный microbenchmark](verification/half-t4-microbenchmark.json) исключает
+  компиляцию и измеряет дополнительную PyTorch allocated память.
+- Неизменённый пример SwiGLU участвует в общем результате, но исключён из
+  собственной доли. Эффект каждого семейства на полный запуск отдельно не измерялся.
+- Для финальной сдачи ещё нужны commit платформенного репозитория, публичный
+  notebook из шаблона с этим commit, данные команды, демо до трёх минут и презентация.
+  По указанию пользователя сейчас изменяется только личная папка `Мерей`.
 
 ## Источники и авторство
 
-Triton-код написан самостоятельно. Источники определяют математические
-формулы, порядок dtype conversions и интерфейсы; код чужих кернелов не взят:
+Triton-код написан самостоятельно; источники задают формулы, интерфейсы и
+порядок dtype conversions. Чужие реализации Triton не копировались.
 
-- [Triton language API](https://triton-lang.org/main/python-api/triton.language.html):
-  загрузки, редукции, экспонента и launch grid.
-- [Qwen2RMSNorm и RoPE, Transformers 5.16.1](https://github.com/huggingface/transformers/blob/v5.16.1/src/transformers/models/qwen2/modeling_qwen2.py):
-  формулы, точный порядок cast, epsilon и layout Q/K.
-- [Transformers loss_utils 5.16.1](https://github.com/huggingface/transformers/blob/v5.16.1/src/transformers/loss/loss_utils.py):
-  causal shift, float32 upcast, `num_items_in_batch`.
-- [TRL SFTTrainer 0.29.1](https://github.com/huggingface/trl/blob/v0.29.1/trl/trainer/sft_trainer.py):
-  no-grad entropy и исходная агрегация метрик.
-- [Soup rewind_hf 0.77.0](https://github.com/MakazhanAlpamys/Soup/blob/v0.77.0/src/soup_cli/trainer/rewind_hf.py):
-  supervised-token row loss и token counts.
-- [bitsandbytes 0.50.2 functional](https://github.com/bitsandbytes-foundation/bitsandbytes/blob/0.50.2/bitsandbytes/functional.py)
-  и [MatMul4Bit autograd](https://github.com/bitsandbytes-foundation/bitsandbytes/blob/0.50.2/bitsandbytes/autograd/_functions.py):
-  представление QuantState, nibble order и реально используемый backward hook.
+- [Triton language API](https://triton-lang.org/main/python-api/triton.language.html).
+- [Qwen2RMSNorm/RoPE, Transformers 5.16.1](https://github.com/huggingface/transformers/blob/v5.16.1/src/transformers/models/qwen2/modeling_qwen2.py).
+- [ForCausalLMLoss/fixed CE 5.16.1](https://github.com/huggingface/transformers/blob/v5.16.1/src/transformers/loss/loss_utils.py): shift, FP32 upcast и нормировка.
+- [Instance loss_function setter](https://github.com/huggingface/transformers/blob/v5.16.1/src/transformers/modeling_utils.py).
+- [Accelerate 1.14.0 output conversion](https://github.com/huggingface/accelerate/blob/v1.14.0/src/accelerate/utils/operations.py) и [AMP wrapper](https://github.com/huggingface/accelerate/blob/v1.14.0/src/accelerate/accelerator.py).
+- [TRL SFTTrainer 0.29.1](https://github.com/huggingface/trl/blob/v0.29.1/trl/trainer/sft_trainer.py) и [Soup rewind 0.77.0](https://github.com/MakazhanAlpamys/Soup/blob/v0.77.0/src/soup_cli/trainer/rewind_hf.py).
+- [bitsandbytes 0.50.2 functional](https://github.com/bitsandbytes-foundation/bitsandbytes/blob/0.50.2/bitsandbytes/functional.py) и [MatMul4Bit backward](https://github.com/bitsandbytes-foundation/bitsandbytes/blob/0.50.2/bitsandbytes/autograd/_functions.py): NF4/QuantState.
 
-Лицензия starter kit и решения — Apache-2.0, см. `LICENSE` и `NOTICE`.
-Данные загружаются исходным `task/prepare_data.py`; модель и датасет не
-включены в репозиторий.
+Лицензия — Apache-2.0, см. `LICENSE` и `NOTICE`. Модель и датасет загружаются
+исходными скриптами и не включены в репозиторий. Оригинальные README команды
+и личной папки сохранены в `docs/`.
