@@ -149,7 +149,9 @@ def install():
     @functools.wraps(original)
     def build(self, *args, **kwargs):
         trainer = original(self, *args, **kwargs)
-        wrap_trainer(trainer)
+        if wrap_trainer(trainer):
+            from .frozen_storage import prepare_trainer_storage
+            prepare_trainer_storage(trainer)
         return trainer
 
     build._soup_private_streaming = True
