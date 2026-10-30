@@ -38,6 +38,8 @@ from .nf4 import MatMulNF4, dequantize_nf4, supported as nf4_supported, _linear_
 from . import warmup as _warmup
 from .rmsnorm import add_rmsnorm
 from .dropout import real_row_dropout, _supported as _real_dropout_supported
+from .batch_metadata import compact_batch_metadata
+from .backward_sums import sum_half_gradients
 
 # Static candidate configuration: no harness/test/environment-dependent switch.
 REAL_ROW_DROPOUT = True
@@ -51,7 +53,9 @@ def rope_pad_fwd_kernel(Q, LQ, K, LK, V, LV, COS, SIN, ROWS, QP, KP, VP, sp_b, s
                         HALF: tl.constexpr,
                         REP: tl.constexpr, BLOCK_HQ: tl.constexpr, BLOCK_HK: tl.constexpr,
                         HAS_LQ: tl.constexpr, HAS_LK: tl.constexpr, HAS_LV: tl.constexpr,
-                        PACKED: tl.constexpr = False):
+                        PACKED: tl.constexpr = False,
+                        FUSE_LORA_SCALE: tl.constexpr = False,
+                        LORA_Q_SCALE: tl.constexpr = 1.0, LORA_V_SCALE: tl.constexpr = 1.0):
     t = tl.program_id(0).to(tl.int64)
     if PACKED:
         b = 0
@@ -75,8 +79,14 @@ def rope_pad_fwd_kernel(Q, LQ, K, LK, V, LV, COS, SIN, ROWS, QP, KP, VP, sp_b, s
     x1 = tl.load(Q + src, mask=mq, other=0.0).to(tl.float32)
     x2 = tl.load(Q + src + HALF, mask=mq, other=0.0).to(tl.float32)
     if HAS_LQ:
-        x1 = x1 + tl.load(LQ + src, mask=mq, other=0.0).to(tl.float32)
-        x2 = x2 + tl.load(LQ + src + HALF, mask=mq, other=0.0).to(tl.float32)
+        lq1 = tl.load(LQ + src, mask=mq, other=0.0).to(tl.float32)
+        lq2 = tl.load(LQ + src + HALF, mask=mq, other=0.0).to(tl.float32)
+        if FUSE_LORA_SCALE:
+            # The eager LoRA multiply writes half before the FP32 add.
+            lq1 = (lq1 * LORA_Q_SCALE).to(tl.float16).to(tl.float32)
+            lq2 = (lq2 * LORA_Q_SCALE).to(tl.float16).to(tl.float32)
+        x1 = x1 + lq1
+        x2 = x2 + lq2
     dst = b * sp_b + hq * sp_h + l * sp_l + cols
     tl.store(QP + dst, ((x1 * c1) - (x2 * s1)).to(dt), mask=mq)
     tl.store(QP + dst + HALF, ((x2 * c2) + (x1 * s2)).to(dt), mask=mq)
@@ -95,8 +105,13 @@ def rope_pad_fwd_kernel(Q, LQ, K, LK, V, LV, COS, SIN, ROWS, QP, KP, VP, sp_b, s
     v1 = tl.load(V + srck, mask=mk, other=0.0).to(tl.float32)
     v2 = tl.load(V + srck + HALF, mask=mk, other=0.0).to(tl.float32)
     if HAS_LV:
-        v1 = v1 + tl.load(LV + srck, mask=mk, other=0.0).to(tl.float32)
-        v2 = v2 + tl.load(LV + srck + HALF, mask=mk, other=0.0).to(tl.float32)
+        lv1 = tl.load(LV + srck, mask=mk, other=0.0).to(tl.float32)
+        lv2 = tl.load(LV + srck + HALF, mask=mk, other=0.0).to(tl.float32)
+        if FUSE_LORA_SCALE:
+            lv1 = (lv1 * LORA_V_SCALE).to(tl.float16).to(tl.float32)
+            lv2 = (lv2 * LORA_V_SCALE).to(tl.float16).to(tl.float32)
+        v1 = v1 + lv1
+        v2 = v2 + lv2
     vo1 = v1.to(dt)
     vo2 = v2.to(dt)
     for rep in tl.static_range(REP):
@@ -113,7 +128,9 @@ def rope_pad_bwd_kernel(DQP, DKP, DVP, COS, SIN, ROWS, DQ, DLQ, DK, DLK, DV, DLV
                         HK: tl.constexpr, HALF: tl.constexpr, REP: tl.constexpr,
                         BLOCK_HQ: tl.constexpr, BLOCK_HK: tl.constexpr, HAS_LQ: tl.constexpr,
                         HAS_LK: tl.constexpr, HAS_LV: tl.constexpr,
-                        PACKED: tl.constexpr = False):
+                        PACKED: tl.constexpr = False,
+                        FUSE_LORA_SCALE: tl.constexpr = False,
+                        LORA_Q_SCALE: tl.constexpr = 1.0, LORA_V_SCALE: tl.constexpr = 1.0):
     t = tl.program_id(0).to(tl.int64)
     if PACKED:
         b = 0
@@ -143,8 +160,14 @@ def rope_pad_bwd_kernel(DQP, DKP, DVP, COS, SIN, ROWS, DQ, DLQ, DK, DLK, DV, DLV
     tl.store(DQ + dst, d1, mask=mq)
     tl.store(DQ + dst + HALF, d2, mask=mq)
     if HAS_LQ:
-        tl.store(DLQ + dst, d1, mask=mq)
-        tl.store(DLQ + dst + HALF, d2, mask=mq)
+        if FUSE_LORA_SCALE:
+            # CastBackward of RoPE/add reaches the eager half multiply first.
+            dlq1 = (d1.to(tl.float32) * LORA_Q_SCALE).to(tl.float16)
+            dlq2 = (d2.to(tl.float32) * LORA_Q_SCALE).to(tl.float16)
+        else:
+            dlq1, dlq2 = d1, d2
+        tl.store(DLQ + dst, dlq1, mask=mq)
+        tl.store(DLQ + dst + HALF, dlq2, mask=mq)
 
     # k and v: the REP query heads' gradients summed in fp32 (repeat_kv's backward)
     hk = tl.arange(0, BLOCK_HK)[:, None]
@@ -171,8 +194,12 @@ def rope_pad_bwd_kernel(DQP, DKP, DVP, COS, SIN, ROWS, DQ, DLQ, DK, DLK, DV, DLV
     tl.store(DV + dstk, gv1.to(dt), mask=mk)
     tl.store(DV + dstk + HALF, gv2.to(dt), mask=mk)
     if HAS_LV:
-        tl.store(DLV + dstk, gv1.to(dt), mask=mk)
-        tl.store(DLV + dstk + HALF, gv2.to(dt), mask=mk)
+        dlv1, dlv2 = gv1.to(dt), gv2.to(dt)
+        if FUSE_LORA_SCALE:
+            dlv1 = (dlv1.to(tl.float32) * LORA_V_SCALE).to(tl.float16)
+            dlv2 = (dlv2.to(tl.float32) * LORA_V_SCALE).to(tl.float16)
+        tl.store(DLV + dstk, dlv1, mask=mk)
+        tl.store(DLV + dstk + HALF, dlv2, mask=mk)
 
 
 @triton.jit(do_not_specialize=["seq_len", "to_flat"])  # one compiled variant, both directions
@@ -202,7 +229,8 @@ class RoPEPad(torch.autograd.Function):
     """(q, k, v) of the real tokens (+ LoRA outputs) -> rotated, fp16, padded, GQA-repeated."""
 
     @staticmethod
-    def forward(ctx, q, lq, k, lk, v, lv, cos, sin, rows, batch, seq_len, hq, hk, dim, rep):
+    def forward(ctx, q, lq, k, lk, v, lv, cos, sin, rows, batch, seq_len, hq, hk, dim, rep,
+                *, lora_scales=None):
         dtype = torch.float16
         out_heads = hk * rep
         packed = bool(getattr(ctx, "_packed", False))
@@ -224,11 +252,15 @@ class RoPEPad(torch.autograd.Function):
             qp.stride(2), kp.stride(0), kp.stride(1), kp.stride(2), seq_len, HQ=hq, HK=hk,
             HALF=dim // 2, REP=rep, BLOCK_HQ=bq,
             BLOCK_HK=bk, HAS_LQ=lq is not None, HAS_LK=lk is not None, HAS_LV=lv is not None,
-            PACKED=packed, num_warps=4, enable_fp_fusion=False)
+            PACKED=packed, FUSE_LORA_SCALE=lora_scales is not None,
+            LORA_Q_SCALE=lora_scales[0] if lora_scales is not None else 1.0,
+            LORA_V_SCALE=lora_scales[1] if lora_scales is not None else 1.0,
+            num_warps=4, enable_fp_fusion=False)
         ctx.save_for_backward(cos, sin, rows)
         ctx.meta = (layout_batch, layout_sequence, hq, hk, dim, rep, lq is not None, lk is not None,
                     lv is not None)
         ctx._packed = packed
+        ctx.lora_scales = lora_scales
         ctx.dtypes = (q.dtype, k.dtype, v.dtype)
         return qp, kp, vp
 
@@ -249,6 +281,7 @@ class RoPEPad(torch.autograd.Function):
         dlq = torch.empty_like(dq) if has_lq else None
         dlk = torch.empty_like(dk) if has_lk else None
         dlv = torch.empty_like(dv) if has_lv else None
+        lora_scales = getattr(ctx, "lora_scales", None)
         bq, bk = _blocks(hq, hk)
         rope_pad_bwd_kernel[(tokens,)](
             dqp, dkp, dvp, cos, sin, rows, dq, dlq if has_lq else dq, dk, dlk if has_lk else dk,
@@ -256,7 +289,11 @@ class RoPEPad(torch.autograd.Function):
             dkp.stride(0), dkp.stride(1), dkp.stride(2), dvp.stride(0), dvp.stride(1),
             dvp.stride(2), seq_len, HQ=hq, HK=hk, HALF=dim // 2, REP=rep, BLOCK_HQ=bq,
             BLOCK_HK=bk, HAS_LQ=has_lq, HAS_LK=has_lk, HAS_LV=has_lv, num_warps=4,
-            PACKED=bool(getattr(ctx, "_packed", False)), enable_fp_fusion=False)
+            PACKED=bool(getattr(ctx, "_packed", False)),
+            FUSE_LORA_SCALE=lora_scales is not None,
+            LORA_Q_SCALE=lora_scales[0] if lora_scales is not None else 1.0,
+            LORA_V_SCALE=lora_scales[1] if lora_scales is not None else 1.0,
+            enable_fp_fusion=False)
         q_dtype, k_dtype, v_dtype = ctx.dtypes
         return (dq.to(q_dtype), dlq, dk.to(k_dtype), dlk, dv.to(v_dtype), dlv,
                 None, None, None, None, None, None, None, None, None)
@@ -274,6 +311,27 @@ class RoPEPacked(torch.autograd.Function):
     @staticmethod
     def backward(ctx, dqp, dkp, dvp):
         return RoPEPad.backward(ctx, dqp, dkp, dvp)
+
+
+class RoPEPackedScaled(torch.autograd.Function):
+    """Private packed Q/V LoRA scaling; legacy 15-argument APIs stay unchanged."""
+
+    @staticmethod
+    def forward(ctx, q, lq, k, lk, v, lv, cos, sin, rows, batch, seq_len,
+                hq, hk, dim, rep, q_scale, v_scale):
+        if (lq is None or lv is None or lk is not None
+                or lq.dtype != torch.float16 or lv.dtype != torch.float16
+                or type(q_scale) is not float or type(v_scale) is not float
+                or q_scale != 2.0 or v_scale != 2.0):
+            raise ValueError("private scaled packed RoPE requires half Q/V and fixed float scale 2")
+        ctx._packed = True
+        return RoPEPad.forward(ctx, q, lq, k, lk, v, lv, cos, sin, rows,
+                               batch, seq_len, hq, hk, dim, rep,
+                               lora_scales=(q_scale, v_scale))
+
+    @staticmethod
+    def backward(ctx, dqp, dkp, dvp):
+        return RoPEPad.backward(ctx, dqp, dkp, dvp) + (None, None)
 
 
 class UnpadHeads(torch.autograd.Function):
@@ -325,12 +383,15 @@ class QKV4bit(torch.autograd.Function):
 
     @staticmethod
     def backward(ctx, *grads):
-        dx = None
+        parts = []
         for layer, grad in zip(ctx.layers, grads):
             if grad is None:
                 continue
-            part = torch.matmul(grad.to(ctx.dtype), _weight(layer, ctx.dtype)).float()
-            dx = part if dx is None else dx.add_(part)
+            # Keep each GEMM's native half rounding, then widen and sum in
+            # the same q -> k -> v order in one elementwise launch.
+            parts.append(torch.matmul(grad.to(ctx.dtype), _weight(layer, ctx.dtype)))
+        dx = (sum_half_gradients(parts) if len(parts) > 1
+              else parts[0].float() if parts else None)
         return dx.to(ctx.x_dtype) if dx is not None else None, None, None, None, None
 
 
@@ -505,6 +566,9 @@ def _batch_metadata(input_ids, attention_mask, labels):
             or input_ids.shape[0] == 0 or input_ids.shape[1] == 0):
         return None
     sequence = input_ids.shape[1]
+    compact = compact_batch_metadata(attention_mask, labels)
+    if compact is not NotImplemented:
+        return compact
     binary = ((attention_mask == 0) | (attention_mask == 1)).all()
     valid = attention_mask != 0
     counts = valid.sum(dim=-1, dtype=torch.int32)
@@ -569,11 +633,27 @@ class _Batch:
         self._padded.pop(id(x), None)
 
 
-def _lora_out(parts, x, step):
+def _lora_out(parts, x, step, *, apply_scale=True):
     base, lora_a, lora_b, dropout, scaling = parts
     if lora_a is None:
         return None
-    return lora_b(lora_a(step.dropout(dropout, x))) * scaling
+    output = lora_b(lora_a(step.dropout(dropout, x)))
+    return output * scaling if apply_scale else output
+
+
+def _can_fuse_lora_scaling(q_parts, v_parts, x, step):
+    """Only the qualified private packed AMP path with the fixed Q/V scale."""
+    if (step.packed_metadata is None or not x.is_cuda or x.dtype != torch.float32
+            or not torch.is_autocast_enabled("cuda")
+            or torch.get_autocast_dtype("cuda") != torch.float16
+            or q_parts[1] is None or v_parts[1] is None
+            or type(q_parts[4]) is not float or q_parts[4] != 2.0
+            or type(v_parts[4]) is not float or v_parts[4] != 2.0):
+        return False
+    from .private_scope import expected_loss_scale
+    # This scope is installed only around the exact private trainer consumer.
+    # No benchmark, step number, or test-detection flag participates.
+    return expected_loss_scale() is not None
 
 
 def _attention(layer, projections, x, cos, sin, mask, step, meta):
@@ -581,16 +661,27 @@ def _attention(layer, projections, x, cos, sin, mask, step, meta):
     q_parts, k_parts, v_parts, o_parts = projections
     q, k, v = QKV4bit.apply(x, q_parts[0], k_parts[0], v_parts[0], torch.float16)
     # the LoRA branches in the base order (q, k, v): same dropout draws
-    lq = _lora_out(q_parts, x, step)
+    fuse_scaling = (k_parts[1] is None
+                    and _can_fuse_lora_scaling(q_parts, v_parts, x, step))
+    lq = _lora_out(q_parts, x, step, apply_scale=not fuse_scaling)
     lk = _lora_out(k_parts, x, step)
-    lv = _lora_out(v_parts, x, step)
+    lv = _lora_out(v_parts, x, step, apply_scale=not fuse_scaling)
+    if fuse_scaling and (lq.dtype != torch.float16 or lv.dtype != torch.float16):
+        # An unexpected module result keeps the original arithmetic, with no
+        # second dropout draw or projection replay.
+        lq, lv = lq * q_parts[4], lv * v_parts[4]
+        fuse_scaling = False
     step.done_with(x)
     if step.packed_metadata is not None:
         # Equal heads keep native efficient/Cutlass available on sm75. No
         # PyTorch repeat/gather is necessary: the Triton producer writes this
         # packed layout directly, in the same real-token order as x.
-        qp, kp, vp = RoPEPacked.apply(q, lq, k, lk, v, lv, cos, sin, step.rows,
-            step.batch, step.seq_len, meta["hq"], meta["hk"], meta["dim"], meta["rep"])
+        arguments = (q, lq, k, lk, v, lv, cos, sin, step.rows,
+                     step.batch, step.seq_len, meta["hq"], meta["hk"], meta["dim"], meta["rep"])
+        if fuse_scaling:
+            qp, kp, vp = RoPEPackedScaled.apply(*arguments, q_parts[4], v_parts[4])
+        else:
+            qp, kp, vp = RoPEPacked.apply(*arguments)
         cumulative = step.packed_metadata["cumulative"]
         maximum = step.packed_metadata["maximum"]
         out = torch.ops.aten._efficient_attention_forward.default(
@@ -630,7 +721,9 @@ def fast_forward(model, meta, input_ids, attention_mask, labels, num_items_in_ba
     _warmup.wait()  # a kernel still compiling in the warm-up thread: wait, do not compile twice
     inner = model.model
     batch, seq_len = input_ids.shape
-    rows = attention_mask.reshape(-1).nonzero().squeeze(1)
+    rows = packed_metadata.get("rows")
+    if rows is None:
+        rows = attention_mask.reshape(-1).nonzero().squeeze(1)
     step = _Batch(rows, batch, seq_len, packed_metadata=packed_metadata)
 
     h = inner.embed_tokens(input_ids.reshape(-1).index_select(0, rows))
@@ -717,15 +810,20 @@ def patch_qwen2_causal_lm():
 
 def warmup(parts=("fwd", "bwd"), hq=12, hk=2, dim=128):
     """Compile the kernels of this file for Qwen2.5-1.5B's training step; see warmup.py."""
+    from .warmup import load_compiled
+
     f16, f32, i64 = torch.float16, torch.float32, torch.int64
     bq, bk = _blocks(hq, hk)
     n = 16  # every stride of these layouts is a multiple of 16; seq_len is not specialized
     common = dict(HQ=hq, HK=hk, HALF=dim // 2, REP=hq // hk, BLOCK_HQ=bq, BLOCK_HK=bk,
                   PACKED=True,
+                  FUSE_LORA_SCALE=True, LORA_Q_SCALE=2.0, LORA_V_SCALE=2.0,
                   HAS_LQ=True, HAS_LK=False, HAS_LV=True, num_warps=4, enable_fp_fusion=False)
     if "fwd" in parts:
-        rope_pad_fwd_kernel.warmup(f16, f16, f16, f16, f16, f16, f32, f32, i64, f16, f16, f16,
-                                   n, n, n, n, n, n, 7, grid=(1,), **common)
+        from .batch_metadata import warmup as warmup_batch_metadata
+        warmup_batch_metadata()
+        load_compiled(rope_pad_fwd_kernel.warmup(f16, f16, f16, f16, f16, f16, f32, f32, i64, f16, f16, f16,
+                                   n, n, n, n, n, n, 7, grid=(1,), **common))
     if "bwd" in parts:
-        rope_pad_bwd_kernel.warmup(f16, f16, f16, f32, f32, i64, f16, f16, f16, f16, f16, f16,
-                                   n, n, n, n, n, n, n, n, n, 7, grid=(1,), **common)
+        load_compiled(rope_pad_bwd_kernel.warmup(f16, f16, f16, f32, f32, i64, f16, f16, f16, f16, f16, f16,
+                                   n, n, n, n, n, n, n, n, n, 7, grid=(1,), **common))

@@ -1,5 +1,26 @@
 # Мерей — Soup Kernel Challenge
 
+## Последнее сравнение: текущий Мерей → runtime 29419f43
+
+В одной серии Kaggle T4 медиана полного запуска уменьшилась **53.38 →
+49.17 с (−7.9%)**, GPU peak — **5275 → 5175 MiB**. Два старых запуска:
+52.30 / 54.46 с; два новых: 48.50 / 49.84 с. Timed steps 3–64:
+25.707 → 25.737 с; ускорение steady-state обучения этим A/B не заявляется.
+**339 solution tests + 79 Soup tests PASS.**
+
+Runtime source: [29419f43d9b9173d1ba5d6824a31589ad3b84df7](https://github.com/promaladoi/Decentrathon-6.0/commit/29419f43d9b9173d1ba5d6824a31589ad3b84df7).
+[Что изменено, границы сравнений](solution/OPTIMIZATION_NOTES.md) ·
+[Pinned reproduction notebook](solution/optimization_validation.ipynb) ·
+[Official admission/quality checks](verification/codex_optimization/final-checks.json).
+Обязательный допуск проверяется отдельно от A/B. Документация внутри
+solution может публиковаться позднее без изменения runtime `.py`;
+финальный checks hash связывает опубликованные bytes.
+
+## Предыдущее подтверждённое состояние — история
+
+Ниже сохранены прежние измерения и ссылки; они относятся к указанным
+там старым code commits, а не к runtime 29419f43.
+
 **Kaggle T4: 82.19 → 56.09 с; GPU peak
 14345 → 5275 MiB; 10/10 checks PASS.**
 **181 passed, 0 skipped** solution; **79 passed** Soup с патчами. Финальная платформенная сдача ещё не оформлена.

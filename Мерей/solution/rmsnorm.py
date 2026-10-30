@@ -227,18 +227,20 @@ def patch_qwen2_rmsnorm():
 def warmup(n=1536, parts=("fwd", "bwd", "add_fwd", "add_bwd", "add_bwd_no_dh")):
     """Compile the variants Qwen2.5-1.5B launches (fp32 hidden state, fp32 weights, fp16
     attention output) ahead of the first step; see warmup.py."""
+    from .warmup import load_compiled
+
     f32, f16 = torch.float32, torch.float16
     block, warps = _launch_config(n)
     cfg = dict(grid=(1,), BLOCK_N=block, num_warps=warps, enable_fp_fusion=False)
     if "fwd" in parts:
-        rmsnorm_fwd_kernel.warmup(f32, f32, f32, f32, n, n, n, 1e-6, **cfg)
+        load_compiled(rmsnorm_fwd_kernel.warmup(f32, f32, f32, f32, n, n, n, 1e-6, **cfg))
     if "add_fwd" in parts:
-        add_rmsnorm_fwd_kernel.warmup(f32, f16, f32, f32, f32, f32, n, n, n, n, n, 1e-6, **cfg)
+        load_compiled(add_rmsnorm_fwd_kernel.warmup(f32, f16, f32, f32, f32, f32, n, n, n, n, n, 1e-6, **cfg))
     if "bwd" in parts:
-        rmsnorm_bwd_kernel.warmup(f32, f32, f32, f32, f32, n, n, n, n, **cfg)
+        load_compiled(rmsnorm_bwd_kernel.warmup(f32, f32, f32, f32, f32, n, n, n, n, **cfg))
     if "add_bwd" in parts:
-        add_rmsnorm_bwd_kernel.warmup(f32, f32, f32, f32, f32, f32, f16, n, n, n, n, n, n,
-                                      HAS_DH=True, **cfg)
+        load_compiled(add_rmsnorm_bwd_kernel.warmup(f32, f32, f32, f32, f32, f32, f16, n, n, n, n, n, n,
+                                      HAS_DH=True, **cfg))
     if "add_bwd_no_dh" in parts:  # an unused residual output (autograd usually passes zeros)
-        add_rmsnorm_bwd_kernel.warmup(f32, f32, f32, f32, f32, f32, f16, n, n, n, n, n, n,
-                                      HAS_DH=False, **cfg)
+        load_compiled(add_rmsnorm_bwd_kernel.warmup(f32, f32, f32, f32, f32, f32, f16, n, n, n, n, n, n,
+                                      HAS_DH=False, **cfg))

@@ -1,0 +1,2253 @@
+{
+  "kind": "cpu_only_tokenization_hashing_wall_diagnostic",
+  "status": "ok",
+  "model_loaded": false,
+  "training_run": false,
+  "fingerprint_or_cache_policy_modified": false,
+  "tokenizer_download_allowed": false,
+  "tokenizer_load_wall_s": 0.43213779999996405,
+  "tokenizer": {
+    "type": "transformers.models.qwen2.tokenization_qwen2.Qwen2Tokenizer",
+    "resolved_commit": null
+  },
+  "sources": [
+    {
+      "callable": "soup_cli.data.loader.load_dataset",
+      "source_sha256": "e8fd13d574aabeda7a22c4763143fdee043b2ee9d66d03460cff9190cce45e03"
+    },
+    {
+      "callable": "soup_cli.data.sft_format.build_format_row",
+      "source_sha256": "7f5eb503c3da72e27f85630a7deb9786eece3cbbeddced10596c3691c6aa894c"
+    },
+    {
+      "callable": "soup_cli.trainer.sft._map_text_sft_rows",
+      "source_sha256": "e2ad99da28831cb0926a101086b864fbc5c670df694fc77f54201c0e0130552c"
+    },
+    {
+      "callable": "soup_cli.trainer.sft._ensure_assistant_masks",
+      "source_sha256": "6287193e0985eb367b09632785f822e625d4e9f048023ee2cd8641d0af9a58eb"
+    },
+    {
+      "callable": "datasets.arrow_dataset.Dataset.map",
+      "source_sha256": "1f601f97dcdd911fd7c4bbf2d80aa9d0ce5e1b4445d97948ba5108f4fd484274"
+    },
+    {
+      "callable": "datasets.utils._dill.dumps",
+      "source_sha256": "576141dad8ce5c69a9791cf57ac7c20d278228d9b2549230254b95add78efefd"
+    },
+    {
+      "callable": "trl.trainer.sft_trainer.SFTTrainer._prepare_dataset",
+      "source_sha256": "b07d32f025ef3496e19291d491a1e0863c06f0e66f93cc3799b555fd6afada03"
+    }
+  ],
+  "versions": {
+    "soup-cli": "0.77.0",
+    "datasets": "4.8.5",
+    "transformers": "5.16.1",
+    "trl": "0.29.1",
+    "torch": "2.11.0+cu128"
+  },
+  "passes": [
+    {
+      "rows": 256,
+      "columns": [
+        "input_ids",
+        "labels",
+        "attention_mask",
+        "assistant_masks"
+      ],
+      "tokens": 52890,
+      "supervised_labels": 33608,
+      "ordered_rows_sha256": "a53275beb00a3a35256b5ff68b02c19db759cf90b37e48697b9f40c433f7f2e1"
+    },
+    {
+      "rows": 256,
+      "columns": [
+        "input_ids",
+        "labels",
+        "attention_mask",
+        "assistant_masks"
+      ],
+      "tokens": 52890,
+      "supervised_labels": 33608,
+      "ordered_rows_sha256": "a53275beb00a3a35256b5ff68b02c19db759cf90b37e48697b9f40c433f7f2e1"
+    }
+  ],
+  "trl_prepare": {
+    "model_free": true,
+    "pretokenized": true,
+    "packing": false,
+    "defaults": {
+      "dataset_num_proc": null,
+      "dataset_text_field": "text",
+      "assistant_only_loss": false,
+      "shuffle_dataset": false,
+      "packing_strategy": "bfd",
+      "use_liger_kernel": false,
+      "max_length": 512,
+      "seed": 1
+    }
+  },
+  "ordered_outputs_identical": true,
+  "phases": [
+    {
+      "phase": "pass_1.build_format_row",
+      "wall_s": 2.3381000119115924e-05
+    },
+    {
+      "phase": "pass_1.soup_map_text_sft_rows",
+      "wall_s": 2.6528744110000844
+    },
+    {
+      "phase": "pass_1.soup_assistant_masks",
+      "wall_s": 0.054998798000269744
+    },
+    {
+      "phase": "pass_1.trl_prepare_pretokenized",
+      "wall_s": 0.010161633000279835
+    },
+    {
+      "phase": "pass_2.build_format_row",
+      "wall_s": 3.7012000120739685e-05
+    },
+    {
+      "phase": "pass_2.soup_map_text_sft_rows",
+      "wall_s": 2.635533163999753
+    },
+    {
+      "phase": "pass_2.soup_assistant_masks",
+      "wall_s": 0.052959240000291175
+    },
+    {
+      "phase": "pass_2.trl_prepare_pretokenized",
+      "wall_s": 0.007678392000343592
+    }
+  ],
+  "maps": [
+    {
+      "id": 0,
+      "phase": "pass_1.soup_map_text_sft_rows",
+      "input_rows": 256,
+      "function": {
+        "type": "builtins.function",
+        "callable": "soup_cli.trainer.sft._map_text_sft_rows.<locals>.checked_format_row",
+        "freevars": [
+          {
+            "name": "NoCausalLossTargetError",
+            "type": "builtins.type"
+          },
+          {
+            "name": "ensure_causal_loss_target",
+            "type": "builtins.function",
+            "callable": "soup_cli.data.loss_mask.ensure_causal_loss_target",
+            "freevars": []
+          },
+          {
+            "name": "format_row",
+            "type": "builtins.function",
+            "callable": "soup_cli.data.sft_format._wrap_dropping_arrow_nulls.<locals>.wrapped",
+            "freevars": [
+              {
+                "name": "inner",
+                "type": "builtins.function",
+                "callable": "soup_cli.data.sft_format._build_assistant_only_format_row.<locals>.format_row",
+                "freevars": [
+                  {
+                    "name": "include_eot",
+                    "type": "builtins.bool"
+                  },
+                  {
+                    "name": "mask_history",
+                    "type": "builtins.bool"
+                  },
+                  {
+                    "name": "max_length",
+                    "type": "builtins.int"
+                  },
+                  {
+                    "name": "tokenizer",
+                    "type": "transformers.models.qwen2.tokenization_qwen2.Qwen2Tokenizer"
+                  }
+                ]
+              }
+            ]
+          },
+          {
+            "name": "max_length",
+            "type": "builtins.int"
+          },
+          {
+            "name": "split",
+            "type": "builtins.str"
+          }
+        ]
+      },
+      "batched": false,
+      "with_indices": true,
+      "num_proc": null,
+      "explicit_fingerprint": false,
+      "output_rows": 256,
+      "status": "ok",
+      "wall_s": 2.64596293600016
+    },
+    {
+      "id": 1,
+      "phase": "pass_1.soup_assistant_masks",
+      "input_rows": 256,
+      "function": {
+        "type": "builtins.function",
+        "callable": "soup_cli.trainer.sft._ensure_assistant_masks.<locals>.<lambda>",
+        "freevars": []
+      },
+      "batched": false,
+      "with_indices": false,
+      "num_proc": null,
+      "explicit_fingerprint": false,
+      "output_rows": 256,
+      "status": "ok",
+      "wall_s": 0.05494811100015795
+    },
+    {
+      "id": 2,
+      "phase": "pass_1.trl_prepare_pretokenized",
+      "input_rows": 256,
+      "function": {
+        "type": "builtins.function",
+        "callable": "trl.data_utils.truncate_dataset.<locals>.truncate",
+        "freevars": [
+          {
+            "name": "max_length",
+            "type": "builtins.int"
+          }
+        ]
+      },
+      "batched": true,
+      "with_indices": false,
+      "num_proc": null,
+      "explicit_fingerprint": false,
+      "output_rows": 256,
+      "status": "ok",
+      "wall_s": 0.007182327999998961
+    },
+    {
+      "id": 3,
+      "phase": "pass_2.soup_map_text_sft_rows",
+      "input_rows": 256,
+      "function": {
+        "type": "builtins.function",
+        "callable": "soup_cli.trainer.sft._map_text_sft_rows.<locals>.checked_format_row",
+        "freevars": [
+          {
+            "name": "NoCausalLossTargetError",
+            "type": "builtins.type"
+          },
+          {
+            "name": "ensure_causal_loss_target",
+            "type": "builtins.function",
+            "callable": "soup_cli.data.loss_mask.ensure_causal_loss_target",
+            "freevars": []
+          },
+          {
+            "name": "format_row",
+            "type": "builtins.function",
+            "callable": "soup_cli.data.sft_format._wrap_dropping_arrow_nulls.<locals>.wrapped",
+            "freevars": [
+              {
+                "name": "inner",
+                "type": "builtins.function",
+                "callable": "soup_cli.data.sft_format._build_assistant_only_format_row.<locals>.format_row",
+                "freevars": [
+                  {
+                    "name": "include_eot",
+                    "type": "builtins.bool"
+                  },
+                  {
+                    "name": "mask_history",
+                    "type": "builtins.bool"
+                  },
+                  {
+                    "name": "max_length",
+                    "type": "builtins.int"
+                  },
+                  {
+                    "name": "tokenizer",
+                    "type": "transformers.models.qwen2.tokenization_qwen2.Qwen2Tokenizer"
+                  }
+                ]
+              }
+            ]
+          },
+          {
+            "name": "max_length",
+            "type": "builtins.int"
+          },
+          {
+            "name": "split",
+            "type": "builtins.str"
+          }
+        ]
+      },
+      "batched": false,
+      "with_indices": true,
+      "num_proc": null,
+      "explicit_fingerprint": false,
+      "output_rows": 256,
+      "status": "ok",
+      "wall_s": 2.6293253150001874
+    },
+    {
+      "id": 4,
+      "phase": "pass_2.soup_assistant_masks",
+      "input_rows": 256,
+      "function": {
+        "type": "builtins.function",
+        "callable": "soup_cli.trainer.sft._ensure_assistant_masks.<locals>.<lambda>",
+        "freevars": []
+      },
+      "batched": false,
+      "with_indices": false,
+      "num_proc": null,
+      "explicit_fingerprint": false,
+      "output_rows": 256,
+      "status": "ok",
+      "wall_s": 0.05291561500007447
+    },
+    {
+      "id": 5,
+      "phase": "pass_2.trl_prepare_pretokenized",
+      "input_rows": 256,
+      "function": {
+        "type": "builtins.function",
+        "callable": "trl.data_utils.truncate_dataset.<locals>.truncate",
+        "freevars": [
+          {
+            "name": "max_length",
+            "type": "builtins.int"
+          }
+        ]
+      },
+      "batched": true,
+      "with_indices": false,
+      "num_proc": null,
+      "explicit_fingerprint": false,
+      "output_rows": 256,
+      "status": "ok",
+      "wall_s": 0.0058514890001788444
+    }
+  ],
+  "dumps": [
+    {
+      "phase": "pass_1.soup_map_text_sft_rows",
+      "map_id": null,
+      "wall_s": 0.0001139119999606919,
+      "serialized_bytes": 19,
+      "status": "ok",
+      "object": {
+        "type": "builtins.str"
+      }
+    },
+    {
+      "phase": "pass_1.soup_map_text_sft_rows",
+      "map_id": null,
+      "wall_s": 0.0031520510001428192,
+      "serialized_bytes": 299044,
+      "status": "ok",
+      "object": {
+        "type": "datasets.table.InMemoryTable"
+      }
+    },
+    {
+      "phase": "pass_1.soup_map_text_sft_rows",
+      "map_id": null,
+      "wall_s": 2.6337999770476017e-05,
+      "serialized_bytes": 29,
+      "status": "ok",
+      "object": {
+        "type": "builtins.str"
+      }
+    },
+    {
+      "phase": "pass_1.soup_map_text_sft_rows",
+      "map_id": null,
+      "wall_s": 1.152300001194817e-05,
+      "serialized_bytes": 4,
+      "status": "ok",
+      "object": {
+        "type": "builtins.NoneType"
+      }
+    },
+    {
+      "phase": "pass_1.soup_map_text_sft_rows",
+      "map_id": null,
+      "wall_s": 1.1403999906178797e-05,
+      "serialized_bytes": 28,
+      "status": "ok",
+      "object": {
+        "type": "builtins.str"
+      }
+    },
+    {
+      "phase": "pass_1.soup_map_text_sft_rows",
+      "map_id": null,
+      "wall_s": 2.870599973903154e-05,
+      "serialized_bytes": 5,
+      "status": "ok",
+      "object": {
+        "type": "builtins.dict"
+      }
+    },
+    {
+      "phase": "pass_1.soup_map_text_sft_rows",
+      "map_id": null,
+      "wall_s": 1.0511000255064573e-05,
+      "serialized_bytes": 26,
+      "status": "ok",
+      "object": {
+        "type": "builtins.str"
+      }
+    },
+    {
+      "phase": "pass_1.soup_map_text_sft_rows",
+      "map_id": null,
+      "wall_s": 8.075000096141594e-06,
+      "serialized_bytes": 4,
+      "status": "ok",
+      "object": {
+        "type": "builtins.NoneType"
+      }
+    },
+    {
+      "phase": "pass_1.soup_map_text_sft_rows",
+      "map_id": null,
+      "wall_s": 8.803000127954874e-06,
+      "serialized_bytes": 22,
+      "status": "ok",
+      "object": {
+        "type": "builtins.str"
+      }
+    },
+    {
+      "phase": "pass_1.soup_map_text_sft_rows",
+      "map_id": null,
+      "wall_s": 1.7601999843464e-05,
+      "serialized_bytes": 5,
+      "status": "ok",
+      "object": {
+        "type": "builtins.dict"
+      }
+    },
+    {
+      "phase": "pass_1.soup_map_text_sft_rows",
+      "map_id": null,
+      "wall_s": 8.898000032786513e-06,
+      "serialized_bytes": 22,
+      "status": "ok",
+      "object": {
+        "type": "builtins.str"
+      }
+    },
+    {
+      "phase": "pass_1.soup_map_text_sft_rows",
+      "map_id": null,
+      "wall_s": 7.808000191289466e-06,
+      "serialized_bytes": 4,
+      "status": "ok",
+      "object": {
+        "type": "builtins.NoneType"
+      }
+    },
+    {
+      "phase": "pass_1.soup_map_text_sft_rows",
+      "map_id": null,
+      "wall_s": 8.275999789475463e-06,
+      "serialized_bytes": 19,
+      "status": "ok",
+      "object": {
+        "type": "builtins.str"
+      }
+    },
+    {
+      "phase": "pass_1.soup_map_text_sft_rows",
+      "map_id": null,
+      "wall_s": 0.0004181700001026911,
+      "serialized_bytes": 604,
+      "status": "ok",
+      "object": {
+        "type": "datasets.info.DatasetInfo"
+      }
+    },
+    {
+      "phase": "pass_1.soup_map_text_sft_rows",
+      "map_id": null,
+      "wall_s": 1.3272999694891041e-05,
+      "serialized_bytes": 33,
+      "status": "ok",
+      "object": {
+        "type": "builtins.str"
+      }
+    },
+    {
+      "phase": "pass_1.soup_map_text_sft_rows",
+      "map_id": null,
+      "wall_s": 9.511999905953417e-06,
+      "serialized_bytes": 4,
+      "status": "ok",
+      "object": {
+        "type": "builtins.bool"
+      }
+    },
+    {
+      "phase": "pass_1.soup_map_text_sft_rows",
+      "map_id": null,
+      "wall_s": 8.877000254869927e-06,
+      "serialized_bytes": 20,
+      "status": "ok",
+      "object": {
+        "type": "builtins.str"
+      }
+    },
+    {
+      "phase": "pass_1.soup_map_text_sft_rows",
+      "map_id": null,
+      "wall_s": 1.4497999927698402e-05,
+      "serialized_bytes": 4,
+      "status": "ok",
+      "object": {
+        "type": "builtins.NoneType"
+      }
+    },
+    {
+      "phase": "pass_1.soup_map_text_sft_rows",
+      "map_id": 0,
+      "wall_s": 2.5716999971336918e-05,
+      "serialized_bytes": 30,
+      "status": "ok",
+      "object": {
+        "type": "builtins.str"
+      }
+    },
+    {
+      "phase": "pass_1.soup_map_text_sft_rows",
+      "map_id": 0,
+      "wall_s": 1.2850000075559365e-05,
+      "serialized_bytes": 56,
+      "status": "ok",
+      "object": {
+        "type": "builtins.str"
+      }
+    },
+    {
+      "phase": "pass_1.soup_map_text_sft_rows",
+      "map_id": 0,
+      "wall_s": 1.2115000117773889e-05,
+      "serialized_bytes": 30,
+      "status": "ok",
+      "object": {
+        "type": "builtins.str"
+      }
+    },
+    {
+      "phase": "pass_1.soup_map_text_sft_rows",
+      "map_id": 0,
+      "wall_s": 1.0259000191581436e-05,
+      "serialized_bytes": 29,
+      "status": "ok",
+      "object": {
+        "type": "builtins.str"
+      }
+    },
+    {
+      "phase": "pass_1.soup_map_text_sft_rows",
+      "map_id": 0,
+      "wall_s": 9.487999705015682e-06,
+      "serialized_bytes": 23,
+      "status": "ok",
+      "object": {
+        "type": "builtins.str"
+      }
+    },
+    {
+      "phase": "pass_1.soup_map_text_sft_rows",
+      "map_id": 0,
+      "wall_s": 2.1599999854515772e-05,
+      "serialized_bytes": 5,
+      "status": "ok",
+      "object": {
+        "type": "builtins.dict"
+      }
+    },
+    {
+      "phase": "pass_1.soup_map_text_sft_rows",
+      "map_id": 0,
+      "wall_s": 9.479999789618887e-06,
+      "serialized_bytes": 22,
+      "status": "ok",
+      "object": {
+        "type": "builtins.str"
+      }
+    },
+    {
+      "phase": "pass_1.soup_map_text_sft_rows",
+      "map_id": 0,
+      "wall_s": 2.1130177789996196,
+      "serialized_bytes": 9954402,
+      "status": "ok",
+      "object": {
+        "type": "builtins.function",
+        "callable": "soup_cli.trainer.sft._map_text_sft_rows.<locals>.checked_format_row",
+        "freevars": [
+          {
+            "name": "NoCausalLossTargetError",
+            "type": "builtins.type"
+          },
+          {
+            "name": "ensure_causal_loss_target",
+            "type": "builtins.function",
+            "callable": "soup_cli.data.loss_mask.ensure_causal_loss_target",
+            "freevars": []
+          },
+          {
+            "name": "format_row",
+            "type": "builtins.function",
+            "callable": "soup_cli.data.sft_format._wrap_dropping_arrow_nulls.<locals>.wrapped",
+            "freevars": [
+              {
+                "name": "inner",
+                "type": "builtins.function",
+                "callable": "soup_cli.data.sft_format._build_assistant_only_format_row.<locals>.format_row",
+                "freevars": [
+                  {
+                    "name": "include_eot",
+                    "type": "builtins.bool"
+                  },
+                  {
+                    "name": "mask_history",
+                    "type": "builtins.bool"
+                  },
+                  {
+                    "name": "max_length",
+                    "type": "builtins.int"
+                  },
+                  {
+                    "name": "tokenizer",
+                    "type": "transformers.models.qwen2.tokenization_qwen2.Qwen2Tokenizer"
+                  }
+                ]
+              }
+            ]
+          },
+          {
+            "name": "max_length",
+            "type": "builtins.int"
+          },
+          {
+            "name": "split",
+            "type": "builtins.str"
+          }
+        ]
+      }
+    },
+    {
+      "phase": "pass_1.soup_map_text_sft_rows",
+      "map_id": 0,
+      "wall_s": 5.502299973159097e-05,
+      "serialized_bytes": 28,
+      "status": "ok",
+      "object": {
+        "type": "builtins.str"
+      }
+    },
+    {
+      "phase": "pass_1.soup_map_text_sft_rows",
+      "map_id": 0,
+      "wall_s": 2.5874000129988417e-05,
+      "serialized_bytes": 25,
+      "status": "ok",
+      "object": {
+        "type": "builtins.list"
+      }
+    },
+    {
+      "phase": "pass_1.soup_map_text_sft_rows",
+      "map_id": 0,
+      "wall_s": 1.1869999980262946e-05,
+      "serialized_bytes": 26,
+      "status": "ok",
+      "object": {
+        "type": "builtins.str"
+      }
+    },
+    {
+      "phase": "pass_1.soup_map_text_sft_rows",
+      "map_id": 0,
+      "wall_s": 9.641999895393383e-06,
+      "serialized_bytes": 4,
+      "status": "ok",
+      "object": {
+        "type": "builtins.bool"
+      }
+    },
+    {
+      "phase": "pass_1.soup_map_text_sft_rows",
+      "map_id": 0,
+      "wall_s": 3.6238000120647484e-05,
+      "serialized_bytes": 30,
+      "status": "ok",
+      "object": {
+        "type": "builtins.str"
+      }
+    },
+    {
+      "phase": "pass_1.soup_map_text_sft_rows",
+      "map_id": 0,
+      "wall_s": 1.313700022365083e-05,
+      "serialized_bytes": 55,
+      "status": "ok",
+      "object": {
+        "type": "builtins.str"
+      }
+    },
+    {
+      "phase": "pass_1.soup_map_text_sft_rows",
+      "map_id": 0,
+      "wall_s": 1.1995000022579916e-05,
+      "serialized_bytes": 18,
+      "status": "ok",
+      "object": {
+        "type": "builtins.str"
+      }
+    },
+    {
+      "phase": "pass_1.soup_map_text_sft_rows",
+      "map_id": 0,
+      "wall_s": 9.735999810800422e-06,
+      "serialized_bytes": 19,
+      "status": "ok",
+      "object": {
+        "type": "builtins.str"
+      }
+    },
+    {
+      "phase": "pass_1.soup_assistant_masks",
+      "map_id": 1,
+      "wall_s": 5.117800037623965e-05,
+      "serialized_bytes": 30,
+      "status": "ok",
+      "object": {
+        "type": "builtins.str"
+      }
+    },
+    {
+      "phase": "pass_1.soup_assistant_masks",
+      "map_id": 1,
+      "wall_s": 1.3179999768908601e-05,
+      "serialized_bytes": 56,
+      "status": "ok",
+      "object": {
+        "type": "builtins.str"
+      }
+    },
+    {
+      "phase": "pass_1.soup_assistant_masks",
+      "map_id": 1,
+      "wall_s": 1.228199971592403e-05,
+      "serialized_bytes": 30,
+      "status": "ok",
+      "object": {
+        "type": "builtins.str"
+      }
+    },
+    {
+      "phase": "pass_1.soup_assistant_masks",
+      "map_id": 1,
+      "wall_s": 9.826999757933663e-06,
+      "serialized_bytes": 29,
+      "status": "ok",
+      "object": {
+        "type": "builtins.str"
+      }
+    },
+    {
+      "phase": "pass_1.soup_assistant_masks",
+      "map_id": 1,
+      "wall_s": 8.930000149121042e-06,
+      "serialized_bytes": 23,
+      "status": "ok",
+      "object": {
+        "type": "builtins.str"
+      }
+    },
+    {
+      "phase": "pass_1.soup_assistant_masks",
+      "map_id": 1,
+      "wall_s": 2.9300000278453808e-05,
+      "serialized_bytes": 5,
+      "status": "ok",
+      "object": {
+        "type": "builtins.dict"
+      }
+    },
+    {
+      "phase": "pass_1.soup_assistant_masks",
+      "map_id": 1,
+      "wall_s": 9.287000011681812e-06,
+      "serialized_bytes": 22,
+      "status": "ok",
+      "object": {
+        "type": "builtins.str"
+      }
+    },
+    {
+      "phase": "pass_1.soup_assistant_masks",
+      "map_id": 1,
+      "wall_s": 0.0008040620000429044,
+      "serialized_bytes": 542,
+      "status": "ok",
+      "object": {
+        "type": "builtins.function",
+        "callable": "soup_cli.trainer.sft._ensure_assistant_masks.<locals>.<lambda>",
+        "freevars": []
+      }
+    },
+    {
+      "phase": "pass_1.soup_assistant_masks",
+      "map_id": 1,
+      "wall_s": 2.8638999992836034e-05,
+      "serialized_bytes": 30,
+      "status": "ok",
+      "object": {
+        "type": "builtins.str"
+      }
+    },
+    {
+      "phase": "pass_1.soup_assistant_masks",
+      "map_id": 1,
+      "wall_s": 1.3460000445775222e-05,
+      "serialized_bytes": 55,
+      "status": "ok",
+      "object": {
+        "type": "builtins.str"
+      }
+    },
+    {
+      "phase": "pass_1.soup_assistant_masks",
+      "map_id": 1,
+      "wall_s": 1.2297000012040371e-05,
+      "serialized_bytes": 18,
+      "status": "ok",
+      "object": {
+        "type": "builtins.str"
+      }
+    },
+    {
+      "phase": "pass_1.soup_assistant_masks",
+      "map_id": 1,
+      "wall_s": 1.0000999736803351e-05,
+      "serialized_bytes": 19,
+      "status": "ok",
+      "object": {
+        "type": "builtins.str"
+      }
+    },
+    {
+      "phase": "pass_1.trl_prepare_pretokenized",
+      "map_id": null,
+      "wall_s": 5.662100011250004e-05,
+      "serialized_bytes": 30,
+      "status": "ok",
+      "object": {
+        "type": "builtins.str"
+      }
+    },
+    {
+      "phase": "pass_1.trl_prepare_pretokenized",
+      "map_id": null,
+      "wall_s": 1.419000000169035e-05,
+      "serialized_bytes": 55,
+      "status": "ok",
+      "object": {
+        "type": "builtins.str"
+      }
+    },
+    {
+      "phase": "pass_1.trl_prepare_pretokenized",
+      "map_id": null,
+      "wall_s": 1.2760000117850723e-05,
+      "serialized_bytes": 23,
+      "status": "ok",
+      "object": {
+        "type": "builtins.str"
+      }
+    },
+    {
+      "phase": "pass_1.trl_prepare_pretokenized",
+      "map_id": null,
+      "wall_s": 4.647700006898958e-05,
+      "serialized_bytes": 53,
+      "status": "ok",
+      "object": {
+        "type": "builtins.function",
+        "callable": "trl.trainer.utils.remove_none_values",
+        "freevars": []
+      }
+    },
+    {
+      "phase": "pass_1.trl_prepare_pretokenized",
+      "map_id": null,
+      "wall_s": 1.090300020223367e-05,
+      "serialized_bytes": 18,
+      "status": "ok",
+      "object": {
+        "type": "builtins.str"
+      }
+    },
+    {
+      "phase": "pass_1.trl_prepare_pretokenized",
+      "map_id": null,
+      "wall_s": 9.387999853061046e-06,
+      "serialized_bytes": 20,
+      "status": "ok",
+      "object": {
+        "type": "builtins.str"
+      }
+    },
+    {
+      "phase": "pass_1.trl_prepare_pretokenized",
+      "map_id": null,
+      "wall_s": 3.1675999707658775e-05,
+      "serialized_bytes": 30,
+      "status": "ok",
+      "object": {
+        "type": "builtins.str"
+      }
+    },
+    {
+      "phase": "pass_1.trl_prepare_pretokenized",
+      "map_id": null,
+      "wall_s": 1.403600026606e-05,
+      "serialized_bytes": 55,
+      "status": "ok",
+      "object": {
+        "type": "builtins.str"
+      }
+    },
+    {
+      "phase": "pass_1.trl_prepare_pretokenized",
+      "map_id": null,
+      "wall_s": 1.2845999663113616e-05,
+      "serialized_bytes": 18,
+      "status": "ok",
+      "object": {
+        "type": "builtins.str"
+      }
+    },
+    {
+      "phase": "pass_1.trl_prepare_pretokenized",
+      "map_id": null,
+      "wall_s": 1.066899994839332e-05,
+      "serialized_bytes": 19,
+      "status": "ok",
+      "object": {
+        "type": "builtins.str"
+      }
+    },
+    {
+      "phase": "pass_1.trl_prepare_pretokenized",
+      "map_id": 2,
+      "wall_s": 1.6447999769297894e-05,
+      "serialized_bytes": 30,
+      "status": "ok",
+      "object": {
+        "type": "builtins.str"
+      }
+    },
+    {
+      "phase": "pass_1.trl_prepare_pretokenized",
+      "map_id": 2,
+      "wall_s": 1.254800008609891e-05,
+      "serialized_bytes": 56,
+      "status": "ok",
+      "object": {
+        "type": "builtins.str"
+      }
+    },
+    {
+      "phase": "pass_1.trl_prepare_pretokenized",
+      "map_id": 2,
+      "wall_s": 1.167799973700312e-05,
+      "serialized_bytes": 21,
+      "status": "ok",
+      "object": {
+        "type": "builtins.str"
+      }
+    },
+    {
+      "phase": "pass_1.trl_prepare_pretokenized",
+      "map_id": 2,
+      "wall_s": 9.775000307854498e-06,
+      "serialized_bytes": 4,
+      "status": "ok",
+      "object": {
+        "type": "builtins.bool"
+      }
+    },
+    {
+      "phase": "pass_1.trl_prepare_pretokenized",
+      "map_id": 2,
+      "wall_s": 2.0856000446656253e-05,
+      "serialized_bytes": 30,
+      "status": "ok",
+      "object": {
+        "type": "builtins.str"
+      }
+    },
+    {
+      "phase": "pass_1.trl_prepare_pretokenized",
+      "map_id": 2,
+      "wall_s": 8.061000244197203e-06,
+      "serialized_bytes": 29,
+      "status": "ok",
+      "object": {
+        "type": "builtins.str"
+      }
+    },
+    {
+      "phase": "pass_1.trl_prepare_pretokenized",
+      "map_id": 2,
+      "wall_s": 7.767000170133542e-06,
+      "serialized_bytes": 23,
+      "status": "ok",
+      "object": {
+        "type": "builtins.str"
+      }
+    },
+    {
+      "phase": "pass_1.trl_prepare_pretokenized",
+      "map_id": 2,
+      "wall_s": 4.330100000515813e-05,
+      "serialized_bytes": 5,
+      "status": "ok",
+      "object": {
+        "type": "builtins.dict"
+      }
+    },
+    {
+      "phase": "pass_1.trl_prepare_pretokenized",
+      "map_id": 2,
+      "wall_s": 8.859999979904387e-06,
+      "serialized_bytes": 22,
+      "status": "ok",
+      "object": {
+        "type": "builtins.str"
+      }
+    },
+    {
+      "phase": "pass_1.trl_prepare_pretokenized",
+      "map_id": 2,
+      "wall_s": 0.0012057580001965107,
+      "serialized_bytes": 1229,
+      "status": "ok",
+      "object": {
+        "type": "builtins.function",
+        "callable": "trl.data_utils.truncate_dataset.<locals>.truncate",
+        "freevars": [
+          {
+            "name": "max_length",
+            "type": "builtins.int"
+          }
+        ]
+      }
+    },
+    {
+      "phase": "pass_1.trl_prepare_pretokenized",
+      "map_id": 2,
+      "wall_s": 2.8043999918736517e-05,
+      "serialized_bytes": 30,
+      "status": "ok",
+      "object": {
+        "type": "builtins.str"
+      }
+    },
+    {
+      "phase": "pass_1.trl_prepare_pretokenized",
+      "map_id": 2,
+      "wall_s": 1.2882000191893894e-05,
+      "serialized_bytes": 55,
+      "status": "ok",
+      "object": {
+        "type": "builtins.str"
+      }
+    },
+    {
+      "phase": "pass_1.trl_prepare_pretokenized",
+      "map_id": 2,
+      "wall_s": 1.1626999821601203e-05,
+      "serialized_bytes": 18,
+      "status": "ok",
+      "object": {
+        "type": "builtins.str"
+      }
+    },
+    {
+      "phase": "pass_1.trl_prepare_pretokenized",
+      "map_id": 2,
+      "wall_s": 9.830000180954812e-06,
+      "serialized_bytes": 19,
+      "status": "ok",
+      "object": {
+        "type": "builtins.str"
+      }
+    },
+    {
+      "phase": "pass_1.trl_prepare_pretokenized",
+      "map_id": 2,
+      "wall_s": 2.8912999823660357e-05,
+      "serialized_bytes": 30,
+      "status": "ok",
+      "object": {
+        "type": "builtins.str"
+      }
+    },
+    {
+      "phase": "pass_1.trl_prepare_pretokenized",
+      "map_id": 2,
+      "wall_s": 1.3373999991017627e-05,
+      "serialized_bytes": 55,
+      "status": "ok",
+      "object": {
+        "type": "builtins.str"
+      }
+    },
+    {
+      "phase": "pass_1.trl_prepare_pretokenized",
+      "map_id": 2,
+      "wall_s": 1.2269999842828838e-05,
+      "serialized_bytes": 27,
+      "status": "ok",
+      "object": {
+        "type": "builtins.str"
+      }
+    },
+    {
+      "phase": "pass_1.trl_prepare_pretokenized",
+      "map_id": 2,
+      "wall_s": 2.3613999928784324e-05,
+      "serialized_bytes": 5,
+      "status": "ok",
+      "object": {
+        "type": "builtins.dict"
+      }
+    },
+    {
+      "phase": "pass_1.trl_prepare_pretokenized",
+      "map_id": 2,
+      "wall_s": 1.0788999588839943e-05,
+      "serialized_bytes": 18,
+      "status": "ok",
+      "object": {
+        "type": "builtins.str"
+      }
+    },
+    {
+      "phase": "pass_1.trl_prepare_pretokenized",
+      "map_id": 2,
+      "wall_s": 9.195000075123971e-06,
+      "serialized_bytes": 19,
+      "status": "ok",
+      "object": {
+        "type": "builtins.str"
+      }
+    },
+    {
+      "phase": "pass_1.trl_prepare_pretokenized",
+      "map_id": null,
+      "wall_s": 2.5086999812629074e-05,
+      "serialized_bytes": 30,
+      "status": "ok",
+      "object": {
+        "type": "builtins.str"
+      }
+    },
+    {
+      "phase": "pass_1.trl_prepare_pretokenized",
+      "map_id": null,
+      "wall_s": 1.2817999959224835e-05,
+      "serialized_bytes": 55,
+      "status": "ok",
+      "object": {
+        "type": "builtins.str"
+      }
+    },
+    {
+      "phase": "pass_2.soup_map_text_sft_rows",
+      "map_id": null,
+      "wall_s": 4.469600025913678e-05,
+      "serialized_bytes": 19,
+      "status": "ok",
+      "object": {
+        "type": "builtins.str"
+      }
+    },
+    {
+      "phase": "pass_2.soup_map_text_sft_rows",
+      "map_id": null,
+      "wall_s": 0.0035543599997254205,
+      "serialized_bytes": 299044,
+      "status": "ok",
+      "object": {
+        "type": "datasets.table.InMemoryTable"
+      }
+    },
+    {
+      "phase": "pass_2.soup_map_text_sft_rows",
+      "map_id": null,
+      "wall_s": 2.0679000044765417e-05,
+      "serialized_bytes": 29,
+      "status": "ok",
+      "object": {
+        "type": "builtins.str"
+      }
+    },
+    {
+      "phase": "pass_2.soup_map_text_sft_rows",
+      "map_id": null,
+      "wall_s": 1.0379000286775408e-05,
+      "serialized_bytes": 4,
+      "status": "ok",
+      "object": {
+        "type": "builtins.NoneType"
+      }
+    },
+    {
+      "phase": "pass_2.soup_map_text_sft_rows",
+      "map_id": null,
+      "wall_s": 1.0556999768596143e-05,
+      "serialized_bytes": 28,
+      "status": "ok",
+      "object": {
+        "type": "builtins.str"
+      }
+    },
+    {
+      "phase": "pass_2.soup_map_text_sft_rows",
+      "map_id": null,
+      "wall_s": 2.2631999854638707e-05,
+      "serialized_bytes": 5,
+      "status": "ok",
+      "object": {
+        "type": "builtins.dict"
+      }
+    },
+    {
+      "phase": "pass_2.soup_map_text_sft_rows",
+      "map_id": null,
+      "wall_s": 9.765999948285753e-06,
+      "serialized_bytes": 26,
+      "status": "ok",
+      "object": {
+        "type": "builtins.str"
+      }
+    },
+    {
+      "phase": "pass_2.soup_map_text_sft_rows",
+      "map_id": null,
+      "wall_s": 7.298000127775595e-06,
+      "serialized_bytes": 4,
+      "status": "ok",
+      "object": {
+        "type": "builtins.NoneType"
+      }
+    },
+    {
+      "phase": "pass_2.soup_map_text_sft_rows",
+      "map_id": null,
+      "wall_s": 8.072999662545044e-06,
+      "serialized_bytes": 22,
+      "status": "ok",
+      "object": {
+        "type": "builtins.str"
+      }
+    },
+    {
+      "phase": "pass_2.soup_map_text_sft_rows",
+      "map_id": null,
+      "wall_s": 1.5405999874928966e-05,
+      "serialized_bytes": 5,
+      "status": "ok",
+      "object": {
+        "type": "builtins.dict"
+      }
+    },
+    {
+      "phase": "pass_2.soup_map_text_sft_rows",
+      "map_id": null,
+      "wall_s": 8.20500008558156e-06,
+      "serialized_bytes": 22,
+      "status": "ok",
+      "object": {
+        "type": "builtins.str"
+      }
+    },
+    {
+      "phase": "pass_2.soup_map_text_sft_rows",
+      "map_id": null,
+      "wall_s": 6.997000127739739e-06,
+      "serialized_bytes": 4,
+      "status": "ok",
+      "object": {
+        "type": "builtins.NoneType"
+      }
+    },
+    {
+      "phase": "pass_2.soup_map_text_sft_rows",
+      "map_id": null,
+      "wall_s": 7.690000074944692e-06,
+      "serialized_bytes": 19,
+      "status": "ok",
+      "object": {
+        "type": "builtins.str"
+      }
+    },
+    {
+      "phase": "pass_2.soup_map_text_sft_rows",
+      "map_id": null,
+      "wall_s": 0.00039236800012076856,
+      "serialized_bytes": 604,
+      "status": "ok",
+      "object": {
+        "type": "datasets.info.DatasetInfo"
+      }
+    },
+    {
+      "phase": "pass_2.soup_map_text_sft_rows",
+      "map_id": null,
+      "wall_s": 1.2961000265931943e-05,
+      "serialized_bytes": 33,
+      "status": "ok",
+      "object": {
+        "type": "builtins.str"
+      }
+    },
+    {
+      "phase": "pass_2.soup_map_text_sft_rows",
+      "map_id": null,
+      "wall_s": 9.333999969385331e-06,
+      "serialized_bytes": 4,
+      "status": "ok",
+      "object": {
+        "type": "builtins.bool"
+      }
+    },
+    {
+      "phase": "pass_2.soup_map_text_sft_rows",
+      "map_id": null,
+      "wall_s": 8.96500023372937e-06,
+      "serialized_bytes": 20,
+      "status": "ok",
+      "object": {
+        "type": "builtins.str"
+      }
+    },
+    {
+      "phase": "pass_2.soup_map_text_sft_rows",
+      "map_id": null,
+      "wall_s": 7.123999694158556e-06,
+      "serialized_bytes": 4,
+      "status": "ok",
+      "object": {
+        "type": "builtins.NoneType"
+      }
+    },
+    {
+      "phase": "pass_2.soup_map_text_sft_rows",
+      "map_id": 3,
+      "wall_s": 2.4553999992349418e-05,
+      "serialized_bytes": 30,
+      "status": "ok",
+      "object": {
+        "type": "builtins.str"
+      }
+    },
+    {
+      "phase": "pass_2.soup_map_text_sft_rows",
+      "map_id": 3,
+      "wall_s": 1.2040999990858836e-05,
+      "serialized_bytes": 56,
+      "status": "ok",
+      "object": {
+        "type": "builtins.str"
+      }
+    },
+    {
+      "phase": "pass_2.soup_map_text_sft_rows",
+      "map_id": 3,
+      "wall_s": 1.1698999969667057e-05,
+      "serialized_bytes": 30,
+      "status": "ok",
+      "object": {
+        "type": "builtins.str"
+      }
+    },
+    {
+      "phase": "pass_2.soup_map_text_sft_rows",
+      "map_id": 3,
+      "wall_s": 9.240000053978292e-06,
+      "serialized_bytes": 29,
+      "status": "ok",
+      "object": {
+        "type": "builtins.str"
+      }
+    },
+    {
+      "phase": "pass_2.soup_map_text_sft_rows",
+      "map_id": 3,
+      "wall_s": 8.846999662637245e-06,
+      "serialized_bytes": 23,
+      "status": "ok",
+      "object": {
+        "type": "builtins.str"
+      }
+    },
+    {
+      "phase": "pass_2.soup_map_text_sft_rows",
+      "map_id": 3,
+      "wall_s": 2.130900020347326e-05,
+      "serialized_bytes": 5,
+      "status": "ok",
+      "object": {
+        "type": "builtins.dict"
+      }
+    },
+    {
+      "phase": "pass_2.soup_map_text_sft_rows",
+      "map_id": 3,
+      "wall_s": 9.010000212583691e-06,
+      "serialized_bytes": 22,
+      "status": "ok",
+      "object": {
+        "type": "builtins.str"
+      }
+    },
+    {
+      "phase": "pass_2.soup_map_text_sft_rows",
+      "map_id": 3,
+      "wall_s": 2.129217965999942,
+      "serialized_bytes": 9954402,
+      "status": "ok",
+      "object": {
+        "type": "builtins.function",
+        "callable": "soup_cli.trainer.sft._map_text_sft_rows.<locals>.checked_format_row",
+        "freevars": [
+          {
+            "name": "NoCausalLossTargetError",
+            "type": "builtins.type"
+          },
+          {
+            "name": "ensure_causal_loss_target",
+            "type": "builtins.function",
+            "callable": "soup_cli.data.loss_mask.ensure_causal_loss_target",
+            "freevars": []
+          },
+          {
+            "name": "format_row",
+            "type": "builtins.function",
+            "callable": "soup_cli.data.sft_format._wrap_dropping_arrow_nulls.<locals>.wrapped",
+            "freevars": [
+              {
+                "name": "inner",
+                "type": "builtins.function",
+                "callable": "soup_cli.data.sft_format._build_assistant_only_format_row.<locals>.format_row",
+                "freevars": [
+                  {
+                    "name": "include_eot",
+                    "type": "builtins.bool"
+                  },
+                  {
+                    "name": "mask_history",
+                    "type": "builtins.bool"
+                  },
+                  {
+                    "name": "max_length",
+                    "type": "builtins.int"
+                  },
+                  {
+                    "name": "tokenizer",
+                    "type": "transformers.models.qwen2.tokenization_qwen2.Qwen2Tokenizer"
+                  }
+                ]
+              }
+            ]
+          },
+          {
+            "name": "max_length",
+            "type": "builtins.int"
+          },
+          {
+            "name": "split",
+            "type": "builtins.str"
+          }
+        ]
+      }
+    },
+    {
+      "phase": "pass_2.soup_map_text_sft_rows",
+      "map_id": 3,
+      "wall_s": 6.213999995452468e-05,
+      "serialized_bytes": 28,
+      "status": "ok",
+      "object": {
+        "type": "builtins.str"
+      }
+    },
+    {
+      "phase": "pass_2.soup_map_text_sft_rows",
+      "map_id": 3,
+      "wall_s": 2.7135999971505953e-05,
+      "serialized_bytes": 25,
+      "status": "ok",
+      "object": {
+        "type": "builtins.list"
+      }
+    },
+    {
+      "phase": "pass_2.soup_map_text_sft_rows",
+      "map_id": 3,
+      "wall_s": 1.1696000001393259e-05,
+      "serialized_bytes": 26,
+      "status": "ok",
+      "object": {
+        "type": "builtins.str"
+      }
+    },
+    {
+      "phase": "pass_2.soup_map_text_sft_rows",
+      "map_id": 3,
+      "wall_s": 9.80300001174328e-06,
+      "serialized_bytes": 4,
+      "status": "ok",
+      "object": {
+        "type": "builtins.bool"
+      }
+    },
+    {
+      "phase": "pass_2.soup_map_text_sft_rows",
+      "map_id": 3,
+      "wall_s": 3.5835000289807795e-05,
+      "serialized_bytes": 30,
+      "status": "ok",
+      "object": {
+        "type": "builtins.str"
+      }
+    },
+    {
+      "phase": "pass_2.soup_map_text_sft_rows",
+      "map_id": 3,
+      "wall_s": 1.2710000191873405e-05,
+      "serialized_bytes": 55,
+      "status": "ok",
+      "object": {
+        "type": "builtins.str"
+      }
+    },
+    {
+      "phase": "pass_2.soup_map_text_sft_rows",
+      "map_id": 3,
+      "wall_s": 1.2006999895675108e-05,
+      "serialized_bytes": 18,
+      "status": "ok",
+      "object": {
+        "type": "builtins.str"
+      }
+    },
+    {
+      "phase": "pass_2.soup_map_text_sft_rows",
+      "map_id": 3,
+      "wall_s": 1.0467000265634852e-05,
+      "serialized_bytes": 19,
+      "status": "ok",
+      "object": {
+        "type": "builtins.str"
+      }
+    },
+    {
+      "phase": "pass_2.soup_assistant_masks",
+      "map_id": 4,
+      "wall_s": 4.824799998459639e-05,
+      "serialized_bytes": 30,
+      "status": "ok",
+      "object": {
+        "type": "builtins.str"
+      }
+    },
+    {
+      "phase": "pass_2.soup_assistant_masks",
+      "map_id": 4,
+      "wall_s": 1.3534999652620172e-05,
+      "serialized_bytes": 56,
+      "status": "ok",
+      "object": {
+        "type": "builtins.str"
+      }
+    },
+    {
+      "phase": "pass_2.soup_assistant_masks",
+      "map_id": 4,
+      "wall_s": 1.2311999853409361e-05,
+      "serialized_bytes": 30,
+      "status": "ok",
+      "object": {
+        "type": "builtins.str"
+      }
+    },
+    {
+      "phase": "pass_2.soup_assistant_masks",
+      "map_id": 4,
+      "wall_s": 1.0325999937776942e-05,
+      "serialized_bytes": 29,
+      "status": "ok",
+      "object": {
+        "type": "builtins.str"
+      }
+    },
+    {
+      "phase": "pass_2.soup_assistant_masks",
+      "map_id": 4,
+      "wall_s": 9.229999704984948e-06,
+      "serialized_bytes": 23,
+      "status": "ok",
+      "object": {
+        "type": "builtins.str"
+      }
+    },
+    {
+      "phase": "pass_2.soup_assistant_masks",
+      "map_id": 4,
+      "wall_s": 2.8765000024577603e-05,
+      "serialized_bytes": 5,
+      "status": "ok",
+      "object": {
+        "type": "builtins.dict"
+      }
+    },
+    {
+      "phase": "pass_2.soup_assistant_masks",
+      "map_id": 4,
+      "wall_s": 1.0046000170405023e-05,
+      "serialized_bytes": 22,
+      "status": "ok",
+      "object": {
+        "type": "builtins.str"
+      }
+    },
+    {
+      "phase": "pass_2.soup_assistant_masks",
+      "map_id": 4,
+      "wall_s": 0.0008118530004139757,
+      "serialized_bytes": 542,
+      "status": "ok",
+      "object": {
+        "type": "builtins.function",
+        "callable": "soup_cli.trainer.sft._ensure_assistant_masks.<locals>.<lambda>",
+        "freevars": []
+      }
+    },
+    {
+      "phase": "pass_2.soup_assistant_masks",
+      "map_id": 4,
+      "wall_s": 3.168700004607672e-05,
+      "serialized_bytes": 30,
+      "status": "ok",
+      "object": {
+        "type": "builtins.str"
+      }
+    },
+    {
+      "phase": "pass_2.soup_assistant_masks",
+      "map_id": 4,
+      "wall_s": 1.3761999980488326e-05,
+      "serialized_bytes": 55,
+      "status": "ok",
+      "object": {
+        "type": "builtins.str"
+      }
+    },
+    {
+      "phase": "pass_2.soup_assistant_masks",
+      "map_id": 4,
+      "wall_s": 1.2710000191873405e-05,
+      "serialized_bytes": 18,
+      "status": "ok",
+      "object": {
+        "type": "builtins.str"
+      }
+    },
+    {
+      "phase": "pass_2.soup_assistant_masks",
+      "map_id": 4,
+      "wall_s": 1.084099994841381e-05,
+      "serialized_bytes": 19,
+      "status": "ok",
+      "object": {
+        "type": "builtins.str"
+      }
+    },
+    {
+      "phase": "pass_2.trl_prepare_pretokenized",
+      "map_id": null,
+      "wall_s": 4.292700032237917e-05,
+      "serialized_bytes": 30,
+      "status": "ok",
+      "object": {
+        "type": "builtins.str"
+      }
+    },
+    {
+      "phase": "pass_2.trl_prepare_pretokenized",
+      "map_id": null,
+      "wall_s": 1.3812999895890243e-05,
+      "serialized_bytes": 55,
+      "status": "ok",
+      "object": {
+        "type": "builtins.str"
+      }
+    },
+    {
+      "phase": "pass_2.trl_prepare_pretokenized",
+      "map_id": null,
+      "wall_s": 1.2677000086114276e-05,
+      "serialized_bytes": 23,
+      "status": "ok",
+      "object": {
+        "type": "builtins.str"
+      }
+    },
+    {
+      "phase": "pass_2.trl_prepare_pretokenized",
+      "map_id": null,
+      "wall_s": 4.758700015372597e-05,
+      "serialized_bytes": 53,
+      "status": "ok",
+      "object": {
+        "type": "builtins.function",
+        "callable": "trl.trainer.utils.remove_none_values",
+        "freevars": []
+      }
+    },
+    {
+      "phase": "pass_2.trl_prepare_pretokenized",
+      "map_id": null,
+      "wall_s": 1.0838999969564611e-05,
+      "serialized_bytes": 18,
+      "status": "ok",
+      "object": {
+        "type": "builtins.str"
+      }
+    },
+    {
+      "phase": "pass_2.trl_prepare_pretokenized",
+      "map_id": null,
+      "wall_s": 9.477999810769688e-06,
+      "serialized_bytes": 20,
+      "status": "ok",
+      "object": {
+        "type": "builtins.str"
+      }
+    },
+    {
+      "phase": "pass_2.trl_prepare_pretokenized",
+      "map_id": null,
+      "wall_s": 2.4492000193276908e-05,
+      "serialized_bytes": 30,
+      "status": "ok",
+      "object": {
+        "type": "builtins.str"
+      }
+    },
+    {
+      "phase": "pass_2.trl_prepare_pretokenized",
+      "map_id": null,
+      "wall_s": 1.2805000096705044e-05,
+      "serialized_bytes": 55,
+      "status": "ok",
+      "object": {
+        "type": "builtins.str"
+      }
+    },
+    {
+      "phase": "pass_2.trl_prepare_pretokenized",
+      "map_id": null,
+      "wall_s": 1.153900029748911e-05,
+      "serialized_bytes": 18,
+      "status": "ok",
+      "object": {
+        "type": "builtins.str"
+      }
+    },
+    {
+      "phase": "pass_2.trl_prepare_pretokenized",
+      "map_id": null,
+      "wall_s": 1.0148000001208857e-05,
+      "serialized_bytes": 19,
+      "status": "ok",
+      "object": {
+        "type": "builtins.str"
+      }
+    },
+    {
+      "phase": "pass_2.trl_prepare_pretokenized",
+      "map_id": 5,
+      "wall_s": 1.5734000044176355e-05,
+      "serialized_bytes": 30,
+      "status": "ok",
+      "object": {
+        "type": "builtins.str"
+      }
+    },
+    {
+      "phase": "pass_2.trl_prepare_pretokenized",
+      "map_id": 5,
+      "wall_s": 1.0678999842639314e-05,
+      "serialized_bytes": 56,
+      "status": "ok",
+      "object": {
+        "type": "builtins.str"
+      }
+    },
+    {
+      "phase": "pass_2.trl_prepare_pretokenized",
+      "map_id": 5,
+      "wall_s": 2.0034000044688582e-05,
+      "serialized_bytes": 21,
+      "status": "ok",
+      "object": {
+        "type": "builtins.str"
+      }
+    },
+    {
+      "phase": "pass_2.trl_prepare_pretokenized",
+      "map_id": 5,
+      "wall_s": 9.379999937664252e-06,
+      "serialized_bytes": 4,
+      "status": "ok",
+      "object": {
+        "type": "builtins.bool"
+      }
+    },
+    {
+      "phase": "pass_2.trl_prepare_pretokenized",
+      "map_id": 5,
+      "wall_s": 8.70200028657564e-06,
+      "serialized_bytes": 30,
+      "status": "ok",
+      "object": {
+        "type": "builtins.str"
+      }
+    },
+    {
+      "phase": "pass_2.trl_prepare_pretokenized",
+      "map_id": 5,
+      "wall_s": 8.444999821222154e-06,
+      "serialized_bytes": 29,
+      "status": "ok",
+      "object": {
+        "type": "builtins.str"
+      }
+    },
+    {
+      "phase": "pass_2.trl_prepare_pretokenized",
+      "map_id": 5,
+      "wall_s": 7.688000096095493e-06,
+      "serialized_bytes": 23,
+      "status": "ok",
+      "object": {
+        "type": "builtins.str"
+      }
+    },
+    {
+      "phase": "pass_2.trl_prepare_pretokenized",
+      "map_id": 5,
+      "wall_s": 2.604000019346131e-05,
+      "serialized_bytes": 5,
+      "status": "ok",
+      "object": {
+        "type": "builtins.dict"
+      }
+    },
+    {
+      "phase": "pass_2.trl_prepare_pretokenized",
+      "map_id": 5,
+      "wall_s": 8.458999673166545e-06,
+      "serialized_bytes": 22,
+      "status": "ok",
+      "object": {
+        "type": "builtins.str"
+      }
+    },
+    {
+      "phase": "pass_2.trl_prepare_pretokenized",
+      "map_id": 5,
+      "wall_s": 0.0011177649998899142,
+      "serialized_bytes": 1229,
+      "status": "ok",
+      "object": {
+        "type": "builtins.function",
+        "callable": "trl.data_utils.truncate_dataset.<locals>.truncate",
+        "freevars": [
+          {
+            "name": "max_length",
+            "type": "builtins.int"
+          }
+        ]
+      }
+    },
+    {
+      "phase": "pass_2.trl_prepare_pretokenized",
+      "map_id": 5,
+      "wall_s": 2.775899974949425e-05,
+      "serialized_bytes": 30,
+      "status": "ok",
+      "object": {
+        "type": "builtins.str"
+      }
+    },
+    {
+      "phase": "pass_2.trl_prepare_pretokenized",
+      "map_id": 5,
+      "wall_s": 2.1596999886241974e-05,
+      "serialized_bytes": 55,
+      "status": "ok",
+      "object": {
+        "type": "builtins.str"
+      }
+    },
+    {
+      "phase": "pass_2.trl_prepare_pretokenized",
+      "map_id": 5,
+      "wall_s": 1.2588000117830234e-05,
+      "serialized_bytes": 18,
+      "status": "ok",
+      "object": {
+        "type": "builtins.str"
+      }
+    },
+    {
+      "phase": "pass_2.trl_prepare_pretokenized",
+      "map_id": 5,
+      "wall_s": 9.767999927134952e-06,
+      "serialized_bytes": 19,
+      "status": "ok",
+      "object": {
+        "type": "builtins.str"
+      }
+    },
+    {
+      "phase": "pass_2.trl_prepare_pretokenized",
+      "map_id": 5,
+      "wall_s": 3.103700009887689e-05,
+      "serialized_bytes": 30,
+      "status": "ok",
+      "object": {
+        "type": "builtins.str"
+      }
+    },
+    {
+      "phase": "pass_2.trl_prepare_pretokenized",
+      "map_id": 5,
+      "wall_s": 1.2827999853470828e-05,
+      "serialized_bytes": 55,
+      "status": "ok",
+      "object": {
+        "type": "builtins.str"
+      }
+    },
+    {
+      "phase": "pass_2.trl_prepare_pretokenized",
+      "map_id": 5,
+      "wall_s": 1.2028000128339045e-05,
+      "serialized_bytes": 27,
+      "status": "ok",
+      "object": {
+        "type": "builtins.str"
+      }
+    },
+    {
+      "phase": "pass_2.trl_prepare_pretokenized",
+      "map_id": 5,
+      "wall_s": 2.366700027778279e-05,
+      "serialized_bytes": 5,
+      "status": "ok",
+      "object": {
+        "type": "builtins.dict"
+      }
+    },
+    {
+      "phase": "pass_2.trl_prepare_pretokenized",
+      "map_id": 5,
+      "wall_s": 1.071800033969339e-05,
+      "serialized_bytes": 18,
+      "status": "ok",
+      "object": {
+        "type": "builtins.str"
+      }
+    },
+    {
+      "phase": "pass_2.trl_prepare_pretokenized",
+      "map_id": 5,
+      "wall_s": 9.154000053968048e-06,
+      "serialized_bytes": 19,
+      "status": "ok",
+      "object": {
+        "type": "builtins.str"
+      }
+    },
+    {
+      "phase": "pass_2.trl_prepare_pretokenized",
+      "map_id": null,
+      "wall_s": 2.092400018227636e-05,
+      "serialized_bytes": 30,
+      "status": "ok",
+      "object": {
+        "type": "builtins.str"
+      }
+    },
+    {
+      "phase": "pass_2.trl_prepare_pretokenized",
+      "map_id": null,
+      "wall_s": 1.2398999842844205e-05,
+      "serialized_bytes": 55,
+      "status": "ok",
+      "object": {
+        "type": "builtins.str"
+      }
+    }
+  ],
+  "dumps_summary": [
+    {
+      "phase": "pass_2.soup_map_text_sft_rows",
+      "object": "soup_cli.trainer.sft._map_text_sft_rows.<locals>.checked_format_row",
+      "calls": 1,
+      "wall_s": 2.129217965999942,
+      "serialized_bytes": 9954402
+    },
+    {
+      "phase": "pass_1.soup_map_text_sft_rows",
+      "object": "soup_cli.trainer.sft._map_text_sft_rows.<locals>.checked_format_row",
+      "calls": 1,
+      "wall_s": 2.1130177789996196,
+      "serialized_bytes": 9954402
+    },
+    {
+      "phase": "pass_2.soup_map_text_sft_rows",
+      "object": "datasets.table.InMemoryTable",
+      "calls": 1,
+      "wall_s": 0.0035543599997254205,
+      "serialized_bytes": 299044
+    },
+    {
+      "phase": "pass_1.soup_map_text_sft_rows",
+      "object": "datasets.table.InMemoryTable",
+      "calls": 1,
+      "wall_s": 0.0031520510001428192,
+      "serialized_bytes": 299044
+    },
+    {
+      "phase": "pass_1.trl_prepare_pretokenized",
+      "object": "trl.data_utils.truncate_dataset.<locals>.truncate",
+      "calls": 1,
+      "wall_s": 0.0012057580001965107,
+      "serialized_bytes": 1229
+    },
+    {
+      "phase": "pass_2.trl_prepare_pretokenized",
+      "object": "trl.data_utils.truncate_dataset.<locals>.truncate",
+      "calls": 1,
+      "wall_s": 0.0011177649998899142,
+      "serialized_bytes": 1229
+    },
+    {
+      "phase": "pass_2.soup_assistant_masks",
+      "object": "soup_cli.trainer.sft._ensure_assistant_masks.<locals>.<lambda>",
+      "calls": 1,
+      "wall_s": 0.0008118530004139757,
+      "serialized_bytes": 542
+    },
+    {
+      "phase": "pass_1.soup_assistant_masks",
+      "object": "soup_cli.trainer.sft._ensure_assistant_masks.<locals>.<lambda>",
+      "calls": 1,
+      "wall_s": 0.0008040620000429044,
+      "serialized_bytes": 542
+    },
+    {
+      "phase": "pass_1.trl_prepare_pretokenized",
+      "object": "builtins.str",
+      "calls": 27,
+      "wall_s": 0.0004341359995123639,
+      "serialized_bytes": 835
+    },
+    {
+      "phase": "pass_1.soup_map_text_sft_rows",
+      "object": "builtins.str",
+      "calls": 21,
+      "wall_s": 0.00042819999953280785,
+      "serialized_bytes": 584
+    },
+    {
+      "phase": "pass_1.soup_map_text_sft_rows",
+      "object": "datasets.info.DatasetInfo",
+      "calls": 1,
+      "wall_s": 0.0004181700001026911,
+      "serialized_bytes": 604
+    },
+    {
+      "phase": "pass_2.trl_prepare_pretokenized",
+      "object": "builtins.str",
+      "calls": 27,
+      "wall_s": 0.00040925900066213217,
+      "serialized_bytes": 835
+    },
+    {
+      "phase": "pass_2.soup_map_text_sft_rows",
+      "object": "datasets.info.DatasetInfo",
+      "calls": 1,
+      "wall_s": 0.00039236800012076856,
+      "serialized_bytes": 604
+    },
+    {
+      "phase": "pass_2.soup_map_text_sft_rows",
+      "object": "builtins.str",
+      "calls": 21,
+      "wall_s": 0.00035183800082450034,
+      "serialized_bytes": 584
+    },
+    {
+      "phase": "pass_2.soup_assistant_masks",
+      "object": "builtins.str",
+      "calls": 10,
+      "wall_s": 0.0001726969994706451,
+      "serialized_bytes": 312
+    },
+    {
+      "phase": "pass_1.soup_assistant_masks",
+      "object": "builtins.str",
+      "calls": 10,
+      "wall_s": 0.00016908099996726378,
+      "serialized_bytes": 312
+    },
+    {
+      "phase": "pass_1.soup_map_text_sft_rows",
+      "object": "builtins.dict",
+      "calls": 3,
+      "wall_s": 6.790799943701131e-05,
+      "serialized_bytes": 15
+    },
+    {
+      "phase": "pass_1.trl_prepare_pretokenized",
+      "object": "builtins.dict",
+      "calls": 2,
+      "wall_s": 6.691499993394245e-05,
+      "serialized_bytes": 10
+    },
+    {
+      "phase": "pass_2.soup_map_text_sft_rows",
+      "object": "builtins.dict",
+      "calls": 3,
+      "wall_s": 5.9346999933040934e-05,
+      "serialized_bytes": 15
+    },
+    {
+      "phase": "pass_2.trl_prepare_pretokenized",
+      "object": "builtins.dict",
+      "calls": 2,
+      "wall_s": 4.97070004712441e-05,
+      "serialized_bytes": 10
+    },
+    {
+      "phase": "pass_2.trl_prepare_pretokenized",
+      "object": "trl.trainer.utils.remove_none_values",
+      "calls": 1,
+      "wall_s": 4.758700015372597e-05,
+      "serialized_bytes": 53
+    },
+    {
+      "phase": "pass_1.trl_prepare_pretokenized",
+      "object": "trl.trainer.utils.remove_none_values",
+      "calls": 1,
+      "wall_s": 4.647700006898958e-05,
+      "serialized_bytes": 53
+    },
+    {
+      "phase": "pass_1.soup_map_text_sft_rows",
+      "object": "builtins.NoneType",
+      "calls": 4,
+      "wall_s": 4.190400022707763e-05,
+      "serialized_bytes": 16
+    },
+    {
+      "phase": "pass_2.soup_map_text_sft_rows",
+      "object": "builtins.NoneType",
+      "calls": 4,
+      "wall_s": 3.17980002364493e-05,
+      "serialized_bytes": 16
+    },
+    {
+      "phase": "pass_1.soup_assistant_masks",
+      "object": "builtins.dict",
+      "calls": 1,
+      "wall_s": 2.9300000278453808e-05,
+      "serialized_bytes": 5
+    },
+    {
+      "phase": "pass_2.soup_assistant_masks",
+      "object": "builtins.dict",
+      "calls": 1,
+      "wall_s": 2.8765000024577603e-05,
+      "serialized_bytes": 5
+    },
+    {
+      "phase": "pass_2.soup_map_text_sft_rows",
+      "object": "builtins.list",
+      "calls": 1,
+      "wall_s": 2.7135999971505953e-05,
+      "serialized_bytes": 25
+    },
+    {
+      "phase": "pass_1.soup_map_text_sft_rows",
+      "object": "builtins.list",
+      "calls": 1,
+      "wall_s": 2.5874000129988417e-05,
+      "serialized_bytes": 25
+    },
+    {
+      "phase": "pass_1.soup_map_text_sft_rows",
+      "object": "builtins.bool",
+      "calls": 2,
+      "wall_s": 1.91539998013468e-05,
+      "serialized_bytes": 8
+    },
+    {
+      "phase": "pass_2.soup_map_text_sft_rows",
+      "object": "builtins.bool",
+      "calls": 2,
+      "wall_s": 1.913699998112861e-05,
+      "serialized_bytes": 8
+    },
+    {
+      "phase": "pass_1.trl_prepare_pretokenized",
+      "object": "builtins.bool",
+      "calls": 1,
+      "wall_s": 9.775000307854498e-06,
+      "serialized_bytes": 4
+    },
+    {
+      "phase": "pass_2.trl_prepare_pretokenized",
+      "object": "builtins.bool",
+      "calls": 1,
+      "wall_s": 9.379999937664252e-06,
+      "serialized_bytes": 4
+    }
+  ],
+  "torch_cuda_initialized": false,
+  "solution_imported": false,
+  "total_wall_s": 18.963984889999665
+}

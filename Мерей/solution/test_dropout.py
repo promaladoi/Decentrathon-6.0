@@ -1,4 +1,4 @@
-"""Exact native-RNG qualification; candidate remains uninstalled in training."""
+"""Exact native-RNG and bit-packed saved-mask qualification."""
 
 import pytest
 import torch
@@ -45,8 +45,11 @@ def test_exact_full_mask_real_output_gradient_and_rng_progression(p, shape, leng
     with torch.autograd.graph.saved_tensors_hooks(
             lambda tensor: saved.append(tensor) or tensor, lambda tensor: tensor):
         actual = real_row_dropout(x, rows, batch, sequence, p, rows_from_nonzero=True)
-    assert len(saved) == 1 and saved[0].dtype == torch.bool and saved[0].shape == x.shape
-    assert torch.equal(saved[0], expected_mask)
+    assert len(saved) == 1 and saved[0].dtype == torch.uint8
+    assert saved[0].shape == ((x.numel() + 7) // 8,)
+    bit_index = torch.arange(x.numel(), device='cuda')
+    unpacked = ((saved[0][bit_index // 8].to(torch.int32) >> (bit_index % 8)) & 1).bool()
+    assert torch.equal(unpacked.reshape_as(expected_mask), expected_mask)
     assert torch.equal(torch.cuda.get_rng_state(), expected_rng)
     assert torch.equal(torch.rand(41, device='cuda'), expected_next)
     state_before_backward = torch.cuda.get_rng_state()

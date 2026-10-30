@@ -1,0 +1,80 @@
+{
+  "measured_runtime_commit": "29419f43d9b9173d1ba5d6824a31589ad3b84df7",
+  "documentation_snapshot_commit": "8d0c83fa6a9e8cd31e344efc61f6410690fd87fe",
+  "current_merei_commit": "d6dca3ac371b6bf5ac15584cd9afbd027aab4a0b",
+  "documentation_only_paths_after_measurement": [
+    "Мерей/README.md",
+    "Мерей/WORK_STATUS.md",
+    "Мерей/solution/OPTIMIZATION_NOTES.md",
+    "Мерей/solution/optimization_validation.ipynb"
+  ],
+  "all_solution_python_git_blobs_identical_to_measured": true,
+  "solution_python_git_blobs": {
+    "Мерей/solution/__init__.py": "bdfb7ee8b67f1e0ab7fba06f473d76570cdb8456",
+    "Мерей/solution/attention_rows.py": "f75b2a178e18f811074b16d0201ec17428619ba5",
+    "Мерей/solution/backward_sums.py": "9edb99a278215c1925739c30b1e1ac313b54fdcd",
+    "Мерей/solution/batch_metadata.py": "051a5ad3b43b86e65efd8f1eac2032d6688cbfdb",
+    "Мерей/solution/benchmark_attention_rows.py": "ae1d15cbcb1b9f5cf15d31fb2ff8fb1804c663c6",
+    "Мерей/solution/benchmark_dropout.py": "d679868508ee285f85f9439ab94fd95675c30c91",
+    "Мерей/solution/benchmark_packed_integration.py": "bfae5d596ac778ecf3c6129071d2a6b12e91ad26",
+    "Мерей/solution/diagnostics/hash_tokenization.py": "6b6f0da7489214b5336f32d19d949ed2535fb0b5",
+    "Мерей/solution/dropout.py": "82b37aed85addbbd70c4df6e316f621279c2f882",
+    "Мерей/solution/head_weight_cache.py": "2326cd41afcd861c2603da84fa39c2e426dae6c4",
+    "Мерей/solution/layer.py": "919908995f3776f6763c562efff7bfa04cf0ec90",
+    "Мерей/solution/lmhead.py": "94be43a16cb655313c027c79a2b1435a73601c3f",
+    "Мерей/solution/mlp.py": "5e836c910c1dc8e785acea7268ae7fc23ee79ed8",
+    "Мерей/solution/nf4.py": "52ead4fe6752401ee4ca13aa08983a4aa6147cf8",
+    "Мерей/solution/private_scope.py": "d982423c8e263f2eb5a78261abe183d337a7d1f2",
+    "Мерей/solution/rmsnorm.py": "58f00c02d36d6ec14ce8dc0fc0d32ee7349735d4",
+    "Мерей/solution/rope.py": "5d54973adff9bf4b27ecf7a7eec8ff145659638e",
+    "Мерей/solution/run_diagnostics.py": "752c426434a9d6bb3da4bdfcb5ff46f1d31db068",
+    "Мерей/solution/swiglu.py": "92bb82b4f122622e00852583de6ad3aae8d1cb60",
+    "Мерей/solution/test_attention_rows.py": "3d293aeae8b9beaa3e10a79bb7c3c2fa39b4ffa1",
+    "Мерей/solution/test_backward_sums.py": "292264f517a8da7813e9cfd81897a96f2ef8f133",
+    "Мерей/solution/test_batch_metadata.py": "60316bcef7c3f1c9de3fd1f164da04d50b315648",
+    "Мерей/solution/test_dropout.py": "64376e8b2cdb167d6835819f86b30055b083331f",
+    "Мерей/solution/test_dropout_integration.py": "88cf2e65f76e7391914700e5d0772a2c77edec02",
+    "Мерей/solution/test_dropout_packed.py": "3ba2af1ea4e08324337963a95c65c370a40a93e9",
+    "Мерей/solution/test_head_weight_cache.py": "d095bf9be8ee09a615e4add3e8425e2b18d9dea8",
+    "Мерей/solution/test_kernels.py": "046251d5308c226614152a7e4e765fae3b440c23",
+    "Мерей/solution/test_layer.py": "38179423a233e11f764f53a3a4de2eaae212e072",
+    "Мерей/solution/test_lmhead_scaled.py": "ef04167aa6006dd983f2aa05b072d0d4b3f39d7a",
+    "Мерей/solution/test_lmhead_scatter.py": "7a7cd254d1cd8faead2938d63741d768e13b790e",
+    "Мерей/solution/test_lora_scaling.py": "4884a274f47aec2938d3ab5e8306b6c588f9a4e6",
+    "Мерей/solution/test_numerics.py": "f5ab55747db0d91883afba9d35bb69059af61e0a",
+    "Мерей/solution/test_packed_integration.py": "bc6a2cf090e79e0912b55dde43e3fbe8a6f2a77b",
+    "Мерей/solution/test_private_streaming.py": "a128baf286a3766518768dde8178179765e142e8",
+    "Мерей/solution/test_qkv_backward_sums.py": "5909330c038cba3e1d89816adc313660be965c38",
+    "Мерей/solution/test_tokenization_map.py": "722155dfaea8c5d1630edae7355aa1572fd42bc1",
+    "Мерей/solution/test_unpad.py": "259b7b5232ca0bc13d02ae7183f2e489091de3d9",
+    "Мерей/solution/test_warmup_handles.py": "34cabd76bd1834fe7c78f7261843e98c05f633b9",
+    "Мерей/solution/tokenization_map.py": "e17ee41c349e27798c3a386ab82e16eca6772a9e",
+    "Мерей/solution/unpad.py": "1b32e30d92ff73a00c99f43e29ec2395c5ccf2ed",
+    "Мерей/solution/warmup.py": "9ae8d30931886c079cca3d6248d6d7cee1c0dbb5"
+  },
+  "protected_trees_identical_to_current_merei": [
+    "Мерей/harness",
+    "Мерей/task",
+    "Мерей/tests"
+  ],
+  "measured_solution_sha256": "84febf8f6bd77ac76e9fdb56db9b847e507b23823a07ae005f8c9fb550654ed6",
+  "published_solution_sha256": "91ac07291fd907a8ecdce3c873b84c3dd813a4eb8d41e4d4486b77d13b532885",
+  "official_result_sha256": "a5a0b82bcaee70fa1e3c9fc407a188da20ad20ed0243996d4e4b4c9125646e72",
+  "official_result_reassembled": false,
+  "solution_tests": {
+    "passed": 339,
+    "source": "executed notebook cell before same-source A/B"
+  },
+  "soup_tests": {
+    "passed": 79,
+    "source": "official check 10"
+  },
+  "current_merei_memory_ceiling_mib": 5275,
+  "measured_solution_peak_mib": 5175,
+  "notes": [
+    "Official result copied byte-for-byte from unchanged harness.",
+    "Final check_rules binds unchanged runtime and final documentation bytes.",
+    "Later reports outside solution do not change solution hash.",
+    "A/B comparisons are separate series; steady-state speedup is not established."
+  ]
+}
