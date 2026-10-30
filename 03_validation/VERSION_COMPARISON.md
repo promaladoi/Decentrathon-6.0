@@ -16,7 +16,10 @@
 | Codex v6 | f92ebf2 | 10 PASS | 1.1032x | 1.3867x | +0.000% | NF4 widening; 37 tests; 2 paired runs |
 | Codex v7 | a044007 | 10 PASS | 0.9995x | 1.3869x | -0.002% | LoRA fusion rejected: slower; 2 paired runs |
 | Codex v8 | 7435a92 | 10 PASS | 1.0144x | 1.5690x | +0.002% | Direct causal loss; slow LoRA still included; 2 paired runs |
-| Codex v9 | 57182a2 | 10 PASS | 1.1075x | 1.5652x | -0.001% | Current candidate: 41 tests, own kernels 7.3%; 2 paired runs |
+| Codex v9 | 57182a2 | 10 PASS | 1.1075x | 1.5652x | -0.001% | Earlier candidate: 41 tests, own kernels 7.3%; 2 paired runs |
+| Codex v10 | e19b464 | 10 PASS | 1.1156x | 1.9425x | -0.001% | Current validated candidate: 54 tests, own kernels 7.0%; 2 paired runs |
+| Codex v11 | 9e104d4 | No complete report | — | — | — | Superseded by v12; rerun hit concurrent-process OOM, no accepted measurement |
+| Codex v12 | bd2b49a | Pending | — | — | — | 64 kernel tests passed on clean T4; paired benchmark running |
 | Анаис | әлі берілмеген | әлі берілмеген | жоқ | жоқ | жоқ | |
 | Владимир | әлі берілмеген | әлі берілмеген | жоқ | жоқ | жоқ | |
 | Мерей | әлі берілмеген | әлі берілмеген | жоқ | жоқ | жоқ | |

@@ -1,12 +1,13 @@
 # IVNEX: Soup Kernel Challenge
 
-Latest validated candidate: [v9 result](CODEX_V9_RESULT.md), **1.1075x speedup**
-(**9.7% less training time**), **36.1% less GPU memory**, **10/10 checks**.
-Two paired T4 runs: **87.39 → 78.91 s**, **14345 → 9165 MiB**.
-Code: `57182a2`. [Pinned notebook](templates/codex_candidate.ipynb).
-41 kernel tests and 79 Soup tests passed; original kernels' minimum share: 7.3%.
+Latest validated candidate: [v10 result](CODEX_V10_RESULT.md), **1.1156x speedup**
+(**10.4% less training time**), **48.5% less GPU memory**, **10/10 checks**.
+Two paired T4 runs: **86.59 → 77.62 s**, **14345 → 7385 MiB**.
+Code: `e19b464`. [Pinned notebook](templates/codex_candidate.ipynb).
+54 kernel tests and 79 Soup tests passed; original kernels' minimum share: 7.0%.
 [All variants](03_validation/VERSION_COMPARISON.md) · [Commit progress](04_submission/CODEX_PROGRESS.md).
-Earlier results below are archived for comparison. The final team submission is not selected.
+The branch tip contains v12 experiments under validation. Use the pinned notebook
+to reproduce the accepted v10 result. The final team submission is not selected.
 
 ## Earlier v3 candidate (archive)
 
