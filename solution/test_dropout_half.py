@@ -86,3 +86,22 @@ def test_observed_linear_keeps_fp32_input():
     finally:
         handle.remove()
     assert observed == [torch.float32]
+
+
+def test_replaced_linear_forward_keeps_fp32_input(monkeypatch):
+    from solution.unpad import _Batch, _lora_out
+    rows = _rows(4, 512, (512, 173, 284, 97))
+    x = torch.randn((rows.numel(), 1536), device='cuda')
+    a = torch.nn.Linear(1536, 16, bias=False).cuda()
+    b = torch.nn.Linear(16, 256, bias=False).cuda()
+    native = torch.nn.Linear.forward
+    observed = []
+    def replacement(module, inputs):
+        if module is a:
+            observed.append(inputs.dtype)
+        return native(module, inputs)
+    monkeypatch.setattr(torch.nn.Linear, 'forward', replacement)
+    with torch.autocast('cuda', dtype=torch.float16):
+        _lora_out((None, a, b, torch.nn.Dropout(.05), 2.0), x,
+                  _Batch(rows, 4, 512, packed_metadata={}))
+    assert observed == [torch.float32]

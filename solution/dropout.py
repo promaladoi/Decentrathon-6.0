@@ -152,22 +152,17 @@ def real_row_dropout(x, rows, batch, seq_len, p=0.05, training=True, *, rows_fro
     return _RealRowDropout.apply(x, rows, batch, seq_len, p, dtype)
 
 
-def warmup(width=1536, p=0.05):
+def warmup(width=1536, p=0.05, output_dtype=None):
     """Compile only the original gather/apply kernels; never draw random bits."""
     from .warmup import load_compiled
 
     forward, backward = _scales(p)
-    load_compiled(real_dropout_gather_kernel.warmup(
-        torch.float32, torch.bool, torch.int64, torch.float32, torch.uint8,
-        16 * width, 16, width, forward, BLOCK, grid=(1,),
-        num_warps=4, enable_fp_fusion=False))
-    load_compiled(real_dropout_backward_kernel.warmup(
-        torch.float32, torch.uint8, torch.float32, 16 * width, backward, BLOCK,
-        grid=(1,), num_warps=4, enable_fp_fusion=False))
-    load_compiled(real_dropout_gather_kernel.warmup(
-        torch.float32, torch.bool, torch.int64, torch.float16, torch.uint8,
-        16 * width, 16, width, forward, BLOCK, grid=(1,),
-        num_warps=4, enable_fp_fusion=False))
-    load_compiled(real_dropout_backward_kernel.warmup(
-        torch.float16, torch.uint8, torch.float32, 16 * width, backward, BLOCK,
-        grid=(1,), num_warps=4, enable_fp_fusion=False))
+    dtypes = (torch.float32, torch.float16) if output_dtype is None else (output_dtype,)
+    for dtype in dtypes:
+        load_compiled(real_dropout_gather_kernel.warmup(
+            torch.float32, torch.bool, torch.int64, dtype, torch.uint8,
+            16 * width, 16, width, forward, BLOCK, grid=(1,),
+            num_warps=4, enable_fp_fusion=False))
+        load_compiled(real_dropout_backward_kernel.warmup(
+            dtype, torch.uint8, torch.float32, 16 * width, backward, BLOCK,
+            grid=(1,), num_warps=4, enable_fp_fusion=False))

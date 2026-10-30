@@ -646,6 +646,9 @@ def _lora_out(parts, x, step, *, apply_scale=True):
                  and torch.get_autocast_dtype('cuda') == torch.float16
                  and type(lora_a) is torch.nn.Linear
                  and getattr(lora_a.forward, '__func__', None) is torch.nn.Linear.forward
+                 and torch.nn.Linear.forward.__module__ == 'torch.nn.modules.linear'
+                 and torch.nn.Linear.forward.__qualname__ == 'Linear.forward'
+                 and not hasattr(torch.nn.Linear.forward, '__wrapped__')
                  and _no_hooks(lora_a))
     dropped = (step.dropout(dropout, x, cast_half=True) if cast_half
                else step.dropout(dropout, x))
@@ -694,6 +697,9 @@ def _attention(layer, projections, x, cos, sin, mask, step, meta):
             qp, kp, vp = RoPEPackedScaled.apply(*arguments, q_parts[4], v_parts[4])
         else:
             qp, kp, vp = RoPEPacked.apply(*arguments)
+        # Custom RoPE saves only its metadata. Release unneeded projection
+        # outputs before native attention allocates its output/workspace.
+        del arguments, q, k, v, lq, lk, lv
         cumulative = step.packed_metadata["cumulative"]
         maximum = step.packed_metadata["maximum"]
         out = torch.ops.aten._efficient_attention_forward.default(
@@ -751,11 +757,14 @@ def fast_forward(model, meta, input_ids, attention_mask, labels, num_items_in_ba
         if mlp_out is None:  # layer 0: h + 0 is h; the same kernel as the other norms
             mlp_out = h.new_zeros(h.shape, dtype=torch.float16)
         h, x = add_rmsnorm(h, mlp_out, norm.weight, norm.variance_epsilon)
+        del mlp_out
         o = _attention(layer, projections, x, cos, sin, mask, step, meta)
         norm = layer.post_attention_layernorm
         h, x = add_rmsnorm(h, o, norm.weight, norm.variance_epsilon)
+        del o
         mlp = layer.mlp
         mlp_out = MLP4bit.apply(x, mlp.gate_proj, mlp.up_proj, mlp.down_proj, torch.float16)
+        del x
     norm = inner.norm
     _, x = add_rmsnorm(h, mlp_out, norm.weight, norm.variance_epsilon)
 
