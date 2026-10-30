@@ -40,3 +40,8 @@ residual; head gather/scatter share a runtime-direction variant. Existing
 fallbacks and original organizer SwiGLU exclusions remain. This is credited to
 Vladimir, not claimed as independent Nurzhigit/Codex work. No precompiled cache
 is imported and all work remains inside the timed process.
+
+v26 adapts Vladimir's `13d377043fa4cdad121973a3f6179d546918e9f4` launcher preparation
+idea through `launcher_warmup.py`, including all already-loaded shared and
+Nurzhigit kernels, with function/kernel alias deduplication. Attribution remains
+with Vladimir for this startup optimization; no timeline module is imported.

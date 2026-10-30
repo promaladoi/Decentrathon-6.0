@@ -13,6 +13,7 @@ def apply():
     _applied = True
     from .metadata_scan import patch_metadata_scan
     patch_metadata_scan()
+    from .launcher_warmup import patch_launcher_warmup
     from .lazy_train_cli import patch_lazy_train_cli
     patch_lazy_train_cli()
     from .team_vladimir import apply as apply_team
@@ -28,6 +29,7 @@ def apply():
     patch_compact_dropout()
     patch_paired_nf4()
     patch_frozen_weight_cache()
+    patch_launcher_warmup()
     apply_team()
     patch_frozen_storage()
     patch_varlen_attention()
