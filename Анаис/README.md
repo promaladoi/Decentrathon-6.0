@@ -1,61 +1,39 @@
-# Anais — ML Training & Evaluation
+﻿# Анаис — ML Training & Evaluation
 
-## Decentrathon 6.0 | Soup Kernel Challenge
+Вклад в Soup Kernel Challenge: воспроизводимый запуск обучения, сравнение времени и памяти, контроль качества и анализ training loss.
 
-### About My Work
+## Готовые материалы
 
-This folder contains my contribution to the Decentrathon 6.0 hackathon project.
+- kaggle_evaluation.ipynb — автономный notebook со всем исходным проектом. GitHub-токен для запуска не нужен.
+- benchmark_report.py — таблица времени, памяти и eval loss, анализ кривых loss, проверка привязки checks к result.json.
+- test_report.py — четыре теста расчётов и обработки некорректных данных.
+- VALIDATION.md — протокол и критерии проверки.
+- REPORT_CURRENT.md — разбор предварительных сведений из исходного архива с указанием ограничений.
+- PRESENTATION.md — материал для выступления, обновляемый по свежим замерам.
 
-**Role:** ML Engineer & Evaluation Lead
+## Запуск
 
-**Project:** Soup Kernel Challenge — GPU Training Optimization
+В Kaggle импортировать kaggle_evaluation.ipynb, выбрать GPU T4 x2 и Internet On. Используется один GPU. Выполнять ячейки сверху вниз, проверяя успешное завершение подготовки и тестов. Harness выполняет base → solution → solution → base, затем оценку. Если Run All не перешёл к следующей ячейке, выполнить её вручную. Повторно распаковывать проект в существующую папку не нужно.
 
-## Project Goal
+Выполнить ячейки проверок, отчёта и упаковки. Сохранить anais-results.zip и версию notebook с выводами.
 
-Our goal is to optimize the fine-tuning of Qwen2.5-1.5B-Instruct using custom Triton GPU kernels on NVIDIA T4.
+Для обновлённого отчёта из корня полного проекта:
 
-We aim to reduce training time and GPU memory usage while maintaining model quality.
+```bash
+python Анаис/benchmark_report.py --result runs/result.json --out Анаис/reports/latest
+python -m unittest discover -s Анаис -p test_report.py -v
+```
 
-## My Responsibilities
+Генератор создаёт REPORT.md, comparison.csv, loss_analysis.csv и metrics.json. Он не заменяет официальный harness/check_rules.py. Публичные данные не подтверждают прохождение скрытой проверки жюри.
 
-1. Prepare and validate the machine learning training workflow.
-2. Run baseline experiments using Kaggle GPU T4.
-3. Evaluate model performance before and after optimization.
-4. Compare training time and GPU memory consumption.
-5. Analyze training loss and evaluation loss.
-6. Verify the correctness of optimized training.
-7. Prepare benchmark reports and results for the final presentation.
+## Статус
 
-## Technologies
+30 октября 2026 года запущен свежий двухповторный протокол на Kaggle T4 в [рабочем notebook](https://www.kaggle.com/code/aneka123321/notebooke3a59f573b/edit). Это редактор, а не подтверждённая публичная версия с результатами.
 
-- Python
-- PyTorch
-- Triton
-- Soup CLI
-- Kaggle GPU T4
-- Qwen2.5-1.5B-Instruct
-- LoRA Fine-Tuning
+Установка зависимостей, подготовка 256 training и 256 eval строк, три теста первоначального генератора и четыре GPU-теста starter прошли. Обновлённый генератор локально прошёл четыре теста. Финальные показатели и официальные проверки будут добавлены после завершения запуска.
 
-## Evaluation Metrics
+Исследуемое решение сейчас — starter SwiGLU из исходного архива. Собственные ядра команды здесь не реализованы; проверки 3 и 4 ожидаемо не будут пройдены. Экономию от примера организаторов нельзя выдавать за авторскую оптимизацию команды.
 
-| Metric | Description |
-|---|---|
-| Training Time | Total training duration in seconds |
-| GPU Memory | Peak GPU memory usage |
-| Evaluation Loss | Model quality after training |
-| Speedup | Baseline time / optimized time |
-| Memory Reduction | Percentage of GPU memory saved |
+## Источник и авторство
 
-## Planned Deliverables
-
-- ML training validation workflow
-- Python benchmark comparison script
-- Model evaluation report
-- Performance comparison table
-- Results for the team presentation
-
-## Current Status
-
-ML evaluation workflow is in progress.
-
-Benchmark results will be documented after verification using official Kaggle runs.
+Исходный проект взят из предоставленного архива hack-a5a4072f-wither-ai-main.zip. В notebook сохранены LICENSE и NOTICE исходного проекта. Файлы harness/, task/, tests/ и starter solution не менялись. Вклад этой папки — инструменты оценки, тесты расчётов, протокол и отчётность.
