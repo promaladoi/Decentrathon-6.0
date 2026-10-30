@@ -8,8 +8,14 @@ Code: `4a5cfd2`. **115 kernel tests + 79 Soup tests**, own-kernel share **12.9%*
 Exact source/report hashes and raw archive verified locally.
 [Reproduce v16](templates/codex_v16.ipynb) · [Pinned candidate](templates/codex_candidate.ipynb).
 
-The branch tip contains [v17 paired-byte NF4 experiment](CODEX_V17_EXPERIMENT.md).
-Its 104 CPU layout cases pass; T4 parity, performance, quality and ten checks are pending.
+**Branch-tip code is experimental.** The pinned v16 notebook above selects the
+fully verified source. New work: [v17 NF4](CODEX_V17_EXPERIMENT.md),
+[v18 lossless tied storage](CODEX_V18_EXPERIMENT.md) and
+[v20 compact mask bits](CODEX_V20_EXPERIMENT.md). Local checks pass (104 NF4
+layout cases, 15 CPU storage contracts, 124 mask-layout cases); GPU validation
+is pending. The [one-cell finite coordinator](templates/run_experiments_cell.py)
+runs v17, v18 and v20 serially after its initial launch in the existing Kaggle session.
+No coordinator start or new GPU result is claimed yet.
 [Current status](CURRENT_STATUS.md) · [All variants](03_validation/VERSION_COMPARISON.md).
 The final team submission is not selected; no 70–90% time reduction or victory is claimed.
 

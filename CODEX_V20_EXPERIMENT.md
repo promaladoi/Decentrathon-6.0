@@ -25,3 +25,7 @@ compilation, CUDA floating-point behavior, RNG or training quality/performance.
 The bounded coordinator queues v17, v18 and v20, using exact source commits in
 isolated serial workers. v19 is the separately committed intermediate source,
 not an independently measured result. v16 remains the fully verified fallback.
+
+Local layout result: **124 cases passed**, including every byte pattern and
+partial-byte/tile boundaries for fp16/fp32 storage. The report pins the exact
+source commit and module SHA-256. This is not a GPU test or benchmark result.

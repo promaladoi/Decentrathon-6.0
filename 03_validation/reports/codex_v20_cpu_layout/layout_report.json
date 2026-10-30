@@ -1,0 +1,756 @@
+{
+  "source_commit": "22ff279a586aa309991957b84ba11597fd342f8b",
+  "module_sha256": "b9cf668cd1bd6e8f9efbbacbd57eb8786f895ead01833d8dbb97943ad4f6008b",
+  "method": "actual kernel AST with bounds-checked NumPy pointer model; independent packbits/unpackbits oracle",
+  "cases_passed": 124,
+  "all_256_byte_patterns": true,
+  "gpu_compilation_tested": false,
+  "gpu_rounding_or_rng_tested": false,
+  "training_quality_or_speed_tested": false,
+  "cases": [
+    {
+      "name": "strided real rows and partial final byte",
+      "n": 7,
+      "hidden": 7,
+      "dtype": "float16"
+    },
+    {
+      "name": "strided real rows and partial final byte",
+      "n": 7,
+      "hidden": 7,
+      "dtype": "float32"
+    },
+    {
+      "name": "strided real rows and partial final byte",
+      "n": 6,
+      "hidden": 7,
+      "dtype": "float16"
+    },
+    {
+      "name": "strided real rows and partial final byte",
+      "n": 6,
+      "hidden": 7,
+      "dtype": "float32"
+    },
+    {
+      "name": "strided real rows and partial final byte",
+      "n": 4,
+      "hidden": 7,
+      "dtype": "float16"
+    },
+    {
+      "name": "strided real rows and partial final byte",
+      "n": 4,
+      "hidden": 7,
+      "dtype": "float32"
+    },
+    {
+      "name": "strided real rows and partial final byte",
+      "n": 35,
+      "hidden": 7,
+      "dtype": "float16"
+    },
+    {
+      "name": "strided real rows and partial final byte",
+      "n": 35,
+      "hidden": 7,
+      "dtype": "float32"
+    },
+    {
+      "name": "strided real rows and partial final byte",
+      "n": 34,
+      "hidden": 7,
+      "dtype": "float16"
+    },
+    {
+      "name": "strided real rows and partial final byte",
+      "n": 34,
+      "hidden": 7,
+      "dtype": "float32"
+    },
+    {
+      "name": "strided real rows and partial final byte",
+      "n": 32,
+      "hidden": 7,
+      "dtype": "float16"
+    },
+    {
+      "name": "strided real rows and partial final byte",
+      "n": 32,
+      "hidden": 7,
+      "dtype": "float32"
+    },
+    {
+      "name": "strided real rows and partial final byte",
+      "n": 119,
+      "hidden": 7,
+      "dtype": "float16"
+    },
+    {
+      "name": "strided real rows and partial final byte",
+      "n": 119,
+      "hidden": 7,
+      "dtype": "float32"
+    },
+    {
+      "name": "strided real rows and partial final byte",
+      "n": 118,
+      "hidden": 7,
+      "dtype": "float16"
+    },
+    {
+      "name": "strided real rows and partial final byte",
+      "n": 118,
+      "hidden": 7,
+      "dtype": "float32"
+    },
+    {
+      "name": "strided real rows and partial final byte",
+      "n": 116,
+      "hidden": 7,
+      "dtype": "float16"
+    },
+    {
+      "name": "strided real rows and partial final byte",
+      "n": 116,
+      "hidden": 7,
+      "dtype": "float32"
+    },
+    {
+      "name": "strided real rows and partial final byte",
+      "n": 224,
+      "hidden": 7,
+      "dtype": "float16"
+    },
+    {
+      "name": "strided real rows and partial final byte",
+      "n": 224,
+      "hidden": 7,
+      "dtype": "float32"
+    },
+    {
+      "name": "strided real rows and partial final byte",
+      "n": 223,
+      "hidden": 7,
+      "dtype": "float16"
+    },
+    {
+      "name": "strided real rows and partial final byte",
+      "n": 223,
+      "hidden": 7,
+      "dtype": "float32"
+    },
+    {
+      "name": "strided real rows and partial final byte",
+      "n": 221,
+      "hidden": 7,
+      "dtype": "float16"
+    },
+    {
+      "name": "strided real rows and partial final byte",
+      "n": 221,
+      "hidden": 7,
+      "dtype": "float32"
+    },
+    {
+      "name": "strided real rows and partial final byte",
+      "n": 17,
+      "hidden": 17,
+      "dtype": "float16"
+    },
+    {
+      "name": "strided real rows and partial final byte",
+      "n": 17,
+      "hidden": 17,
+      "dtype": "float32"
+    },
+    {
+      "name": "strided real rows and partial final byte",
+      "n": 16,
+      "hidden": 17,
+      "dtype": "float16"
+    },
+    {
+      "name": "strided real rows and partial final byte",
+      "n": 16,
+      "hidden": 17,
+      "dtype": "float32"
+    },
+    {
+      "name": "strided real rows and partial final byte",
+      "n": 14,
+      "hidden": 17,
+      "dtype": "float16"
+    },
+    {
+      "name": "strided real rows and partial final byte",
+      "n": 14,
+      "hidden": 17,
+      "dtype": "float32"
+    },
+    {
+      "name": "strided real rows and partial final byte",
+      "n": 85,
+      "hidden": 17,
+      "dtype": "float16"
+    },
+    {
+      "name": "strided real rows and partial final byte",
+      "n": 85,
+      "hidden": 17,
+      "dtype": "float32"
+    },
+    {
+      "name": "strided real rows and partial final byte",
+      "n": 84,
+      "hidden": 17,
+      "dtype": "float16"
+    },
+    {
+      "name": "strided real rows and partial final byte",
+      "n": 84,
+      "hidden": 17,
+      "dtype": "float32"
+    },
+    {
+      "name": "strided real rows and partial final byte",
+      "n": 82,
+      "hidden": 17,
+      "dtype": "float16"
+    },
+    {
+      "name": "strided real rows and partial final byte",
+      "n": 82,
+      "hidden": 17,
+      "dtype": "float32"
+    },
+    {
+      "name": "strided real rows and partial final byte",
+      "n": 289,
+      "hidden": 17,
+      "dtype": "float16"
+    },
+    {
+      "name": "strided real rows and partial final byte",
+      "n": 289,
+      "hidden": 17,
+      "dtype": "float32"
+    },
+    {
+      "name": "strided real rows and partial final byte",
+      "n": 288,
+      "hidden": 17,
+      "dtype": "float16"
+    },
+    {
+      "name": "strided real rows and partial final byte",
+      "n": 288,
+      "hidden": 17,
+      "dtype": "float32"
+    },
+    {
+      "name": "strided real rows and partial final byte",
+      "n": 286,
+      "hidden": 17,
+      "dtype": "float16"
+    },
+    {
+      "name": "strided real rows and partial final byte",
+      "n": 286,
+      "hidden": 17,
+      "dtype": "float32"
+    },
+    {
+      "name": "strided real rows and partial final byte",
+      "n": 544,
+      "hidden": 17,
+      "dtype": "float16"
+    },
+    {
+      "name": "strided real rows and partial final byte",
+      "n": 544,
+      "hidden": 17,
+      "dtype": "float32"
+    },
+    {
+      "name": "strided real rows and partial final byte",
+      "n": 543,
+      "hidden": 17,
+      "dtype": "float16"
+    },
+    {
+      "name": "strided real rows and partial final byte",
+      "n": 543,
+      "hidden": 17,
+      "dtype": "float32"
+    },
+    {
+      "name": "strided real rows and partial final byte",
+      "n": 541,
+      "hidden": 17,
+      "dtype": "float16"
+    },
+    {
+      "name": "strided real rows and partial final byte",
+      "n": 541,
+      "hidden": 17,
+      "dtype": "float32"
+    },
+    {
+      "name": "strided real rows and partial final byte",
+      "n": 65,
+      "hidden": 65,
+      "dtype": "float16"
+    },
+    {
+      "name": "strided real rows and partial final byte",
+      "n": 65,
+      "hidden": 65,
+      "dtype": "float32"
+    },
+    {
+      "name": "strided real rows and partial final byte",
+      "n": 64,
+      "hidden": 65,
+      "dtype": "float16"
+    },
+    {
+      "name": "strided real rows and partial final byte",
+      "n": 64,
+      "hidden": 65,
+      "dtype": "float32"
+    },
+    {
+      "name": "strided real rows and partial final byte",
+      "n": 62,
+      "hidden": 65,
+      "dtype": "float16"
+    },
+    {
+      "name": "strided real rows and partial final byte",
+      "n": 62,
+      "hidden": 65,
+      "dtype": "float32"
+    },
+    {
+      "name": "strided real rows and partial final byte",
+      "n": 325,
+      "hidden": 65,
+      "dtype": "float16"
+    },
+    {
+      "name": "strided real rows and partial final byte",
+      "n": 325,
+      "hidden": 65,
+      "dtype": "float32"
+    },
+    {
+      "name": "strided real rows and partial final byte",
+      "n": 324,
+      "hidden": 65,
+      "dtype": "float16"
+    },
+    {
+      "name": "strided real rows and partial final byte",
+      "n": 324,
+      "hidden": 65,
+      "dtype": "float32"
+    },
+    {
+      "name": "strided real rows and partial final byte",
+      "n": 322,
+      "hidden": 65,
+      "dtype": "float16"
+    },
+    {
+      "name": "strided real rows and partial final byte",
+      "n": 322,
+      "hidden": 65,
+      "dtype": "float32"
+    },
+    {
+      "name": "strided real rows and partial final byte",
+      "n": 1105,
+      "hidden": 65,
+      "dtype": "float16"
+    },
+    {
+      "name": "strided real rows and partial final byte",
+      "n": 1105,
+      "hidden": 65,
+      "dtype": "float32"
+    },
+    {
+      "name": "strided real rows and partial final byte",
+      "n": 1104,
+      "hidden": 65,
+      "dtype": "float16"
+    },
+    {
+      "name": "strided real rows and partial final byte",
+      "n": 1104,
+      "hidden": 65,
+      "dtype": "float32"
+    },
+    {
+      "name": "strided real rows and partial final byte",
+      "n": 1102,
+      "hidden": 65,
+      "dtype": "float16"
+    },
+    {
+      "name": "strided real rows and partial final byte",
+      "n": 1102,
+      "hidden": 65,
+      "dtype": "float32"
+    },
+    {
+      "name": "strided real rows and partial final byte",
+      "n": 2080,
+      "hidden": 65,
+      "dtype": "float16"
+    },
+    {
+      "name": "strided real rows and partial final byte",
+      "n": 2080,
+      "hidden": 65,
+      "dtype": "float32"
+    },
+    {
+      "name": "strided real rows and partial final byte",
+      "n": 2079,
+      "hidden": 65,
+      "dtype": "float16"
+    },
+    {
+      "name": "strided real rows and partial final byte",
+      "n": 2079,
+      "hidden": 65,
+      "dtype": "float32"
+    },
+    {
+      "name": "strided real rows and partial final byte",
+      "n": 2077,
+      "hidden": 65,
+      "dtype": "float16"
+    },
+    {
+      "name": "strided real rows and partial final byte",
+      "n": 2077,
+      "hidden": 65,
+      "dtype": "float32"
+    },
+    {
+      "name": "strided real rows and partial final byte",
+      "n": 128,
+      "hidden": 128,
+      "dtype": "float16"
+    },
+    {
+      "name": "strided real rows and partial final byte",
+      "n": 128,
+      "hidden": 128,
+      "dtype": "float32"
+    },
+    {
+      "name": "strided real rows and partial final byte",
+      "n": 127,
+      "hidden": 128,
+      "dtype": "float16"
+    },
+    {
+      "name": "strided real rows and partial final byte",
+      "n": 127,
+      "hidden": 128,
+      "dtype": "float32"
+    },
+    {
+      "name": "strided real rows and partial final byte",
+      "n": 125,
+      "hidden": 128,
+      "dtype": "float16"
+    },
+    {
+      "name": "strided real rows and partial final byte",
+      "n": 125,
+      "hidden": 128,
+      "dtype": "float32"
+    },
+    {
+      "name": "strided real rows and partial final byte",
+      "n": 640,
+      "hidden": 128,
+      "dtype": "float16"
+    },
+    {
+      "name": "strided real rows and partial final byte",
+      "n": 640,
+      "hidden": 128,
+      "dtype": "float32"
+    },
+    {
+      "name": "strided real rows and partial final byte",
+      "n": 639,
+      "hidden": 128,
+      "dtype": "float16"
+    },
+    {
+      "name": "strided real rows and partial final byte",
+      "n": 639,
+      "hidden": 128,
+      "dtype": "float32"
+    },
+    {
+      "name": "strided real rows and partial final byte",
+      "n": 637,
+      "hidden": 128,
+      "dtype": "float16"
+    },
+    {
+      "name": "strided real rows and partial final byte",
+      "n": 637,
+      "hidden": 128,
+      "dtype": "float32"
+    },
+    {
+      "name": "strided real rows and partial final byte",
+      "n": 2176,
+      "hidden": 128,
+      "dtype": "float16"
+    },
+    {
+      "name": "strided real rows and partial final byte",
+      "n": 2176,
+      "hidden": 128,
+      "dtype": "float32"
+    },
+    {
+      "name": "strided real rows and partial final byte",
+      "n": 2175,
+      "hidden": 128,
+      "dtype": "float16"
+    },
+    {
+      "name": "strided real rows and partial final byte",
+      "n": 2175,
+      "hidden": 128,
+      "dtype": "float32"
+    },
+    {
+      "name": "strided real rows and partial final byte",
+      "n": 2173,
+      "hidden": 128,
+      "dtype": "float16"
+    },
+    {
+      "name": "strided real rows and partial final byte",
+      "n": 2173,
+      "hidden": 128,
+      "dtype": "float32"
+    },
+    {
+      "name": "strided real rows and partial final byte",
+      "n": 4096,
+      "hidden": 128,
+      "dtype": "float16"
+    },
+    {
+      "name": "strided real rows and partial final byte",
+      "n": 4096,
+      "hidden": 128,
+      "dtype": "float32"
+    },
+    {
+      "name": "strided real rows and partial final byte",
+      "n": 4095,
+      "hidden": 128,
+      "dtype": "float16"
+    },
+    {
+      "name": "strided real rows and partial final byte",
+      "n": 4095,
+      "hidden": 128,
+      "dtype": "float32"
+    },
+    {
+      "name": "strided real rows and partial final byte",
+      "n": 4093,
+      "hidden": 128,
+      "dtype": "float16"
+    },
+    {
+      "name": "strided real rows and partial final byte",
+      "n": 4093,
+      "hidden": 128,
+      "dtype": "float32"
+    },
+    {
+      "name": "strided real rows and partial final byte",
+      "n": 1536,
+      "hidden": 1536,
+      "dtype": "float16"
+    },
+    {
+      "name": "strided real rows and partial final byte",
+      "n": 1536,
+      "hidden": 1536,
+      "dtype": "float32"
+    },
+    {
+      "name": "strided real rows and partial final byte",
+      "n": 1535,
+      "hidden": 1536,
+      "dtype": "float16"
+    },
+    {
+      "name": "strided real rows and partial final byte",
+      "n": 1535,
+      "hidden": 1536,
+      "dtype": "float32"
+    },
+    {
+      "name": "strided real rows and partial final byte",
+      "n": 1533,
+      "hidden": 1536,
+      "dtype": "float16"
+    },
+    {
+      "name": "strided real rows and partial final byte",
+      "n": 1533,
+      "hidden": 1536,
+      "dtype": "float32"
+    },
+    {
+      "name": "strided real rows and partial final byte",
+      "n": 7680,
+      "hidden": 1536,
+      "dtype": "float16"
+    },
+    {
+      "name": "strided real rows and partial final byte",
+      "n": 7680,
+      "hidden": 1536,
+      "dtype": "float32"
+    },
+    {
+      "name": "strided real rows and partial final byte",
+      "n": 7679,
+      "hidden": 1536,
+      "dtype": "float16"
+    },
+    {
+      "name": "strided real rows and partial final byte",
+      "n": 7679,
+      "hidden": 1536,
+      "dtype": "float32"
+    },
+    {
+      "name": "strided real rows and partial final byte",
+      "n": 7677,
+      "hidden": 1536,
+      "dtype": "float16"
+    },
+    {
+      "name": "strided real rows and partial final byte",
+      "n": 7677,
+      "hidden": 1536,
+      "dtype": "float32"
+    },
+    {
+      "name": "strided real rows and partial final byte",
+      "n": 26112,
+      "hidden": 1536,
+      "dtype": "float16"
+    },
+    {
+      "name": "strided real rows and partial final byte",
+      "n": 26112,
+      "hidden": 1536,
+      "dtype": "float32"
+    },
+    {
+      "name": "strided real rows and partial final byte",
+      "n": 26111,
+      "hidden": 1536,
+      "dtype": "float16"
+    },
+    {
+      "name": "strided real rows and partial final byte",
+      "n": 26111,
+      "hidden": 1536,
+      "dtype": "float32"
+    },
+    {
+      "name": "strided real rows and partial final byte",
+      "n": 26109,
+      "hidden": 1536,
+      "dtype": "float16"
+    },
+    {
+      "name": "strided real rows and partial final byte",
+      "n": 26109,
+      "hidden": 1536,
+      "dtype": "float32"
+    },
+    {
+      "name": "strided real rows and partial final byte",
+      "n": 49152,
+      "hidden": 1536,
+      "dtype": "float16"
+    },
+    {
+      "name": "strided real rows and partial final byte",
+      "n": 49152,
+      "hidden": 1536,
+      "dtype": "float32"
+    },
+    {
+      "name": "strided real rows and partial final byte",
+      "n": 49151,
+      "hidden": 1536,
+      "dtype": "float16"
+    },
+    {
+      "name": "strided real rows and partial final byte",
+      "n": 49151,
+      "hidden": 1536,
+      "dtype": "float32"
+    },
+    {
+      "name": "strided real rows and partial final byte",
+      "n": 49149,
+      "hidden": 1536,
+      "dtype": "float16"
+    },
+    {
+      "name": "strided real rows and partial final byte",
+      "n": 49149,
+      "hidden": 1536,
+      "dtype": "float32"
+    },
+    {
+      "name": "all 256 byte patterns",
+      "n": 2048,
+      "hidden": 8,
+      "dtype": "float16"
+    },
+    {
+      "name": "all 256 byte patterns",
+      "n": 2048,
+      "hidden": 8,
+      "dtype": "float32"
+    },
+    {
+      "name": "all 256 byte patterns",
+      "n": 2045,
+      "hidden": 8,
+      "dtype": "float16"
+    },
+    {
+      "name": "all 256 byte patterns",
+      "n": 2045,
+      "hidden": 8,
+      "dtype": "float32"
+    }
+  ]
+}

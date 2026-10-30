@@ -10,6 +10,11 @@
       "version": "v18",
       "commit": "d01b2d8c71738c6345cd704b369bd58027ac09c1",
       "nf4_analysis": false
+    },
+    {
+      "version": "v20",
+      "commit": "22ff279a586aa309991957b84ba11597fd342f8b",
+      "nf4_analysis": false
     }
   ]
 }
