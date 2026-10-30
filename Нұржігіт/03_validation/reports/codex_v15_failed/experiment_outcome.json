@@ -1,0 +1,6 @@
+{
+  "code_commit": "389f037ce1cee63a759eb52384b5c28839d2bc4a",
+  "version": "v15",
+  "status": "testing",
+  "error": "Command '['/usr/bin/python3', '-m', 'pytest', 'solution/test_compact_dropout.py', '-q']' returned non-zero exit status 1."
+}

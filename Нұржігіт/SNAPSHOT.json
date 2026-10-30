@@ -1,5 +1,5 @@
 {
-  "source_commit": "b19534155f5e7677aeab30f65575b98adf1154a3",
+  "source_commit": "4a5cfd20fd79e597e15919f3f19f959a6b4d689a",
   "source_repo": "BAITC-Hacks/hack-a5a4072f-wither-ai",
   "files": [
     ".gitattributes",
@@ -18,6 +18,10 @@
     "03_validation/reports/codex_v12/checks.json",
     "03_validation/reports/codex_v12/result.json",
     "03_validation/reports/codex_v14_failed/participant_console.txt",
+    "03_validation/reports/codex_v15_failed/archive_verification.json",
+    "03_validation/reports/codex_v15_failed/dropout_tests.log",
+    "03_validation/reports/codex_v15_failed/experiment_outcome.json",
+    "03_validation/reports/codex_v15_failed/participant_console_redacted.txt",
     "03_validation/reports/codex_v2/checks.json",
     "03_validation/reports/codex_v2/result.json",
     "03_validation/reports/codex_v3/checks.json",

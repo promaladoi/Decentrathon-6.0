@@ -45,3 +45,25 @@ def test_successive_dropout_calls_preserve_rng_sequence(dtype):
     assert torch.equal(torch.cuda.get_rng_state(), end)
     for a, b in zip(actual, expected):
         torch.testing.assert_close(a, b, rtol=0, atol=0)
+
+
+@pytest.mark.parametrize('dtype', [torch.float16, torch.float32])
+def test_index_storage_layout_does_not_change_dropout(dtype):
+    from solution.compact_dropout import compact_dropout
+    batch, seq_len, hidden = 3, 23, 128
+    strided = torch.arange(batch * seq_len, device='cuda')[::3]
+    contiguous = strided.contiguous()
+    assert strided.stride(0) == 3 and contiguous.stride(0) == 1
+    x = torch.randn(strided.numel(), hidden, device='cuda', dtype=dtype, requires_grad=True)
+    grad = torch.randn_like(x)
+    torch.cuda.manual_seed(127)
+    state = torch.cuda.get_rng_state()
+    a = compact_dropout(x, strided, batch, seq_len, .05)
+    ga, = torch.autograd.grad(a, x, grad)
+    end = torch.cuda.get_rng_state()
+    torch.cuda.set_rng_state(state)
+    b = compact_dropout(x, contiguous, batch, seq_len, .05)
+    gb, = torch.autograd.grad(b, x, grad)
+    assert torch.equal(torch.cuda.get_rng_state(), end)
+    torch.testing.assert_close(a, b, rtol=0, atol=0)
+    torch.testing.assert_close(ga, gb, rtol=0, atol=0)

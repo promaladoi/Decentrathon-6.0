@@ -24,10 +24,14 @@ def compact_dropout_rows(X, MASK, ROWS, OUT, N, H: tl.constexpr,
 class _CompactDropout(torch.autograd.Function):
     @staticmethod
     def forward(ctx, x, rows, batch, seq_len, p):
-        # native_dropout and functional.dropout consumed the same RNG offset on
-        # the challenge T4 but assigned random draws to elements differently.
-        # Use the original public operation, dtype and shape. Ones make its
-        # nonzero outputs an exact mask; discard their rounded half scale and
+        # The kernel reads ROWS + row, so it needs unit-stride indices. A
+        # slice such as arange(...)[::3] is a view with stride 3; reading it as
+        # dense indices silently selects other tokens' masks. Normalize once
+        # and retain that same index tensor for backward. Production nonzero()
+        # rows already have unit stride, so this is normally a no-op.
+        rows = rows.contiguous()
+        # Keep the original public dropout operation, dtype and full shape.
+        # Ones expose the boolean mask. Ignore their rounded fp16 scale and
         # apply the original fp32 scale in our elementwise kernel below.
         dummy = torch.ones((batch, seq_len, x.shape[-1]), device=x.device, dtype=x.dtype)
         dropped = torch.nn.functional.dropout(dummy, p=p, training=True)
