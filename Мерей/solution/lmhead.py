@@ -25,11 +25,10 @@ GRAD_BLOCK = 1024
 
 
 @triton.jit
-def lm_ce_kernel(LOGITS, TARGET, ENT, AMAX, CE, LSE, stride, V,
-                 BLOCK_V: tl.constexpr):
+def _lm_ce_statistics(LOGITS, target, stride, V, BLOCK_V: tl.constexpr,
+                       WITH_TARGET: tl.constexpr):
     row = tl.program_id(0)
     ptr = LOGITS + row.to(tl.int64) * stride
-    target = tl.load(TARGET + row).to(tl.int32)
     m = -1e30
     s = 0.0
     u = 0.0
@@ -51,13 +50,44 @@ def lm_ce_kernel(LOGITS, TARGET, ENT, AMAX, CE, LSE, stride, V,
         u = alpha * (u + s * (m - new_m)) + tl.sum(e * (z - new_m), axis=0)
         s = alpha * s + tl.sum(e, axis=0)
         m = new_m
-        zt += tl.sum(tl.where(cols == target, z, 0.0), axis=0)
+        if WITH_TARGET:
+            zt += tl.sum(tl.where(cols == target, z, 0.0), axis=0)
     log_s = tl.log(s)
-    tl.store(ENT + row, log_s - u / s)
-    tl.store(AMAX + row, best_i.to(tl.int64))
     lse = m + log_s
-    tl.store(CE + row, lse - zt)
+    return log_s - u / s, best_i.to(tl.int64), lse - zt, lse
+
+
+@triton.jit
+def lm_ce_kernel(LOGITS, TARGET, ENT, AMAX, CE, LSE, stride, V,
+                 BLOCK_V: tl.constexpr):
+    """Dense-output compatibility entry point, sharing the production arithmetic."""
+    row = tl.program_id(0)
+    target = tl.load(TARGET + row).to(tl.int32)
+    entropy, best, ce, lse = _lm_ce_statistics(
+        LOGITS, target, stride, V, BLOCK_V, True)
+    tl.store(ENT + row, entropy)
+    tl.store(AMAX + row, best)
+    tl.store(CE + row, ce)
     tl.store(LSE + row, lse)
+
+
+@triton.jit
+def lm_ce_scatter_kernel(LOGITS, TARGET, ROWS, ENT, AMAX, CE, LSE,
+                         stride, row_stride, target_stride, V,
+                         BLOCK_V: tl.constexpr, WRITE_CE: tl.constexpr):
+    """Write each unique real-token row directly; only labelled rows need CE/LSE."""
+    row = tl.program_id(0)
+    output_row = tl.load(ROWS + row.to(tl.int64) * row_stride)
+    target = -100
+    if WRITE_CE:
+        target = tl.load(TARGET + output_row * target_stride).to(tl.int32)
+    entropy, best, ce, lse = _lm_ce_statistics(
+        LOGITS, target, stride, V, BLOCK_V, WRITE_CE)
+    tl.store(ENT + output_row, entropy)
+    tl.store(AMAX + output_row, best)
+    if WRITE_CE:
+        tl.store(CE + output_row, ce)
+        tl.store(LSE + row, lse)
 
 
 @triton.jit
@@ -106,22 +136,23 @@ def _gradient_mm(logits, lse, targets, scale, weight, overwrite=False):
 
 def _stats(x16, w16, idx, targets, entropy, argmax, ce, saved_chunks=None,
            precompute=None):
+    if idx.numel() == 0:
+        return
     vocabulary = w16.shape[0]
     for chunk in idx.split(CHUNK):
         count = chunk.numel()
         logits = torch.mm(x16.index_select(0, chunk), w16.t())
-        target = targets.index_select(0, chunk)
-        ent = torch.empty(count, device=x16.device, dtype=torch.float32)
-        pred = torch.empty(count, device=x16.device, dtype=torch.int64)
-        loss = torch.empty(count, device=x16.device, dtype=torch.float32)
-        lse = torch.empty(count, device=x16.device, dtype=torch.float32)
-        lm_ce_kernel[(count,)](
-            logits, target, ent, pred, loss, lse, logits.stride(0),
-            vocabulary, BLOCK_V=BLOCK_V, num_warps=8)
-        entropy.index_copy_(0, chunk, ent)
-        argmax.index_copy_(0, chunk, pred)
-        if ce is not None:
-            ce.index_copy_(0, chunk, loss)
+        # Each index occurs once. Scatter the statistics in the same launch
+        # that computes them, avoiding chunk temporaries and index_copy calls.
+        # Prompt rows need neither their ignored targets nor CE/LSE storage.
+        lse = (torch.empty(count, device=x16.device, dtype=torch.float32)
+               if ce is not None else None)
+        lm_ce_scatter_kernel[(count,)](
+            logits, targets, chunk, entropy, argmax,
+            ce if ce is not None else entropy,
+            lse if lse is not None else entropy,
+            logits.stride(0), chunk.stride(0), targets.stride(0), vocabulary,
+            BLOCK_V=BLOCK_V, WRITE_CE=ce is not None, num_warps=8)
         if saved_chunks is not None:
             # Keep the exact original half GEMM output. No clone/index_copy of
             # this vocabulary-sized tensor and no in-place gradient overwrite.
@@ -130,6 +161,7 @@ def _stats(x16, w16, idx, targets, entropy, argmax, ce, saved_chunks=None,
             scale, hidden_gradient, saved_lse = precompute
             # Statistics have consumed logits. Reuse that temporary as half
             # dlogits rather than retaining/allocating a vocabulary-sized cache.
+            target = targets.index_select(0, chunk)
             dx = _gradient_mm(logits, lse, target, scale, w16, overwrite=True)
             hidden_gradient.index_copy_(0, chunk, dx)
             saved_lse.append(lse)
@@ -336,9 +368,11 @@ def patch_metric_readers():
 
 
 def warmup(vocab=151936):
-    """Compile the exact cached-half-logits stats/backward signatures."""
+    """Compile the production scatter statistics and actual-scale backward."""
     f16, f32, i64 = torch.float16, torch.float32, torch.int64
-    lm_ce_kernel.warmup(f16, i64, f32, i64, f32, f32, vocab, vocab,
-                        grid=(1,), BLOCK_V=BLOCK_V, num_warps=8)
+    for write_ce in (True, False):
+        lm_ce_scatter_kernel.warmup(
+            f16, i64, i64, f32, i64, f32, f32, vocab, 1, 1, vocab,
+            grid=(1,), BLOCK_V=BLOCK_V, WRITE_CE=write_ce, num_warps=8)
     lm_scale_gradient_kernel.warmup(f16, f32, i64, f32, f16, vocab, vocab,
                                     grid=(1, 1), BLOCK=GRAD_BLOCK, num_warps=4)
