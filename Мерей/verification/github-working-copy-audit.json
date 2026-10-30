@@ -1,0 +1,128 @@
+{
+  "repository": "promaladoi/Decentrathon-6.0",
+  "directory": "Мерей",
+  "fetched_commit": "3c5efb368b7392ea13b376908006a98b689b636f",
+  "implementation_commit": "3c389e9f1259031123026c99057f78b3ad57b671",
+  "measured_kaggle_version": 363806584,
+  "measured_snapshot_sha256": "eaa4e00672e0f2133bcbb1452ae73652c8e9dbaa3c1dc89b280725d0e9f80308",
+  "local_final_source_audit": "final_source_audit.json",
+  "solution_python_files": [
+    {
+      "path": "solution/__init__.py",
+      "byteIdentical": false,
+      "newlineNormalizedEqual": true,
+      "remoteCRLF": 0,
+      "localCRLF": 20,
+      "remoteBlobSha": "ea5a5eb03c44d03f4dac20099cc520417e8337f8"
+    },
+    {
+      "path": "solution/benchmark.py",
+      "byteIdentical": true,
+      "newlineNormalizedEqual": true,
+      "remoteCRLF": 0,
+      "localCRLF": 0,
+      "remoteBlobSha": "c37d4f39af4ac7861deb028c343827cd7d3c8e06"
+    },
+    {
+      "path": "solution/nf4.py",
+      "byteIdentical": true,
+      "newlineNormalizedEqual": true,
+      "remoteCRLF": 0,
+      "localCRLF": 0,
+      "remoteBlobSha": "80563116e1c410a72cf202510eaba786f091fb0a"
+    },
+    {
+      "path": "solution/patches.py",
+      "byteIdentical": true,
+      "newlineNormalizedEqual": true,
+      "remoteCRLF": 0,
+      "localCRLF": 0,
+      "remoteBlobSha": "b06307487d04b245b1a43efe5dc812dd470c0d9b"
+    },
+    {
+      "path": "solution/rmsnorm.py",
+      "byteIdentical": true,
+      "newlineNormalizedEqual": true,
+      "remoteCRLF": 0,
+      "localCRLF": 0,
+      "remoteBlobSha": "02088c047d658567fcce708d5112efac262ae3b7"
+    },
+    {
+      "path": "solution/rope.py",
+      "byteIdentical": true,
+      "newlineNormalizedEqual": true,
+      "remoteCRLF": 0,
+      "localCRLF": 0,
+      "remoteBlobSha": "8cad0d95b76a54018d34755c5f854449ce120392"
+    },
+    {
+      "path": "solution/swiglu.py",
+      "byteIdentical": false,
+      "newlineNormalizedEqual": true,
+      "remoteCRLF": 0,
+      "localCRLF": 81,
+      "remoteBlobSha": "92bb82b4f122622e00852583de6ad3aae8d1cb60"
+    },
+    {
+      "path": "solution/test_integration.py",
+      "byteIdentical": true,
+      "newlineNormalizedEqual": true,
+      "remoteCRLF": 0,
+      "localCRLF": 0,
+      "remoteBlobSha": "d500170eccf889bcd1d4016d7a8a764ec903d68b"
+    },
+    {
+      "path": "solution/test_kernels.py",
+      "byteIdentical": false,
+      "newlineNormalizedEqual": true,
+      "remoteCRLF": 0,
+      "localCRLF": 34,
+      "remoteBlobSha": "08b287109578356a532db911a918191cc9e221ab"
+    },
+    {
+      "path": "solution/test_nf4.py",
+      "byteIdentical": true,
+      "newlineNormalizedEqual": true,
+      "remoteCRLF": 0,
+      "localCRLF": 0,
+      "remoteBlobSha": "f120e6c96e69b5dd682c4cb05f189dad5a70c8b7"
+    },
+    {
+      "path": "solution/test_rmsnorm.py",
+      "byteIdentical": true,
+      "newlineNormalizedEqual": true,
+      "remoteCRLF": 0,
+      "localCRLF": 0,
+      "remoteBlobSha": "067948b69738642bd972597f46f6f0a99ab253ef"
+    },
+    {
+      "path": "solution/test_rope.py",
+      "byteIdentical": true,
+      "newlineNormalizedEqual": true,
+      "remoteCRLF": 0,
+      "localCRLF": 0,
+      "remoteBlobSha": "9615fb33005c3bab59b443859254c73762d5c515"
+    },
+    {
+      "path": "solution/test_vocab.py",
+      "byteIdentical": true,
+      "newlineNormalizedEqual": true,
+      "remoteCRLF": 0,
+      "localCRLF": 0,
+      "remoteBlobSha": "70ea0caee406b20423349af1ebda39b2cd8657c1"
+    },
+    {
+      "path": "solution/vocab.py",
+      "byteIdentical": true,
+      "newlineNormalizedEqual": true,
+      "remoteCRLF": 0,
+      "localCRLF": 0,
+      "remoteBlobSha": "8f7e75d46777c9e7d08e3bf5ceca3fc3b1174eb3"
+    }
+  ],
+  "all_solution_files_equal_after_newline_normalization": true,
+  "exact_equal_files": 11,
+  "protected_remote_files_match_platform_source_git_blobs": 15,
+  "platform_source_commit": "fc44fd2d2bf23f624e95cef655f03fecbd87ec46",
+  "note": "Remote code was not modified by the documentation/evidence update. Three unchanged starter files have LF in GitHub and CRLF in the measured local snapshot. The measured snapshot and solution SHA256 are not claimed as byte hashes of the newline-normalized GitHub copy. This audit does not rerun GPU tests."
+}

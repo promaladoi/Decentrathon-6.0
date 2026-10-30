@@ -1,0 +1,579 @@
+Time
+	
+#
+	
+Log Message
+
+8.2s	1	0.00s - Debugger warning: It seems that frozen modules are being used, which may
+
+8.2s	2	0.00s - make the debugger miss breakpoints. Please pass -Xfrozen_modules=off
+
+8.2s	3	0.00s - to python to disable frozen modules.
+
+8.2s	4	0.00s - Note: Debugging will proceed. Set PYDEVD_DISABLE_FILE_VALIDATION=1 to disable this validation.
+
+8.8s	5	0.00s - Debugger warning: It seems that frozen modules are being used, which may
+
+8.8s	6	0.00s - make the debugger miss breakpoints. Please pass -Xfrozen_modules=off
+
+8.8s	7	0.00s - to python to disable frozen modules.
+
+8.8s	8	0.00s - Note: Debugging will proceed. Set PYDEVD_DISABLE_FILE_VALIDATION=1 to disable this validation.
+
+10.0s	9	{'mode': 'development', 'snapshot_sha256': 'eaa4e00672e0f2133bcbb1452ae73652c8e9dbaa3c1dc89b280725d0e9f80308'}
+
+10.2s	10	Tesla T4
+
+10.2s	11	Tesla T4
+
+10.2s	12	
+
+10.9s	13	Found existing installation: torchao 0.10.0
+
+11.0s	14	Uninstalling torchao-0.10.0:
+
+11.5s	15	  Successfully uninstalled torchao-0.10.0
+
+19.5s	16	{'source': 'development snapshot', 'sha256': 'eaa4e00672e0f2133bcbb1452ae73652c8e9dbaa3c1dc89b280725d0e9f80308', 'starter_commit': 'c7c2fcd15972ce8b898d8d3ff732ee192c817ceb', 'files': 36}
+
+19.6s	17	{'soup-cli': '0.77.0', 'torch': '2.11.0+cu128', 'triton': '3.6.0', 'transformers': '5.16.1', 'peft': '0.20.0', 'trl': '0.29.1', 'bitsandbytes': '0.50.2', 'accelerate': '1.14.0'}
+
+83.4s	18	...................................s.s......................................................................................................... [ 43%]
+
+83.6s	19	.. [ 43%]
+
+90.3s	20	.............................................................................................................................................. [ 86%]
+
+90.5s	21	. [ 86%]
+
+92.4s	22	...............................                                                   [100%]
+
+92.4s	23	165 passed, 1 skipped in 71.20s (0:01:11)
+
+92.4s	24	.............                                                   [100%]
+
+92.4s	25	165 passed, 1 skipped in 71.20s (0:01:11)
+
+110.2s	26	.......................................................................................................................... [ 91%]
+
+110.2s	27	.......                                                                  [100%]
+
+110.2s	28	=============================== warnings summary ===============================
+
+110.2s	29	../../../usr/local/lib/python3.13/dist-packages/torch/jit/_script.py:365: 14 warnings
+
+110.2s	30	  /usr/local/lib/python3.13/dist-packages/torch/jit/_script.py:365: DeprecationWarning: `torch.jit.script_method` is deprecated. Please switch to `torch.compile` or `torch.export`.
+
+110.2s	31	    warnings.warn(
+
+110.2s	32	
+
+110.2s	33	-- Docs: https://docs.pytest.org/en/stable/how-to/capture-warnings.html
+
+110.2s	34	79 passed, 14 warnings in 8.43s
+
+110.3s	35	...................... [ 91%]
+
+110.3s	36	.......                                                                  [100%]
+
+110.3s	37	=============================== warnings summary ===============================
+
+110.3s	38	../../../usr/local/lib/python3.13/dist-packages/torch/jit/_script.py:365: 14 warnings
+
+110.3s	39	  /usr/local/lib/python3.13/dist-packages/torch/jit/_script.py:365: DeprecationWarning: `torch.jit.script_method` is deprecated. Please switch to `torch.compile` or `torch.export`.
+
+110.3s	40	    warnings.warn(
+
+110.3s	41	
+
+110.3s	42	-- Docs: https://docs.pytest.org/en/stable/how-to/capture-warnings.html
+
+110.3s	43	79 passed, 14 warnings in 8.43s
+
+118.1s	44	{
+
+118.1s	45	  "kind": "synthetic_microbenchmark_not_training_score",
+
+118.1s	46	  "device": "Tesla T4",
+
+118.1s	47	  "torch": "2.11.0+cu128",
+
+118.1s	48	  "rows": 256,
+
+118.1s	49	  "vocabulary": 151936,
+
+118.1s	50	  "repeats": 20,
+
+118.1s	51	  "timing": "CUDA events after 3 warmups; excludes compilation",
+
+118.1s	52	  "memory": "extra PyTorch allocated peak, not official nvidia-smi peak",
+
+118.1s	53	  "cross_entropy_forward_backward": {
+
+118.1s	54	    "base": {
+
+118.1s	55	      "median_ms": 5.700400114059448,
+
+118.1s	56	      "peak_extra_allocated_mib": 445.1259765625
+
+118.1s	57	    },
+
+118.1s	58	    "solution": {
+
+118.1s	59	      "median_ms": 2.3114880323410034,
+
+118.1s	60	      "peak_extra_allocated_mib": 148.37841796875
+
+118.1s	61	    }
+
+118.1s	62	  },
+
+118.1s	63	  "entropy": {
+
+118.1s	64	    "base": {
+
+118.1s	65	      "median_ms": 8.905744075775146,
+
+118.1s	66	      "peak_extra_allocated_mib": 296.7509765625
+
+118.1s	67	    },
+
+118.1s	68	    "solution": {
+
+118.1s	69	      "median_ms": 0.7046239972114563,
+
+118.1s	70	      "peak_extra_allocated_mib": 0.1142578125
+
+118.1s	71	    }
+
+118.1s	72	  },
+
+118.1s	73	  "rmsnorm_forward_backward": {
+
+118.1s	74	    "base": {
+
+118.1s	75	      "median_ms": 0.5905760228633881,
+
+118.1s	76	      "peak_extra_allocated_mib": 9.0
+
+118.1s	77	    },
+
+118.1s	78	    "solution": {
+
+118.1s	79	      "median_ms": 0.4042239934206009,
+
+118.1s	80	      "peak_extra_allocated_mib": 3.0009765625
+
+118.1s	81	    }
+
+118.1s	82	  }
+
+118.1s	83	}
+
+118.3s	84	{
+
+118.3s	85	  "kind": "synthetic_microbenchmark_not_training_score",
+
+118.3s	86	  "device": "Tesla T4",
+
+118.3s	87	  "torch": "2.11.0+cu128",
+
+118.3s	88	  "rows": 256,
+
+118.3s	89	  "vocabulary": 151936,
+
+118.3s	90	  "repeats": 20,
+
+118.3s	91	  "timing": "CUDA events after 3 warmups; excludes compilation",
+
+118.3s	92	  "memory": "extra PyTorch allocated peak, not official nvidia-smi peak",
+
+118.3s	93	  "cross_entropy_forward_backward": {
+
+118.3s	94	    "base": {
+
+118.3s	95	      "median_ms": 5.700400114059448,
+
+118.3s	96	      "peak_extra_allocated_mib": 445.1259765625
+
+118.3s	97	    },
+
+118.3s	98	    "solution": {
+
+118.3s	99	      "median_ms": 2.3114880323410034,
+
+118.3s	100	      "peak_extra_allocated_mib": 148.37841796875
+
+118.3s	101	    }
+
+118.3s	102	  },
+
+118.3s	103	  "entropy": {
+
+118.3s	104	    "base": {
+
+118.3s	105	      "median_ms": 8.905744075775146,
+
+118.3s	106	      "peak_extra_allocated_mib": 296.7509765625
+
+118.3s	107	    },
+
+118.3s	108	    "solution": {
+
+118.3s	109	      "median_ms": 0.7046239972114563,
+
+118.3s	110	      "peak_extra_allocated_mib": 0.1142578125
+
+118.3s	111	    }
+
+118.3s	112	  },
+
+118.3s	113	  "rmsnorm_forward_backward": {
+
+118.3s	114	    "base": {
+
+118.3s	115	      "median_ms": 0.5905760228633881,
+
+118.3s	116	      "peak_extra_allocated_mib": 9.0
+
+118.3s	117	    },
+
+118.3s	118	    "solution": {
+
+118.3s	119	      "median_ms": 0.4042239934206009,
+
+118.3s	120	      "peak_extra_allocated_mib": 3.0009765625
+
+118.3s	121	    }
+
+118.3s	122	  }
+
+118.3s	123	}
+
+120.3s	124	Warning: You are sending unauthenticated requests to the HF Hub. Please set a HF_TOKEN to enable higher rate limits and faster downloads.
+
+120.5s	125	Warning: You are sending unauthenticated requests to the HF Hub. Please set a HF_TOKEN to enable higher rate limits and faster downloads.
+
+120.5s	126	
+
+120.5s	127	Warning: You are sending unauthenticated requests to the HF Hub. Please set a HF_TOKEN to enable higher rate limits and faster downloads.
+
+121.8s	128	Generating train split: 0 examples [00:00, ? examples/s]Generating train split: 0 examples [00:00, ? examples/s]
+
+123.5s	129	Generating train split: 0 examples [00:00, ? examples/s]Generating train split: 52201 examples [00:01, 28032.49 examples/s]Generating train split: 52201 examples [00:01, 27757.16 examples/s]
+
+123.5s	130	wrote 256 training rows and 256 eval rows to /kaggle/working/repo/data
+
+123.7s	131	Generating train split: 52201 examples [00:01, 28032.49 examples/s]Generating train split: 52201 examples [00:01, 27757.16 examples/s]
+
+123.7s	132	
+
+123.7s	133	Generating train split: 52201 examples [00:01, 28032.49 examples/s]Generating train split: 52201 examples [00:01, 27757.16 examples/s]
+
+123.7s	134	wrote 256 training rows and 256 eval rows to /kaggle/working/repo/data
+
+145.7s	135	[run_task] warm-up done in 20.68 s
+
+145.7s	136	[run_task] base_1: training ...
+
+145.9s	137	[run_task] warm-up done in 20.68 s
+
+145.9s	138	[run_task] base_1: training ...
+
+234.6s	139	[run_task] base_1: ok, 88.79 s, peak 14345 MiB
+
+234.6s	140	[run_task] solution_1: training ...
+
+234.8s	141	[run_task] base_1: ok, 88.79 s, peak 14345 MiB
+
+234.8s	142	[run_task] solution_1: training ...
+
+316.5s	143	[run_task] solution_1: ok, 81.82 s, peak 12381 MiB
+
+316.5s	144	[run_task] solution_2: training ...
+
+316.7s	145	[run_task] solution_1: ok, 81.82 s, peak 12381 MiB
+
+316.7s	146	[run_task] solution_2: training ...
+
+398.4s	147	[run_task] solution_2: ok, 81.82 s, peak 12381 MiB
+
+398.4s	148	[run_task] base_2: training ...
+
+398.7s	149	[run_task] solution_2: ok, 81.82 s, peak 12381 MiB
+
+398.7s	150	[run_task] base_2: training ...
+
+483.1s	151	[run_task] base_2: ok, 84.56 s, peak 14345 MiB
+
+483.1s	152	[run_task] eval base ...
+
+483.3s	153	[run_task] base_2: ok, 84.56 s, peak 14345 MiB
+
+483.3s	154	[run_task] eval base ...
+
+525.6s	155	[run_task] eval solution ...
+
+525.8s	156	[run_task] eval solution ...
+
+570.3s	157	
+
+570.3s	158	=== result ===
+
+570.3s	159	base      time     86.7 s   peak  14345 MiB   eval loss 2.04963
+
+570.3s	160	solution  time     81.8 s   peak  12381 MiB   eval loss 2.04969
+
+570.3s	161	speedup 1.059x   memory base/solution 1.159x   eval loss vs base 0.003 %
+
+570.3s	162	written: /kaggle/working/repo/runs/result.json
+
+570.3s	163	
+
+570.3s	164	=== result ===
+
+570.3s	165	base      time     86.7 s   peak  14345 MiB   eval loss 2.04963
+
+570.3s	166	solution  time     81.8 s   peak  12381 MiB   eval loss 2.04969
+
+570.3s	167	speedup 1.059x   memory base/solution 1.159x   eval loss vs base 0.003 %
+
+570.3s	168	written: /kaggle/working/repo/runs/result.json
+
+584.4s	169	PASS  1. every base and solution run finished                                            2 base and 2 solution runs of 2 each
+
+584.4s	170	PASS  2. no ready-made kernel libraries                                                  loaded: none; imported in solution/: none; packages changed during the run: none
+
+584.4s	171	PASS  3. own @triton.jit kernels in solution/ run in training                            soup_nf4_unpack_kernel (solution/nf4.py), soup_rmsnorm_backward_kernel (solution/rmsnorm.py), soup_rmsnorm_forward_kernel (solution/rmsnorm.py), soup_rope_backward_kernel (solution/rope.py), soup_rope_forward_kernel (solution/rope.py), vocabulary_finish_kernel (solution/vocab.py), vocabulary_gradient_kernel (solution/vocab.py), vocabulary_partials_kernel (solution/vocab.py); the example's kernels do not count, under any name: example_swiglu_fwd_kernel, example_swiglu_bwd_kernel
+
+584.4s	172	PASS  4. own kernels together take >= 5% of the training time                            7.3% of the training time (lowest of 2 runs, steps 3+)
+
+584.4s	173	PASS  5. same task and Soup outputs (steps, adapter, settings, tokens, metrics, rewind)  identical within tolerance
+
+584.4s	174	PASS  6. loss curve follows the base                                                     base_2: first step 0.00%, mean of all steps 0.01%; solution_1: first step 0.00%, mean of all steps 0.01%; solution_2: first step 0.00%, mean of all steps 0.01% (max 1% and 3%)
+
+584.4s	175	PASS  7. quality: eval loss at most 0.5% above the base                                  +0.003%
+
+584.4s	176	PASS  8. not worse than the base on time or memory (10% margin)                          time x0.944, memory x0.863 of the base
+
+584.4s	177	PASS  9. clean measurement (a T4, idle GPUs, one GPU, harness allocator, peaks agree)    clean
+
+584.4s	178	PASS  10. Soup regression tests with your patches                                        79 passed, 14 warnings in 8.20s
+
+584.4s	179	
+
+584.4s	180	ALL CHECKS PASSED
+
+584.5s	181	speedup 1.059x (counts as 1.059), memory base/solution 1.159x (counts as 1.159), eval loss vs base +0.003 %, all checks passed on this result: True
+
+584.5s	182	Speed and memory points depend on the best admitted team: 35 * ln(s) / ln(best s) and 30 * ln(m) / ln(best m).
+
+584.5s	183	PASS  1. every base and solution run finished                                            2 base and 2 solution runs of 2 each
+
+584.5s	184	PASS  2. no ready-made kernel libraries                                                  loaded: none; imported in solution/: none; packages changed during the run: none
+
+584.5s	185	PASS  3. own @triton.jit kernels in solution/ run in training                            soup_nf4_unpack_kernel (solution/nf4.py), soup_rmsnorm_backward_kernel (solution/rmsnorm.py), soup_rmsnorm_forward_kernel (solution/rmsnorm.py), soup_rope_backward_kernel (solution/rope.py), soup_rope_forward_kernel (solution/rope.py), vocabulary_finish_kernel (solution/vocab.py), vocabulary_gradient_kernel (solution/vocab.py), vocabulary_partials_kernel (solution/vocab.py); the example's kernels do not count, under any name: example_swiglu_fwd_kernel, example_swiglu_bwd_kernel
+
+584.5s	186	PASS  4. own kernels together take >= 5% of the training time                            7.3% of the training time (lowest of 2 runs, steps 3+)
+
+584.5s	187	PASS  5. same task and Soup outputs (steps, adapter, settings, tokens, metrics, rewind)  identical within tolerance
+
+584.5s	188	PASS  6. loss curve follows the base                                                     base_2: first step 0.00%, mean of all steps 0.01%; solution_1: first step 0.00%, mean of all steps 0.01%; solution_2: first step 0.00%, mean of all steps 0.01% (max 1% and 3%)
+
+584.5s	189	PASS  7. quality: eval loss at most 0.5% above the base                                  +0.003%
+
+584.5s	190	PASS  8. not worse than the base on time or memory (10% margin)                          time x0.944, memory x0.863 of the base
+
+584.5s	191	PASS  9. clean measurement (a T4, idle GPUs, one GPU, harness allocator, peaks agree)    clean
+
+584.5s	192	PASS  10. Soup regression tests with your patches                                        79 passed, 14 warnings in 8.20s
+
+584.5s	193	
+
+584.5s	194	ALL CHECKS PASSED
+
+584.5s	195	speedup 1.059x (counts as 1.059), memory base/solution 1.159x (counts as 1.159), eval loss vs base +0.003 %, all checks passed on this result: True
+
+584.5s	196	Speed and memory points depend on the best admitted team: 35 * ln(s) / ln(best s) and 30 * ln(m) / ln(best m).
+
+584.5s	197	{
+
+584.5s	198	  "snapshot_sha256": "eaa4e00672e0f2133bcbb1452ae73652c8e9dbaa3c1dc89b280725d0e9f80308",
+
+584.5s	199	  "summary": {
+
+584.5s	200	    "base": {
+
+584.5s	201	      "ok": true,
+
+584.5s	202	      "runs": 2,
+
+584.5s	203	      "wall_s": 86.68,
+
+584.5s	204	      "gpu_peak_mib": 14345,
+
+584.5s	205	      "train_loop_s": 59.79,
+
+584.5s	206	      "eval_loss": 2.04963
+
+584.5s	207	    },
+
+584.5s	208	    "solution": {
+
+584.5s	209	      "ok": true,
+
+584.5s	210	      "runs": 2,
+
+584.5s	211	      "wall_s": 81.82,
+
+584.5s	212	      "gpu_peak_mib": 12381,
+
+584.5s	213	      "train_loop_s": 59.22,
+
+584.5s	214	      "eval_loss": 2.04969
+
+584.5s	215	    },
+
+584.5s	216	    "ratios": {
+
+584.5s	217	      "speedup": 1.0594,
+
+584.5s	218	      "memory_ratio": 1.1586,
+
+584.5s	219	      "quality_delta_pct": 0.003
+
+584.5s	220	    }
+
+584.5s	221	  },
+
+584.5s	222	  "checks": {
+
+584.5s	223	    "result_sha256": "5297c7c570ede337722148f59aeed47f65ea27f66b503662fc6f1f1b6fe193d1",
+
+584.5s	224	    "solution_sha256": "68a2eb35f8d32e68f0ae45efc30a1d01d87daf9c7363667caf4f8c98a0009878",
+
+584.5s	225	    "checks": [
+
+584.5s	226	      {
+
+584.5s	227	        "check": "1. every base and solution run finished",
+
+584.5s	228	        "ok": true,
+
+584.5s	229	        "detail": "2 base and 2 solution runs of 2 each"
+
+584.5s	230	      },
+
+584.5s	231	      {
+
+584.5s	232	        "check": "2. no ready-made kernel libraries",
+
+584.5s	233	        "ok": true,
+
+584.5s	234	        "detail": "loaded: none; imported in solution/: none; packages changed during the run: none"
+
+584.5s	235	      },
+
+584.5s	236	      {
+
+584.5s	237	        "check": "3. own @triton.jit kernels in solution/ run in training",
+
+584.5s	238	        "ok": true,
+
+584.5s	239	        "detail": "soup_nf4_unpack_kernel (solution/nf4.py), soup_rmsnorm_backward_kernel (solution/rmsnorm.py), soup_rmsnorm_forward_kernel (solution/rmsnorm.py), soup_rope_backward_kernel (solution/rope.py), soup_rope_forward_kernel (solution/rope.py), vocabulary_finish_kernel (solution/vocab.py), vocabulary_gradient_kernel (solution/vocab.py), vocabulary_partials_kernel (solution/vocab.py); the example's kernels do not count, under any name: example_swiglu_fwd_kernel, example_swiglu_bwd_kernel"
+
+584.5s	240	      },
+
+584.5s	241	      {
+
+584.5s	242	        "check": "4. own kernels together take >= 5% of the training time",
+
+584.5s	243	        "ok": true,
+
+584.5s	244	        "detail": "7.3% of the training time (lowest of 2 runs, steps 3+)"
+
+584.5s	245	      },
+
+584.5s	246	      {
+
+584.5s	247	        "check": "5. same task and Soup outputs (steps, adapter, settings, tokens, metrics, rewind)",
+
+584.5s	248	        "ok": true,
+
+584.5s	249	        "detail": "identical within tolerance"
+
+584.5s	250	      },
+
+584.5s	251	      {
+
+584.5s	252	        "check": "6. loss curve follows the base",
+
+584.5s	253	        "ok": true,
+
+584.5s	254	        "detail": "base_2: first step 0.00%, mean of all steps 0.01%; solution_1: first step 0.00%, mean of all steps 0.01%; solution_2: first step 0.00%, mean of all steps 0.01% (max 1% and 3%)"
+
+584.5s	255	      },
+
+584.5s	256	      {
+
+584.5s	257	        "check": "7. quality: eval loss at most 0.5% above the base",
+
+584.5s	258	        "ok": true,
+
+584.5s	259	        "detail": "+0.003%"
+
+584.5s	260	      },
+
+584.5s	261	      {
+
+584.5s	262	        "check": "8. not worse than the base on time or memory (10% margin)",
+
+584.5s	263	        "ok": true,
+
+584.5s	264	        "detail": "time x0.944, memory x0.863 of the base"
+
+584.5s	265	      },
+
+584.5s	266	      {
+
+584.5s	267	        "check": "9. clean measurement (a T4, idle GPUs, one GPU, harness allocator, peaks agree)",
+
+584.5s	268	        "ok": true,
+
+584.5s	269	        "detail": "clean"
+
+584.5s	270	      },
+
+584.5s	271	      {
+
+584.5s	272	        "check": "10. Soup regression tests with your patches",
+
+584.5s	273	        "ok": true,
+
+584.5s	274	        "detail": "79 passed, 14 warnings in 8.20s"
+
+584.5s	275	      }
+
+584.5s	276	    ],
+
+584.5s	277	    "notes": []
+
+584.5s	278	  }
+
+584.5s	279	}
+
+587.1s	280	/usr/local/lib/python3.13/dist-packages/mistune.py:435: SyntaxWarning: invalid escape sequence '\|'
+
+587.1s	281	  cells[i][c] = re.sub('\\\\\|', '|', cell)
+
+587.3s	282	/usr/local/lib/python3.13/dist-packages/nbconvert/filters/filter_links.py:36: SyntaxWarning: invalid escape sequence '\_'
+
+587.3s	283	  text = re.sub(r'_', '\_', text) # Escape underscores in display text
+
+588.1s	284	[NbConvertApp] Converting notebook __notebook__.ipynb to notebook
+
+588.2s	285	[NbConvertApp] Writing 143287 bytes to __notebook__.ipynb
+
+590.7s	286	[NbConvertApp] Converting notebook __notebook__.ipynb to html
+
+591.3s	287	[NbConvertApp] Writing 434623 bytes to __results__.html
