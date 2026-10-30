@@ -8,7 +8,7 @@ import triton
 import triton.language as tl
 
 TILE = 4096
-ROW_CHUNK = 1024
+ROW_CHUNK = 512
 
 
 @triton.jit
@@ -102,8 +102,8 @@ def parallel_stats(x16, w16, idx, targets, ent, amax, ce, grad_x):
             ce.index_copy_(0, chunk, c)
             grad_x.index_copy_(0, chunk, torch.mm(logits, w16).float())
         # Release this vocabulary-sized buffer before allocating the next one.
-        # Previously assignment kept two 512-row chunks alive at once. A single
-        # 1024-row chunk uses larger native GEMMs without two live logits buffers.
+        # v38's 1024-row trial exceeded the user memory cap on the complete task.
+        # Keep 512 rows and release promptly; the original native GEMMs remain.
         del logits, target, e, a, c
 
 
