@@ -2,6 +2,7 @@
 import argparse
 import json
 from pathlib import Path
+import re
 import subprocess
 import sys
 
@@ -15,15 +16,30 @@ def main():
     if subprocess.check_output(['nvidia-smi','--query-compute-apps=pid',
                                 '--format=csv,noheader'],text=True).strip():
         raise RuntimeError('Another GPU process is active')
-    # A failed strict research test stops the screen, without modifying its oracle.
-    subprocess.run([sys.executable,'-m','pytest','02_kernel_research/test_gate_up_forward.py','-q'],
-                   cwd=repo,check=True)
     sys.path.insert(0,str(repo/'02_kernel_research'))
     sys.path.insert(0,str(repo))
     import torch
+    import triton
+    assert torch.cuda.get_device_capability()==(7,5)
+    from gate_up_forward import compiled_backend_probe
+    ptx = compiled_backend_probe()
+    backend = dict(gpu=torch.cuda.get_device_name(), torch=torch.__version__,
+                   triton=triton.__version__,
+                   tensor_core_mma_found=bool(re.search(r'\b(?:mma\.sync|wmma\.mma)\.',ptx)))
+    args.output.with_suffix('.ptx').write_text(ptx)
+    print('GATE_UP_BACKEND',json.dumps(backend),flush=True)
+    if not backend['tensor_core_mma_found']:
+        args.output.write_text(json.dumps(dict(
+            kind='isolated research; not a full-task result', backend=backend,
+            status='rejected_before_numerical_sweep', rows=[],
+            reason='Candidate tl.dot did not generate Tensor Core MMA on this T4; keep native GEMMs'),indent=2))
+        print('Research rejected: scalar-FMA lowering is unsuitable for this Tensor Core candidate.',flush=True)
+        return 2
+    # A failed strict research test stops the screen, without modifying its oracle.
+    subprocess.run([sys.executable,'-m','pytest','02_kernel_research/test_gate_up_forward.py','-q'],
+                   cwd=repo,check=True)
     import triton.testing
     from gate_up_forward import CONFIGS,fused_gate_up,production_gate_up
-    assert torch.cuda.get_device_capability()==(7,5)
     rows=[]
     for m in (512,832,1024):
         torch.manual_seed(42)
@@ -38,7 +54,8 @@ def main():
             rows.append(row)
             print('GATE_UP_DIAGNOSTIC',json.dumps(row),flush=True)
         del x,wg,wu
-    args.output.write_text(json.dumps(dict(kind='isolated research; not a full-task result',rows=rows),indent=2))
+    args.output.write_text(json.dumps(dict(kind='isolated research; not a full-task result',backend=backend,rows=rows),indent=2))
+    return 0
 
 
-if __name__=='__main__': main()
+if __name__=='__main__': raise SystemExit(main())

@@ -18,7 +18,14 @@ All code is isolated under `02_kernel_research/`. It is neither imported nor
 enabled by `solution.apply()`. The older failed backward-fusion research and its
 strict tests are retained unchanged.
 
-The bounded GPU screen first runs the new numerical tests, then measures four
+The bounded GPU screen first inspects the generated PTX for actual Tensor Core
+MMA. Triton [removed its legacy MMA lowering below SM80](https://github.com/triton-lang/triton/pull/5066);
+therefore compiling a valid `tl.dot` does not establish a fast T4 kernel. If the
+probe emits no MMA, the candidate is rejected immediately and its PTX is saved;
+the numerical sweep and timings are not claimed to have run. No package is
+downgraded, and native production GEMMs are retained.
+
+When the backend probe passes, the screen runs the new numerical tests, then measures four
 configurations on three task-representative row counts. A correctness failure
 stops before timing. There is no production autotuning or cross-process cache.
 The screen baseline uses the original organizer Triton activation with native

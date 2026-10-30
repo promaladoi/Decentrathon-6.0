@@ -90,3 +90,22 @@ def production_gate_up(x, wg, wu):
     h = torch.empty_like(g)
     example_swiglu_fwd_kernel[(triton.cdiv(g.numel(), BLOCK),)](g, u, h, g.numel(), BLOCK=BLOCK)
     return g, u, h
+
+
+def compiled_backend_probe():
+    """Inspect actual SM75 code generation before a costly diagnostic sweep.
+
+    Modern Triton may lower tl.dot to scalar FMA on Turing. This is a probe of
+    the candidate compiler output, not a training measurement or correctness
+    pass. Only a single output tile is launched, with task projection widths.
+    """
+    x = torch.zeros((32, 1536), device='cuda', dtype=torch.float16)
+    wg = torch.zeros((8960, 1536), device='cuda', dtype=torch.float16)
+    wu = torch.zeros_like(wg)
+    g = torch.empty((32, 8960), device='cuda', dtype=torch.float16)
+    u, h = torch.empty_like(g), torch.empty_like(g)
+    compiled = gate_up_forward_kernel[(1,)](
+        x, wg, wu, g, u, h, 32, 8960, 1536, 32, 64, 32, 8,
+        num_warps=4, num_stages=2, enable_fp_fusion=False)
+    torch.cuda.synchronize()
+    return compiled.asm['ptx']
