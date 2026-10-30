@@ -331,6 +331,7 @@ class NativeInstalledTests(unittest.TestCase):
 import importlib
 import importlib.util
 import json
+import os
 import sys
 import time
 import transformers
@@ -343,6 +344,7 @@ helper = importlib.util.module_from_spec(spec)
 spec.loader.exec_module(helper)
 assert "trl.import_utils" not in sys.modules
 assert "trl" not in sys.modules, "Soup module import must not have imported TRL eagerly"
+assert os.environ.get("CUDA_VISIBLE_DEVICES") == "", "run this separate prefix proof CPU-only"
 original = helper.metadata.packages_distributions
 native_scan_callers = []
 snapshot_returns = []
@@ -418,7 +420,8 @@ cuda_initialized = bool(torch is not None and torch.cuda.is_initialized())
 assert not cuda_initialized
 print(json.dumps({"native_mapping_equal": True, "independent_dict_and_lists": True,
                   "entries": len(mapping), "helper_lookups": lookups,
-                  "cuda_initialized": cuda_initialized, "real_setup_prefix_seconds": import_seconds,
+                  "cuda_initialized": cuda_initialized, "cpu_probe_gpu_hidden": True,
+                  "real_setup_prefix_seconds": import_seconds,
                   "fresh_native_scan_seconds": fresh_scan_seconds,
                   "native_scan_callers_during_setup": native_scan_callers,
                   "actual_snapshot_returns_to_trl": len(snapshot_returns), "setup_calls": setup_calls,
@@ -427,11 +430,16 @@ print(json.dumps({"native_mapping_equal": True, "independent_dict_and_lists": Tr
 '''
         result = subprocess.run(
             [sys.executable, "-c", source, str(Path(__file__).with_name("package_metadata_snapshot.py"))],
-            capture_output=True, text=True, timeout=120)
+            # Native TRL imports may initialize CUDA when a GPU is visible.
+            # Hide it only in this separate CPU proof; training keeps its
+            # original environment and has a separate measured memory check.
+            capture_output=True, text=True, timeout=120,
+            env=dict(os.environ, CUDA_VISIBLE_DEVICES=""))
         self.assertEqual(result.returncode, 0, result.stdout + result.stderr)
         report = json.loads(result.stdout.strip().splitlines()[-1])
         self.assertTrue(report["native_mapping_equal"])
         self.assertTrue(report["independent_dict_and_lists"])
+        self.assertTrue(report["cpu_probe_gpu_hidden"])
         self.assertFalse(report["cuda_initialized"])
         print("native metadata snapshot parity: " + json.dumps(report), flush=True)
 
