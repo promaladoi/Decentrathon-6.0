@@ -1,2 +1,2 @@
-# hack-a5a4072f-wither-ai
-Hackathon team repository for Wither AI
+# hack-a5a4072f-IVNEX
+Hackathon team repository for IVNEX
