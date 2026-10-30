@@ -1,0 +1,22 @@
+{
+  "candidate": "2d171ddc1f6d43e593f5dd80e1a86731f27ad6f7",
+  "queue": "eff793254e6ba005955bee26f6dd4d9c5ec2187c",
+  "launcher": "dbc12c325ede4fcf4c77a259b47854a2a7c04eb4",
+  "snapshot": "Нұржігіт/experiments/v44/solution",
+  "source_files_verified": 47,
+  "solution_sha256": "10aa53fa064ff2db9343a29fe587610f711406f73da673cebbfecd11bfc1a04a",
+  "exact_git_blobs": true,
+  "cpu_tests": {
+    "passed": 50,
+    "skipped": 9,
+    "subtests_passed": 9,
+    "seconds": 20.47
+  },
+  "t4_measurement": "pending; no timing, memory, quality or 10/10 claim",
+  "selected_production": {
+    "version": "v34",
+    "source_commit": "fe2272c79bf00ae17654c388c5e79237d265f968",
+    "source_files_verified": 48,
+    "unchanged": true
+  }
+}

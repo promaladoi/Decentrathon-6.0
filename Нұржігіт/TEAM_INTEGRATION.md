@@ -63,3 +63,15 @@ Nurzhigit adds the deferred native-import integration and its independent
 contracts/proof. This CPU helper is never counted as an own Triton kernel.
 It is candidate work pending the combined T4 benchmark, not a transfer of
 Merei's earlier performance claims to this source revision.
+
+
+## v44: combined team memory candidate (pending T4)
+
+The active experimental path now imports Merei's complete corrected stage2
+Python solution and all tests from `6a4f577e95605547b1b713013db1ffc44aa620bd`.
+Merei and the underlying Vladimir contributions retain their authorship.
+Nurzhigit's additions are exact tied frozen storage, its integration tests and
+the validation runner. The 42 unchanged imported files have provenance hashes.
+The package initializer is adapted; no performance result is inherited.
+See `CODEX_V44_EXPERIMENT.md`. Older sections describe historical revisions,
+not the current experiment's imports. The public selected solution stays v34.
