@@ -11,6 +11,8 @@ import zipfile
 from IPython.display import display, FileLink
 
 SOURCE = '458e7a1d7706737f8b3a32a8f795419c2e726f1a'
+CONTROL = 'f93d00da5f282faddd4e5b9694dba7a7f14a83b1'
+QUEUE = '1033f48f97e6a55a497e41b28f06d1ebaf5517e2'
 working = Path('/kaggle/working')
 if os.name != 'posix' or not working.is_dir():
     raise RuntimeError('Run in Kaggle with GPU T4 x2 and Internet on')
@@ -19,12 +21,13 @@ subprocess.run(['git', 'clone', '-q', '--filter=blob:none', '--single-branch',
                 '--branch', 'codex/kernel-v1', '--no-checkout',
                 'https://github.com/promaladoi/Decentrathon-6.0.git', str(control)],
                check=True, timeout=180)
-subprocess.run(['git', '-C', str(control), 'checkout', '-q', SOURCE], check=True)
+subprocess.run(['git', '-C', str(control), 'checkout', '-q', CONTROL], check=True)
 # Coordinator checks GPU idleness, creates an exact separate worker, prepares
 # the original fixed split if needed, and bounds the complete worker to 20 min.
 # It never changes the checkout of a running measured process.
 done = subprocess.run([sys.executable, '04_submission/coordinate_experiments.py',
-                       '--max-jobs', '1', '--idle-minutes', '0', '--max-minutes', '20'],
+                       '--max-jobs', '1', '--idle-minutes', '0', '--max-minutes', '20',
+                       '--queue-commit', QUEUE],
                       cwd=control)
 print('V43 COORDINATOR EXIT:', done.returncode, flush=True)
 archive = working/'codex_v43.zip'
