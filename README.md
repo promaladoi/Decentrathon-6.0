@@ -1,11 +1,14 @@
 # IVNEX: Soup Kernel Challenge
 
-Latest validated improvement: [v5 result](CODEX_V5_RESULT.md), **1.0636x speedup**
-(about **6.0% less training time**), **27.9% less GPU memory**, **10/10 checks**.
-Code: `58c7378`. [Pinned notebook](templates/codex_v5.ipynb).
-Earlier results below remain for comparison. v6 is currently under measurement.
+Latest validated candidate: [v9 result](CODEX_V9_RESULT.md), **1.1075x speedup**
+(**9.7% less training time**), **36.1% less GPU memory**, **10/10 checks**.
+Two paired T4 runs: **87.39 → 78.91 s**, **14345 → 9165 MiB**.
+Code: `57182a2`. [Pinned notebook](templates/codex_candidate.ipynb).
+41 kernel tests and 79 Soup tests passed; original kernels' minimum share: 7.3%.
+[All variants](03_validation/VERSION_COMPARISON.md) · [Commit progress](04_submission/CODEX_PROGRESS.md).
+Earlier results below are archived for comparison. The final team submission is not selected.
 
-## Codex candidate: тексерілген жеке нұсқа
+## Earlier v3 candidate (archive)
 
 Code commit: `8f82109fdec5f239c0cd4df21ed27fded849cd18`, branch `codex/kernel-v1`.
 Тапсырма баптауларын сақтап, vocabulary loss/entropy, frozen RMSNorm және NF4
@@ -22,7 +25,7 @@ Kaggle T4-де 33 кернел тесті, 79 Soup тесті және барл�
 Speedup **1.0326x** (5%-дан аз, scoring бойынша тең), memory ratio **1.1583x**.
 Жады шамамен 13.7% азайды; бұл үнем негізінен retained starter SwiGLU мысалынан.
 Код, қайта іске қосу, нақты есептер және шектеулер: [CODEX_VARIANT.md](CODEX_VARIANT.md).
-[Осы commit-ке бекітілген Kaggle notebook](templates/codex_candidate.ipynb).
+v3 reproduction details: [CODEX_VARIANT.md](CODEX_VARIANT.md).
 [Команда нұсқаларын салыстыру](03_validation/VERSION_COMPARISON.md).
 Өзге қатысушылардың нұсқалары әлі берілген жоқ; финалдық команда нұсқасы таңдалмаған.
 

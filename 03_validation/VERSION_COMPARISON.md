@@ -12,6 +12,11 @@
 | Codex / Нұржігіт v3 | 8f82109fdec5f239c0cd4df21ed27fded849cd18 | 10 PASS | 1.033x | 1.158x | +0.000% | 2 paired run; өз кернелдері 7.1%; speed gain <5%, scoring-де тең |
 | Original public repo, direct verification | c7c2fcd15972ce8b898d8d3ff732ee192c817ceb | 8 PASS; 3,4 FAIL | 0.916x | 1.158x | +0.003% | 1 paired run; өзгертілмеген ұйымдастырушы мысалы |
 | Codex / Нұржігіт v4 experiment | 12b9f58f32e70fc1db6ca47b7860eb9870a9ffd8 | 10 PASS | 1.036x | 1.158x | +0.000% | 2 paired run; 37 kernel tests; өз кернелдері 7.1%; v3-тен айқын ұтыс дәлелденбеді |
+| Codex v5 | 58c7378 | 10 PASS | 1.0636x | 1.3867x | -0.000% | FP16 MLP intermediates; 2 paired runs |
+| Codex v6 | f92ebf2 | 10 PASS | 1.1032x | 1.3867x | +0.000% | NF4 widening; 37 tests; 2 paired runs |
+| Codex v7 | a044007 | 10 PASS | 0.9995x | 1.3869x | -0.002% | LoRA fusion rejected: slower; 2 paired runs |
+| Codex v8 | 7435a92 | 10 PASS | 1.0144x | 1.5690x | +0.002% | Direct causal loss; slow LoRA still included; 2 paired runs |
+| Codex v9 | 57182a2 | 10 PASS | 1.1075x | 1.5652x | -0.001% | Current candidate: 41 tests, own kernels 7.3%; 2 paired runs |
 | Анаис | әлі берілмеген | әлі берілмеген | жоқ | жоқ | жоқ | |
 | Владимир | әлі берілмеген | әлі берілмеген | жоқ | жоқ | жоқ | |
 | Мерей | әлі берілмеген | әлі берілмеген | жоқ | жоқ | жоқ | |

@@ -12,3 +12,7 @@ the solution.
 Task data: AmanMussa/kazakh-instruction-v2 on Hugging Face (MIT on its card), a Kazakh translation
 of Stanford Alpaca (tatsu-lab/alpaca, CC BY-NC 4.0). It is downloaded at run time, not shipped here.
 Model: Qwen/Qwen2.5-1.5B-Instruct on Hugging Face, Apache-2.0 license.
+
+solution/causal_loss.py adapts causal-shifting and normalization semantics from
+Transformers 5.16.1, transformers/loss/loss_utils.py, Copyright 2024 The HuggingFace
+Team, Apache-2.0. Vocabulary reductions use this team's Triton kernels.

@@ -16,6 +16,17 @@ repository remains the development and eventual submission source. Neither
 repository's `main` branch is changed by this mirror; teammates' folders are
 preserved. The winning version is still to be selected by the team.
 
+## Current validated result
+
+v9 code `57182a2`: **1.1075x speedup**, **9.7% less runtime**, **36.1% less memory**.
+Base / solution: **87.39 / 78.91 s**, **14345 / 9165 MiB**.
+10/10 checks, 41 kernel tests, 79 Soup tests; own-kernel share 7.3%.
+See [full report](../CODEX_V9_RESULT.md) and [pinned notebook](../templates/codex_candidate.ipynb).
+
+v5 through v9 each have source commits and separate raw-report commits on both remotes.
+v7's slower LoRA fusion was rejected; v9 retains the useful causal-loss memory improvement.
+The interactive draft has a save conflict; downloaded artifacts are preserved independently.
+
 ## Completed milestones
 
 | Code commit | Change | Measured outcome |
@@ -25,7 +36,7 @@ preserved. The winning version is still to be selected by the team.
 | `8f82109` | Use the decoder in the existing forward fallback | 10/10 checks; own-kernel share 7.1% |
 | `3f86aa3` | Reproduction notebook, raw reports and comparison instructions | Code and raw-report hashes verified |
 
-Latest validated T4 result, two paired runs: base **88.08 s**, candidate
+Archived v3 T4 result, two paired runs: base **88.08 s**, candidate
 **85.30 s**; peak memory **14345 / 12385 MiB**; eval loss **2.04963 / 2.04963**.
 The measured speedup is **1.0326x**, below the competition's 5% speed-scoring
 threshold. This is a validated candidate, not a claim of maximum possible speed.
