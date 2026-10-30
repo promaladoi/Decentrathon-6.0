@@ -35,6 +35,7 @@ import triton.language as tl
 from .lmhead import LazyLogits, lm_head_loss, patch_metric_readers
 from .mlp import MLP4bit, _compute_dtype
 from .nf4 import MatMulNF4, dequantize_nf4, supported as nf4_supported, _linear_forward
+from . import timeline as _timeline
 from . import warmup as _warmup
 from .rmsnorm import add_rmsnorm
 from .dropout import real_row_dropout, _supported as _real_dropout_supported
@@ -628,6 +629,7 @@ def fast_forward(model, meta, input_ids, attention_mask, labels, num_items_in_ba
             raise ValueError("unsupported packed right-padded batch")
     patch_metric_readers()
     _warmup.wait()  # a kernel still compiling in the warm-up thread: wait, do not compile twice
+    _timeline.once("step 1 forward start")
     inner = model.model
     batch, seq_len = input_ids.shape
     rows = attention_mask.reshape(-1).nonzero().squeeze(1)
@@ -659,6 +661,7 @@ def fast_forward(model, meta, input_ids, attention_mask, labels, num_items_in_ba
     targets = shifted.reshape(-1).index_select(0, rows)
     loss, stats = lm_head_loss(x, model.lm_head.weight, targets, num_items_in_batch)
     logits = LazyLogits(batch, seq_len, model.lm_head.weight.shape[0], rows, stats)
+    _timeline.once("step 1 forward end", sync=True)
     return CausalLMOutputWithPast(loss=loss, logits=logits)
 
 
