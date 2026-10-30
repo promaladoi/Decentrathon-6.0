@@ -91,6 +91,28 @@ def test_dtype_change_refunds_previous_resident_size():
     assert a.dtype == torch.float16 and cache.bytes == 32 and len(calls) == 2
 
 
+def test_data_replacement_without_version_increment_invalidates_hit():
+    p, s, cache, calls = setup()
+    before = cache.get(p, s, torch.float16)
+    version = p._version
+    p.data = p.data.clone().add_(1)
+    assert p._version == version
+    after = cache.get(p, s, torch.float16)
+    assert after is not before and len(calls) == 2
+    torch.testing.assert_close(after, (p.float()*.25+.125).half().view(4,4), rtol=0, atol=0)
+
+
+def test_metadata_change_and_trainable_state_invalidate_previously_cached_hit():
+    p, s, cache, calls = setup()
+    before = cache.get(p, s, torch.float16)
+    s.shape = (2, 8)
+    after = cache.get(p, s, torch.float16)
+    assert after is not before and after.shape == (2,8) and len(calls) == 2
+    s.absmax.requires_grad_()
+    cache.get(p, s, torch.float16)
+    assert len(calls) == 3
+
+
 def test_budget_limit_decodes_without_retaining():
     p, s, cache, calls = setup(max_bytes=31)
     a, b = cache.get(p, s, torch.float16), cache.get(p, s, torch.float16)

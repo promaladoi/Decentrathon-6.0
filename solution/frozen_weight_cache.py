@@ -35,6 +35,34 @@ def _snapshot(packed, state, dtype):
     return layout, metadata, tensors
 
 
+def _matches(entry, packed, state, dtype):
+    """Validate the same signature without rebuilding all tensor record tuples."""
+    layout, records = entry['signature']
+    nested = bool(getattr(state, 'nested', False))
+    second = getattr(state, 'state2', None) if nested else None
+    offset = getattr(state, 'offset', None)
+    scalar_offset = offset if isinstance(offset, (int, float)) else None
+    if layout != (tuple(state.shape), getattr(state, 'quant_type', None), state.blocksize,
+                  nested, getattr(second, 'blocksize', None), scalar_offset, dtype):
+        return False
+    tensors = [packed, getattr(state, 'code', None), getattr(state, 'absmax', None), offset]
+    if second is not None:
+        tensors.extend((getattr(second, 'code', None), getattr(second, 'absmax', None)))
+    tensors = [t for t in tensors if torch.is_tensor(t)]
+    if len(tensors) != len(records):
+        return False
+    try:
+        for tensor, ref, record in zip(tensors, entry['refs'], records):
+            if (ref() is not tensor or tensor.requires_grad or tensor._version != record[2]
+                    or tensor.data_ptr() != record[1] or tuple(tensor.shape) != record[3]
+                    or tuple(tensor.stride()) != record[4] or tensor.dtype != record[5]
+                    or tensor.device != record[6]):
+                return False
+    except RuntimeError:
+        return False
+    return True
+
+
 class FrozenWeightCache:
     """Mutation-aware tensor cache; routing to eligible CUDA matrices is separate."""
     def __init__(self, decoder, max_bytes=MAX_BYTES):
@@ -50,16 +78,14 @@ class FrozenWeightCache:
     def get(self, packed, state, dtype):
         if packed.requires_grad:
             return self.decoder(packed, state, dtype)
+        key = id(packed)
+        entry = self.entries.get(key)
+        if entry is not None and entry['owner']() is packed and _matches(entry, packed, state, dtype):
+            return entry['value']
         snapshot = _snapshot(packed, state, dtype)
         if snapshot is None:
             return self.decoder(packed, state, dtype)
         layout, metadata, tensors = snapshot
-        key = id(packed)
-        entry = self.entries.get(key)
-        if (entry is not None and entry['owner']() is packed and
-                entry['signature'] == (layout, metadata) and
-                all(ref() is t for ref, t in zip(entry['refs'], tensors))):
-            return entry['value']
         self._drop(key)
         value = self.decoder(packed, state, dtype)
         size = value.numel()*value.element_size()
