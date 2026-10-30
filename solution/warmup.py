@@ -51,11 +51,7 @@ def _steps(unpad):
         if fast.REAL_ROW_DROPOUT:
             # After QKV projection, before RoPEPad: compile arithmetic only.
             # This callback never invokes native_dropout or consumes RNG.
-            # The qualified private LoRA consumer uses the half producer.
-            # Compile only that pair here; public/fallback FP32 variants still
-            # compile normally if used. No signature is read across runs.
-            import torch
-            steps.insert(3, lambda: compact_dropout.warmup(output_dtype=torch.float16))
+            steps.insert(3, compact_dropout.warmup)
         return steps
     return [nf4.warmup, rmsnorm.warmup, rope.warmup, mlp.warmup]
 

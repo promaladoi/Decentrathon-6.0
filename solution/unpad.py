@@ -593,7 +593,7 @@ class _Batch:
         self.packed_metadata = packed_metadata
         self._padded = {}
 
-    def dropout(self, dropout, x, *, cast_half=False):
+    def dropout(self, dropout, x):
         """dropout(x) of the real tokens, drawn on the (batch, seq_len, features) tensor of the
         base run, so the random masks are the same."""
         if type(dropout) is torch.nn.Identity:
@@ -620,8 +620,7 @@ class _Batch:
                 and _real_dropout_supported(x, self.rows, self.batch, self.seq_len,
                                              dropout.p, True, True)):
             return real_row_dropout(x, self.rows, self.batch, self.seq_len,
-                                    dropout.p, rows_from_nonzero=True,
-                                    output_dtype=torch.float16 if cast_half else None)
+                                    dropout.p, rows_from_nonzero=True)
         key = id(x)
         if key not in self._padded:
             full = x.new_zeros((self.batch * self.seq_len, x.shape[-1]))
@@ -638,21 +637,7 @@ def _lora_out(parts, x, step, *, apply_scale=True):
     base, lora_a, lora_b, dropout, scaling = parts
     if lora_a is None:
         return None
-    # Native Linear under FP16 autocast would immediately cast this FP32
-    # dropout result. Fold only that final cast into its producer; preserve
-    # module calls, exact native RNG and FP32 dropout input-gradient rounding.
-    cast_half = (step.packed_metadata is not None and x.dtype == torch.float32
-                 and torch.is_autocast_enabled('cuda')
-                 and torch.get_autocast_dtype('cuda') == torch.float16
-                 and type(lora_a) is torch.nn.Linear
-                 and getattr(lora_a.forward, '__func__', None) is torch.nn.Linear.forward
-                 and torch.nn.Linear.forward.__module__ == 'torch.nn.modules.linear'
-                 and torch.nn.Linear.forward.__qualname__ == 'Linear.forward'
-                 and not hasattr(torch.nn.Linear.forward, '__wrapped__')
-                 and _no_hooks(lora_a))
-    dropped = (step.dropout(dropout, x, cast_half=True) if cast_half
-               else step.dropout(dropout, x))
-    output = lora_b(lora_a(dropped))
+    output = lora_b(lora_a(step.dropout(dropout, x)))
     return output * scaling if apply_scale else output
 
 
@@ -697,8 +682,7 @@ def _attention(layer, projections, x, cos, sin, mask, step, meta):
             qp, kp, vp = RoPEPackedScaled.apply(*arguments, q_parts[4], v_parts[4])
         else:
             qp, kp, vp = RoPEPacked.apply(*arguments)
-        # Custom RoPE saves only its metadata. Release unneeded projection
-        # outputs before native attention allocates its output/workspace.
+        # Saved autograd metadata retains what backward needs.
         del arguments, q, k, v, lq, lk, lv
         cumulative = step.packed_metadata["cumulative"]
         maximum = step.packed_metadata["maximum"]

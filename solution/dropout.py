@@ -96,7 +96,7 @@ def reference_dropout(x, rows, batch, seq_len, p=0.05, training=True):
 
 class _RealRowDropout(torch.autograd.Function):
     @staticmethod
-    def forward(ctx, x, rows, batch, seq_len, p, output_dtype):
+    def forward(ctx, x, rows, batch, seq_len, p):
         forward_scale, backward_scale = _scales(p)
         dummy = torch.empty((batch, seq_len, x.shape[1]), device=x.device,
                             dtype=torch.float32, memory_format=torch.contiguous_format)
@@ -107,7 +107,7 @@ class _RealRowDropout(torch.autograd.Function):
             raise RuntimeError('native dropout candidate requires aligned CUDA allocation')
         discarded, full_mask = torch.ops.aten.native_dropout.default(dummy, float(p), True)
         del discarded, dummy
-        output = torch.empty_like(x, dtype=output_dtype)
+        output = torch.empty_like(x)
         n = x.numel()
         packed_mask = torch.empty((triton.cdiv(n, 8),), dtype=torch.uint8, device=x.device)
         real_dropout_gather_kernel[(triton.cdiv(n, BLOCK),)](
@@ -115,7 +115,6 @@ class _RealRowDropout(torch.autograd.Function):
             x.shape[1], forward_scale, BLOCK, num_warps=4, enable_fp_fusion=False)
         ctx.save_for_backward(packed_mask)
         ctx.backward_scale = backward_scale
-        ctx.input_dtype = x.dtype
         return output
 
     @staticmethod
@@ -123,19 +122,15 @@ class _RealRowDropout(torch.autograd.Function):
     def backward(ctx, grad_output):
         packed_mask, = ctx.saved_tensors
         grad_output = grad_output.contiguous()
-        # Autocast's native CastBackward widens the half upstream to FP32
-        # before dropout arithmetic. The kernel does that on load, and writes
-        # FP32 directly: never round the dropout input gradient back to half.
-        dx = torch.empty_like(grad_output, dtype=ctx.input_dtype)
+        dx = torch.empty_like(grad_output)
         n = grad_output.numel()
         real_dropout_backward_kernel[(triton.cdiv(n, BLOCK),)](
             grad_output, packed_mask, dx, n, ctx.backward_scale, BLOCK,
             num_warps=4, enable_fp_fusion=False)
-        return dx, None, None, None, None, None
+        return dx, None, None, None, None
 
 
-def real_row_dropout(x, rows, batch, seq_len, p=0.05, training=True, *, rows_from_nonzero=False,
-                     output_dtype=None):
+def real_row_dropout(x, rows, batch, seq_len, p=0.05, training=True, *, rows_from_nonzero=False):
     """Dropout equivalent to the dense padded operation for trusted real rows.
 
     Fast-path caller contract: rows_from_nonzero=True means rows came from
@@ -144,25 +139,20 @@ def real_row_dropout(x, rows, batch, seq_len, p=0.05, training=True, *, rows_fro
     device synchronization. Other callers use the reference operation.
     This function does not inspect or bypass nn.Module hooks.
     """
-    if output_dtype not in (None, torch.float16, torch.float32):
-        raise ValueError('dropout output dtype must be float16 or float32')
-    dtype = x.dtype if output_dtype is None else output_dtype
     if not _supported(x, rows, batch, seq_len, p, training, rows_from_nonzero):
-        return reference_dropout(x, rows, batch, seq_len, p, training).to(dtype)
-    return _RealRowDropout.apply(x, rows, batch, seq_len, p, dtype)
+        return reference_dropout(x, rows, batch, seq_len, p, training)
+    return _RealRowDropout.apply(x, rows, batch, seq_len, p)
 
 
-def warmup(width=1536, p=0.05, output_dtype=None):
+def warmup(width=1536, p=0.05):
     """Compile only the original gather/apply kernels; never draw random bits."""
     from .warmup import load_compiled
 
     forward, backward = _scales(p)
-    dtypes = (torch.float32, torch.float16) if output_dtype is None else (output_dtype,)
-    for dtype in dtypes:
-        load_compiled(real_dropout_gather_kernel.warmup(
-            torch.float32, torch.bool, torch.int64, dtype, torch.uint8,
-            16 * width, 16, width, forward, BLOCK, grid=(1,),
-            num_warps=4, enable_fp_fusion=False))
-        load_compiled(real_dropout_backward_kernel.warmup(
-            dtype, torch.uint8, torch.float32, 16 * width, backward, BLOCK,
-            grid=(1,), num_warps=4, enable_fp_fusion=False))
+    load_compiled(real_dropout_gather_kernel.warmup(
+        torch.float32, torch.bool, torch.int64, torch.float32, torch.uint8,
+        16 * width, 16, width, forward, BLOCK, grid=(1,),
+        num_warps=4, enable_fp_fusion=False))
+    load_compiled(real_dropout_backward_kernel.warmup(
+        torch.float32, torch.uint8, torch.float32, 16 * width, backward, BLOCK,
+        grid=(1,), num_warps=4, enable_fp_fusion=False))
