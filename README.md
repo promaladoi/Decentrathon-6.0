@@ -1,17 +1,18 @@
 # IVNEX: Soup Kernel Challenge
 
-Latest fully validated candidate: [v12 result](CODEX_V12_RESULT.md), **1.1608x speedup**
-(**13.9% less training time**), **48.5% less GPU memory**, **10/10 checks**.
-Two paired T4 runs: **86.12 → 74.19 s**, **14345 → 7385 MiB**.
-Code: `bd2b49a`. [Pinned notebook](templates/codex_candidate.ipynb).
-64 kernel tests and 79 Soup tests passed; original kernels' minimum share: 8.1%.
+Latest completed Kaggle console result: [combined v13](CODEX_V13_RESULT.md),
+**1.398x speedup (28.5% less runtime)**, **59.8% less GPU memory**, **10/10 PASS**.
+Two paired runs: **88.5 → 63.3 s**, **14345 → 5761 MiB**, eval loss **2.04968 → 2.04966**.
+Code: `13eaa8a`. **106 kernel tests + 79 Soup tests**, own-kernel share **11.3%**.
+The participant supplied the final console output; the raw archive still needs
+local download/hash verification. [Reproduce v13](templates/codex_v13.ipynb).
 
-The branch tip contains the combined team v14 experiment. v13 passed 106 kernel
-tests and 79 Soup tests; visible training times were 62.93 / 63.68 s with 5761 MiB.
-Its final evaluation/check report has not yet been collected after browser
-connection loss, so these are provisional measurements. See [current status](CURRENT_STATUS.md)
-and [team contribution provenance](TEAM_INTEGRATION.md).
-[All variants](03_validation/VERSION_COMPARISON.md) · [Commit progress](04_submission/CODEX_PROGRESS.md).
+The branch tip is the **unverified v14 compact-dropout experiment**.
+[Run v14](templates/codex_v14.ipynb) in a fresh Kaggle notebook with T4 x2 and Internet On.
+Browser control disconnected before its launch was confirmed; the participant
+reported that no v14 cell was present. Do not claim that v14 has run or passed.
+[Fully archived v12 fallback](CODEX_V12_RESULT.md) · [Current status](CURRENT_STATUS.md) ·
+[Component credits](TEAM_INTEGRATION.md) · [All variants](03_validation/VERSION_COMPARISON.md).
 The final team submission is not selected.
 
 ## Earlier v3 candidate (archive)
