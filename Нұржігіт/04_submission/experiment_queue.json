@@ -30,6 +30,16 @@
       "version": "v33",
       "commit": "7d70da7438d419be834f51da5aaee3154799519d",
       "nf4_analysis": false
+    },
+    {
+      "version": "v34",
+      "commit": "fe2272c79bf00ae17654c388c5e79237d265f968",
+      "nf4_analysis": false
+    },
+    {
+      "version": "v35",
+      "commit": "bba28df972b99bb7a3a23328a3e3444ea79d7765",
+      "nf4_analysis": false
     }
   ]
 }

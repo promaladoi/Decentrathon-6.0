@@ -1,47 +1,50 @@
-# Current status
+# Verified candidate comparison
 
-All rows below are original paired T4 reports with two base and two solution
-runs, all ten checks, and source/result hashes independently verified locally.
+Shortest collected median total time: **v28, 80.75 → 44.43 seconds**,
+**1.8175x**, **45.0% less elapsed time**, **10/10**.
+Peak **7153 MiB** (50.1% less than its base), eval delta
+**-0.000%**. Exact measured code: `4aaaade07f255269fb8ef8cf7a6b6007d95120b7`.
+Lower-memory alternative: **v22, 54.64 seconds,
+4467 MiB**, all ten checks.
 
-| Version | Exact code | Base / solution seconds | Peak MiB | Eval loss delta | Checks |
-|---|---|---:|---:|---:|---:|
-| v16 | `4a5cfd2` | 85.07 / 60.41 | 5601 | +0.001% | 10/10 |
-| v17r1 | `7c5f6d8` | 84.28 / 54.19 | 5601 | -0.002% | 10/10 |
-| v18r1 | `d01b2d8` | 80.94 / 55.61 | 4701 | +0.000% | 10/10 |
-| v20r1 | `22ff279` | 81.23 / 55.81 | 4467 | -0.000% | 10/10 |
-| v21 | `a67816b` | 80.84 / 55.48 | 4467 | -0.001% | 10/10 |
-| v22 | `7a8b38f` | 80.70 / 54.64 | 4467 | +0.001% | 10/10 |
-| v23 | `d8ac022` | 80.68 / 52.76 | 6747 | -0.003% | 10/10 |
+| Version | Code | Base s | Solution s | Peak MiB | Speedup | Eval delta | Checks |
+|---|---|---:|---:|---:|---:|---:|---:|
+| v16 | `4a5cfd2` | 85.07 | 60.41 | 5601 | 1.4082x | +0.001% | 10/10 |
+| v17r1 | `7c5f6d8` | 84.28 | 54.19 | 5601 | 1.5553x | -0.002% | 10/10 |
+| v18r1 | `d01b2d8` | 80.94 | 55.61 | 4701 | 1.4555x | +0.000% | 10/10 |
+| v20r1 | `22ff279` | 81.23 | 55.81 | 4467 | 1.4555x | -0.000% | 10/10 |
+| v21 | `a67816b` | 80.84 | 55.48 | 4467 | 1.4571x | -0.001% | 10/10 |
+| v22 | `7a8b38f` | 80.70 | 54.64 | 4467 | 1.4769x | +0.001% | 10/10 |
+| v23 | `d8ac022` | 80.68 | 52.76 | 6747 | 1.5292x | -0.003% | 10/10 |
+| v24 | `053c9c4` | 78.99 | 50.95 | 6651 | 1.5503x | -0.001% | 10/10 |
+| v25 | `fd296f4` | 80.87 | 48.97 | 6651 | 1.6514x | +0.000% | 10/10 |
+| v26 | `79643de` | 80.84 | 46.38 | 6651 | 1.7430x | -0.000% | 10/10 |
+| v27 | `7efba21` | 80.79 | 45.83 | 7153 | 1.7628x | +0.002% | 10/10 |
+| v28 | `4aaaade` | 80.75 | 44.43 | 7153 | 1.8175x | -0.000% | 10/10 |
 
-v23 is the shortest collected absolute wall time: 34.6% below its paired base,
-1.5292x speedup, 53.0% lower peak memory, own real kernels 7.9% of timed training.
-It spends more VRAM on exact process-local frozen-weight reuse. v17r1 has the
-highest observed paired ratio (1.5553x), but its first base was 87.03 s compared
-with 81.52 s for its second. Do not rank close versions from unlike cold baselines
-alone. v20r1/v21/v22 retain the lowest collected peak, 4467 MiB.
+Every row is an original two-base/two-solution T4 report. The complete source
+file set, source bytes, original result checksum and all ten checks were verified
+locally from the raw archives. `03_validation/reports/codex_VERSION/` holds proof,
+result, check and console files. Adapter archives are exported separately.
 
-v24 (`053c9c4`) passed 214 solution tests, 79 Soup tests and all ten original
-checks in the Kaggle console: base 77.09/80.89 s, solution 50.37/51.52 s,
-peak 6651 MiB, eval delta -0.001%. Raw local collection is queued.
-It uses native PyTorch variable-length causal attention, preserving per-example
-boundaries, positions, full-shape dropout draws and exact task settings.
+Close medians overlap ordinary run-to-run variation; this is the shortest
+observed result, not a guarantee that every rerun wins. Compare each solution
+with its own paired base. Memory efficiency also affects hackathon points, so
+the shortest-time candidate does not by itself establish the highest final rank.
 
-v25 (`fd296f4`) passed 230 solution tests, 79 Soup tests and all ten original
-checks in the Kaggle console: base 80.65/81.09 s, solution 48.36/49.57 s,
-peak 6651 MiB, eval delta +0.000%, real own-kernel share 8.1%. Collection pending.
-v26 (`79643de`) passed 233 solution tests and 79 Soup tests. Its two training
-commands took 45.86/46.91 s; eval and final admission checks are still running.
-v27 (`7efba21`) and v28 (`4aaaade`) are queued afterward. No current user action
-is required. v29 (`9b0d96b`) adds an inactive two-product MLP-gradient fusion for
-a separate native-vs-own T4 diagnostic after the paired jobs finish.
+The fixed task stays Qwen2.5-1.5B, NF4/double-quant, LoRA r16, batch 4, sequence
+512, 256 original Kazakh instructions and 64 steps on one T4. No changes were
+made to organizer harness/task/tests. No model or compiler cache is moved outside
+the timed process. Own-kernel time is measured by the unchanged organizer code.
 
-A separate diagnostic of v17r1 completed: GPU attention forward/backward was
-about 14.9% of recorded GPU kernel time; NF4 decoding about 9.2%. CPU profiling
-identified repeated package metadata scans and dataset fingerprint serialization
-as startup candidates. Profiler overhead is material: diagnostic wall time is
-never a contest score, and these percentages are not full-command speedups.
+The target **20–30 seconds for the complete unchanged command is not achieved**.
+No first-place or maximum-possible claim is made. GPU/CPU profiling and isolated
+matrix microbenchmarks are diagnostics; their times are excluded from this table.
+The inactive v29 GEMM research failed its strict numeric tests and remains with
+those tests in the research folder. It is never used by the production solution.
+v30/v31 were unrun; v32/v33 stopped before training on those research tests.
 
-The user target remains 20-30 seconds for the full command; it is not achieved.
-The official harness, task and organizer tests remain unchanged. Browser control
-works and no user action is needed to launch the current experiment. Initial
-dependency failures and all later evidence are preserved separately.
+Vladimir's shared forward and launcher optimization are explicitly credited in
+TEAM_INTEGRATION.md. Failed initial environment runs and earlier candidates
+remain in history. Final team selection and a public saved executed notebook are
+still separate hackathon submission steps.
