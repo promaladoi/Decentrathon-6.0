@@ -47,3 +47,5 @@ def apply():
     patch_bnb_matmul_4bit()  # ours: one-launch NF4 (double-quant) dequantization for 4-bit layers
     if UNPAD:
         patch_qwen2_causal_lm()  # ours: real tokens only, padded only for attention; fused loss
+        from .private_scope import install as install_private_scope
+        install_private_scope()

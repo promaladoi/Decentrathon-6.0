@@ -1,121 +1,191 @@
-"""NF4 dequantization in Triton for bitsandbytes' 4-bit linear layers, forward and backward.
+"""Exact NF4 decoding with the team's frozen-matmul integration.
 
-Every Linear4bit in the model (q/k/v/o and gate/up/down in all 28 layers) unpacks its NF4 weight
-to fp16 once in forward and once more in backward (for the gradient of its input). bitsandbytes
-does this with its own CUDA kernels; with double quantization (Soup's 4-bit config) the per-block
-scales are themselves 8-bit and take an extra dequantize launch plus an add before the weight
-can be unpacked. Here one launch does all of it: per output element it reads its nibble, looks up
-the NF4 code, rebuilds the block scale from the 8-bit scale, the second-level scale and the offset,
-and writes the fp16 weight. The matmul itself stays in cuBLAS (F.linear), exactly as bitsandbytes'
-dequantize + F.linear path, and no dense weight is kept between forward and backward.
+Integration: teammate Vladimir, source commit 987da36e1efa90652e1a7f8c48afef50685dbc40.
+Decode arithmetic/validation: Merey's verified original NF4 kernel, commit
+b7c406dea7dbdc379149910efe044dccf155d083. The two original contributions are
+combined here; neither is presented as third-party code written by somebody else.
 
-Layout (bitsandbytes 0.50.2): weight [N, K] flattened, two values per byte, the even element in the
-high nibble; scale of element i = absmax[i // blocksize]; with nested quantization
-absmax[b] = code2[absmax_u8[b]] * absmax2[b // 256] + offset.
-Idea: bitsandbytes' NF4 format (Dettmers et al., QLoRA, https://arxiv.org/abs/2305.14314);
-code written by us.
+Pinned bitsandbytes 0.50.2 selects custom GEMM for some small-M shapes and
+dequantize+F.linear for the rest. Preserve that choice, replacing only the
+fallback's decode. Backward first rounds to QuantState.dtype, as its Python
+dequantize_4bit does, before converting to grad_output.dtype.
 """
+
+import functools
+import math
 
 import torch
 import triton
 import triton.language as tl
 
-BLOCK = 2048
+BLOCK = 1024
 
 
 @triton.jit
-def nf4_dequant_kernel(PACKED, CODE, ABSMAX, ABSMAX2, CODE2, OFFSET, OUT, n,
-                       QBLOCK: tl.constexpr, NESTED: tl.constexpr, BLOCK: tl.constexpr):
-    idx = tl.program_id(0).to(tl.int64) * BLOCK + tl.arange(0, BLOCK)
-    mask = idx < n
-    byte = tl.load(PACKED + idx // 2, mask=mask, other=0).to(tl.int32)
-    nibble = (byte >> ((1 - (idx % 2)) * 4).to(tl.int32)) & 0xF
-    value = tl.load(CODE + nibble, mask=mask, other=0.0)
-    qblock = idx // QBLOCK
+def nf4_dequant_kernel(Packed, Absmax, Code4, Absmax2, Code8, Offset, Out,
+                       N, QUANT_BLOCK: tl.constexpr, NESTED: tl.constexpr,
+                       SCALE_BLOCK: tl.constexpr, BLOCK: tl.constexpr):
+    position = tl.program_id(0) * BLOCK + tl.arange(0, BLOCK)
+    valid = position < N
+    byte = tl.load(Packed + position // 2, valid, other=0).to(tl.int32)
+    index = tl.where(position % 2 == 0, byte >> 4, byte & 15)
+    value = tl.load(Code4 + index).to(tl.float32)
+    quant_block = position // QUANT_BLOCK
     if NESTED:
-        q8 = tl.load(ABSMAX + qblock, mask=mask, other=0).to(tl.int32)
-        scale = tl.load(CODE2 + q8, mask=mask, other=0.0) * \
-            tl.load(ABSMAX2 + qblock // 256, mask=mask, other=0.0) + tl.load(OFFSET)
+        scale_index = tl.load(Absmax + quant_block, valid, other=0).to(tl.int32)
+        scale_code = tl.load(Code8 + scale_index).to(tl.float32)
+        scale_max = tl.load(Absmax2 + quant_block // SCALE_BLOCK,
+                            valid, other=0).to(tl.float32)
+        scale = scale_code * scale_max
+        scale = scale + tl.load(Offset).to(tl.float32)
     else:
-        scale = tl.load(ABSMAX + qblock, mask=mask, other=0.0)
-    tl.store(OUT + idx, (value * scale).to(OUT.dtype.element_ty), mask=mask)
+        scale = tl.load(Absmax + quant_block, valid, other=0).to(tl.float32)
+    tl.store(Out + position, value * scale, valid)
+
+
+def _tensor(value, device, dtype, minimum):
+    return (isinstance(value, torch.Tensor) and value.device == device
+            and value.dtype == dtype and value.is_contiguous()
+            and value.numel() >= minimum and not value.requires_grad)
 
 
 def supported(state):
-    if state is None or state.quant_type != "nf4" or len(state.shape) != 2:
+    shape = getattr(state, 'shape', None)
+    dtype = getattr(state, 'dtype', None)
+    block = getattr(state, 'blocksize', None)
+    code = getattr(state, 'code', None)
+    if (getattr(state, 'quant_type', None) != 'nf4'
+            or not isinstance(shape, (tuple, list, torch.Size)) or len(shape) != 2
+            or not all(isinstance(size, int) and size > 0 for size in shape)
+            or dtype not in (torch.float16, torch.float32)
+            or block not in (32, 64, 128, 256, 512, 1024, 2048, 4096)
+            or not isinstance(code, torch.Tensor) or not code.is_cuda):
         return False
-    if getattr(state, "code", None) is None or state.code.numel() != 16:
+    device = code.device
+    scales = triton.cdiv(math.prod(shape), block)
+    if not _tensor(code, device, torch.float32, 16) or code.numel() != 16:
         return False
-    if state.nested:
-        s2 = state.state2
-        return s2 is not None and s2.blocksize == 256 and s2.code is not None and \
-            torch.is_tensor(state.offset)
-    return True
+    if not getattr(state, 'nested', False):
+        return _tensor(getattr(state, 'absmax', None), device, torch.float32, scales)
+    second = getattr(state, 'state2', None)
+    return (second is not None and getattr(second, 'blocksize', None) == 256
+            and not getattr(second, 'nested', False)
+            and getattr(second, 'dtype', None) == torch.float32
+            and _tensor(getattr(state, 'absmax', None), device, torch.uint8, scales)
+            and _tensor(getattr(second, 'code', None), device, torch.float32, 256)
+            and _tensor(getattr(second, 'absmax', None), device,
+                        torch.float32, triton.cdiv(scales, 256))
+            and _tensor(getattr(state, 'offset', None), device, torch.float32, 1)
+            and state.offset.numel() == 1)
+
+
+def _packed_supported(packed, state):
+    return (supported(state) and isinstance(packed, torch.Tensor)
+            and packed.is_cuda and packed.device == state.code.device
+            and packed.dtype == torch.uint8 and packed.is_contiguous()
+            and packed.numel() == triton.cdiv(math.prod(state.shape), 2)
+            and not packed.requires_grad)
+
+
+def _decode(packed, state, dtype):
+    """Raw decode to the destination dtype, as CUDA forward fallback does."""
+    if not _packed_supported(packed, state) or dtype not in (torch.float16, torch.float32):
+        raise ValueError('unsupported CUDA NF4 input')
+    dense = torch.empty(state.shape, dtype=dtype, device=packed.device)
+    nested = bool(state.nested)
+    if nested:
+        second_max, code8, offset = state.state2.absmax, state.state2.code, state.offset
+    else:
+        second_max = code8 = offset = state.absmax
+    elements = dense.numel()
+    nf4_dequant_kernel[(triton.cdiv(elements, BLOCK),)](
+        packed, state.absmax, state.code, second_max, code8, offset, dense,
+        elements, state.blocksize, nested, 256, BLOCK,
+        num_warps=4, enable_fp_fusion=False)
+    return dense
 
 
 def dequantize_nf4(packed, state, dtype):
-    """The [N, K] weight of a Linear4bit in `dtype`, unpacked by one Triton launch."""
-    out = torch.empty(tuple(state.shape), device=packed.device, dtype=dtype)
-    n = out.numel()
-    packed = packed.reshape(-1)
-    if packed.dtype != torch.uint8:
-        packed = packed.view(torch.uint8)
-    code = state.code.to(device=packed.device, dtype=torch.float32)
+    """Canonical [N,K], with native functional-decode then cast semantics.
+
+    Unlike functional.dequantize_4bit's compatibility transpose convention,
+    this team's existing API always returns the canonical weight orientation.
+    """
+    return _decode(packed, state, state.dtype).to(dtype)
+
+
+def _uses_native_custom_gemm(A, state):
+    from bitsandbytes.backends.cuda import ops
+
+    rows = A.numel() // A.shape[-1]
+    if rows > ops._gemm_4bit_custom_max_m or A.shape[-1] % state.blocksize:
+        return False
+    return bool(ops._gemm_4bit_use_custom_fn(
+        A.device.index, A.dtype, rows, state.shape[0], state.shape[1]))
+
+
+def _native_forward(A, packed, bias, state):
+    packed = packed.view(-1, 1)
     if state.nested:
-        s2 = state.state2
-        args = (state.absmax, s2.absmax.float(), s2.code.float(), state.offset.float().reshape(1))
-    else:
-        absmax = state.absmax.float()
-        args = (absmax, absmax, code, code)  # unused when NESTED is off
-    nf4_dequant_kernel[(triton.cdiv(n, BLOCK),)](packed, code, *args, out, n,
-                                                 QBLOCK=state.blocksize, NESTED=bool(state.nested),
-                                                 BLOCK=BLOCK, num_warps=8)
-    return out
+        return torch.ops.bitsandbytes.gemm_4bit.default(
+            A, packed, state.shape, state.state2.absmax, state.blocksize,
+            state.quant_type, bias=bias, absmax_8bit=state.absmax,
+            absmax_code=state.state2.code, absmax_offset=state.offset)
+    return torch.ops.bitsandbytes.gemm_4bit.default(
+        A, packed, state.shape, state.absmax, state.blocksize,
+        state.quant_type, bias=bias)
+
+
+def _linear_forward(A, packed, bias, state):
+    """Shared non-autograd forward for MatMulNF4 and frozen MLP4bit."""
+    if _uses_native_custom_gemm(A, state):
+        return _native_forward(A, packed, bias, state)
+    return torch.nn.functional.linear(A, _decode(packed, state, A.dtype), bias)
 
 
 class MatMulNF4(torch.autograd.Function):
-    """A @ W.T + bias with W unpacked by our kernel; the same math as bitsandbytes' MatMul4Bit
-    (dequantize, then F.linear forward and grad_output @ W backward; no gradient for W)."""
-
     @staticmethod
     def forward(ctx, A, packed, bias, state):
-        weight = dequantize_nf4(packed, state, A.dtype)
-        out = torch.nn.functional.linear(A, weight, bias)
-        ctx.state, ctx.packed = state, packed
+        out = _linear_forward(A, packed, bias, state)
+        ctx.state = state
+        ctx.save_for_backward(packed)
         ctx.bias_dtype = None if bias is None else bias.dtype
         return out
 
     @staticmethod
     def backward(ctx, grad_output):
+        packed, = ctx.saved_tensors
         grad_A = grad_bias = None
         if ctx.needs_input_grad[0]:
-            weight = dequantize_nf4(ctx.packed, ctx.state, grad_output.dtype)
-            grad_A = torch.matmul(grad_output, weight)
+            grad_A = torch.matmul(grad_output,
+                                  dequantize_nf4(packed, ctx.state, grad_output.dtype))
         if ctx.needs_input_grad[2]:
             grad_bias = grad_output.reshape(-1, grad_output.shape[-1]).sum(0, dtype=ctx.bias_dtype)
         return grad_A, None, grad_bias, None
 
 
 def make_matmul_4bit(original):
+    @functools.wraps(original)
     def matmul_4bit(A, B, quant_state, out=None, bias=None):
-        if out is not None or not A.is_cuda or A.numel() == 0 or not supported(quant_state) or \
-                A.dtype not in (torch.float16, torch.float32) or A.shape[-1] != quant_state.shape[1]:
+        if (out is not None or not isinstance(A, torch.Tensor) or not A.is_cuda
+                or A.numel() == 0 or A.dtype != torch.float16
+                or not _packed_supported(B, quant_state)
+                or quant_state.dtype != torch.float16
+                or A.device != B.device or A.shape[-1] != quant_state.shape[1]):
             return original(A, B, quant_state, out=out, bias=bias)
         return MatMulNF4.apply(A, B, bias, quant_state)
-
+    matmul_4bit._soup_team_nf4 = True
     return matmul_4bit
 
 
 def patch_bnb_matmul_4bit():
-    """Route bitsandbytes.matmul_4bit (called by Linear4bit.forward, so by every 4-bit layer and
-    by PEFT's LoRA layers through their base layer) through MatMulNF4."""
     import bitsandbytes
-
-    bitsandbytes.matmul_4bit = make_matmul_4bit(bitsandbytes.matmul_4bit)
+    if not getattr(bitsandbytes.matmul_4bit, '_soup_team_nf4', False):
+        bitsandbytes.matmul_4bit = make_matmul_4bit(bitsandbytes.matmul_4bit)
 
 
 def warmup():
-    """Compile the fp16, double-quantized variant every 4-bit layer launches; see warmup.py."""
     f32, u8 = torch.float32, torch.uint8
-    nf4_dequant_kernel.warmup(u8, f32, u8, f32, f32, f32, torch.float16, 16 * 1536, grid=(1,),
-                              QBLOCK=64, NESTED=True, BLOCK=BLOCK, num_warps=8)
+    nf4_dequant_kernel.warmup(u8, u8, f32, f32, f32, f32, torch.float16,
+                              16 * 1536, 64, True, 256, BLOCK, grid=(1,),
+                              num_warps=4, enable_fp_fusion=False)

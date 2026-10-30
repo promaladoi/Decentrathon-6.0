@@ -1,5 +1,9 @@
 """Qwen2's MLP on 4-bit weights with fp16 activations, forward and backward.
 
+Team integration originally by Vladimir, commit
+987da36e1efa90652e1a7f8c48afef50685dbc40. Merey's integration preserves the
+public MLP output dtype, retained-graph reuse and narrow frozen-layer guards.
+
 bitsandbytes' Linear4bit returns its result in the dtype of its input. Here the MLP input is fp32
 (k-bit preparation keeps the norms in fp32), so in transformers gate and up come back as fp32:
 2 x tokens x 8960 values per layer that the SwiGLU keeps for backward, written once as fp32 and
@@ -18,7 +22,7 @@ they are theirs and do not count as ours.
 import torch
 import triton
 
-from .nf4 import dequantize_nf4, supported as nf4_supported
+from .nf4 import _linear_forward, dequantize_nf4, supported as nf4_supported
 from .swiglu import BLOCK as SWIGLU_BLOCK, example_swiglu_bwd_kernel, example_swiglu_fwd_kernel
 
 
@@ -32,24 +36,24 @@ class MLP4bit(torch.autograd.Function):
     @staticmethod
     def forward(ctx, x, gate, up, down, dtype):
         x16 = x.to(dtype)
-        g = torch.nn.functional.linear(x16, _weight(gate, dtype))
-        u = torch.nn.functional.linear(x16, _weight(up, dtype))
+        g = _linear_forward(x16, gate.weight, None, gate.weight.quant_state)
+        u = _linear_forward(x16, up.weight, None, up.weight.quant_state)
         del x16
         h = torch.empty_like(g)
         n = g.numel()
         example_swiglu_fwd_kernel[(triton.cdiv(n, SWIGLU_BLOCK),)](g, u, h, n, BLOCK=SWIGLU_BLOCK)
-        out = torch.nn.functional.linear(h, _weight(down, dtype))
+        out = _linear_forward(h, down.weight, None, down.weight.quant_state)
         ctx.layers, ctx.dtype, ctx.x_dtype = (gate, up, down), dtype, x.dtype
-        # kept as attributes, not saved tensors, so backward can free them as soon as it is done
-        ctx.gu = (g, u) if ctx.needs_input_grad[0] else None
+        # Saved tensors preserve version checking, saved-tensor hooks and a
+        # second backward when the caller explicitly retains this graph.
+        ctx.save_for_backward(g, u)
         return out
 
     @staticmethod
     def backward(ctx, grad_out):
         gate, up, down = ctx.layers
         dtype = ctx.dtype
-        g, u = ctx.gu
-        ctx.gu = None
+        g, u = ctx.saved_tensors
         # MatMul4Bit.backward: grad @ dequantized weight, in the gradient's dtype
         dh = torch.matmul(grad_out.to(dtype), _weight(down, dtype)).contiguous()
         dg, du = torch.empty_like(g), torch.empty_like(u)
@@ -64,23 +68,41 @@ class MLP4bit(torch.autograd.Function):
 
 
 def _compute_dtype(layers):
-    """fp16/fp32 compute dtype shared by three plain NF4 Linear4bit layers, else None."""
+    """The fixed frozen plain NF4/fp16-compute MLP, otherwise eager fallback."""
     try:
         import bitsandbytes as bnb
         from bitsandbytes.nn import modules as bnb_modules
     except ImportError:
         return None
+    module_impl = torch.nn.modules.module
+    if any(getattr(module_impl, name, None) for name in (
+            '_global_forward_hooks', '_global_forward_pre_hooks',
+            '_global_backward_hooks', '_global_backward_pre_hooks')):
+        return None
+    native_forward = bnb.nn.Linear4bit.forward
+    if (getattr(native_forward, '__module__', None) != 'bitsandbytes.nn.modules'
+            or getattr(native_forward, '__qualname__', None) != 'Linear4bit.forward'
+            or hasattr(native_forward, '__wrapped__')):
+        return None
     dtype = None
     for layer in layers:
-        if not isinstance(layer, bnb.nn.Linear4bit) or layer.bias is not None:
+        if (type(layer) is not bnb.nn.Linear4bit or layer.bias is not None
+                or any(p.requires_grad for p in layer.parameters())
+                or getattr(layer.forward, '__func__', None) is not native_forward
+                or any(getattr(layer, name, None) for name in (
+                    '_forward_hooks', '_forward_pre_hooks',
+                    '_backward_hooks', '_backward_pre_hooks'))
+                or hasattr(layer, '_hf_hook')):
             return None
         fix = getattr(bnb_modules, "fix_4bit_weight_quant_state_from_module", None)
         if fix is not None:
             fix(layer)
         state = getattr(layer.weight, "quant_state", None)
-        if not layer.weight.is_cuda or not nf4_supported(state):
+        if (not layer.weight.is_cuda or layer.weight.dtype != torch.uint8
+                or not nf4_supported(state) or state.dtype != torch.float16
+                or layer.weight.device != state.code.device):
             return None
-        if layer.compute_dtype not in (torch.float16, torch.float32) or \
+        if layer.compute_dtype != torch.float16 or not layer.compute_type_is_set or \
                 (dtype is not None and layer.compute_dtype != dtype):
             return None
         dtype = layer.compute_dtype
@@ -89,12 +111,20 @@ def _compute_dtype(layers):
 
 def make_mlp_forward(previous):
     def forward(self, x):
-        if not x.is_cuda or getattr(getattr(self, "config", None), "hidden_act", "silu") != "silu":
+        if (not isinstance(x, torch.Tensor) or not x.is_cuda or x.numel() == 0
+                or x.dtype not in (torch.float16, torch.float32)
+                or getattr(getattr(self, "config", None), "hidden_act", "silu") != "silu"):
             return previous(self, x)
         dtype = _compute_dtype((self.gate_proj, self.up_proj, self.down_proj))
         if dtype is None:
             return previous(self, x)
-        return MLP4bit.apply(x, self.gate_proj, self.up_proj, self.down_proj, dtype)
+        if (x.device != self.gate_proj.weight.device
+                or any(x.device != layer.weight.device for layer in
+                       (self.up_proj, self.down_proj))
+                or x.shape[-1] != self.gate_proj.in_features
+                or x.shape[-1] != self.up_proj.in_features):
+            return previous(self, x)
+        return MLP4bit.apply(x, self.gate_proj, self.up_proj, self.down_proj, dtype).to(x.dtype)
 
     return forward
 

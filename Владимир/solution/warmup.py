@@ -21,9 +21,10 @@ _state = {"thread": None, "started": None}
 def _steps(unpad):
     from . import lmhead, mlp, nf4, rmsnorm, rope
     from . import unpad as fast
+    from . import dropout as compact_dropout
 
     if unpad:  # the unpadded training step, in order of first use
-        return [nf4.warmup,
+        steps = [nf4.warmup,
                 lambda: rmsnorm.warmup(parts=("add_fwd",)),
                 lambda: fast.warmup(parts=("fwd",)),
                 lambda: mlp.warmup(parts=("fwd",)),
@@ -31,6 +32,11 @@ def _steps(unpad):
                 lambda: rmsnorm.warmup(parts=("add_bwd",)),
                 lambda: mlp.warmup(parts=("bwd",)),
                 lambda: fast.warmup(parts=("bwd",))]
+        if fast.REAL_ROW_DROPOUT:
+            # After QKV projection, before RoPEPad: compile arithmetic only.
+            # This callback never invokes native_dropout or consumes RNG.
+            steps.insert(2, compact_dropout.warmup)
+        return steps
     return [nf4.warmup, rmsnorm.warmup, rope.warmup, mlp.warmup]
 
 

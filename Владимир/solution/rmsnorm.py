@@ -1,5 +1,9 @@
 """Fused RMSNorm for Qwen2, forward and backward in Triton, alone or with the residual add before it.
 
+Residual fusion and integration: teammate Vladimir, source commit
+987da36e1efa90652e1a7f8c48afef50685dbc40. Cast-aware backward arithmetic:
+Merey's original verified kernel, commit b7c406dea7dbdc379149910efe044dccf155d083.
+
 Qwen2RMSNorm in PyTorch is six launches each way (cast, pow, mean, rsqrt, mul, mul), and every one
 reads and writes the whole fp32 hidden state. Here one program normalizes one row (one token) in
 registers: one read of x and one write of y forward, one read of x and dy and one write of dx
@@ -47,10 +51,12 @@ def rmsnorm_bwd_kernel(DY, X, W, RSTD, DX, stride_dy, stride_x, stride_dx, N,
     x = tl.load(X + row * stride_x + cols, mask=mask, other=0.0).to(tl.float32)
     w = tl.load(W + cols, mask=mask, other=0.0).to(tl.float32)
     rstd = tl.load(RSTD + row)
-    x_hat = x * rstd
-    g = dy * w
-    # d/dx of x * rstd(x): rstd * (g - x_hat * mean(g * x_hat))
-    dx = rstd * (g - x_hat * (tl.sum(g * x_hat, axis=0) / N))
+    # Native MulBackward casts the gradient to the normalized input's dtype
+    # before CastBackward widens it into the float32 normalization graph.
+    g = (dy * w).to(X.dtype.element_ty).to(tl.float32)
+    projection = tl.sum(g * x, axis=0)
+    variance_grad = projection * (-0.5 * rstd * rstd * rstd)
+    dx = g * rstd + (2.0 * x) * (variance_grad / N)
     tl.store(DX + row * stride_dx + cols, dx.to(DX.dtype.element_ty), mask=mask)
 
 
@@ -83,11 +89,15 @@ def add_rmsnorm_bwd_kernel(DY, DH, X, W, RSTD, DX, DD, stride_dy, stride_dh, str
     x = tl.load(X + row * stride_x + cols, mask=mask, other=0.0).to(tl.float32)
     w = tl.load(W + cols, mask=mask, other=0.0).to(tl.float32)
     rstd = tl.load(RSTD + row)
-    x_hat = x * rstd
-    g = dy * w
-    dx = rstd * (g - x_hat * (tl.sum(g * x_hat, axis=0) / N))
+    g = (dy * w).to(X.dtype.element_ty).to(tl.float32)
+    projection = tl.sum(g * x, axis=0)
+    variance_grad = projection * (-0.5 * rstd * rstd * rstd)
+    dx = g * rstd + (2.0 * x) * (variance_grad / N)
+    # The norm returns h.dtype before autograd joins h's residual branch.
+    dx = dx.to(X.dtype.element_ty).to(tl.float32)
     if HAS_DH:  # h also feeds the next residual add: its gradient joins the norm's
         dx += tl.load(DH + row * stride_dh + cols, mask=mask, other=0.0).to(tl.float32)
+    dx = dx.to(X.dtype.element_ty).to(tl.float32)
     tl.store(DX + row * stride_dx + cols, dx.to(DX.dtype.element_ty), mask=mask)
     # the same gradient for the attention output, in its own dtype (autograd's add backward)
     tl.store(DD + row * stride_dd + cols, dx.to(DD.dtype.element_ty), mask=mask)
@@ -121,7 +131,7 @@ class RMSNorm(torch.autograd.Function):
         rstd = torch.empty(x2.shape[0], device=x.device, dtype=torch.float32)
         block, warps = _launch_config(n)
         rmsnorm_fwd_kernel[(x2.shape[0],)](x2, weight, y, rstd, x2.stride(0), y.stride(0), n, eps,
-                                           BLOCK_N=block, num_warps=warps)
+                                           BLOCK_N=block, num_warps=warps, enable_fp_fusion=False)
         ctx.save_for_backward(x2, weight, rstd)
         ctx.shape = shape
         return y.reshape(shape)
@@ -136,7 +146,8 @@ class RMSNorm(torch.autograd.Function):
         dx = torch.empty(x2.shape, device=x2.device, dtype=x2.dtype)
         block, warps = _launch_config(n)
         rmsnorm_bwd_kernel[(x2.shape[0],)](dy2, x2, weight, rstd, dx, dy2.stride(0), x2.stride(0),
-                                           dx.stride(0), n, BLOCK_N=block, num_warps=warps)
+                                           dx.stride(0), n, BLOCK_N=block, num_warps=warps,
+                                           enable_fp_fusion=False)
         dw = None
         if ctx.needs_input_grad[1]:  # frozen under LoRA; kept so the function stays general
             x_hat = (x2.float() * rstd[:, None]).to(x2.dtype)
@@ -159,7 +170,7 @@ class AddRMSNorm(torch.autograd.Function):
         block, warps = _launch_config(n)
         add_rmsnorm_fwd_kernel[(r2.shape[0],)](r2, d2, weight, h, y, rstd, r2.stride(0), d2.stride(0),
                                                h.stride(0), y.stride(0), n, eps, BLOCK_N=block,
-                                               num_warps=warps)
+                                               num_warps=warps, enable_fp_fusion=False)
         ctx.save_for_backward(h, weight, rstd)
         ctx.shape, ctx.dtypes = shape, (residual.dtype, delta.dtype)
         return h.view(shape), y.view(shape)
@@ -171,7 +182,7 @@ class AddRMSNorm(torch.autograd.Function):
         r_dtype, d_dtype = ctx.dtypes
         if dy is None:  # y unused: the add's gradient only
             dh = torch.zeros(h.shape, device=h.device, dtype=h.dtype) if dh is None else dh
-            return dh.to(r_dtype), dh.to(d_dtype), None, None
+            return dh.to(r_dtype).view(ctx.shape), dh.to(d_dtype).view(ctx.shape), None, None
         dy2 = _rows(dy, n)
         dh2 = _rows(dh, n) if dh is not None else dy2
         dx = torch.empty(h.shape, device=h.device, dtype=r_dtype)
@@ -180,7 +191,7 @@ class AddRMSNorm(torch.autograd.Function):
         add_rmsnorm_bwd_kernel[(h.shape[0],)](dy2, dh2, h, weight, rstd, dx, dd, dy2.stride(0),
                                               dh2.stride(0), h.stride(0), dx.stride(0), dd.stride(0),
                                               n, BLOCK_N=block, HAS_DH=dh is not None,
-                                              num_warps=warps)
+                                              num_warps=warps, enable_fp_fusion=False)
         dw = None
         if ctx.needs_input_grad[2]:
             x_hat = (h.float() * rstd[:, None]).to(h.dtype)
@@ -218,7 +229,7 @@ def warmup(n=1536, parts=("fwd", "bwd", "add_fwd", "add_bwd", "add_bwd_no_dh")):
     attention output) ahead of the first step; see warmup.py."""
     f32, f16 = torch.float32, torch.float16
     block, warps = _launch_config(n)
-    cfg = dict(grid=(1,), BLOCK_N=block, num_warps=warps)
+    cfg = dict(grid=(1,), BLOCK_N=block, num_warps=warps, enable_fp_fusion=False)
     if "fwd" in parts:
         rmsnorm_fwd_kernel.warmup(f32, f32, f32, f32, n, n, n, 1e-6, **cfg)
     if "add_fwd" in parts:

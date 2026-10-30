@@ -1,55 +1,48 @@
-"""lm_head, cross-entropy and the per-token metrics in row chunks, without the full logits.
+"""Chunked frozen lm_head CE/metrics with actual-scale backward.
 
-In the base run the 4 x 512 x 151,936 logits exist several times at once: lm_head writes them in
-fp16 (0.6 GB), the loss upcasts a fp32 copy (1.2 GB) and keeps its log-softmax (1.2 GB) for
-backward, accelerate converts the output logits to fp32 (1.2 GB), TRL's token accuracy makes one
-more contiguous copy, and TRL's entropy and Soup's per-row rewind losses run softmaxes over them.
-That is the largest block of the training step's peak memory and about 7% of its time.
+The online statistics and private LazyLogits interface originate from teammate
+Vladimir's implementation at main 987da36e1efa90652e1a7f8c48afef50685dbc40.
+The team correction applies the true grad_loss/denominator BEFORE FP16
+gradient rounding and the half head-gradient GEMM. In the strict private
+trainer scope, its live GradScaler value allows this work to run during
+forward; only half hidden states/gradients and FP32 row LSE are retained.
+Backward checks the actual upstream value. A mismatch recomputes labelled
+head logits and uses the actual value, preserving arbitrary upstream scaling.
 
-Here the logits of 512 tokens at a time are multiplied out (fp16, cuBLAS, the same product
-lm_head computes under autocast) and one Triton program per token reads its row of 151,936 logits:
-an online softmax (Milakov and Gimelshein, https://arxiv.org/abs/1805.02867) gives the
-log-sum-exp, the entropy and the arg-max in one pass, and for tokens with a label a second pass
-writes the gradient of the cross-entropy, softmax - one_hot, over the logits in place. One more
-matmul turns that into the gradient of the hidden state right away, so nothing of the vocabulary
-size is kept for backward: backward only scales that gradient by the loss scale. Tokens without
-a label (prompt tokens) only need their entropy, so they skip the gradient.
-
-The loss is the same sum of per-token cross-entropies over the same tokens divided by the same
-num_items_in_batch as transformers' ForCausalLMLoss. TRL's entropy and token accuracy and Soup's
-per-row rewind losses are computed from these per-token values by the same formulas, through
-LazyLogits, which stands in for the logits tensor where they read it (see the patches below).
-Code written by us.
+General calls retain the qualified supervised FP16 logits/LSE cache path.
+No fixed 1024 gradient is used. LazyLogits must remain inside the caller's
+strict private trainer scope; its interface is unchanged.
+Online softmax idea: https://arxiv.org/abs/1805.02867.
 """
 
 import torch
 import triton
 import triton.language as tl
 
-CHUNK = 512  # tokens per logits chunk: 512 x 151,936 fp16 = 156 MB
+CHUNK = 512
 BLOCK_V = 4096
-GRAD_SCALE = 1024.0  # keeps small probabilities out of fp16 subnormals; divided out in backward
+GRAD_BLOCK = 1024
 
 
-@triton.jit(do_not_specialize=["with_grad"])  # one compiled variant for both uses
-def lm_ce_kernel(LOGITS, TARGET, ENT, AMAX, CE, stride, V, grad_scale, with_grad,
+@triton.jit
+def lm_ce_kernel(LOGITS, TARGET, ENT, AMAX, CE, LSE, stride, V,
                  BLOCK_V: tl.constexpr):
     row = tl.program_id(0)
     ptr = LOGITS + row.to(tl.int64) * stride
-    target = tl.load(TARGET + row).to(tl.int32)  # -100 for a token without a label
-    m = -1e30  # running max
-    s = 0.0  # sum of exp(z - m)
-    u = 0.0  # sum of exp(z - m) * (z - m), for the entropy
+    target = tl.load(TARGET + row).to(tl.int32)
+    m = -1e30
+    s = 0.0
+    u = 0.0
     best = -1e30
     best_i = 0
-    zt = 0.0  # the target's logit
+    zt = 0.0
     for start in range(0, V, BLOCK_V):
         cols = start + tl.arange(0, BLOCK_V)
         mask = cols < V
         z = tl.load(ptr + cols, mask=mask, other=0.0).to(tl.float32)
         z = tl.where(mask, z, -1e30)
         bmax = tl.max(z, axis=0)
-        bi = tl.argmax(z, axis=0)  # first index of the block's max, as torch.argmax
+        bi = tl.argmax(z, axis=0)
         best_i = tl.where(bmax > best, start + bi, best_i)
         best = tl.maximum(best, bmax)
         new_m = tl.maximum(m, bmax)
@@ -60,73 +53,179 @@ def lm_ce_kernel(LOGITS, TARGET, ENT, AMAX, CE, stride, V, grad_scale, with_grad
         m = new_m
         zt += tl.sum(tl.where(cols == target, z, 0.0), axis=0)
     log_s = tl.log(s)
-    tl.store(ENT + row, log_s - u / s)  # -sum(p * log p)
+    tl.store(ENT + row, log_s - u / s)
     tl.store(AMAX + row, best_i.to(tl.int64))
     lse = m + log_s
-    tl.store(CE + row, lse - zt)  # read only for labelled tokens
-    if with_grad:
-        for start in range(0, V, BLOCK_V):  # d(CE)/dz = softmax - one_hot, in place
-            cols = start + tl.arange(0, BLOCK_V)
-            mask = cols < V
-            z = tl.load(ptr + cols, mask=mask, other=0.0).to(tl.float32)
-            p = tl.exp(z - lse)
-            g = tl.where(cols == target, p - 1.0, p) * grad_scale
-            tl.store(ptr + cols, g.to(LOGITS.dtype.element_ty), mask=mask)
+    tl.store(CE + row, lse - zt)
+    tl.store(LSE + row, lse)
 
 
-def _stats(x16, w16, idx, targets, ent, amax, ce, grad_x, with_grad):
-    """Fill the statistics (and, with_grad, the CE and hidden-state gradient) of tokens idx."""
-    vocab = w16.shape[0]
-    if idx.numel() == 0:
-        return
+@triton.jit
+def lm_scale_gradient_kernel(LOGITS, LSE, TARGET, SCALE, DG, stride,
+                              V: tl.constexpr, BLOCK: tl.constexpr):
+    row = tl.program_id(0)
+    col = tl.program_id(1) * BLOCK + tl.arange(0, BLOCK)
+    mask = col < V
+    z = tl.load(LOGITS + row.to(tl.int64) * stride + col,
+                 mask=mask, other=0.0).to(tl.float32)
+    lse = tl.load(LSE + row).to(tl.float32)
+    target = tl.load(TARGET + row)
+    scale = tl.load(SCALE).to(tl.float32)
+    probability = tl.exp(z - lse)
+    gradient = probability - (col == target).to(tl.float32)
+    scaled = gradient * scale
+    if tl.abs(scale) == float("inf"):
+        # Native NLL -> log-softmax gives -scale + probability * scale:
+        # the target is NaN for either sign of infinite scale, also at p=0.
+        scaled = tl.where(col == target, float("nan"), scaled)
+    tl.store(DG + row.to(tl.int64) * V + col,
+              scaled.to(DG.dtype.element_ty), mask=mask)
+
+
+def _targets_in_bounds(targets, vocabulary):
+    """Raw flag is testable without poisoning a CUDA process with an assert."""
+    return ((targets == -100) | ((targets >= 0) & (targets < vocabulary))).all()
+
+
+def _private_expected_loss_scale():
+    # Resolve lazily: importing this module alone never activates a trainer
+    # scope or depends on construction order during setup/warmup.
+    from . import private_scope
+    helper = getattr(private_scope, "expected_loss_scale", None)
+    return helper() if helper is not None else None
+
+
+def _gradient_mm(logits, lse, targets, scale, weight, overwrite=False):
+    vocabulary = weight.shape[0]
+    dg = logits if overwrite else torch.empty_like(logits)
+    lm_scale_gradient_kernel[(logits.shape[0], triton.cdiv(vocabulary, GRAD_BLOCK))](
+        logits, lse, targets, scale, dg, logits.stride(0), vocabulary,
+        BLOCK=GRAD_BLOCK, num_warps=4)
+    return torch.mm(dg, weight)
+
+
+def _stats(x16, w16, idx, targets, entropy, argmax, ce, saved_chunks=None,
+           precompute=None):
+    vocabulary = w16.shape[0]
     for chunk in idx.split(CHUNK):
-        n = chunk.numel()
+        count = chunk.numel()
         logits = torch.mm(x16.index_select(0, chunk), w16.t())
-        tgt = targets.index_select(0, chunk)
-        e, a = torch.empty(n, device=x16.device), torch.empty(n, device=x16.device,
-                                                               dtype=torch.int64)
-        c = torch.empty(n, device=x16.device)
-        lm_ce_kernel[(n,)](logits, tgt, e, a, c, logits.stride(0), vocab, GRAD_SCALE,
-                           1 if with_grad else 0, BLOCK_V=BLOCK_V, num_warps=8)
-        ent.index_copy_(0, chunk, e)
-        amax.index_copy_(0, chunk, a)
-        if with_grad:
-            ce.index_copy_(0, chunk, c)
-            grad_x.index_copy_(0, chunk, torch.mm(logits, w16).float())
-        del logits
+        target = targets.index_select(0, chunk)
+        ent = torch.empty(count, device=x16.device, dtype=torch.float32)
+        pred = torch.empty(count, device=x16.device, dtype=torch.int64)
+        loss = torch.empty(count, device=x16.device, dtype=torch.float32)
+        lse = torch.empty(count, device=x16.device, dtype=torch.float32)
+        lm_ce_kernel[(count,)](
+            logits, target, ent, pred, loss, lse, logits.stride(0),
+            vocabulary, BLOCK_V=BLOCK_V, num_warps=8)
+        entropy.index_copy_(0, chunk, ent)
+        argmax.index_copy_(0, chunk, pred)
+        if ce is not None:
+            ce.index_copy_(0, chunk, loss)
+        if saved_chunks is not None:
+            # Keep the exact original half GEMM output. No clone/index_copy of
+            # this vocabulary-sized tensor and no in-place gradient overwrite.
+            saved_chunks.append((logits, lse))
+        if precompute is not None:
+            scale, hidden_gradient, saved_lse = precompute
+            # Statistics have consumed logits. Reuse that temporary as half
+            # dlogits rather than retaining/allocating a vocabulary-sized cache.
+            dx = _gradient_mm(logits, lse, target, scale, w16, overwrite=True)
+            hidden_gradient.index_copy_(0, chunk, dx)
+            saved_lse.append(lse)
 
 
 class LMHeadLoss(torch.autograd.Function):
-    """sum over labelled tokens of CE(x @ W.T, target) / denom; fills `stats` with the per-token
-    entropy, arg-max and cross-entropy."""
+    """Same scalar CE/stats API, with true upstream scaling before half DG."""
 
     @staticmethod
     def forward(ctx, x, weight, targets, denom, stats):
+        if weight.requires_grad:
+            raise ValueError("chunked lm_head requires frozen weight")
+        if (x.ndim != 2 or weight.ndim != 2 or targets.ndim != 1
+                or x.shape[1] != weight.shape[1] or targets.numel() != x.shape[0]
+                or targets.dtype != torch.int64 or targets.device != x.device
+                or weight.device != x.device or not x.is_cuda):
+            raise ValueError("unsupported chunked lm_head input shape/device/dtype")
+        torch._assert_async(_targets_in_bounds(targets, weight.shape[0]),
+                            "cross_entropy target out of bounds")
         tokens, hidden = x.shape
         x16 = x.to(torch.float16)
-        w16 = weight.to(torch.float16)  # what autocast feeds lm_head
-        ent = torch.empty(tokens, device=x.device)
-        amax = torch.empty(tokens, device=x.device, dtype=torch.int64)
-        ce = torch.zeros(tokens, device=x.device)
-        grad_x = torch.zeros(tokens, hidden, device=x.device)
+        w16 = weight.to(torch.float16)
+        entropy = torch.empty(tokens, device=x.device, dtype=torch.float32)
+        argmax = torch.empty(tokens, device=x.device, dtype=torch.int64)
+        ce = torch.zeros(tokens, device=x.device, dtype=torch.float32)
         valid = targets != -100
-        _stats(x16, w16, valid.nonzero().squeeze(1), targets, ent, amax, ce, grad_x, True)
-        _stats(x16, w16, (~valid).nonzero().squeeze(1), targets, ent, amax, ce, grad_x, False)
-        del w16, x16
-        stats.update(entropy=ent, argmax=amax, ce=ce, valid=valid)
-        ctx.save_for_backward(grad_x, denom)
-        ctx.x_dtype = x.dtype
+        labelled = valid.nonzero().squeeze(1)
+        prompt = (~valid).nonzero().squeeze(1)
+        chunks = []
+        expected = (_private_expected_loss_scale()
+                    if ctx.needs_input_grad[0] and x.dtype == torch.float32 else None)
+        ctx.precomputed = expected is not None
+        if ctx.precomputed:
+            expected = torch.tensor(expected, device=x.device, dtype=torch.float32)
+            hidden_gradient = torch.zeros((tokens, hidden), device=x.device,
+                                           dtype=torch.float16)
+            lse_chunks = []
+            precompute = (expected / denom.float(), hidden_gradient, lse_chunks)
+        else:
+            precompute = None
+        _stats(x16, w16, labelled, targets, entropy, argmax, ce,
+               chunks if ctx.needs_input_grad[0] and not ctx.precomputed else None,
+               precompute=precompute)
+        _stats(x16, w16, prompt, targets, entropy, argmax, None)
+        stats.update(entropy=entropy, argmax=argmax, ce=ce, valid=valid)
+        labelled_targets = targets.index_select(0, labelled)
+        if ctx.precomputed:
+            # FP32 x guarantees x16 is an owned copy, so a later mutation of
+            # the public input cannot corrupt the mismatch recomputation.
+            ctx.num_chunks = len(lse_chunks)
+            ctx.save_for_backward(w16, labelled, labelled_targets, denom,
+                                  x16, expected, hidden_gradient, *lse_chunks)
+        else:
+            ctx.num_chunks = len(chunks)
+            ctx.save_for_backward(w16, labelled, labelled_targets, denom,
+                                  *(value[0] for value in chunks),
+                                  *(value[1] for value in chunks))
+        ctx.x_dtype, ctx.shape = x.dtype, (tokens, hidden)
         return ce.sum() / denom
 
     @staticmethod
     def backward(ctx, grad_loss):
-        grad_x, denom = ctx.saved_tensors
-        scale = grad_loss.float() / (denom.float() * GRAD_SCALE)
-        return (grad_x * scale).to(ctx.x_dtype), None, None, None, None
+        w16, labelled, labelled_targets, denom, *buffers = ctx.saved_tensors
+        # Ignore-index derivatives stay zero even at NaN/Inf loss/upstream.
+        if labelled.numel() == 0:
+            return (torch.zeros(ctx.shape, device=w16.device, dtype=ctx.x_dtype),
+                    None, None, None, None)
+        if ctx.precomputed:
+            x16, expected, hidden_gradient, *lse_chunks = buffers
+            # One scalar equality, without assuming the caller used its
+            # predicted AMP scale. Mismatches take the actual-scale path.
+            if torch.equal(grad_loss.detach().float().reshape(()), expected):
+                return hidden_gradient.to(ctx.x_dtype), None, None, None, None
+            logits_chunks = None
+        else:
+            logits_chunks = buffers[:ctx.num_chunks]
+            lse_chunks = buffers[ctx.num_chunks:]
+        grad_x = torch.zeros(ctx.shape, device=w16.device, dtype=ctx.x_dtype)
+        scale = grad_loss.float() / denom.float()
+        offset = 0
+        for position, lse in enumerate(lse_chunks):
+            count = lse.shape[0]
+            indices = labelled[offset:offset + count]
+            if ctx.precomputed:
+                logits = torch.mm(x16.index_select(0, indices), w16.t())
+            else:
+                logits = logits_chunks[position]
+            target_chunk = labelled_targets[offset:offset + count]
+            dx = _gradient_mm(logits, lse, target_chunk, scale, w16,
+                              overwrite=ctx.precomputed)
+            grad_x.index_copy_(0, indices, dx.to(ctx.x_dtype))
+            offset += count
+        return grad_x, None, None, None, None
 
 
 def lm_head_loss(x, weight, targets, num_items_in_batch):
-    """ForCausalLMLoss: reduction "sum" over num_items_in_batch when given, else the mean."""
     if num_items_in_batch is None:
         denom = (targets != -100).sum().float()
     elif torch.is_tensor(num_items_in_batch):
@@ -237,7 +336,9 @@ def patch_metric_readers():
 
 
 def warmup(vocab=151936):
-    """Compile lm_ce_kernel as the training step launches it; see warmup.py."""
+    """Compile the exact cached-half-logits stats/backward signatures."""
     f16, f32, i64 = torch.float16, torch.float32, torch.int64
-    lm_ce_kernel.warmup(f16, i64, f32, i64, f32, vocab, vocab, GRAD_SCALE, 1, grid=(1,),
-                        BLOCK_V=BLOCK_V, num_warps=8)
+    lm_ce_kernel.warmup(f16, i64, f32, i64, f32, f32, vocab, vocab,
+                        grid=(1,), BLOCK_V=BLOCK_V, num_warps=8)
+    lm_scale_gradient_kernel.warmup(f16, f32, i64, f32, f16, vocab, vocab,
+                                    grid=(1, 1), BLOCK=GRAD_BLOCK, num_warps=4)
