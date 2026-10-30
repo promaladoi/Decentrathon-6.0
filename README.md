@@ -1,13 +1,18 @@
 # IVNEX: Soup Kernel Challenge
 
-Latest validated candidate: [v10 result](CODEX_V10_RESULT.md), **1.1156x speedup**
-(**10.4% less training time**), **48.5% less GPU memory**, **10/10 checks**.
-Two paired T4 runs: **86.59 → 77.62 s**, **14345 → 7385 MiB**.
-Code: `e19b464`. [Pinned notebook](templates/codex_candidate.ipynb).
-54 kernel tests and 79 Soup tests passed; original kernels' minimum share: 7.0%.
+Latest fully validated candidate: [v12 result](CODEX_V12_RESULT.md), **1.1608x speedup**
+(**13.9% less training time**), **48.5% less GPU memory**, **10/10 checks**.
+Two paired T4 runs: **86.12 → 74.19 s**, **14345 → 7385 MiB**.
+Code: `bd2b49a`. [Pinned notebook](templates/codex_candidate.ipynb).
+64 kernel tests and 79 Soup tests passed; original kernels' minimum share: 8.1%.
+
+The branch tip contains the combined team v14 experiment. v13 passed 106 kernel
+tests and 79 Soup tests; visible training times were 62.93 / 63.68 s with 5761 MiB.
+Its final evaluation/check report has not yet been collected after browser
+connection loss, so these are provisional measurements. See [current status](CURRENT_STATUS.md)
+and [team contribution provenance](TEAM_INTEGRATION.md).
 [All variants](03_validation/VERSION_COMPARISON.md) · [Commit progress](04_submission/CODEX_PROGRESS.md).
-The branch tip contains v12 experiments under validation. Use the pinned notebook
-to reproduce the accepted v10 result. The final team submission is not selected.
+The final team submission is not selected.
 
 ## Earlier v3 candidate (archive)
 

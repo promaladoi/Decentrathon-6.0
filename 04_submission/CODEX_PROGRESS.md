@@ -1,3 +1,14 @@
+# Current update
+
+The latest fully collected result is v12: 1.1608x speedup, 48.5% less peak memory,
+64 kernel tests, 79 Soup tests and 10/10 checks. v13 combines Vladimir's shared
+unpadded forward with Nurzhigit/Codex parallel vocabulary statistics; 106 kernel
+tests and 79 Soup tests passed. Visible paired training medians: 88.52 / 63.31 s,
+14345 / 5761 MiB. Its final evaluation and check report are still uncollected.
+v14 preserves native dropout RNG but applies the mask only to real tokens.
+The browser connection was lost during final evaluation of v13; no completed
+v13/v14 result is claimed until exact artifacts have been collected and checked.
+
 # Latest update
 
 v10 passed all 10 checks: 1.1156x speedup, 48.5% less peak memory.
