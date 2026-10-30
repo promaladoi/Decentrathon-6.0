@@ -1,0 +1,32 @@
+{
+  "kind": "local CPU validation, not a T4 score",
+  "python": "3.12.10 (tags/v3.12.10:0cc8128, Apr  8 2025, 12:21:36) [MSC v.1943 64 bit (AMD64)]",
+  "platform": "Windows-11-10.0.26300-SP0",
+  "packages": {
+    "torch": "2.11.0+cpu",
+    "transformers": "5.16.1",
+    "peft": "0.20.0",
+    "trl": "0.29.1",
+    "accelerate": "1.14.0",
+    "soup-cli": "0.77.0",
+    "datasets": "4.8.2"
+  },
+  "targeted_tests_passed": 40,
+  "targeted_tests_skipped": 0,
+  "native_combined_prefix_proof": {
+    "native_mapping_equal": true,
+    "independent_dict_and_lists": true,
+    "active_lazy_cli_coexists": true,
+    "real_deferred_hook_hit": true,
+    "native_setup_calls": 1,
+    "actual_snapshot_returns_to_trl": 1,
+    "native_scans_during_setup": 0,
+    "original_function_restored": true,
+    "stopped_before_seed_and_model": true,
+    "cuda_initialized": false
+  },
+  "log_sha256": "9fa2df6f7ce1ce3933dcaed19974401dcc9c6a49651ec94f77aac9f72ae321d5",
+  "t4_full_benchmark_run": false,
+  "ten_original_gpu_checks_run": false,
+  "target_30_seconds_claimed": false
+}
