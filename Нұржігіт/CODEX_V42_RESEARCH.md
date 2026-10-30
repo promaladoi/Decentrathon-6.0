@@ -18,7 +18,14 @@ All code is isolated under `02_kernel_research/`. It is neither imported nor
 enabled by `solution.apply()`. The older failed backward-fusion research and its
 strict tests are retained unchanged.
 
-The bounded GPU screen first runs the new numerical tests, then measures four
+The bounded GPU screen first inspects the generated PTX for actual Tensor Core
+MMA. Triton [removed its legacy MMA lowering below SM80](https://github.com/triton-lang/triton/pull/5066);
+therefore compiling a valid `tl.dot` does not establish a fast T4 kernel. If the
+probe emits no MMA, the candidate is rejected immediately and its PTX is saved;
+the numerical sweep and timings are not claimed to have run. No package is
+downgraded, and native production GEMMs are retained.
+
+When the backend probe passes, the screen runs the new numerical tests, then measures four
 configurations on three task-representative row counts. A correctness failure
 stops before timing. There is no production autotuning or cross-process cache.
 The screen baseline uses the original organizer Triton activation with native
@@ -35,3 +42,20 @@ snapshot remains v34.
 If this research later qualifies, activation requires a separate measured
 revision with the new implementation under `solution/`. Research-directory
 launches are never counted as production own-kernel time.
+
+## Run the bounded screen in the current Kaggle session
+
+Copy `04_submission/kaggle_v42_cell.py` into one new Code cell of the existing
+notebook containing `/kaggle/working/codex_v41.zip`, and press Shift+Enter once.
+The launcher checks out exact research revision
+`aea2dbb8076c0c3a1e1d4c6ea361abf2df5b01e7` from the public collaboration repo.
+The original v41 ZIP is verified against its own separate code revision and
+exported with the diagnostic logs. No full-model training or production patch
+is performed by this screen. The numerical/timing worker has a 15-minute limit.
+
+A strict numerical test failure rejects the research before timing. The ZIP
+link is still displayed when the worker fails, so its original error is retained.
+A successful screen provides kernel timings, not a new 10/10 full-task result.
+
+Local launcher validation: Python syntax and command-line help passed; the
+existing three user-constraint tests passed. The T4 screen remains unmeasured.
