@@ -11,6 +11,10 @@ import triton
 import triton.language as tl
 
 BLOCK_BYTES = 1024
+# The T4 microbenchmark found the byte-paired path slightly faster on small
+# attention projections but slower on large MLP weights. Keep the old decoder
+# on the latter; this is shape dispatch, not a change of quantized values.
+PAIRED_MAX_ELEMENTS = 4_194_304
 
 
 @triton.jit
@@ -63,6 +67,10 @@ def warmup():
     paired_nf4_kernel.warmup(u8, f32, u8, f32, f32, f32, torch.float16,
                              16 * 1536, 64, True, BLOCK_BYTES,
                              grid=(1,), num_warps=4)
+    from .team_vladimir.nf4 import nf4_dequant_kernel, BLOCK
+    nf4_dequant_kernel.warmup(u8, f32, u8, f32, f32, f32, torch.float16,
+                              16 * 1536, QBLOCK=64, NESTED=True, BLOCK=BLOCK,
+                              grid=(1,), num_warps=8)
 
 
 def patch_paired_nf4():
@@ -74,7 +82,8 @@ def patch_paired_nf4():
     def decode(packed, state, dtype):
         if (packed.is_cuda and dtype in (torch.float16, torch.float32)
                 and nf4.supported(state) and state.blocksize > 0
-                and state.blocksize % 2 == 0 and math.prod(state.shape) > 0):
+                and state.blocksize % 2 == 0
+                and 0 < math.prod(state.shape) <= PAIRED_MAX_ELEMENTS):
             return dequantize_pairs(packed, state, dtype)
         return original(packed, state, dtype)
 

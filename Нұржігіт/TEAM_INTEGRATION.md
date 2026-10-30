@@ -30,3 +30,13 @@ timing change is introduced. Both revisions still need GPU validation.
 Correction after v15 failure: the RNG-mapping diagnosis above was not established.
 The compact kernel assumed contiguous row-index storage; tests passed stride-2/3
 views. v16 normalizes the indices and retains strict output/gradient/RNG tests.
+
+
+v21 additionally integrates Vladimir's startup revision `987da36e1efa90652e1a7f8c48afef50685dbc40` for warmup.py,
+rmsnorm.py, mlp.py and unpad.py. Its changes reduce compiled variants, compile
+in first-use order and join the in-process compilation thread before step 1.
+The initial RMSNorm reuses the same residual-add kernel with an exact zero
+residual; head gather/scatter share a runtime-direction variant. Existing
+fallbacks and original organizer SwiGLU exclusions remain. This is credited to
+Vladimir, not claimed as independent Nurzhigit/Codex work. No precompiled cache
+is imported and all work remains inside the timed process.

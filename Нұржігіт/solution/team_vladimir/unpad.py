@@ -34,7 +34,8 @@ import triton.language as tl
 from .lmhead import LazyLogits, lm_head_loss, patch_metric_readers
 from .mlp import MLP4bit, _compute_dtype
 from .nf4 import MatMulNF4, dequantize_nf4, supported as nf4_supported
-from .rmsnorm import add_rmsnorm, rmsnorm
+from . import warmup as _warmup
+from .rmsnorm import add_rmsnorm
 
 
 @triton.jit(do_not_specialize=["seq_len"])
@@ -157,9 +158,9 @@ def rope_pad_bwd_kernel(DQP, DKP, DVP, COS, SIN, ROWS, DQ, DLQ, DK, DLK, DV, DLV
         tl.store(DLV + dstk + HALF, gv2.to(dt), mask=mk)
 
 
-@triton.jit(do_not_specialize=["seq_len"])
-def heads_rows_kernel(FLAT, PAD, ROWS, sp_b, sp_h, sp_l, seq_len, H: tl.constexpr,
-                      D: tl.constexpr, BLOCK_H: tl.constexpr, TO_FLAT: tl.constexpr):
+@triton.jit(do_not_specialize=["seq_len", "to_flat"])  # one compiled variant, both directions
+def heads_rows_kernel(FLAT, PAD, ROWS, sp_b, sp_h, sp_l, seq_len, to_flat, H: tl.constexpr,
+                      D: tl.constexpr, BLOCK_H: tl.constexpr):
     """(batch, heads, seq_len, D) <-> (tokens, heads * D) for the real tokens."""
     t = tl.program_id(0).to(tl.int64)
     r = tl.load(ROWS + t)
@@ -170,7 +171,7 @@ def heads_rows_kernel(FLAT, PAD, ROWS, sp_b, sp_h, sp_l, seq_len, H: tl.constexp
     mask = heads < H
     flat = FLAT + t * (H * D) + heads * D + cols
     pad = PAD + b * sp_b + heads * sp_h + l * sp_l + cols
-    if TO_FLAT:
+    if to_flat:
         tl.store(flat, tl.load(pad, mask=mask, other=0.0), mask=mask)
     else:
         tl.store(pad, tl.load(flat, mask=mask, other=0.0), mask=mask)
@@ -260,9 +261,8 @@ class UnpadHeads(torch.autograd.Function):
 def _heads_rows(flat, padded, rows, seq_len, to_flat):
     heads, dim = padded.shape[1], padded.shape[3]
     heads_rows_kernel[(rows.numel(),)](flat, padded, rows, padded.stride(0), padded.stride(1),
-                                       padded.stride(2), seq_len, H=heads, D=dim,
-                                       BLOCK_H=triton.next_power_of_2(heads), TO_FLAT=to_flat,
-                                       num_warps=4)
+                                       padded.stride(2), seq_len, 1 if to_flat else 0, H=heads,
+                                       D=dim, BLOCK_H=triton.next_power_of_2(heads), num_warps=4)
 
 
 class QKV4bit(torch.autograd.Function):
@@ -468,6 +468,7 @@ def fast_forward(model, meta, input_ids, attention_mask, labels, num_items_in_ba
     from transformers.models.qwen2 import modeling_qwen2
 
     patch_metric_readers()
+    _warmup.wait()  # a kernel still compiling in the warm-up thread: wait, do not compile twice
     inner = model.model
     batch, seq_len = input_ids.shape
     rows = attention_mask.reshape(-1).nonzero().squeeze(1)
@@ -484,10 +485,9 @@ def fast_forward(model, meta, input_ids, attention_mask, labels, num_items_in_ba
     mlp_out = None
     for layer, projections in meta["layers"]:
         norm = layer.input_layernorm
-        if mlp_out is None:
-            x = rmsnorm(h, norm.weight, norm.variance_epsilon)
-        else:
-            h, x = add_rmsnorm(h, mlp_out, norm.weight, norm.variance_epsilon)
+        if mlp_out is None:  # layer 0: h + 0 is h; the same kernel as the other norms
+            mlp_out = h.new_zeros(h.shape, dtype=torch.float16)
+        h, x = add_rmsnorm(h, mlp_out, norm.weight, norm.variance_epsilon)
         o = _attention(layer, projections, x, cos, sin, mask, step, meta)
         norm = layer.post_attention_layernorm
         h, x = add_rmsnorm(h, o, norm.weight, norm.variance_epsilon)
@@ -550,17 +550,18 @@ def patch_qwen2_causal_lm():
     cls.forward = make_causal_lm_forward(cls.forward)
 
 
-def warmup(hq=12, hk=2, dim=128):
+def warmup(parts=("fwd", "bwd"), hq=12, hk=2, dim=128):
     """Compile the kernels of this file for Qwen2.5-1.5B's training step; see warmup.py."""
     f16, f32, i64 = torch.float16, torch.float32, torch.int64
     bq, bk = _blocks(hq, hk)
     n = 16  # every stride of these layouts is a multiple of 16; seq_len is not specialized
     common = dict(HQ=hq, HK=hk, HALF=dim // 2, REP=hq // hk, BLOCK_HQ=bq, BLOCK_HK=bk,
                   HAS_LQ=True, HAS_LK=False, HAS_LV=True, num_warps=4, enable_fp_fusion=False)
-    rope_pad_fwd_kernel.warmup(f16, f16, f16, f16, f16, f16, f32, f32, i64, f16, f16, f16,
-                               n, n, n, n, n, n, 7, grid=(1,), **common)
-    rope_pad_bwd_kernel.warmup(f16, f16, f16, f32, f32, i64, f16, f16, f16, f16, f16, f16,
-                               n, n, n, n, n, n, n, n, n, 7, grid=(1,), **common)
-    for to_flat in (True, False):
-        heads_rows_kernel.warmup(f16, f16, i64, n, n, n, 7, grid=(1,), H=hq, D=dim,
-                                 BLOCK_H=bq, TO_FLAT=to_flat, num_warps=4)
+    if "fwd" in parts:
+        rope_pad_fwd_kernel.warmup(f16, f16, f16, f16, f16, f16, f32, f32, i64, f16, f16, f16,
+                                   n, n, n, n, n, n, 7, grid=(1,), **common)
+        heads_rows_kernel.warmup(f16, f16, i64, n, n, n, 7, 1, grid=(1,), H=hq, D=dim,
+                                 BLOCK_H=bq, num_warps=4)
+    if "bwd" in parts:
+        rope_pad_bwd_kernel.warmup(f16, f16, f16, f32, f32, i64, f16, f16, f16, f16, f16, f16,
+                                   n, n, n, n, n, n, n, n, n, 7, grid=(1,), **common)
