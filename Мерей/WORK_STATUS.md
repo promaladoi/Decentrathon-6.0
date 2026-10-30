@@ -1,5 +1,24 @@
 # Мерей — состояние работы
 
+## Последний runtime: 29419f43
+
+[Выбранный source](https://github.com/promaladoi/Decentrathon-6.0/commit/29419f43d9b9173d1ba5d6824a31589ad3b84df7):
+**339 solution tests + 79 Soup tests PASS** на T4. Текущий Мерей и новая
+версия в одной серии: **53.38 → 49.17 с** median whole command (−7.9%),
+**5275 → 5175 MiB** maximum peak. Старые runs 52.30 / 54.46 с; новые
+48.50 / 49.84 с. Timed steps 3–64: **25.707 → 25.737 с** — это не
+доказательство ускорения steady-state training.
+
+[Изменения и точные границы A/B](solution/OPTIMIZATION_NOTES.md) ·
+[Reproduction notebook, pinned 29419f43](solution/optimization_validation.ipynb) ·
+[Official admission/quality proof](verification/codex_optimization/final-checks.json).
+Допуск и качество проверяются отдельно исходным harness; A/B их не
+заменяет. Документация может иметь более поздний docs-only publication
+commit при тех же production `.py`; окончательный checks hash относится
+к опубликованным bytes. Платформенная сдача остаётся отдельным этапом.
+
+## Прежний checkpoint — сохранённая история
+
 Полный Kaggle T4 development checkpoint прошёл **10/10 automatic checks**.
 **181 passed, 0 skipped** solution; **79 passed** Soup с патчами. Финальная платформенная сдача ещё не оформлена.
 
