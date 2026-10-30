@@ -1,5 +1,5 @@
 {
-  "source_commit": "dca07de60721acf175f810c09a6c71aaee2aba79",
+  "source_commit": "fd296f45fac9cb5f10182fe6439941b891bbe65f",
   "source_repo": "BAITC-Hacks/hack-a5a4072f-wither-ai",
   "files": [
     ".gitattributes",
@@ -213,6 +213,7 @@
     "CODEX_V22_EXPERIMENT.md",
     "CODEX_V23_EXPERIMENT.md",
     "CODEX_V24_EXPERIMENT.md",
+    "CODEX_V25_EXPERIMENT.md",
     "CODEX_V4_EXPERIMENT.md",
     "CODEX_V5_RESULT.md",
     "CODEX_V6_RESULT.md",
@@ -240,6 +241,7 @@
     "solution/frozen_storage_kernel.py",
     "solution/frozen_weight_cache.py",
     "solution/lazy_train_cli.py",
+    "solution/metadata_scan.py",
     "solution/mlp_precision.py",
     "solution/nf4.py",
     "solution/output_precision.py",
@@ -267,6 +269,7 @@
     "solution/test_frozen_weight_cache.py",
     "solution/test_kernels.py",
     "solution/test_lazy_train_cli.py",
+    "solution/test_metadata_scan.py",
     "solution/test_paired_nf4.py",
     "solution/test_parallel_head.py",
     "solution/test_sparse_mlp.py",

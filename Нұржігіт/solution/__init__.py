@@ -11,6 +11,8 @@ def apply():
     if _applied:
         return
     _applied = True
+    from .metadata_scan import patch_metadata_scan
+    patch_metadata_scan()
     from .lazy_train_cli import patch_lazy_train_cli
     patch_lazy_train_cli()
     from .team_vladimir import apply as apply_team
