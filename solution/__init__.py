@@ -15,3 +15,5 @@ def apply():
     from .parallel_head import patch_parallel_head
     apply_team()
     patch_parallel_head()
+    from .compact_dropout import patch_compact_dropout
+    patch_compact_dropout()
