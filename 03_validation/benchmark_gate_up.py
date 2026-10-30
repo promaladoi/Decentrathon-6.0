@@ -1,4 +1,5 @@
 """Finite, independent T4 screen; never replaces a full-task measurement."""
+import argparse
 import json
 from pathlib import Path
 import subprocess
@@ -6,6 +7,10 @@ import sys
 
 
 def main():
+    parser=argparse.ArgumentParser(description=__doc__)
+    parser.add_argument('--output',type=Path,default=Path('/kaggle/working/codex_gate_up_diagnostic.json'))
+    args=parser.parse_args()
+    if args.output.exists(): raise FileExistsError('Preserve previous diagnostic')
     repo=Path(__file__).resolve().parents[1]
     if subprocess.check_output(['nvidia-smi','--query-compute-apps=pid',
                                 '--format=csv,noheader'],text=True).strip():
@@ -33,9 +38,7 @@ def main():
             rows.append(row)
             print('GATE_UP_DIAGNOSTIC',json.dumps(row),flush=True)
         del x,wg,wu
-    dest=Path('/kaggle/working/codex_gate_up_diagnostic.json')
-    if dest.exists(): raise FileExistsError('Preserve previous diagnostic')
-    dest.write_text(json.dumps(dict(kind='isolated research; not a full-task result',rows=rows),indent=2))
+    args.output.write_text(json.dumps(dict(kind='isolated research; not a full-task result',rows=rows),indent=2))
 
 
 if __name__=='__main__': main()
