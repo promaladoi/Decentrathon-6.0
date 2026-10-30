@@ -1,0 +1,317 @@
+........................................................................ [ 26%]
+...........................................FF..FF..FF..FF............... [ 53%]
+........................................................................ [ 80%]
+....................................................                     [100%]
+=================================== FAILURES ===================================
+_________ test_independent_half_rounding_and_fp32_sum[config0-shape2] __________
+
+shape = (127, 384, 1024), config = (32, 64, 32, 4)
+
+    @pytest.mark.parametrize('shape',[(1,37,19),(23,128,256),(127,384,1024),(833,1536,8960)])
+    @pytest.mark.parametrize('config',[(32,64,32,4),(32,64,64,4),(64,64,64,4),(32,128,64,4)])
+    def test_independent_half_rounding_and_fp32_sum(shape,config):
+        from .fused_mlp_gradient import fused_gradient
+        m,n,k=shape
+        torch.manual_seed(17)
+        dg,du=[torch.randn((m,k),device='cuda',dtype=torch.float16)*.1 for _ in range(2)]
+        wg,wu=[torch.randn((k,n),device='cuda',dtype=torch.float16)*.1 for _ in range(2)]
+        partial_g,partial_u=dg@wg,du@wu
+        expected=partial_g.float()+partial_u.float()
+        actual=fused_gradient(dg,du,wg,wu,config)
+        assert actual.dtype==torch.float32 and actual.shape==(m,n)
+        relative=torch.linalg.vector_norm(actual-expected)/torch.linalg.vector_norm(expected)
+        assert relative.item()<.001
+        # CUBLAS and Triton can accumulate the dot in different FP32 orders before
+        # each FP16 output rounding. A fixed tolerance on their final sum fails
+        # near cancellation: two of 1.28M entries differed by 0.00390625 even while
+        # the strict global L2 bound passed. Bound per-entry error by the ulps of
+        # the independent partial products, not by the small cancelled sum.
+        def ulp(x):
+            p=torch.nextafter(x,torch.full_like(x,float('inf'))).float()-x.float()
+            q=x.float()-torch.nextafter(x,torch.full_like(x,-float('inf'))).float()
+            return torch.maximum(p.abs(),q.abs())
+        error=(actual-expected).abs()
+        bound=2*(ulp(partial_g)+ulp(partial_u))+1e-5
+>       assert torch.all(error<=bound).item()
+E       AssertionError: assert False
+E        +  where False = <built-in method item of Tensor object at 0x79e9dbd22c60>()
+E        +    where <built-in method item of Tensor object at 0x79e9dbd22c60> = tensor(False, device='cuda:0').item
+E        +      where tensor(False, device='cuda:0') = <built-in method all of type object at 0x79eb038e4000>(tensor([[6.1035e-05, 0.0000e+00, 3.0518e-05,  ..., 6.1035e-05, 1.1444e-05,\n         8.3923e-05],\n        [0.0000e+00, ...05],\n        [6.1035e-05, 0.0000e+00, 1.8311e-04,  ..., 2.4414e-04, 1.2970e-04,\n         5.7983e-04]], device='cuda:0') <= tensor([[6.2035e-04, 3.1518e-04, 5.5932e-04,  ..., 6.2035e-04, 2.5796e-04,\n         1.4733e-04],\n        [7.4242e-04, ...04],\n        [1.1086e-03, 3.7621e-04, 3.7621e-04,  ..., 6.2035e-04, 2.6940e-04,\n         1.0476e-03]], device='cuda:0'))
+E        +        where <built-in method all of type object at 0x79eb038e4000> = torch.all
+
+solution/test_fused_mlp_gradient.py:32: AssertionError
+_________ test_independent_half_rounding_and_fp32_sum[config0-shape3] __________
+
+shape = (833, 1536, 8960), config = (32, 64, 32, 4)
+
+    @pytest.mark.parametrize('shape',[(1,37,19),(23,128,256),(127,384,1024),(833,1536,8960)])
+    @pytest.mark.parametrize('config',[(32,64,32,4),(32,64,64,4),(64,64,64,4),(32,128,64,4)])
+    def test_independent_half_rounding_and_fp32_sum(shape,config):
+        from .fused_mlp_gradient import fused_gradient
+        m,n,k=shape
+        torch.manual_seed(17)
+        dg,du=[torch.randn((m,k),device='cuda',dtype=torch.float16)*.1 for _ in range(2)]
+        wg,wu=[torch.randn((k,n),device='cuda',dtype=torch.float16)*.1 for _ in range(2)]
+        partial_g,partial_u=dg@wg,du@wu
+        expected=partial_g.float()+partial_u.float()
+        actual=fused_gradient(dg,du,wg,wu,config)
+        assert actual.dtype==torch.float32 and actual.shape==(m,n)
+        relative=torch.linalg.vector_norm(actual-expected)/torch.linalg.vector_norm(expected)
+        assert relative.item()<.001
+        # CUBLAS and Triton can accumulate the dot in different FP32 orders before
+        # each FP16 output rounding. A fixed tolerance on their final sum fails
+        # near cancellation: two of 1.28M entries differed by 0.00390625 even while
+        # the strict global L2 bound passed. Bound per-entry error by the ulps of
+        # the independent partial products, not by the small cancelled sum.
+        def ulp(x):
+            p=torch.nextafter(x,torch.full_like(x,float('inf'))).float()-x.float()
+            q=x.float()-torch.nextafter(x,torch.full_like(x,-float('inf'))).float()
+            return torch.maximum(p.abs(),q.abs())
+        error=(actual-expected).abs()
+        bound=2*(ulp(partial_g)+ulp(partial_u))+1e-5
+>       assert torch.all(error<=bound).item()
+E       AssertionError: assert False
+E        +  where False = <built-in method item of Tensor object at 0x79e9dbd23bb0>()
+E        +    where <built-in method item of Tensor object at 0x79e9dbd23bb0> = tensor(False, device='cuda:0').item
+E        +      where tensor(False, device='cuda:0') = <built-in method all of type object at 0x79eb038e4000>(tensor([[0.0009, 0.0008, 0.0000,  ..., 0.0010, 0.0000, 0.0000],\n        [0.0000, 0.0000, 0.0003,  ..., 0.0010, 0.0002,... ..., 0.0010, 0.0001, 0.0000],\n        [0.0000, 0.0000, 0.0000,  ..., 0.0002, 0.0002, 0.0010]],\n       device='cuda:0') <= tensor([[0.0021, 0.0020, 0.0022,  ..., 0.0029, 0.0020, 0.0029],\n        [0.0012, 0.0029, 0.0004,  ..., 0.0039, 0.0004,... ..., 0.0022, 0.0007, 0.0020],\n        [0.0025, 0.0039, 0.0039,  ..., 0.0025, 0.0015, 0.0039]],\n       device='cuda:0'))
+E        +        where <built-in method all of type object at 0x79eb038e4000> = torch.all
+
+solution/test_fused_mlp_gradient.py:32: AssertionError
+_________ test_independent_half_rounding_and_fp32_sum[config1-shape2] __________
+
+shape = (127, 384, 1024), config = (32, 64, 64, 4)
+
+    @pytest.mark.parametrize('shape',[(1,37,19),(23,128,256),(127,384,1024),(833,1536,8960)])
+    @pytest.mark.parametrize('config',[(32,64,32,4),(32,64,64,4),(64,64,64,4),(32,128,64,4)])
+    def test_independent_half_rounding_and_fp32_sum(shape,config):
+        from .fused_mlp_gradient import fused_gradient
+        m,n,k=shape
+        torch.manual_seed(17)
+        dg,du=[torch.randn((m,k),device='cuda',dtype=torch.float16)*.1 for _ in range(2)]
+        wg,wu=[torch.randn((k,n),device='cuda',dtype=torch.float16)*.1 for _ in range(2)]
+        partial_g,partial_u=dg@wg,du@wu
+        expected=partial_g.float()+partial_u.float()
+        actual=fused_gradient(dg,du,wg,wu,config)
+        assert actual.dtype==torch.float32 and actual.shape==(m,n)
+        relative=torch.linalg.vector_norm(actual-expected)/torch.linalg.vector_norm(expected)
+        assert relative.item()<.001
+        # CUBLAS and Triton can accumulate the dot in different FP32 orders before
+        # each FP16 output rounding. A fixed tolerance on their final sum fails
+        # near cancellation: two of 1.28M entries differed by 0.00390625 even while
+        # the strict global L2 bound passed. Bound per-entry error by the ulps of
+        # the independent partial products, not by the small cancelled sum.
+        def ulp(x):
+            p=torch.nextafter(x,torch.full_like(x,float('inf'))).float()-x.float()
+            q=x.float()-torch.nextafter(x,torch.full_like(x,-float('inf'))).float()
+            return torch.maximum(p.abs(),q.abs())
+        error=(actual-expected).abs()
+        bound=2*(ulp(partial_g)+ulp(partial_u))+1e-5
+>       assert torch.all(error<=bound).item()
+E       AssertionError: assert False
+E        +  where False = <built-in method item of Tensor object at 0x79e9dbd614a0>()
+E        +    where <built-in method item of Tensor object at 0x79e9dbd614a0> = tensor(False, device='cuda:0').item
+E        +      where tensor(False, device='cuda:0') = <built-in method all of type object at 0x79eb038e4000>(tensor([[6.1035e-05, 0.0000e+00, 3.0518e-05,  ..., 6.1035e-05, 1.1444e-05,\n         8.3923e-05],\n        [0.0000e+00, ...05],\n        [6.1035e-05, 0.0000e+00, 1.8311e-04,  ..., 2.4414e-04, 1.2970e-04,\n         5.7983e-04]], device='cuda:0') <= tensor([[6.2035e-04, 3.1518e-04, 5.5932e-04,  ..., 6.2035e-04, 2.5796e-04,\n         1.4733e-04],\n        [7.4242e-04, ...04],\n        [1.1086e-03, 3.7621e-04, 3.7621e-04,  ..., 6.2035e-04, 2.6940e-04,\n         1.0476e-03]], device='cuda:0'))
+E        +        where <built-in method all of type object at 0x79eb038e4000> = torch.all
+
+solution/test_fused_mlp_gradient.py:32: AssertionError
+_________ test_independent_half_rounding_and_fp32_sum[config1-shape3] __________
+
+shape = (833, 1536, 8960), config = (32, 64, 64, 4)
+
+    @pytest.mark.parametrize('shape',[(1,37,19),(23,128,256),(127,384,1024),(833,1536,8960)])
+    @pytest.mark.parametrize('config',[(32,64,32,4),(32,64,64,4),(64,64,64,4),(32,128,64,4)])
+    def test_independent_half_rounding_and_fp32_sum(shape,config):
+        from .fused_mlp_gradient import fused_gradient
+        m,n,k=shape
+        torch.manual_seed(17)
+        dg,du=[torch.randn((m,k),device='cuda',dtype=torch.float16)*.1 for _ in range(2)]
+        wg,wu=[torch.randn((k,n),device='cuda',dtype=torch.float16)*.1 for _ in range(2)]
+        partial_g,partial_u=dg@wg,du@wu
+        expected=partial_g.float()+partial_u.float()
+        actual=fused_gradient(dg,du,wg,wu,config)
+        assert actual.dtype==torch.float32 and actual.shape==(m,n)
+        relative=torch.linalg.vector_norm(actual-expected)/torch.linalg.vector_norm(expected)
+        assert relative.item()<.001
+        # CUBLAS and Triton can accumulate the dot in different FP32 orders before
+        # each FP16 output rounding. A fixed tolerance on their final sum fails
+        # near cancellation: two of 1.28M entries differed by 0.00390625 even while
+        # the strict global L2 bound passed. Bound per-entry error by the ulps of
+        # the independent partial products, not by the small cancelled sum.
+        def ulp(x):
+            p=torch.nextafter(x,torch.full_like(x,float('inf'))).float()-x.float()
+            q=x.float()-torch.nextafter(x,torch.full_like(x,-float('inf'))).float()
+            return torch.maximum(p.abs(),q.abs())
+        error=(actual-expected).abs()
+        bound=2*(ulp(partial_g)+ulp(partial_u))+1e-5
+>       assert torch.all(error<=bound).item()
+E       AssertionError: assert False
+E        +  where False = <built-in method item of Tensor object at 0x79e9dbd619f0>()
+E        +    where <built-in method item of Tensor object at 0x79e9dbd619f0> = tensor(False, device='cuda:0').item
+E        +      where tensor(False, device='cuda:0') = <built-in method all of type object at 0x79eb038e4000>(tensor([[0.0009, 0.0008, 0.0000,  ..., 0.0010, 0.0000, 0.0000],\n        [0.0000, 0.0000, 0.0003,  ..., 0.0010, 0.0002,... ..., 0.0010, 0.0001, 0.0000],\n        [0.0000, 0.0000, 0.0000,  ..., 0.0002, 0.0002, 0.0010]],\n       device='cuda:0') <= tensor([[0.0021, 0.0020, 0.0022,  ..., 0.0029, 0.0020, 0.0029],\n        [0.0012, 0.0029, 0.0004,  ..., 0.0039, 0.0004,... ..., 0.0022, 0.0007, 0.0020],\n        [0.0025, 0.0039, 0.0039,  ..., 0.0025, 0.0015, 0.0039]],\n       device='cuda:0'))
+E        +        where <built-in method all of type object at 0x79eb038e4000> = torch.all
+
+solution/test_fused_mlp_gradient.py:32: AssertionError
+_________ test_independent_half_rounding_and_fp32_sum[config2-shape2] __________
+
+shape = (127, 384, 1024), config = (64, 64, 64, 4)
+
+    @pytest.mark.parametrize('shape',[(1,37,19),(23,128,256),(127,384,1024),(833,1536,8960)])
+    @pytest.mark.parametrize('config',[(32,64,32,4),(32,64,64,4),(64,64,64,4),(32,128,64,4)])
+    def test_independent_half_rounding_and_fp32_sum(shape,config):
+        from .fused_mlp_gradient import fused_gradient
+        m,n,k=shape
+        torch.manual_seed(17)
+        dg,du=[torch.randn((m,k),device='cuda',dtype=torch.float16)*.1 for _ in range(2)]
+        wg,wu=[torch.randn((k,n),device='cuda',dtype=torch.float16)*.1 for _ in range(2)]
+        partial_g,partial_u=dg@wg,du@wu
+        expected=partial_g.float()+partial_u.float()
+        actual=fused_gradient(dg,du,wg,wu,config)
+        assert actual.dtype==torch.float32 and actual.shape==(m,n)
+        relative=torch.linalg.vector_norm(actual-expected)/torch.linalg.vector_norm(expected)
+        assert relative.item()<.001
+        # CUBLAS and Triton can accumulate the dot in different FP32 orders before
+        # each FP16 output rounding. A fixed tolerance on their final sum fails
+        # near cancellation: two of 1.28M entries differed by 0.00390625 even while
+        # the strict global L2 bound passed. Bound per-entry error by the ulps of
+        # the independent partial products, not by the small cancelled sum.
+        def ulp(x):
+            p=torch.nextafter(x,torch.full_like(x,float('inf'))).float()-x.float()
+            q=x.float()-torch.nextafter(x,torch.full_like(x,-float('inf'))).float()
+            return torch.maximum(p.abs(),q.abs())
+        error=(actual-expected).abs()
+        bound=2*(ulp(partial_g)+ulp(partial_u))+1e-5
+>       assert torch.all(error<=bound).item()
+E       AssertionError: assert False
+E        +  where False = <built-in method item of Tensor object at 0x79e9dbd62da0>()
+E        +    where <built-in method item of Tensor object at 0x79e9dbd62da0> = tensor(False, device='cuda:0').item
+E        +      where tensor(False, device='cuda:0') = <built-in method all of type object at 0x79eb038e4000>(tensor([[6.1035e-05, 0.0000e+00, 3.0518e-05,  ..., 6.1035e-05, 1.1444e-05,\n         8.3923e-05],\n        [0.0000e+00, ...05],\n        [6.1035e-05, 0.0000e+00, 1.8311e-04,  ..., 2.4414e-04, 1.2970e-04,\n         5.7983e-04]], device='cuda:0') <= tensor([[6.2035e-04, 3.1518e-04, 5.5932e-04,  ..., 6.2035e-04, 2.5796e-04,\n         1.4733e-04],\n        [7.4242e-04, ...04],\n        [1.1086e-03, 3.7621e-04, 3.7621e-04,  ..., 6.2035e-04, 2.6940e-04,\n         1.0476e-03]], device='cuda:0'))
+E        +        where <built-in method all of type object at 0x79eb038e4000> = torch.all
+
+solution/test_fused_mlp_gradient.py:32: AssertionError
+_________ test_independent_half_rounding_and_fp32_sum[config2-shape3] __________
+
+shape = (833, 1536, 8960), config = (64, 64, 64, 4)
+
+    @pytest.mark.parametrize('shape',[(1,37,19),(23,128,256),(127,384,1024),(833,1536,8960)])
+    @pytest.mark.parametrize('config',[(32,64,32,4),(32,64,64,4),(64,64,64,4),(32,128,64,4)])
+    def test_independent_half_rounding_and_fp32_sum(shape,config):
+        from .fused_mlp_gradient import fused_gradient
+        m,n,k=shape
+        torch.manual_seed(17)
+        dg,du=[torch.randn((m,k),device='cuda',dtype=torch.float16)*.1 for _ in range(2)]
+        wg,wu=[torch.randn((k,n),device='cuda',dtype=torch.float16)*.1 for _ in range(2)]
+        partial_g,partial_u=dg@wg,du@wu
+        expected=partial_g.float()+partial_u.float()
+        actual=fused_gradient(dg,du,wg,wu,config)
+        assert actual.dtype==torch.float32 and actual.shape==(m,n)
+        relative=torch.linalg.vector_norm(actual-expected)/torch.linalg.vector_norm(expected)
+        assert relative.item()<.001
+        # CUBLAS and Triton can accumulate the dot in different FP32 orders before
+        # each FP16 output rounding. A fixed tolerance on their final sum fails
+        # near cancellation: two of 1.28M entries differed by 0.00390625 even while
+        # the strict global L2 bound passed. Bound per-entry error by the ulps of
+        # the independent partial products, not by the small cancelled sum.
+        def ulp(x):
+            p=torch.nextafter(x,torch.full_like(x,float('inf'))).float()-x.float()
+            q=x.float()-torch.nextafter(x,torch.full_like(x,-float('inf'))).float()
+            return torch.maximum(p.abs(),q.abs())
+        error=(actual-expected).abs()
+        bound=2*(ulp(partial_g)+ulp(partial_u))+1e-5
+>       assert torch.all(error<=bound).item()
+E       AssertionError: assert False
+E        +  where False = <built-in method item of Tensor object at 0x79e9dbd63250>()
+E        +    where <built-in method item of Tensor object at 0x79e9dbd63250> = tensor(False, device='cuda:0').item
+E        +      where tensor(False, device='cuda:0') = <built-in method all of type object at 0x79eb038e4000>(tensor([[0.0009, 0.0008, 0.0000,  ..., 0.0010, 0.0000, 0.0000],\n        [0.0000, 0.0000, 0.0003,  ..., 0.0010, 0.0002,... ..., 0.0010, 0.0001, 0.0000],\n        [0.0000, 0.0000, 0.0000,  ..., 0.0002, 0.0002, 0.0010]],\n       device='cuda:0') <= tensor([[0.0021, 0.0020, 0.0022,  ..., 0.0029, 0.0020, 0.0029],\n        [0.0012, 0.0029, 0.0004,  ..., 0.0039, 0.0004,... ..., 0.0022, 0.0007, 0.0020],\n        [0.0025, 0.0039, 0.0039,  ..., 0.0025, 0.0015, 0.0039]],\n       device='cuda:0'))
+E        +        where <built-in method all of type object at 0x79eb038e4000> = torch.all
+
+solution/test_fused_mlp_gradient.py:32: AssertionError
+_________ test_independent_half_rounding_and_fp32_sum[config3-shape2] __________
+
+shape = (127, 384, 1024), config = (32, 128, 64, 4)
+
+    @pytest.mark.parametrize('shape',[(1,37,19),(23,128,256),(127,384,1024),(833,1536,8960)])
+    @pytest.mark.parametrize('config',[(32,64,32,4),(32,64,64,4),(64,64,64,4),(32,128,64,4)])
+    def test_independent_half_rounding_and_fp32_sum(shape,config):
+        from .fused_mlp_gradient import fused_gradient
+        m,n,k=shape
+        torch.manual_seed(17)
+        dg,du=[torch.randn((m,k),device='cuda',dtype=torch.float16)*.1 for _ in range(2)]
+        wg,wu=[torch.randn((k,n),device='cuda',dtype=torch.float16)*.1 for _ in range(2)]
+        partial_g,partial_u=dg@wg,du@wu
+        expected=partial_g.float()+partial_u.float()
+        actual=fused_gradient(dg,du,wg,wu,config)
+        assert actual.dtype==torch.float32 and actual.shape==(m,n)
+        relative=torch.linalg.vector_norm(actual-expected)/torch.linalg.vector_norm(expected)
+        assert relative.item()<.001
+        # CUBLAS and Triton can accumulate the dot in different FP32 orders before
+        # each FP16 output rounding. A fixed tolerance on their final sum fails
+        # near cancellation: two of 1.28M entries differed by 0.00390625 even while
+        # the strict global L2 bound passed. Bound per-entry error by the ulps of
+        # the independent partial products, not by the small cancelled sum.
+        def ulp(x):
+            p=torch.nextafter(x,torch.full_like(x,float('inf'))).float()-x.float()
+            q=x.float()-torch.nextafter(x,torch.full_like(x,-float('inf'))).float()
+            return torch.maximum(p.abs(),q.abs())
+        error=(actual-expected).abs()
+        bound=2*(ulp(partial_g)+ulp(partial_u))+1e-5
+>       assert torch.all(error<=bound).item()
+E       AssertionError: assert False
+E        +  where False = <built-in method item of Tensor object at 0x79e9dbd637f0>()
+E        +    where <built-in method item of Tensor object at 0x79e9dbd637f0> = tensor(False, device='cuda:0').item
+E        +      where tensor(False, device='cuda:0') = <built-in method all of type object at 0x79eb038e4000>(tensor([[6.1035e-05, 0.0000e+00, 3.0518e-05,  ..., 6.1035e-05, 1.1444e-05,\n         8.3923e-05],\n        [0.0000e+00, ...05],\n        [6.1035e-05, 0.0000e+00, 1.8311e-04,  ..., 2.4414e-04, 1.2970e-04,\n         5.7983e-04]], device='cuda:0') <= tensor([[6.2035e-04, 3.1518e-04, 5.5932e-04,  ..., 6.2035e-04, 2.5796e-04,\n         1.4733e-04],\n        [7.4242e-04, ...04],\n        [1.1086e-03, 3.7621e-04, 3.7621e-04,  ..., 6.2035e-04, 2.6940e-04,\n         1.0476e-03]], device='cuda:0'))
+E        +        where <built-in method all of type object at 0x79eb038e4000> = torch.all
+
+solution/test_fused_mlp_gradient.py:32: AssertionError
+_________ test_independent_half_rounding_and_fp32_sum[config3-shape3] __________
+
+shape = (833, 1536, 8960), config = (32, 128, 64, 4)
+
+    @pytest.mark.parametrize('shape',[(1,37,19),(23,128,256),(127,384,1024),(833,1536,8960)])
+    @pytest.mark.parametrize('config',[(32,64,32,4),(32,64,64,4),(64,64,64,4),(32,128,64,4)])
+    def test_independent_half_rounding_and_fp32_sum(shape,config):
+        from .fused_mlp_gradient import fused_gradient
+        m,n,k=shape
+        torch.manual_seed(17)
+        dg,du=[torch.randn((m,k),device='cuda',dtype=torch.float16)*.1 for _ in range(2)]
+        wg,wu=[torch.randn((k,n),device='cuda',dtype=torch.float16)*.1 for _ in range(2)]
+        partial_g,partial_u=dg@wg,du@wu
+        expected=partial_g.float()+partial_u.float()
+        actual=fused_gradient(dg,du,wg,wu,config)
+        assert actual.dtype==torch.float32 and actual.shape==(m,n)
+        relative=torch.linalg.vector_norm(actual-expected)/torch.linalg.vector_norm(expected)
+        assert relative.item()<.001
+        # CUBLAS and Triton can accumulate the dot in different FP32 orders before
+        # each FP16 output rounding. A fixed tolerance on their final sum fails
+        # near cancellation: two of 1.28M entries differed by 0.00390625 even while
+        # the strict global L2 bound passed. Bound per-entry error by the ulps of
+        # the independent partial products, not by the small cancelled sum.
+        def ulp(x):
+            p=torch.nextafter(x,torch.full_like(x,float('inf'))).float()-x.float()
+            q=x.float()-torch.nextafter(x,torch.full_like(x,-float('inf'))).float()
+            return torch.maximum(p.abs(),q.abs())
+        error=(actual-expected).abs()
+        bound=2*(ulp(partial_g)+ulp(partial_u))+1e-5
+>       assert torch.all(error<=bound).item()
+E       AssertionError: assert False
+E        +  where False = <built-in method item of Tensor object at 0x79e9dbda4af0>()
+E        +    where <built-in method item of Tensor object at 0x79e9dbda4af0> = tensor(False, device='cuda:0').item
+E        +      where tensor(False, device='cuda:0') = <built-in method all of type object at 0x79eb038e4000>(tensor([[0.0009, 0.0008, 0.0000,  ..., 0.0010, 0.0000, 0.0000],\n        [0.0000, 0.0000, 0.0003,  ..., 0.0010, 0.0002,... ..., 0.0010, 0.0001, 0.0000],\n        [0.0000, 0.0000, 0.0000,  ..., 0.0002, 0.0002, 0.0010]],\n       device='cuda:0') <= tensor([[0.0021, 0.0020, 0.0022,  ..., 0.0029, 0.0020, 0.0029],\n        [0.0012, 0.0029, 0.0004,  ..., 0.0039, 0.0004,... ..., 0.0022, 0.0007, 0.0020],\n        [0.0025, 0.0039, 0.0039,  ..., 0.0025, 0.0015, 0.0039]],\n       device='cuda:0'))
+E        +        where <built-in method all of type object at 0x79eb038e4000> = torch.all
+
+solution/test_fused_mlp_gradient.py:32: AssertionError
+=============================== warnings summary ===============================
+solution/team_vladimir/test_kernels.py: 14 warnings
+  /usr/local/lib/python3.13/dist-packages/torch/jit/_script.py:365: DeprecationWarning: `torch.jit.script_method` is deprecated. Please switch to `torch.compile` or `torch.export`.
+    warnings.warn(
+
+-- Docs: https://docs.pytest.org/en/stable/how-to/capture-warnings.html
+=========================== short test summary info ============================
+FAILED solution/test_fused_mlp_gradient.py::test_independent_half_rounding_and_fp32_sum[config0-shape2]
+FAILED solution/test_fused_mlp_gradient.py::test_independent_half_rounding_and_fp32_sum[config0-shape3]
+FAILED solution/test_fused_mlp_gradient.py::test_independent_half_rounding_and_fp32_sum[config1-shape2]
+FAILED solution/test_fused_mlp_gradient.py::test_independent_half_rounding_and_fp32_sum[config1-shape3]
+FAILED solution/test_fused_mlp_gradient.py::test_independent_half_rounding_and_fp32_sum[config2-shape2]
+FAILED solution/test_fused_mlp_gradient.py::test_independent_half_rounding_and_fp32_sum[config2-shape3]
+FAILED solution/test_fused_mlp_gradient.py::test_independent_half_rounding_and_fp32_sum[config3-shape2]
+FAILED solution/test_fused_mlp_gradient.py::test_independent_half_rounding_and_fp32_sum[config3-shape3]
+8 failed, 260 passed, 14 warnings in 22.99s

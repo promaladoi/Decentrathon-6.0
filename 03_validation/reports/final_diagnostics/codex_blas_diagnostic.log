@@ -1,0 +1,13 @@
+[W1030 15:33:27.815444529 Context.cpp:541] Warning: torch.backends.cuda.preferred_blas_library is an experimental feature. If you see any error or unexpected behavior when this flag is set please file an issue on GitHub. (function operator())
+BLAS_DIAGNOSTIC {"operation": "gate_forward_512", "default_ms": 0.5254621620361621, "cublaslt_ms": 0.6178734532811425, "speedup": 0.8504365404368138, "relative_l2": 0.0}
+BLAS_DIAGNOSTIC {"operation": "down_forward_512", "default_ms": 0.4749231034395646, "cublaslt_ms": 0.4756441593170166, "speedup": 0.9984840434528044, "relative_l2": 0.0}
+BLAS_DIAGNOSTIC {"operation": "mlp_backward_512", "default_ms": 0.4134828794002533, "cublaslt_ms": 0.40204548952626246, "speedup": 1.0284479994725664, "relative_l2": 0.0}
+BLAS_DIAGNOSTIC {"operation": "gate_forward_832", "default_ms": 0.883931428194046, "cublaslt_ms": 0.8782884096487974, "speedup": 1.0064250176630534, "relative_l2": 0.0}
+BLAS_DIAGNOSTIC {"operation": "down_forward_832", "default_ms": 0.8878120020031929, "cublaslt_ms": 0.8425215974450111, "speedup": 1.05375577871894, "relative_l2": 0.00026909145526587963}
+BLAS_DIAGNOSTIC {"operation": "mlp_backward_832", "default_ms": 0.84298420105225, "cublaslt_ms": 0.8705712005496025, "speedup": 0.9683116102623928, "relative_l2": 0.00048038052045740187}
+BLAS_DIAGNOSTIC {"operation": "gate_forward_1024", "default_ms": 0.9052964143263988, "cublaslt_ms": 1.0519792485881496, "speedup": 0.8605648975884151, "relative_l2": 0.0}
+BLAS_DIAGNOSTIC {"operation": "down_forward_1024", "default_ms": 1.138308435678482, "cublaslt_ms": 1.2013284581048147, "speedup": 0.9475413888673282, "relative_l2": 0.0}
+BLAS_DIAGNOSTIC {"operation": "mlp_backward_1024", "default_ms": 1.0058284484677844, "cublaslt_ms": 0.9978459006861636, "speedup": 1.0079997801024503, "relative_l2": 0.00048125017201527953}
+BLAS_DIAGNOSTIC {"operation": "head_forward", "default_ms": 3.2676015973091124, "cublaslt_ms": 3.6829819828271866, "speedup": 0.8872162862987416, "relative_l2": 0.0}
+BLAS_DIAGNOSTIC {"operation": "head_backward", "default_ms": 3.046066535146613, "cublaslt_ms": 3.740707978606224, "speedup": 0.8143021461626009, "relative_l2": 0.0007323787431232631}
+BLAS_DIAGNOSTIC_COMPLETE {"aggregate_speedup": 0.9071866712354986}

@@ -1,0 +1,11 @@
+{
+  "version": "v32",
+  "source_commit": "b33081a7f73eee21c0101f3ae865581f000fb68a",
+  "source_files_verified": 50,
+  "solution_sha256": "2f5ec50d64d2500e96b522cfcc3a5f16d95243e3b6e6a4043ba8ad4ae409a270",
+  "status": "failed",
+  "checks_passed": null,
+  "accepted": false,
+  "summary": null,
+  "archive_sha256": "f2c186026df8fc3592ab586710efda63e4649e793b605366abed51af2b09e2cb"
+}

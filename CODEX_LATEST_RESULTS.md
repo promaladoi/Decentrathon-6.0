@@ -1,11 +1,11 @@
 # Verified candidate comparison
 
-Shortest collected median total time: **v28, 80.75 → 44.43 seconds**,
-**1.8175x**, **45.0% less elapsed time**, **10/10**.
-Peak **7153 MiB** (50.1% less than its base), eval delta
-**-0.000%**. Exact measured code: `4aaaade07f255269fb8ef8cf7a6b6007d95120b7`.
-Lower-memory alternative: **v22, 54.64 seconds,
-4467 MiB**, all ten checks.
+Shortest collected median total time: **v34, 78.68 → 43.91 seconds**,
+**1.7918x**, **44.2% less elapsed time**, **10/10**.
+Peak **7151 MiB** (50.1% less than its base), eval delta
+**-0.001%**. Exact measured code: `fe2272c79bf00ae17654c388c5e79237d265f968`.
+Lower-memory alternative: **v35, 46.46 seconds,
+4651 MiB**, all ten checks.
 
 | Version | Code | Base s | Solution s | Peak MiB | Speedup | Eval delta | Checks |
 |---|---|---:|---:|---:|---:|---:|---:|
@@ -21,6 +21,9 @@ Lower-memory alternative: **v22, 54.64 seconds,
 | v26 | `79643de` | 80.84 | 46.38 | 6651 | 1.7430x | -0.000% | 10/10 |
 | v27 | `7efba21` | 80.79 | 45.83 | 7153 | 1.7628x | +0.002% | 10/10 |
 | v28 | `4aaaade` | 80.75 | 44.43 | 7153 | 1.8175x | -0.000% | 10/10 |
+| v34 | `fe2272c` | 78.68 | 43.91 | 7151 | 1.7918x | -0.001% | 10/10 |
+| v35 | `bba28df` | 80.81 | 46.46 | 4651 | 1.7393x | +0.004% | 10/10 |
+| v36 | `dd8ccef` | 80.96 | 44.39 | 7151 | 1.8238x | +0.001% | 10/10 |
 
 Every row is an original two-base/two-solution T4 report. The complete source
 file set, source bytes, original result checksum and all ten checks were verified
@@ -43,8 +46,11 @@ matrix microbenchmarks are diagnostics; their times are excluded from this table
 The inactive v29 GEMM research failed its strict numeric tests and remains with
 those tests in the research folder. It is never used by the production solution.
 v30/v31 were unrun; v32/v33 stopped before training on those research tests.
+The separate 11-shape cuBLASLt screen achieved 0.9072x against the default
+vendor BLAS (about 10.2% more kernel time), so no production backend flag changed.
 
-Vladimir's shared forward and launcher optimization are explicitly credited in
-TEAM_INTEGRATION.md. Failed initial environment runs and earlier candidates
+Vladimir's shared forward/launcher work and Merei's ordered-gradient sums and
+single-read batch metadata are explicitly credited in TEAM_INTEGRATION.md.
+Failed initial environment runs and earlier candidates
 remain in history. Final team selection and a public saved executed notebook are
 still separate hackathon submission steps.

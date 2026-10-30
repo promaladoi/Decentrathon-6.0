@@ -1,10 +1,10 @@
 # IVNEX: Soup Kernel Challenge
 
-Shortest verified total time: **v28, 80.75 → 44.43 seconds**,
-**45.0% less elapsed time**, **1.8175x**, **10/10**.
-Peak **7153 MiB**, eval delta **-0.000%**.
-The lower-memory alternative is **v22: 54.64 seconds,
-4467 MiB**, also **10/10**.
+Shortest verified total time: **v34, 78.68 → 43.91 seconds**,
+**44.2% less elapsed time**, **1.7918x**, **10/10**.
+Peak **7151 MiB**, eval delta **-0.001%**.
+The lower-memory alternative is **v35: 46.46 seconds,
+4651 MiB**, also **10/10**.
 
 [Original source/hash-verified comparison](CODEX_LATEST_RESULTS.md) ·
 [Current status](CURRENT_STATUS.md) · [Pinned candidate notebook](templates/codex_candidate.ipynb).
