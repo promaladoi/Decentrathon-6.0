@@ -20,3 +20,9 @@ The v14 experiment additionally keeps PyTorch's full-shape native dropout mask
 and RNG consumption, but applies that mask and its backward only on real-token
 rows. `solution/compact_dropout.py` and its GPU tests verify exact output,
 input gradient and RNG state equality against the original padded dropout.
+
+v14's direct native_dropout mask source failed exact equivalence tests on T4.
+Repair 3016d55 uses the same public functional.dropout operator as the original.
+v15 ef10dd1 registers current kernels before the existing shared compile thread
+starts, so compilation overlaps model startup. No prebuilt cache or harness
+timing change is introduced. Both revisions still need GPU validation.
