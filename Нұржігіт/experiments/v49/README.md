@@ -1,3 +1,11 @@
+# Current measured status
+
+Status: `measured_alternative`. Selected production remains v45.
+[Verified report](../../CODEX_V49_RESULT.md).
+
+The design note below is historical.
+
+---
 # v49: compact the proven frozen tied pair immediately after trainer construction
 
 Candidate on v48, whose math is v45. Move the existing exact FP32-to-FP16 storage

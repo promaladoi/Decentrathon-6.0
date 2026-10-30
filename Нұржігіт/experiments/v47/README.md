@@ -1,3 +1,10 @@
+# Current measured status
+
+Status: `superseded_before_measurement`. Selected production remains v45.
+
+The design note below is historical.
+
+---
 # v47: compile the used dropout signature and shorten temporary lifetimes
 
 Candidate following v46. No full-task performance claim until measured.

@@ -1,3 +1,11 @@
+# Current measured status
+
+Status: `not_selected`. Selected production remains v45.
+[Verified report](../../CODEX_V46_RESULT.md).
+
+The design note below is historical.
+
+---
 # v46: fold the LoRA input cast into the dropout producer
 
 Candidate based on verified v45 (7a3db8fd5e24bbcb58affb475007a5cf93c56f07).

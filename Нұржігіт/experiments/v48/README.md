@@ -1,3 +1,11 @@
+# Current measured status
+
+Status: `measured_alternative`. Selected production remains v45.
+[Verified report](../../CODEX_V48_RESULT.md).
+
+The design note below is historical.
+
+---
 # v48: v45 arithmetic with shorter temporary lifetimes only
 
 Compared with verified v45 source 7a3db8fd5e24bbcb58affb475007a5cf93c56f07,
