@@ -1,3 +1,8 @@
+# v44 candidate pending T4
+
+New combined memory candidate: see CODEX_V44_EXPERIMENT.md.
+CPU checks passed; no new GPU result or promotion is claimed.
+
 # Verified candidate comparison
 
 Shortest collected median total time: **v34, 78.68 → 43.91 seconds**,

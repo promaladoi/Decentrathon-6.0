@@ -66,10 +66,20 @@ def main():
         if (repo/'solution/deferred_metadata.py').is_file():
             run([sys.executable, '03_validation/verify_startup_metadata.py'],
                 'startup_metadata_parity.log')
-        # Regression for the v14 failure is first; do not spend training time
-        # until the dropout values, gradients and RNG sequence all match.
-        run([sys.executable, '-m', 'pytest', 'solution/test_compact_dropout.py', '-q'],
+        # The earlier path and the corrected low-memory team path use different
+        # dropout modules. Both retain their complete strict tests.
+        dropout_test = ('solution/test_compact_dropout.py'
+                        if (repo/'solution/test_compact_dropout.py').is_file()
+                        else 'solution/test_dropout.py')
+        run([sys.executable, '-m', 'pytest', dropout_test, '-q'],
             'dropout_tests.log')
+        if (repo/'solution/test_storage_integration.py').is_file():
+            run([sys.executable, '-m', 'pytest', 'solution/test_storage_integration.py', '-q'],
+                'storage_integration_tests.log')
+            run([sys.executable, '-c',
+                 "import os,pytest;os.environ['MEREY_NATIVE_METADATA_SNAPSHOT_PARITY']='1';"
+                 "raise SystemExit(pytest.main(['solution/test_package_metadata_snapshot.py',"
+                 "'-q','-k','real_native_setup_prefix']))"], 'native_metadata_parity.log')
         if args.nf4_analysis:
             run([sys.executable, '-m', 'pytest', 'solution/test_paired_nf4.py', '-q'],
                 'paired_nf4_tests.log')
