@@ -10,6 +10,9 @@ offset addition are separate; decoded weights become FP16 before MMA, FP32
 accumulators become FP16 at output. No dense weight cache or split-K storage.
 No production apply()/dispatch imports this module. Standalone performance
 and accuracy qualification do not establish whole-model quality or speed.
+
+V2 appends larger-M/narrow-N tiles to amortize the repeated SIMT decode.
+The original six tiles and their default remain available for controls.
 """
 
 from dataclasses import dataclass
@@ -21,6 +24,9 @@ from triton.experimental.gluon import language as gl
 
 from .nf4_gemm import _validate, reference_nf4_gemm
 from .sm75_gluon import _mma_turing
+
+
+SOURCE_REVISION = 'v2_large_m_n32'
 
 
 @dataclass(frozen=True)
@@ -39,6 +45,8 @@ TILES = {
     'm64n128k32s1': Sm75Tile(64, 128),
     'm32n64k32s2': Sm75Tile(stages=2),
     'm64n64k32s2': Sm75Tile(64, 64, stages=2),
+    'm128n32k32w4s1': Sm75Tile(128, 32, warps=4),
+    'm256n32k32w8s1': Sm75Tile(256, 32, warps=8),
 }
 DEFAULT_TILE = TILES['m32n64k32s1']
 
@@ -60,7 +68,8 @@ def _nf4_tile(PACKED, ABSMAX, CODE4, ABSMAX2, CODE8, OFFSET,
                rows, columns, col_start, W_N: gl.constexpr, W_K: gl.constexpr,
                COLS: gl.constexpr):
     # W_K and starts are quant-block aligned for a 64/128-wide output tile;
-    # 32-wide reduction tiles occupy one half of an aligned quant block.
+    # either a 32-wide output or reduction tile occupies one half of a block.
+    # In particular, col_start // 64 must retain the alternating N32 halves.
     valid = (rows[:, None] < W_N) & (columns[None, :] < W_K)
     positions = rows[:, None].to(gl.int64) * W_K + columns[None, :]
     byte = gl.load(PACKED + positions // 2, mask=valid, other=0).to(gl.int32)
@@ -83,11 +92,15 @@ def _nf4_tile(PACKED, ABSMAX, CODE4, ABSMAX2, CODE8, OFFSET,
 def sm75_nf4_gemm_kernel(A, PACKED, ABSMAX, CODE4, ABSMAX2, CODE8, OFFSET, OUT,
                           M, stride_am, stride_ak, W_N: gl.constexpr, W_K: gl.constexpr,
                           TRANSPOSE_WEIGHT: gl.constexpr,
-                          BM: gl.constexpr, BN: gl.constexpr, BK: gl.constexpr):
+                          BM: gl.constexpr, BN: gl.constexpr, BK: gl.constexpr,
+                          WARPS: gl.constexpr = 4):
     gl.static_assert(W_K % 64 == 0 and BK == 32, 'NF4 row-scale alignment contract')
-    load_layout: gl.constexpr = gl.BlockedLayout([1, 4], [4, 8], [4, 1], [1, 0])
+    gl.static_assert(WARPS == 4 or (WARPS == 8 and BM == 256 and BN == 32),
+                     'only the explicit four/eight-warp trials are supported')
+    load_layout: gl.constexpr = gl.BlockedLayout([1, 4], [4, 8], [WARPS, 1], [1, 0])
+    mma_warps: gl.constexpr = [WARPS, 1] if BN == 32 else [2, 2]
     mma_layout: gl.constexpr = gl.NVMMADistributedLayout(
-        version=[2, 1], warps_per_cta=[2, 2], instr_shape=[16, 8])
+        version=[2, 1], warps_per_cta=mma_warps, instr_shape=[16, 8])
     lhs_layout: gl.constexpr = gl.DotOperandLayout(operand_index=0, parent=mma_layout, k_width=2)
     rhs_layout: gl.constexpr = gl.DotOperandLayout(operand_index=1, parent=mma_layout, k_width=2)
     width: gl.constexpr = W_N if TRANSPOSE_WEIGHT else W_K
@@ -119,8 +132,13 @@ def sm75_nf4_gemm_kernel(A, PACKED, ABSMAX, CODE4, ABSMAX2, CODE8, OFFSET, OUT,
 
 
 def _tile_supported(tile):
-    return (isinstance(tile, Sm75Tile) and tile.m in (32, 64) and tile.n in (64, 128)
-            and tile.k == 32 and tile.warps == 4 and tile.stages in (1, 2))
+    if not isinstance(tile, Sm75Tile):
+        return False
+    old = (tile.m in (32, 64) and tile.n in (64, 128) and tile.k == 32
+           and tile.warps == 4 and tile.stages in (1, 2))
+    narrow = (tile.n == 32 and tile.k == 32 and tile.stages == 1
+              and (tile.m, tile.warps) in ((128, 4), (256, 8)))
+    return old or narrow
 
 
 def sm75_nf4_gemm(a, packed, state, *, transpose_weight=True, tile=DEFAULT_TILE,
@@ -143,6 +161,6 @@ def sm75_nf4_gemm(a, packed, state, *, transpose_weight=True, tile=DEFAULT_TILE,
     compiled = sm75_nf4_gemm_kernel[(triton.cdiv(a.shape[0], tile.m), triton.cdiv(width, tile.n))](
         a, packed, state.absmax, state.code, state.state2.absmax, state.state2.code, state.offset,
         output, a.shape[0], a.stride(0), a.stride(1), W_N=state.shape[0], W_K=state.shape[1],
-        TRANSPOSE_WEIGHT=transpose_weight, BM=tile.m, BN=tile.n, BK=tile.k,
+        TRANSPOSE_WEIGHT=transpose_weight, BM=tile.m, BN=tile.n, BK=tile.k, WARPS=tile.warps,
         num_warps=tile.warps, num_stages=tile.stages, enable_fp_fusion=False)
     return (output, compiled) if return_compiled else output
