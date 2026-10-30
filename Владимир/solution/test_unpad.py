@@ -54,7 +54,7 @@ def test_lm_head_loss_matches_cross_entropy(with_num_items):
     assert (stats["argmax"] == logits.argmax(-1)).float().mean() > 0.999
 
 
-def _padded_reference(q, lq, k, v, lv, cos, sin, rows, batch, seq_len, hq, hk, dim):
+def _padded_reference(q, lq, k, v, lv, cos, sin, rows, batch, seq_len, hq, hk, dim, rep):
     """transformers: projections (+ LoRA) in fp32, RoPE, repeat_kv, autocast cast to fp16, in the
     padded layout (zeros where the batch has no token)."""
     def rot(x, c, s):
@@ -67,16 +67,16 @@ def _padded_reference(q, lq, k, v, lv, cos, sin, rows, batch, seq_len, hq, hk, d
     k32 = k.float().view(tokens, hk, dim)
     v32 = (v.float() + lv.float()).view(tokens, hk, dim)
     c, s = cos[:, None, :], sin[:, None, :]
-    rep = hq // hk
     out = []
-    for t32, heads in ((rot(q32, c, s), hq), (rot(k32, c, s).repeat_interleave(rep, 1), hq),
-                       (v32.repeat_interleave(rep, 1), hq)):
+    for t32, heads in ((rot(q32, c, s), hq), (rot(k32, c, s).repeat_interleave(rep, 1), hk * rep),
+                       (v32.repeat_interleave(rep, 1), hk * rep)):
         full = t32.new_zeros(batch * seq_len, heads, dim).index_copy(0, rows, t32)
         out.append(full.view(batch, seq_len, heads, dim).transpose(1, 2).to(torch.float16))
     return out
 
 
-def test_rope_pad_matches_reference():
+@pytest.mark.parametrize("repeat", [True, False])  # False: SDPA's enable_gqa (no padding)
+def test_rope_pad_matches_reference(repeat):
     from solution.unpad import RoPEPad
 
     torch.manual_seed(0)
@@ -94,17 +94,17 @@ def test_rope_pad_matches_reference():
     inv = 1.0 / (1e6 ** (torch.arange(0, dim, 2, device="cuda").float() / dim))
     emb = torch.cat([torch.outer(pos, inv)] * 2, dim=-1)
     cos, sin = emb.cos(), emb.sin()
-    grads = [torch.randn(batch, hq, seq_len, dim, device="cuda", dtype=torch.float16)
-             for _ in range(3)]
+    rep = hq // hk if repeat else 1
+    grads = [torch.randn(batch, heads, seq_len, dim, device="cuda", dtype=torch.float16)
+             for heads in (hq, hk * rep, hk * rep)]
 
-    ref = _padded_reference(q, lq, k, v, lv, cos, sin, rows, batch, seq_len, hq, hk, dim)
+    ref = _padded_reference(q, lq, k, v, lv, cos, sin, rows, batch, seq_len, hq, hk, dim, rep)
     torch.autograd.backward(ref, grads)
     ref_grads = [t.grad.clone() for t in (q, lq, k, v, lv)]
     for t in (q, lq, k, v, lv):
         t.grad = None
 
-    out = RoPEPad.apply(q, lq, k, None, v, lv, cos, sin, rows, batch, seq_len, hq, hk, dim,
-                        hq // hk)
+    out = RoPEPad.apply(q, lq, k, None, v, lv, cos, sin, rows, batch, seq_len, hq, hk, dim, rep)
     torch.autograd.backward(out, grads)
     for a, b in zip(out, ref):
         torch.testing.assert_close(a, b, rtol=0, atol=1e-3)  # one fp16 ulp at most

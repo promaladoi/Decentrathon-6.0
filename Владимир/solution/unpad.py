@@ -39,7 +39,8 @@ from .rmsnorm import add_rmsnorm, rmsnorm
 
 @triton.jit(do_not_specialize=["seq_len"])
 def rope_pad_fwd_kernel(Q, LQ, K, LK, V, LV, COS, SIN, ROWS, QP, KP, VP, sp_b, sp_h, sp_l,
-                        seq_len, HQ: tl.constexpr, HK: tl.constexpr, HALF: tl.constexpr,
+                        sk_b, sk_h, sk_l, seq_len, HQ: tl.constexpr, HK: tl.constexpr,
+                        HALF: tl.constexpr,
                         REP: tl.constexpr, BLOCK_HQ: tl.constexpr, BLOCK_HK: tl.constexpr,
                         HAS_LQ: tl.constexpr, HAS_LK: tl.constexpr, HAS_LV: tl.constexpr):
     t = tl.program_id(0).to(tl.int64)
@@ -86,7 +87,7 @@ def rope_pad_fwd_kernel(Q, LQ, K, LK, V, LV, COS, SIN, ROWS, QP, KP, VP, sp_b, s
     vo1 = v1.to(dt)
     vo2 = v2.to(dt)
     for rep in tl.static_range(REP):
-        dstk = b * sp_b + (hk * REP + rep) * sp_h + l * sp_l + cols
+        dstk = b * sk_b + (hk * REP + rep) * sk_h + l * sk_l + cols  # KP, VP: same layout
         tl.store(KP + dstk, ko1, mask=mk)
         tl.store(KP + dstk + HALF, ko2, mask=mk)
         tl.store(VP + dstk, vo1, mask=mk)
@@ -193,7 +194,8 @@ class RoPEPad(torch.autograd.Function):
         rope_pad_fwd_kernel[(rows.numel(),)](
             q, lq if lq is not None else q, k, lk if lk is not None else k, v,
             lv if lv is not None else v, cos, sin, rows, qp, kp, vp, qp.stride(0), qp.stride(1),
-            qp.stride(2), seq_len, HQ=hq, HK=hk, HALF=dim // 2, REP=rep, BLOCK_HQ=bq,
+            qp.stride(2), kp.stride(0), kp.stride(1), kp.stride(2), seq_len, HQ=hq, HK=hk,
+            HALF=dim // 2, REP=rep, BLOCK_HQ=bq,
             BLOCK_HK=bk, HAS_LQ=lq is not None, HAS_LK=lk is not None, HAS_LV=lv is not None,
             num_warps=4, enable_fp_fusion=False)
         ctx.save_for_backward(cos, sin, rows)
@@ -556,7 +558,7 @@ def warmup(hq=12, hk=2, dim=128):
     common = dict(HQ=hq, HK=hk, HALF=dim // 2, REP=hq // hk, BLOCK_HQ=bq, BLOCK_HK=bk,
                   HAS_LQ=True, HAS_LK=False, HAS_LV=True, num_warps=4, enable_fp_fusion=False)
     rope_pad_fwd_kernel.warmup(f16, f16, f16, f16, f16, f16, f32, f32, i64, f16, f16, f16,
-                               n, n, n, 7, grid=(1,), **common)
+                               n, n, n, n, n, n, 7, grid=(1,), **common)
     rope_pad_bwd_kernel.warmup(f16, f16, f16, f32, f32, i64, f16, f16, f16, f16, f16, f16,
                                n, n, n, n, n, n, n, n, n, 7, grid=(1,), **common)
     for to_flat in (True, False):
