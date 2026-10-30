@@ -29,3 +29,5 @@ def apply():
     patch_mlp_intermediates()
     from .causal_loss import patch_causal_loss
     patch_causal_loss()
+    from .output_precision import patch_output_precision
+    patch_output_precision()

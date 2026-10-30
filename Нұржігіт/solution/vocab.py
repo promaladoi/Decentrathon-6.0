@@ -111,7 +111,7 @@ class _TokenCrossEntropy(torch.autograd.Function):
 
 
 def token_cross_entropy(x, target, ignore_index=-100, reduction="mean"):
-    """CUDA float32 logits, integer class labels, no class weights/smoothing."""
+    """CUDA fp16/fp32 logits, fp32 reduction, integer labels, no smoothing."""
     losses = _TokenCrossEntropy.apply(x, target, ignore_index)
     if reduction == "none":
         return losses
@@ -141,7 +141,7 @@ def patch_vocabulary_reductions():
                           label_smoothing=0.0):
             supported = (
                 isinstance(input, torch.Tensor) and input.is_cuda
-                and input.dtype == torch.float32 and input.ndim == 2
+                and input.dtype in (torch.float16, torch.float32) and input.ndim == 2
                 and input.shape[0] > 0 and input.shape[1] >= 1024
                 and input.stride(1) == 1 and target.is_cuda
                 and target.device == input.device and target.ndim == 1
@@ -161,7 +161,7 @@ def patch_vocabulary_reductions():
         original_entropy = sft_trainer.entropy_from_logits
 
         def entropy_from_logits(logits, chunk_size=128):
-            if (logits.is_cuda and logits.dtype == torch.float32
+            if (logits.is_cuda and logits.dtype in (torch.float16, torch.float32)
                     and logits.shape[-1] >= 1024 and logits.is_contiguous()
                     and not torch.is_grad_enabled()):
                 return token_entropy(logits)
