@@ -1,7 +1,7 @@
 {
   "source_commit": "db4908e8b486874fda8c6eacc230166116ccad01",
   "source_branch": "codex/kernel-v1",
-  "status": "experimental; measurement pending",
+  "status": "participant-reported complete; original raw archive collection pending",
   "max_memory_mib": 7151,
   "target_total_seconds": 30,
   "files": [
@@ -59,5 +59,9 @@
     "solution/tokenizer_fingerprint.py",
     "solution/varlen_attention.py",
     "solution/vocab.py"
-  ]
+  ],
+  "reported_wall_s": 44.61,
+  "reported_peak_mib": 7011,
+  "reported_checks_passed": 10,
+  "original_archive_collected_locally": false
 }

@@ -1,10 +1,10 @@
 # v42 preparation: inactive gate/up matrix-forward fusion
 
 **No T4 result is claimed. No change to the active solution.**
-The v41 raw archive remains unavailable locally while the browser connection is
-closed. Its last observed partial run was 44.31 seconds / 7011 MiB, with 330
-solution tests and 79 Soup tests passed; the final paired result and ten original
-checks have not been collected or verified. This is not an accepted v41 result.
+The participant supplied the completed v41 verification output: 80.72 / 44.61
+seconds, 7011 MiB, eval loss 2.04965 vs base 2.04967, all ten checks PASS. See
+`CODEX_V41_USER_RESULT.md` for the exact evidence level. Its original ZIP/source
+bytes remain uncollected locally; the next screen verifies and exports that ZIP.
 
 The next experiment shares an input tile across two independent frozen FP16
 projections, rounds both matrix results to FP16, and computes the existing
