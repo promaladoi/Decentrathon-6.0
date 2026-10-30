@@ -1,0 +1,398 @@
+{
+  "release_url": "https://github.com/promaladoi/Decentrathon-6.0/releases/tag/nurzhigit-results-through-v49-20261031",
+  "release_id": 429452936,
+  "tag": "nurzhigit-results-through-v49-20261031",
+  "target_commit": "4b43cc5b32f7b63332aeefc73f9482cbfca3eae0",
+  "published": true,
+  "all_asset_hashes_verified": true,
+  "assets": [
+    {
+      "name": "codex_balanced_bundle.zip",
+      "asset_id": 693307348,
+      "bytes": 9192584,
+      "sha256": "45ce17434450162586c849053f7c03525fefa20ac03b049fa98249dcdf6e9839",
+      "url": "https://github.com/promaladoi/Decentrathon-6.0/releases/download/nurzhigit-results-through-v49-20261031/codex_balanced_bundle.zip",
+      "verification": "server SHA-256"
+    },
+    {
+      "name": "codex_candidate_bundle.zip",
+      "asset_id": 693308278,
+      "bytes": 9191893,
+      "sha256": "ad212477ce47c973e172c902711e71d558aae1580155e2aa7e9d6f60459230c2",
+      "url": "https://github.com/promaladoi/Decentrathon-6.0/releases/download/nurzhigit-results-through-v49-20261031/codex_candidate_bundle.zip",
+      "verification": "server SHA-256"
+    },
+    {
+      "name": "codex_diagnostic_7c5f6d8.zip",
+      "asset_id": 693309247,
+      "bytes": 12862720,
+      "sha256": "99d544d4a9d56a742e1cc40ff50b8d5f05a8de9e52c881e49b2afe6881488fd2",
+      "url": "https://github.com/promaladoi/Decentrathon-6.0/releases/download/nurzhigit-results-through-v49-20261031/codex_diagnostic_7c5f6d8.zip",
+      "verification": "server SHA-256"
+    },
+    {
+      "name": "codex_diagnostic_fe2272c.zip",
+      "asset_id": 693310427,
+      "bytes": 12896537,
+      "sha256": "1669fd2c2f30a9070b5d7a40bf335bf8861c96305ddb28d5c61680c617e1f117",
+      "url": "https://github.com/promaladoi/Decentrathon-6.0/releases/download/nurzhigit-results-through-v49-20261031/codex_diagnostic_fe2272c.zip",
+      "verification": "server SHA-256"
+    },
+    {
+      "name": "codex_experiment_v4_bundle.zip",
+      "asset_id": 693311514,
+      "bytes": 8330688,
+      "sha256": "6989f86f49f9f0e291432760e1e8fba4d98629842383106ae28192a8c2d06962",
+      "url": "https://github.com/promaladoi/Decentrathon-6.0/releases/download/nurzhigit-results-through-v49-20261031/codex_experiment_v4_bundle.zip",
+      "verification": "server SHA-256"
+    },
+    {
+      "name": "codex_final_diagnostics.zip",
+      "asset_id": 693312487,
+      "bytes": 4123,
+      "sha256": "03e15e51880dd9ff31e13a94be2df698a105d32c99a560c51e91291a7eeb6f51",
+      "url": "https://github.com/promaladoi/Decentrathon-6.0/releases/download/nurzhigit-results-through-v49-20261031/codex_final_diagnostics.zip",
+      "verification": "server SHA-256"
+    },
+    {
+      "name": "codex_v10.zip",
+      "asset_id": 693312586,
+      "bytes": 8092862,
+      "sha256": "23bbe78e86336bd12c6891b9e38ddbbca8ff8364d8d7c37a14ba841be74de5b8",
+      "url": "https://github.com/promaladoi/Decentrathon-6.0/releases/download/nurzhigit-results-through-v49-20261031/codex_v10.zip",
+      "verification": "server SHA-256"
+    },
+    {
+      "name": "codex_v12.zip",
+      "asset_id": 693313845,
+      "bytes": 8102314,
+      "sha256": "1d6ff9d74dda3bdc42c21880f33a51863def2aa356c80f005a575a0fbacbfbb0",
+      "url": "https://github.com/promaladoi/Decentrathon-6.0/releases/download/nurzhigit-results-through-v49-20261031/codex_v12.zip",
+      "verification": "server SHA-256"
+    },
+    {
+      "name": "codex_v16.zip",
+      "asset_id": 693314764,
+      "bytes": 8142288,
+      "sha256": "eae0b1599248a7e9d225f03f293d8fb81f43c789a6b94e76bef91fff24838229",
+      "url": "https://github.com/promaladoi/Decentrathon-6.0/releases/download/nurzhigit-results-through-v49-20261031/codex_v16.zip",
+      "verification": "server SHA-256"
+    },
+    {
+      "name": "codex_v16_bundle.zip",
+      "asset_id": 693315904,
+      "bytes": 8680779,
+      "sha256": "bb601aad381e5c0ce9dd9b3fd9b8a9249da12119ca111d86011ae93fa1d019d0",
+      "url": "https://github.com/promaladoi/Decentrathon-6.0/releases/download/nurzhigit-results-through-v49-20261031/codex_v16_bundle.zip",
+      "verification": "server SHA-256"
+    },
+    {
+      "name": "codex_v17r1.zip",
+      "asset_id": 693317472,
+      "bytes": 8148744,
+      "sha256": "0835298bc9df13d18ef3550f709b89f4401cafb8e6db1da8b56fcc86bc606457",
+      "url": "https://github.com/promaladoi/Decentrathon-6.0/releases/download/nurzhigit-results-through-v49-20261031/codex_v17r1.zip",
+      "verification": "server SHA-256"
+    },
+    {
+      "name": "codex_v18r1.zip",
+      "asset_id": 693319101,
+      "bytes": 8149925,
+      "sha256": "661db8333945193c2848e82972a6b71e09e45f5f51181e927157ce051e9166b1",
+      "url": "https://github.com/promaladoi/Decentrathon-6.0/releases/download/nurzhigit-results-through-v49-20261031/codex_v18r1.zip",
+      "verification": "server SHA-256"
+    },
+    {
+      "name": "codex_v20r1.zip",
+      "asset_id": 693320392,
+      "bytes": 8151008,
+      "sha256": "5cc68319d287ab7c36557e1ddc982e5b4000d8cd9e48211ecd95401cf6e30cfe",
+      "url": "https://github.com/promaladoi/Decentrathon-6.0/releases/download/nurzhigit-results-through-v49-20261031/codex_v20r1.zip",
+      "verification": "server SHA-256"
+    },
+    {
+      "name": "codex_v21.zip",
+      "asset_id": 693321807,
+      "bytes": 8151898,
+      "sha256": "687daad94ae29a510adc12fe978c4290b9e04f0d7580ddf30570f0c230c22976",
+      "url": "https://github.com/promaladoi/Decentrathon-6.0/releases/download/nurzhigit-results-through-v49-20261031/codex_v21.zip",
+      "verification": "server SHA-256"
+    },
+    {
+      "name": "codex_v22.zip",
+      "asset_id": 693322959,
+      "bytes": 8179579,
+      "sha256": "3a7caa6a37ee5b2fd04a75ef81c6bb3bfb01b86a7d7cae036308ac2065fe7692",
+      "url": "https://github.com/promaladoi/Decentrathon-6.0/releases/download/nurzhigit-results-through-v49-20261031/codex_v22.zip",
+      "verification": "server SHA-256"
+    },
+    {
+      "name": "codex_v23.zip",
+      "asset_id": 693324481,
+      "bytes": 8183192,
+      "sha256": "368d4a574bb08056666cb39b3a0e464882e9843ae68cb20997f260acf4acf44d",
+      "url": "https://github.com/promaladoi/Decentrathon-6.0/releases/download/nurzhigit-results-through-v49-20261031/codex_v23.zip",
+      "verification": "server SHA-256"
+    },
+    {
+      "name": "codex_v24.zip",
+      "asset_id": 693314762,
+      "bytes": 8186634,
+      "sha256": "b14f42fa6fbe188c8075c1c65b641abcce2364d5a2577cc949d8f4a973792d67",
+      "url": "https://github.com/promaladoi/Decentrathon-6.0/releases/download/nurzhigit-results-through-v49-20261031/codex_v24.zip",
+      "verification": "server SHA-256"
+    },
+    {
+      "name": "codex_v25.zip",
+      "asset_id": 693314759,
+      "bytes": 8189687,
+      "sha256": "25cc6ecc8c8963c2b233c37e163bf6114e81c6d852e690d5c2df6444ebf40cfe",
+      "url": "https://github.com/promaladoi/Decentrathon-6.0/releases/download/nurzhigit-results-through-v49-20261031/codex_v25.zip",
+      "verification": "server SHA-256"
+    },
+    {
+      "name": "codex_v26.zip",
+      "asset_id": 693314755,
+      "bytes": 8191509,
+      "sha256": "1ae1a6d82141e8083b0227b1e1956b0fe64c489c428ed02dd16488c43d7b4135",
+      "url": "https://github.com/promaladoi/Decentrathon-6.0/releases/download/nurzhigit-results-through-v49-20261031/codex_v26.zip",
+      "verification": "server SHA-256"
+    },
+    {
+      "name": "codex_v27.zip",
+      "asset_id": 693314760,
+      "bytes": 8191228,
+      "sha256": "c7e897b57c2b58feeadf71287149717250ad49b07ef77954f884a72d5adff64b",
+      "url": "https://github.com/promaladoi/Decentrathon-6.0/releases/download/nurzhigit-results-through-v49-20261031/codex_v27.zip",
+      "verification": "server SHA-256"
+    },
+    {
+      "name": "codex_v28.zip",
+      "asset_id": 693315933,
+      "bytes": 8194584,
+      "sha256": "dc6eee422363bf4cc2b33694fcaff52521be20d8113e0ade730dd0958840ab58",
+      "url": "https://github.com/promaladoi/Decentrathon-6.0/releases/download/nurzhigit-results-through-v49-20261031/codex_v28.zip",
+      "verification": "server SHA-256"
+    },
+    {
+      "name": "codex_v34.zip",
+      "asset_id": 693315934,
+      "bytes": 8195221,
+      "sha256": "f8b8bd7b0557577d04797e64d18d40d18a1b539e2875fadf71240bed2d1e87c4",
+      "url": "https://github.com/promaladoi/Decentrathon-6.0/releases/download/nurzhigit-results-through-v49-20261031/codex_v34.zip",
+      "verification": "server SHA-256"
+    },
+    {
+      "name": "codex_v35.zip",
+      "asset_id": 693315949,
+      "bytes": 8195497,
+      "sha256": "e05e711037b04555f355541249236e92c24876b11e880aa34394b9a9881a6d51",
+      "url": "https://github.com/promaladoi/Decentrathon-6.0/releases/download/nurzhigit-results-through-v49-20261031/codex_v35.zip",
+      "verification": "server SHA-256"
+    },
+    {
+      "name": "codex_v36.zip",
+      "asset_id": 693315963,
+      "bytes": 8203173,
+      "sha256": "3009d72e1beb382b35efb7489e4657b7cf9e4060dd3387b7928e34fc39dff2cd",
+      "url": "https://github.com/promaladoi/Decentrathon-6.0/releases/download/nurzhigit-results-through-v49-20261031/codex_v36.zip",
+      "verification": "server SHA-256"
+    },
+    {
+      "name": "codex_v37.zip",
+      "asset_id": 693317528,
+      "bytes": 8204381,
+      "sha256": "c773e32716ffcd5151a149383475aa6719a6567ec75591eb7ebb2d7927cf59ae",
+      "url": "https://github.com/promaladoi/Decentrathon-6.0/releases/download/nurzhigit-results-through-v49-20261031/codex_v37.zip",
+      "verification": "server SHA-256"
+    },
+    {
+      "name": "codex_v38.zip",
+      "asset_id": 693317533,
+      "bytes": 8204180,
+      "sha256": "2ac31669554584cec9e0a7cb1823755dbede73edc9e598d49cfb47d2f7cb7839",
+      "url": "https://github.com/promaladoi/Decentrathon-6.0/releases/download/nurzhigit-results-through-v49-20261031/codex_v38.zip",
+      "verification": "server SHA-256"
+    },
+    {
+      "name": "codex_v39.zip",
+      "asset_id": 693317569,
+      "bytes": 8204957,
+      "sha256": "a7f8627b3f90a6a10ccfd3dbc0b822a7b8855ea62e1c8ada8476b5982e616273",
+      "url": "https://github.com/promaladoi/Decentrathon-6.0/releases/download/nurzhigit-results-through-v49-20261031/codex_v39.zip",
+      "verification": "server SHA-256"
+    },
+    {
+      "name": "codex_v40.zip",
+      "asset_id": 693317587,
+      "bytes": 8204949,
+      "sha256": "fed0d41d9d37ae65beae2420cf745c354e8bd3dc3b158ce58b4a49c8378d2c54",
+      "url": "https://github.com/promaladoi/Decentrathon-6.0/releases/download/nurzhigit-results-through-v49-20261031/codex_v40.zip",
+      "verification": "server SHA-256"
+    },
+    {
+      "name": "codex_v45.zip",
+      "asset_id": 693319254,
+      "bytes": 8233632,
+      "sha256": "a7c06beaed9f3d9a45f1996100f4a09bdc97f2f28dc9ee8a19458adbcf1609cf",
+      "url": "https://github.com/promaladoi/Decentrathon-6.0/releases/download/nurzhigit-results-through-v49-20261031/codex_v45.zip",
+      "verification": "server SHA-256"
+    },
+    {
+      "name": "codex_v46.zip",
+      "asset_id": 693319281,
+      "bytes": 8235392,
+      "sha256": "c603647bd75896d4f711cb18b726902b65617cb551e090d6a1b7bc4ead89936a",
+      "url": "https://github.com/promaladoi/Decentrathon-6.0/releases/download/nurzhigit-results-through-v49-20261031/codex_v46.zip",
+      "verification": "server SHA-256"
+    },
+    {
+      "name": "codex_v48.zip",
+      "asset_id": 693319354,
+      "bytes": 8233728,
+      "sha256": "a552e1d725f57092a8f4fc575cb11046098d11d99be1290d9d0a81dc605ac100",
+      "url": "https://github.com/promaladoi/Decentrathon-6.0/releases/download/nurzhigit-results-through-v49-20261031/codex_v48.zip",
+      "verification": "server SHA-256"
+    },
+    {
+      "name": "codex_v49.zip",
+      "asset_id": 693319364,
+      "bytes": 8234942,
+      "sha256": "bf70db108c28d5f2f01d56666bab7d7534491a41055bf123561d7e47791a58df",
+      "url": "https://github.com/promaladoi/Decentrathon-6.0/releases/download/nurzhigit-results-through-v49-20261031/codex_v49.zip",
+      "verification": "server SHA-256"
+    },
+    {
+      "name": "codex_v5.zip",
+      "asset_id": 693320680,
+      "bytes": 8090589,
+      "sha256": "19942e25eead5722cba7c3cabae047e95c48848ba497bc5781264bcedfca7046",
+      "url": "https://github.com/promaladoi/Decentrathon-6.0/releases/download/nurzhigit-results-through-v49-20261031/codex_v5.zip",
+      "verification": "server SHA-256"
+    },
+    {
+      "name": "codex_v6.zip",
+      "asset_id": 693320737,
+      "bytes": 8090868,
+      "sha256": "9f9eef3b72c902c29df9bcf2423f1dd3563ef2c017a1e4be8c58acc5aeef80de",
+      "url": "https://github.com/promaladoi/Decentrathon-6.0/releases/download/nurzhigit-results-through-v49-20261031/codex_v6.zip",
+      "verification": "server SHA-256"
+    },
+    {
+      "name": "codex_v8.zip",
+      "asset_id": 693320813,
+      "bytes": 8093521,
+      "sha256": "afb692e0fe2a1b34d9f7c4a5eb7b872b1bea22f2b87247fb1cfe733d575020e2",
+      "url": "https://github.com/promaladoi/Decentrathon-6.0/releases/download/nurzhigit-results-through-v49-20261031/codex_v8.zip",
+      "verification": "server SHA-256"
+    },
+    {
+      "name": "codex_v9.zip",
+      "asset_id": 693320799,
+      "bytes": 8091755,
+      "sha256": "28213fa3a6bebbde81b21222aef5d761a8854e30a2a820e87b2cb801baf3f1ac",
+      "url": "https://github.com/promaladoi/Decentrathon-6.0/releases/download/nurzhigit-results-through-v49-20261031/codex_v9.zip",
+      "verification": "server SHA-256"
+    },
+    {
+      "name": "codex_verified_v17r1_bundle.zip",
+      "asset_id": 693322063,
+      "bytes": 8695398,
+      "sha256": "02bccbf9722547157d6d0a1e35f7f18df826da21ec5d6db6e65dbb5dcdc7df37",
+      "url": "https://github.com/promaladoi/Decentrathon-6.0/releases/download/nurzhigit-results-through-v49-20261031/codex_verified_v17r1_bundle.zip",
+      "verification": "server SHA-256"
+    },
+    {
+      "name": "codex_verified_v23_bundle.zip",
+      "asset_id": 693322124,
+      "bytes": 8808199,
+      "sha256": "5f765119b0ba0cf14357f90d4c69646b1b86743e18a27aac2500942af320ed34",
+      "url": "https://github.com/promaladoi/Decentrathon-6.0/releases/download/nurzhigit-results-through-v49-20261031/codex_verified_v23_bundle.zip",
+      "verification": "server SHA-256"
+    },
+    {
+      "name": "codex_verified_v28_bundle.zip",
+      "asset_id": 693322131,
+      "bytes": 9182797,
+      "sha256": "60e2e6e36658adfc8e45cc420124441d9145d2fd07bd2f2d81d2a4b161d23113",
+      "url": "https://github.com/promaladoi/Decentrathon-6.0/releases/download/nurzhigit-results-through-v49-20261031/codex_verified_v28_bundle.zip",
+      "verification": "server SHA-256"
+    },
+    {
+      "name": "soup_team_review.zip",
+      "asset_id": 693322168,
+      "bytes": 1365584,
+      "sha256": "0a0186e062f40073e57433bb11395a1103ef149aec8f1ca5b492828a185dccb2",
+      "url": "https://github.com/promaladoi/Decentrathon-6.0/releases/download/nurzhigit-results-through-v49-20261031/soup_team_review.zip",
+      "verification": "server SHA-256"
+    },
+    {
+      "name": "codex_v15_failed.zip",
+      "asset_id": 693322506,
+      "bytes": 58544,
+      "sha256": "33e9e1c9e864d4cfcd57e0d7e43333b798ff0e6d2ee70aa7b73629c104b14176",
+      "url": "https://github.com/promaladoi/Decentrathon-6.0/releases/download/nurzhigit-results-through-v49-20261031/codex_v15_failed.zip",
+      "verification": "server SHA-256"
+    },
+    {
+      "name": "codex_v2_bundle.zip",
+      "asset_id": 693322611,
+      "bytes": 8130605,
+      "sha256": "41c30568590e1a1494b3aa942ae0e342c223081ed09d10aa2514179c4fc553d2",
+      "url": "https://github.com/promaladoi/Decentrathon-6.0/releases/download/nurzhigit-results-through-v49-20261031/codex_v2_bundle.zip",
+      "verification": "server SHA-256"
+    },
+    {
+      "name": "codex_v3_bundle.zip",
+      "asset_id": 693323492,
+      "bytes": 8170975,
+      "sha256": "50470da6c7f40b9e4ae6d8072dbb76cabd7492ff9b0d0e8294c742416f73f7a2",
+      "url": "https://github.com/promaladoi/Decentrathon-6.0/releases/download/nurzhigit-results-through-v49-20261031/codex_v3_bundle.zip",
+      "verification": "server SHA-256"
+    },
+    {
+      "name": "codex_v4_and_original.zip",
+      "asset_id": 693323624,
+      "bytes": 10262565,
+      "sha256": "20820e908f1ee60ffce33d3901ff0468dad9a8e8076854ab7698daa51c4b8b4b",
+      "url": "https://github.com/promaladoi/Decentrathon-6.0/releases/download/nurzhigit-results-through-v49-20261031/codex_v4_and_original.zip",
+      "verification": "server SHA-256"
+    },
+    {
+      "name": "codex_v7.zip",
+      "asset_id": 693323658,
+      "bytes": 8092166,
+      "sha256": "0466c20043699402793d57244b04828152f1d953a95aa6b4bd8303b18abd30c4",
+      "url": "https://github.com/promaladoi/Decentrathon-6.0/releases/download/nurzhigit-results-through-v49-20261031/codex_v7.zip",
+      "verification": "server SHA-256"
+    },
+    {
+      "name": "codex_diagnostic_7a3db8f.zip",
+      "asset_id": 693324040,
+      "bytes": 12960300,
+      "sha256": "3dba5ff1f18e7fbb5064fd9203c06c78cfb2ae30fddcca334e36b6feb827dff9",
+      "url": "https://github.com/promaladoi/Decentrathon-6.0/releases/download/nurzhigit-results-through-v49-20261031/codex_diagnostic_7a3db8f.zip",
+      "verification": "server SHA-256"
+    },
+    {
+      "name": "nurzhigit-reports-and-notebooks.zip",
+      "asset_id": 693325033,
+      "bytes": 2325778,
+      "sha256": "64052d8449dff5d70bb319d61d7299e7d752affeff3159efad931aa7bfa5adb1",
+      "url": "https://github.com/promaladoi/Decentrathon-6.0/releases/download/nurzhigit-results-through-v49-20261031/nurzhigit-reports-and-notebooks.zip",
+      "verification": "server SHA-256"
+    },
+    {
+      "name": "all_results_manifest.json",
+      "asset_id": 693325206,
+      "bytes": 137236,
+      "sha256": "e6158495a1e7df403067a434f6235279884022bb43aba0d719128fc23a6ff503",
+      "url": "https://github.com/promaladoi/Decentrathon-6.0/releases/download/nurzhigit-results-through-v49-20261031/all_results_manifest.json",
+      "verification": "server SHA-256"
+    }
+  ],
+  "public_unauthenticated_read_verified": true,
+  "report_files_byte_verified_in_git": 596,
+  "report_commit": "4b43cc5b32f7b63332aeefc73f9482cbfca3eae0",
+  "selected_version": "v45"
+}
