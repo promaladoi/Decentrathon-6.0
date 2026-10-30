@@ -9,6 +9,7 @@ import shutil
 import subprocess
 import sys
 import uuid
+import zipfile
 
 from coordinate_experiments import REPOSITORY, archived_outcome, parse_queue
 
@@ -40,9 +41,17 @@ def main():
     repo = working/('codex_analysis_'+uuid.uuid4().hex[:8])
     subprocess.run(['git', 'clone', '-q', REPOSITORY, str(repo)], check=True, timeout=120)
     subprocess.run(['git', '-C', str(repo), 'checkout', '-q', best['commit']], check=True)
-    source = working/'nurzhigit_v14/data'
+    with zipfile.ZipFile(working/('codex_'+best['version']+'.zip')) as z:
+        measured = json.loads(z.read('result.json'))
+    source = Path(measured['task']['train_file']).parent.resolve()
+    if not source.is_relative_to(working.resolve()) or source.name != 'data':
+        raise ValueError('Measured task data must stay in this Kaggle project')
     if not all((source/n).is_file() for n in ('train.jsonl', 'eval_public.jsonl')):
-        raise FileNotFoundError('Keep the same task data for the diagnostic')
+        # The coordinator prepares the original fixed split here when a new
+        # Kaggle session no longer has the older v14 work directory.
+        source = control/'data'
+    if not all((source/n).is_file() for n in ('train.jsonl', 'eval_public.jsonl')):
+        raise FileNotFoundError('Measured/coordinator task split is missing')
     shutil.copytree(source, repo/'data')
     subprocess.run([sys.executable, str(control/'03_validation/profile_candidate.py'),
                     '--repo', str(repo), '--cpu'], check=True)
