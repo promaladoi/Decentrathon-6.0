@@ -1,0 +1,11 @@
+{
+  "torch": "2.11.0+cu128",
+  "triton": "3.6.0",
+  "datasets": "4.8.5",
+  "tokenizers": "0.23.1",
+  "transformers": "5.16.1",
+  "peft": "0.20.0",
+  "trl": "0.29.1",
+  "bitsandbytes": "0.50.2",
+  "soup-cli": "0.77.0"
+}

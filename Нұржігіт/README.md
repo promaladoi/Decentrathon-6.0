@@ -1,17 +1,16 @@
-# Нұржігіт — Codex нұсқасы
+# Нұржігіт — тексерілген v34 коды
 
-Команда мүшесінің жұмыс папкасы. Бұл жерде код, notebook және нақты өлшеу есептері бар.
-Платформа репозиторийінен алынған snapshot: `0ae953fe736ba627383b97f1860e61c46acdc746`.
-Kaggle ноутбугындағы бекітілген COMMIT қай код өлшенгенін анықтайды.
-Бүкіл commit тарихы `codex/kernel-v1` branch-інде сақталады.
+`solution/` өлшенген `fe2272c79bf00ae17654c388c5e79237d265f968` кодымен байтқа дейін сәйкес.
+Есептер мен бекітілген notebook-тер `bc96e7581d72a1fc42c6f6bd377cc335cb10694e` publication commit-тен алынды.
+Толық source/result тексеруі: [PUBLICATION_PROOF.json](PUBLICATION_PROOF.json).
 
 # IVNEX: Soup Kernel Challenge
 
-Shortest verified total time: **v28, 80.75 → 44.43 seconds**,
-**45.0% less elapsed time**, **1.8175x**, **10/10**.
-Peak **7153 MiB**, eval delta **-0.000%**.
-The lower-memory alternative is **v22: 54.64 seconds,
-4467 MiB**, also **10/10**.
+Shortest verified total time: **v34, 78.68 → 43.91 seconds**,
+**44.2% less elapsed time**, **1.7918x**, **10/10**.
+Peak **7151 MiB**, eval delta **-0.001%**.
+The lower-memory alternative is **v35: 46.46 seconds,
+4651 MiB**, also **10/10**.
 
 [Original source/hash-verified comparison](CODEX_LATEST_RESULTS.md) ·
 [Current status](CURRENT_STATUS.md) · [Pinned candidate notebook](templates/codex_candidate.ipynb).

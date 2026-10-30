@@ -39,9 +39,9 @@ def can_skip_dense_mask(step,meta):
 
 
 def make_batch_init(original):
-    def init(self, rows, batch, seq_len, plan=None):
+    def init(self, rows, batch, seq_len):
         original(self, rows, batch, seq_len)
-        self._varlen_plan = plan if plan is not None else make_plan(rows, batch, seq_len)
+        self._varlen_plan = make_plan(rows, batch, seq_len)
     init._varlen_attention = True
     return init
 

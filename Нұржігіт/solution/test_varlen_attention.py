@@ -4,16 +4,6 @@ import pytest
 import torch
 
 
-def test_prevalidated_batch_plan_avoids_rebuilding_metadata():
-    from types import SimpleNamespace
-    from .varlen_attention import make_batch_init
-    obj=SimpleNamespace()
-    def original(self,rows,batch,seq): self.original=(rows,batch,seq)
-    plan={'cu':'already validated','max_len':5}
-    make_batch_init(original)(obj,'rows',2,5,plan=plan)
-    assert obj._varlen_plan is plan and obj.original==('rows',2,5)
-
-
 def test_dense_mask_elision_requires_all_causal_varlen_layers():
     from types import SimpleNamespace as S
     from .varlen_attention import can_skip_dense_mask

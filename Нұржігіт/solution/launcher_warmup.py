@@ -40,12 +40,12 @@ def load_compiled():
           file=sys.stderr,flush=True)
 
 
-def patch_launcher_warmup(extra_steps=()):
+def patch_launcher_warmup():
     from .team_vladimir import warmup
     original=warmup._steps
     if getattr(original,'_solution_load_launchers',False):
         return
     def steps(unpad):
-        return original(unpad)+list(extra_steps)+[load_compiled]
+        return original(unpad)+[load_compiled]
     steps._solution_load_launchers=True
     warmup._steps=steps
