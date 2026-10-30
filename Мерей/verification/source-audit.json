@@ -1,0 +1,113 @@
+{
+  "snapshot_sha256": "ddc7740aa180e81cbdafa886d4fa44c1698cd2f79ae1cc45e63dbd45bedb033b",
+  "solution_sha256": "698b33301c9a191f3b8bfadc502a0c15d7a08870579c465cfed119a06a2d4d77",
+  "result_sha256": "eecdceb5343a87742d4bf2b1b87e497cd9cd072c52d39dfeb744e532ecf8bb8b",
+  "all10_checks_passed": true,
+  "protected_files_byte_identical_to_verified_v9": 15,
+  "source_matches_measured_snapshot": true,
+  "own_kernels": {
+    "soup_nf4_unpack_kernel": "solution\\nf4.py",
+    "soup_rmsnorm_forward_kernel": "solution\\rmsnorm.py",
+    "soup_rmsnorm_backward_kernel": "solution\\rmsnorm.py",
+    "soup_rope_forward_kernel": "solution\\rope.py",
+    "soup_rope_backward_kernel": "solution\\rope.py",
+    "vocabulary_partials_kernel": "solution\\vocab.py",
+    "vocabulary_finish_kernel": "solution\\vocab.py",
+    "vocabulary_gradient_kernel": "solution\\vocab.py"
+  },
+  "excluded_starter_kernels": [
+    "example_swiglu_fwd_kernel",
+    "example_swiglu_bwd_kernel"
+  ],
+  "banned_imports": [],
+  "lookalikes": [],
+  "parse_errors": [],
+  "changed_solution_files_from_v9": [
+    "solution/benchmark_frozen_head.py",
+    "solution/benchmark_mlp_variants.py",
+    "solution/compressed_swiglu.py",
+    "solution/frozen_head.py",
+    "solution/half_metrics.py",
+    "solution/narrow_mlp.py",
+    "solution/patches.py",
+    "solution/private_logits.py",
+    "solution/run_diagnostics.py",
+    "solution/strided_accuracy.py",
+    "solution/test_compressed_swiglu.py",
+    "solution/test_frozen_head.py",
+    "solution/test_half_metrics.py",
+    "solution/test_narrow_mlp.py",
+    "solution/test_private_logits.py",
+    "solution/test_strided_accuracy.py"
+  ],
+  "summary": {
+    "base": {
+      "ok": true,
+      "runs": 2,
+      "wall_s": 88.74,
+      "gpu_peak_mib": 14345,
+      "train_loop_s": 61.87,
+      "eval_loss": 2.04964
+    },
+    "solution": {
+      "ok": true,
+      "runs": 2,
+      "wall_s": 78.18,
+      "gpu_peak_mib": 7381,
+      "train_loop_s": 55.34,
+      "eval_loss": 2.04964
+    },
+    "ratios": {
+      "speedup": 1.1351,
+      "memory_ratio": 1.9435,
+      "quality_delta_pct": 0.0
+    }
+  },
+  "own_kernel_measurements": [
+    {
+      "run": "solution_1",
+      "timed_loop_s": 47.497,
+      "own_kernel_ms": {
+        "soup_rmsnorm_forward_kernel": 289.835,
+        "soup_rope_forward_kernel": 277.173,
+        "example_swiglu_fwd_kernel": 543.64,
+        "vocabulary_partials_kernel": 459.213,
+        "vocabulary_finish_kernel": 257.428,
+        "vocabulary_gradient_kernel": 245.719,
+        "soup_rmsnorm_backward_kernel": 391.912,
+        "soup_nf4_unpack_kernel": 998.758,
+        "example_swiglu_bwd_kernel": 925.396,
+        "soup_rope_backward_kernel": 212.553
+      }
+    },
+    {
+      "run": "solution_2",
+      "timed_loop_s": 47.107,
+      "own_kernel_ms": {
+        "soup_rmsnorm_forward_kernel": 290.511,
+        "soup_rope_forward_kernel": 277.148,
+        "example_swiglu_fwd_kernel": 543.721,
+        "vocabulary_partials_kernel": 457.314,
+        "vocabulary_finish_kernel": 247.466,
+        "vocabulary_gradient_kernel": 245.731,
+        "soup_rmsnorm_backward_kernel": 391.705,
+        "soup_nf4_unpack_kernel": 997.158,
+        "example_swiglu_bwd_kernel": 925.52,
+        "soup_rope_backward_kernel": 215.589
+      }
+    }
+  ],
+  "note": "Evidence relates to immutable embedded-source snapshot. Documentation and GitHub receipts are prepared after successful measurement. Head recomputation and compressed-only SwiGLU are diagnostics, disabled in training.",
+  "kaggle_version": 363837033,
+  "code_commit": "b7c406dea7dbdc379149910efe044dccf155d083",
+  "test_results": {
+    "solution_passed": 241,
+    "solution_skipped": 1,
+    "solution_seconds": 76.39,
+    "soup_passed": 79,
+    "soup_initial_seconds": 8.52,
+    "soup_rule_seconds": 8.08,
+    "CPU_passed": 28,
+    "CPU_skipped": 214
+  }
+}

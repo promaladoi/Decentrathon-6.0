@@ -1,6 +1,6 @@
 {
-  "result_sha256": "5297c7c570ede337722148f59aeed47f65ea27f66b503662fc6f1f1b6fe193d1",
-  "solution_sha256": "68a2eb35f8d32e68f0ae45efc30a1d01d87daf9c7363667caf4f8c98a0009878",
+  "result_sha256": "eecdceb5343a87742d4bf2b1b87e497cd9cd072c52d39dfeb744e532ecf8bb8b",
+  "solution_sha256": "698b33301c9a191f3b8bfadc502a0c15d7a08870579c465cfed119a06a2d4d77",
   "checks": [
     {
       "check": "1. every base and solution run finished",
@@ -20,7 +20,7 @@
     {
       "check": "4. own kernels together take >= 5% of the training time",
       "ok": true,
-      "detail": "7.3% of the training time (lowest of 2 runs, steps 3+)"
+      "detail": "6.6% of the training time (lowest of 2 runs, steps 3+)"
     },
     {
       "check": "5. same task and Soup outputs (steps, adapter, settings, tokens, metrics, rewind)",
@@ -35,12 +35,12 @@
     {
       "check": "7. quality: eval loss at most 0.5% above the base",
       "ok": true,
-      "detail": "+0.003%"
+      "detail": "+0.000%"
     },
     {
       "check": "8. not worse than the base on time or memory (10% margin)",
       "ok": true,
-      "detail": "time x0.944, memory x0.863 of the base"
+      "detail": "time x0.881, memory x0.515 of the base"
     },
     {
       "check": "9. clean measurement (a T4, idle GPUs, one GPU, harness allocator, peaks agree)",
@@ -50,7 +50,7 @@
     {
       "check": "10. Soup regression tests with your patches",
       "ok": true,
-      "detail": "79 passed, 14 warnings in 8.20s"
+      "detail": "79 passed, 14 warnings in 8.08s"
     }
   ],
   "notes": []

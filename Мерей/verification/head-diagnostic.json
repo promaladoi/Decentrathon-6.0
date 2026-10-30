@@ -1,0 +1,1084 @@
+{
+  "name": "benchmark_frozen_head",
+  "kind": "diagnostic_not_training_score",
+  "results": {
+    "kind": "synthetic_frozen_head_recompute_not_training_score",
+    "device": "Tesla T4",
+    "torch": "2.11.0+cu128",
+    "rounds": 3,
+    "samples_per_block": 4,
+    "warmups_per_variant": 3,
+    "seed": 319,
+    "ordering": "each round: native,recompute then recompute,native",
+    "timing": "whole head+half CE+input gradient; CUDA events and synchronized wall",
+    "memory": "extra allocated PyTorch bytes for one call, not reserved or NVML peak",
+    "candidate_includes_supported_guard": true,
+    "weights": "seeded random diagnostic frozen fp32 Linear; actual head dimensions",
+    "training_score_claim": false,
+    "sources": {
+      "frozen_head.py": "6e97bac58015a010c98e133fa148384f0793cd3ec951ef176537cad392d4135e",
+      "benchmark_frozen_head.py": "74604ec84d0f11fb8982f7086213c13b211bd8273b420fd4af66c32fce422be2",
+      "vocab.py": "feffe6a066c83690de5b9974a3c172073d487055086e516ff46e1665b40c9486"
+    },
+    "cases": [
+      {
+        "rows": 256,
+        "vocab": 151936,
+        "hidden": 1536,
+        "input_dtype": "torch.float32",
+        "weight_dtype": "torch.float32",
+        "eligible": true,
+        "rounds": [
+          {
+            "round": 1,
+            "blocks": [
+              {
+                "order": [
+                  "native",
+                  "recompute"
+                ],
+                "measurements": {
+                  "native": {
+                    "cuda_event": {
+                      "samples": 4,
+                      "median_ms": 14.731280326843262,
+                      "q25_ms": 14.50707221031189,
+                      "q75_ms": 14.879808187484741,
+                      "minimum_ms": 14.10483169555664,
+                      "maximum_ms": 15.055007934570312
+                    },
+                    "wall": {
+                      "samples": 4,
+                      "median_ms": 14.758821500009844,
+                      "q25_ms": 14.539896000002273,
+                      "q75_ms": 14.90802050000184,
+                      "minimum_ms": 14.153594999982033,
+                      "maximum_ms": 15.085141999975349
+                    },
+                    "cuda_event_values_ms": [
+                      14.10483169555664,
+                      15.055007934570312,
+                      14.82140827178955,
+                      14.641152381896973
+                    ],
+                    "wall_values_ms": [
+                      14.153594999982033,
+                      15.085141999975349,
+                      14.84898000001067,
+                      14.668663000009019
+                    ]
+                  },
+                  "recompute": {
+                    "cuda_event": {
+                      "samples": 4,
+                      "median_ms": 20.019311904907227,
+                      "q25_ms": 19.683624267578125,
+                      "q75_ms": 20.459575653076172,
+                      "minimum_ms": 19.544063568115234,
+                      "maximum_ms": 20.912864685058594
+                    },
+                    "wall": {
+                      "samples": 4,
+                      "median_ms": 20.05212599999595,
+                      "q25_ms": 19.716954750009563,
+                      "q75_ms": 20.492439499975035,
+                      "minimum_ms": 19.579754999995203,
+                      "maximum_ms": 20.945065999967483
+                    },
+                    "cuda_event_values_ms": [
+                      20.912864685058594,
+                      20.30847930908203,
+                      19.730144500732422,
+                      19.544063568115234
+                    ],
+                    "wall_values_ms": [
+                      20.945065999967483,
+                      20.341563999977552,
+                      19.76268800001435,
+                      19.579754999995203
+                    ]
+                  }
+                }
+              },
+              {
+                "order": [
+                  "recompute",
+                  "native"
+                ],
+                "measurements": {
+                  "recompute": {
+                    "cuda_event": {
+                      "samples": 4,
+                      "median_ms": 19.306464195251465,
+                      "q25_ms": 19.22319984436035,
+                      "q75_ms": 19.397528648376465,
+                      "minimum_ms": 19.208608627319336,
+                      "maximum_ms": 19.43552017211914
+                    },
+                    "wall": {
+                      "samples": 4,
+                      "median_ms": 19.338981499970487,
+                      "q25_ms": 19.2506192499593,
+                      "q75_ms": 19.43378049999467,
+                      "minimum_ms": 19.23670899998342,
+                      "maximum_ms": 19.46700100000953
+                    },
+                    "cuda_event_values_ms": [
+                      19.384864807128906,
+                      19.208608627319336,
+                      19.228063583374023,
+                      19.43552017211914
+                    ],
+                    "wall_values_ms": [
+                      19.422706999989714,
+                      19.23670899998342,
+                      19.25525599995126,
+                      19.46700100000953
+                    ]
+                  },
+                  "native": {
+                    "cuda_event": {
+                      "samples": 4,
+                      "median_ms": 13.988175868988037,
+                      "q25_ms": 13.889919757843018,
+                      "q75_ms": 14.179672002792358,
+                      "minimum_ms": 13.804960250854492,
+                      "maximum_ms": 14.544351577758789
+                    },
+                    "wall": {
+                      "samples": 4,
+                      "median_ms": 14.01976099998592,
+                      "q25_ms": 13.918720749984459,
+                      "q75_ms": 14.211746000000858,
+                      "minimum_ms": 13.831642000013744,
+                      "maximum_ms": 14.571659000012005
+                    },
+                    "cuda_event_values_ms": [
+                      14.058112144470215,
+                      13.91823959350586,
+                      13.804960250854492,
+                      14.544351577758789
+                    ],
+                    "wall_values_ms": [
+                      14.091774999997142,
+                      13.947746999974697,
+                      13.831642000013744,
+                      14.571659000012005
+                    ]
+                  }
+                }
+              }
+            ],
+            "cuda_event_speedup": 0.7301933809067109,
+            "wall_speedup": 0.7304855197110887
+          },
+          {
+            "round": 2,
+            "blocks": [
+              {
+                "order": [
+                  "native",
+                  "recompute"
+                ],
+                "measurements": {
+                  "native": {
+                    "cuda_event": {
+                      "samples": 4,
+                      "median_ms": 14.818655967712402,
+                      "q25_ms": 14.438768148422241,
+                      "q75_ms": 15.347999811172485,
+                      "minimum_ms": 14.420479774475098,
+                      "maximum_ms": 15.814656257629395
+                    },
+                    "wall": {
+                      "samples": 4,
+                      "median_ms": 14.847754500010524,
+                      "q25_ms": 14.4685710000374,
+                      "q75_ms": 15.37536174998877,
+                      "minimum_ms": 14.446761000044717,
+                      "maximum_ms": 15.84244299999682
+                    },
+                    "cuda_event_values_ms": [
+                      14.444864273071289,
+                      14.420479774475098,
+                      15.192447662353516,
+                      15.814656257629395
+                    ],
+                    "wall_values_ms": [
+                      14.475841000034961,
+                      14.446761000044717,
+                      15.219667999986086,
+                      15.84244299999682
+                    ]
+                  },
+                  "recompute": {
+                    "cuda_event": {
+                      "samples": 4,
+                      "median_ms": 20.06547260284424,
+                      "q25_ms": 19.695136070251465,
+                      "q75_ms": 20.55998468399048,
+                      "minimum_ms": 19.491039276123047,
+                      "maximum_ms": 21.136608123779297
+                    },
+                    "wall": {
+                      "samples": 4,
+                      "median_ms": 20.09941349999167,
+                      "q25_ms": 19.730296749997933,
+                      "q75_ms": 20.59112924997919,
+                      "minimum_ms": 19.522128999994948,
+                      "maximum_ms": 21.167093999963527
+                    },
+                    "cuda_event_values_ms": [
+                      21.136608123779297,
+                      20.36777687072754,
+                      19.763168334960938,
+                      19.491039276123047
+                    ],
+                    "wall_values_ms": [
+                      21.167093999963527,
+                      20.39914099998441,
+                      19.79968599999893,
+                      19.522128999994948
+                    ]
+                  }
+                }
+              },
+              {
+                "order": [
+                  "recompute",
+                  "native"
+                ],
+                "measurements": {
+                  "recompute": {
+                    "cuda_event": {
+                      "samples": 4,
+                      "median_ms": 19.226608276367188,
+                      "q25_ms": 19.162256240844727,
+                      "q75_ms": 19.30400800704956,
+                      "minimum_ms": 19.15894317626953,
+                      "maximum_ms": 19.346464157104492
+                    },
+                    "wall": {
+                      "samples": 4,
+                      "median_ms": 19.262324000010267,
+                      "q25_ms": 19.198643750030442,
+                      "q75_ms": 19.337381999989134,
+                      "minimum_ms": 19.189034000021366,
+                      "maximum_ms": 19.381124999995336
+                    },
+                    "cuda_event_values_ms": [
+                      19.28985595703125,
+                      19.163360595703125,
+                      19.15894317626953,
+                      19.346464157104492
+                    ],
+                    "wall_values_ms": [
+                      19.322800999987066,
+                      19.201847000033467,
+                      19.189034000021366,
+                      19.381124999995336
+                    ]
+                  },
+                  "native": {
+                    "cuda_event": {
+                      "samples": 4,
+                      "median_ms": 14.312431812286377,
+                      "q25_ms": 13.986271858215332,
+                      "q75_ms": 14.633959770202637,
+                      "minimum_ms": 13.938655853271484,
+                      "maximum_ms": 14.667679786682129
+                    },
+                    "wall": {
+                      "samples": 4,
+                      "median_ms": 14.339970000037283,
+                      "q25_ms": 14.015705750040297,
+                      "q75_ms": 14.662669500026482,
+                      "minimum_ms": 13.972967000029257,
+                      "maximum_ms": 14.700714000014159
+                    },
+                    "cuda_event_values_ms": [
+                      13.938655853271484,
+                      14.002143859863281,
+                      14.667679786682129,
+                      14.622719764709473
+                    ],
+                    "wall_values_ms": [
+                      13.972967000029257,
+                      14.029952000043977,
+                      14.700714000014159,
+                      14.64998800003059
+                    ]
+                  }
+                }
+              }
+            ],
+            "cuda_event_speedup": 0.741461347136668,
+            "wall_speedup": 0.7415863540925165
+          },
+          {
+            "round": 3,
+            "blocks": [
+              {
+                "order": [
+                  "native",
+                  "recompute"
+                ],
+                "measurements": {
+                  "native": {
+                    "cuda_event": {
+                      "samples": 4,
+                      "median_ms": 14.793871879577637,
+                      "q25_ms": 14.682663679122925,
+                      "q75_ms": 14.83236813545227,
+                      "minimum_ms": 14.395648002624512,
+                      "maximum_ms": 14.90124797821045
+                    },
+                    "wall": {
+                      "samples": 4,
+                      "median_ms": 14.821568499996829,
+                      "q25_ms": 14.71164275000092,
+                      "q75_ms": 14.861366000005205,
+                      "minimum_ms": 14.432819000035124,
+                      "maximum_ms": 14.9298050000084
+                    },
+                    "cuda_event_values_ms": [
+                      14.395648002624512,
+                      14.90124797821045,
+                      14.809408187866211,
+                      14.778335571289062
+                    ],
+                    "wall_values_ms": [
+                      14.432819000035124,
+                      14.9298050000084,
+                      14.83855300000414,
+                      14.804583999989518
+                    ]
+                  },
+                  "recompute": {
+                    "cuda_event": {
+                      "samples": 4,
+                      "median_ms": 19.92296028137207,
+                      "q25_ms": 19.755040645599365,
+                      "q75_ms": 20.098095893859863,
+                      "minimum_ms": 19.59529685974121,
+                      "maximum_ms": 20.27948760986328
+                    },
+                    "wall": {
+                      "samples": 4,
+                      "median_ms": 19.95158300002231,
+                      "q25_ms": 19.783102499999927,
+                      "q75_ms": 20.128188000029468,
+                      "minimum_ms": 19.624703999966187,
+                      "maximum_ms": 20.31096000001753
+                    },
+                    "cuda_event_values_ms": [
+                      20.27948760986328,
+                      20.03763198852539,
+                      19.80828857421875,
+                      19.59529685974121
+                    ],
+                    "wall_values_ms": [
+                      20.31096000001753,
+                      20.067264000033447,
+                      19.835902000011174,
+                      19.624703999966187
+                    ]
+                  }
+                }
+              },
+              {
+                "order": [
+                  "recompute",
+                  "native"
+                ],
+                "measurements": {
+                  "recompute": {
+                    "cuda_event": {
+                      "samples": 4,
+                      "median_ms": 19.330016136169434,
+                      "q25_ms": 19.214599609375,
+                      "q75_ms": 19.483352661132812,
+                      "minimum_ms": 19.214336395263672,
+                      "maximum_ms": 19.597375869750977
+                    },
+                    "wall": {
+                      "samples": 4,
+                      "median_ms": 19.358545000017102,
+                      "q25_ms": 19.244133500009752,
+                      "q75_ms": 19.511548500020126,
+                      "minimum_ms": 19.244048000018665,
+                      "maximum_ms": 19.627409999998235
+                    },
+                    "cuda_event_values_ms": [
+                      19.597375869750977,
+                      19.445344924926758,
+                      19.21468734741211,
+                      19.214336395263672
+                    ],
+                    "wall_values_ms": [
+                      19.627409999998235,
+                      19.472928000027423,
+                      19.24416200000678,
+                      19.244048000018665
+                    ]
+                  },
+                  "native": {
+                    "cuda_event": {
+                      "samples": 4,
+                      "median_ms": 13.928063869476318,
+                      "q25_ms": 13.787343978881836,
+                      "q75_ms": 14.206759929656982,
+                      "minimum_ms": 13.613056182861328,
+                      "maximum_ms": 14.794976234436035
+                    },
+                    "wall": {
+                      "samples": 4,
+                      "median_ms": 13.966772499969693,
+                      "q25_ms": 13.827037499964945,
+                      "q75_ms": 14.24137474997167,
+                      "minimum_ms": 13.642976999960865,
+                      "maximum_ms": 14.830036999967433
+                    },
+                    "cuda_event_values_ms": [
+                      13.613056182861328,
+                      13.845439910888672,
+                      14.010687828063965,
+                      14.794976234436035
+                    ],
+                    "wall_values_ms": [
+                      13.642976999960865,
+                      13.888390999966305,
+                      14.045153999973081,
+                      14.830036999967433
+                    ]
+                  }
+                }
+              }
+            ],
+            "cuda_event_speedup": 0.7315473138158632,
+            "wall_speedup": 0.7321776202018309
+          }
+        ],
+        "memory": {
+          "native": {
+            "allocated_start_bytes": 953684992,
+            "allocated_peak_bytes": 1576802304,
+            "extra_allocated_peak_bytes": 623117312,
+            "allocated_end_with_result_bytes": 955257856,
+            "allocated_after_result_release_bytes": 953684992
+          },
+          "recompute": {
+            "allocated_start_bytes": 953684992,
+            "allocated_peak_bytes": 1578375168,
+            "extra_allocated_peak_bytes": 624690176,
+            "allocated_end_with_result_bytes": 955257856,
+            "allocated_after_result_release_bytes": 953684992
+          }
+        },
+        "parity": {
+          "logits": {
+            "shape": [
+              256,
+              151936
+            ],
+            "dtype": "torch.float16",
+            "reference_dtype": "torch.float16",
+            "bitwise_equal": true,
+            "values_equal": true
+          },
+          "loss": {
+            "shape": [],
+            "dtype": "torch.float32",
+            "reference_dtype": "torch.float32",
+            "bitwise_equal": true,
+            "values_equal": true
+          },
+          "input_gradient": {
+            "shape": [
+              256,
+              1536
+            ],
+            "dtype": "torch.float32",
+            "reference_dtype": "torch.float32",
+            "bitwise_equal": true,
+            "values_equal": true
+          }
+        },
+        "all_bitwise_equal": true,
+        "aggregate": {
+          "native": {
+            "cuda_event": {
+              "samples": 24,
+              "median_ms": 14.494607925415039,
+              "q25_ms": 14.008551836013794,
+              "q75_ms": 14.798584222793579,
+              "minimum_ms": 13.613056182861328,
+              "maximum_ms": 15.814656257629395
+            },
+            "wall": {
+              "samples": 24,
+              "median_ms": 14.523750000023483,
+              "q25_ms": 14.041353499990805,
+              "q75_ms": 14.83216599997661,
+              "minimum_ms": 13.642976999960865,
+              "maximum_ms": 15.84244299999682
+            }
+          },
+          "recompute": {
+            "cuda_event": {
+              "samples": 24,
+              "median_ms": 19.51755142211914,
+              "q25_ms": 19.274407863616943,
+              "q75_ms": 19.86562442779541,
+              "minimum_ms": 19.15894317626953,
+              "maximum_ms": 21.136608123779297
+            },
+            "wall": {
+              "samples": 24,
+              "median_ms": 19.550941999995075,
+              "q25_ms": 19.305914749978115,
+              "q75_ms": 19.893742500016742,
+              "minimum_ms": 19.189034000021366,
+              "maximum_ms": 21.167093999963527
+            }
+          }
+        },
+        "inputs_unchanged": true,
+        "labels_unchanged": true,
+        "weight_version_unchanged": true,
+        "status": "qualified_diagnostic_only"
+      },
+      {
+        "rows": 2048,
+        "vocab": 151936,
+        "hidden": 1536,
+        "input_dtype": "torch.float32",
+        "weight_dtype": "torch.float32",
+        "eligible": true,
+        "rounds": [
+          {
+            "round": 1,
+            "blocks": [
+              {
+                "order": [
+                  "native",
+                  "recompute"
+                ],
+                "measurements": {
+                  "native": {
+                    "cuda_event": {
+                      "samples": 4,
+                      "median_ms": 91.1519660949707,
+                      "q25_ms": 89.8194637298584,
+                      "q75_ms": 93.56777381896973,
+                      "minimum_ms": 89.67903900146484,
+                      "maximum_ms": 96.95811462402344
+                    },
+                    "wall": {
+                      "samples": 4,
+                      "median_ms": 91.20838749998939,
+                      "q25_ms": 89.87899849999792,
+                      "q75_ms": 93.6125554999876,
+                      "minimum_ms": 89.71690399999943,
+                      "maximum_ms": 96.99898700000631
+                    },
+                    "cuda_event_values_ms": [
+                      89.86627197265625,
+                      96.95811462402344,
+                      92.43766021728516,
+                      89.67903900146484
+                    ],
+                    "wall_values_ms": [
+                      89.93302999999742,
+                      96.99898700000631,
+                      92.48374499998135,
+                      89.71690399999943
+                    ]
+                  },
+                  "recompute": {
+                    "cuda_event": {
+                      "samples": 4,
+                      "median_ms": 95.27299118041992,
+                      "q25_ms": 94.40000534057617,
+                      "q75_ms": 95.94322395324707,
+                      "minimum_ms": 92.72732543945312,
+                      "maximum_ms": 97.00764465332031
+                    },
+                    "wall": {
+                      "samples": 4,
+                      "median_ms": 95.30705949998719,
+                      "q25_ms": 94.43653124996843,
+                      "q75_ms": 95.97673125000483,
+                      "minimum_ms": 92.76435900000024,
+                      "maximum_ms": 97.04633399996965
+                    },
+                    "cuda_event_values_ms": [
+                      97.00764465332031,
+                      92.72732543945312,
+                      94.95756530761719,
+                      95.58841705322266
+                    ],
+                    "wall_values_ms": [
+                      97.04633399996965,
+                      92.76435900000024,
+                      94.99392199995782,
+                      95.62019700001656
+                    ]
+                  }
+                }
+              },
+              {
+                "order": [
+                  "recompute",
+                  "native"
+                ],
+                "measurements": {
+                  "recompute": {
+                    "cuda_event": {
+                      "samples": 4,
+                      "median_ms": 95.91656112670898,
+                      "q25_ms": 95.16955947875977,
+                      "q75_ms": 96.38549041748047,
+                      "minimum_ms": 92.94847869873047,
+                      "maximum_ms": 97.77235412597656
+                    },
+                    "wall": {
+                      "samples": 4,
+                      "median_ms": 95.95655749998855,
+                      "q25_ms": 95.20850499998801,
+                      "q75_ms": 96.42641349999792,
+                      "minimum_ms": 92.98929999999928,
+                      "maximum_ms": 97.81102900001315
+                    },
+                    "cuda_event_values_ms": [
+                      92.94847869873047,
+                      95.90991973876953,
+                      97.77235412597656,
+                      95.92320251464844
+                    ],
+                    "wall_values_ms": [
+                      92.98929999999928,
+                      95.94823999998425,
+                      97.81102900001315,
+                      95.96487499999284
+                    ]
+                  },
+                  "native": {
+                    "cuda_event": {
+                      "samples": 4,
+                      "median_ms": 92.49651336669922,
+                      "q25_ms": 91.60651969909668,
+                      "q75_ms": 93.01397895812988,
+                      "minimum_ms": 89.36479949951172,
+                      "maximum_ms": 94.13811492919922
+                    },
+                    "wall": {
+                      "samples": 4,
+                      "median_ms": 92.53659899999889,
+                      "q25_ms": 91.64530775002788,
+                      "q75_ms": 93.05593449997218,
+                      "minimum_ms": 89.40731600000618,
+                      "maximum_ms": 94.17805900000076
+                    },
+                    "cuda_event_values_ms": [
+                      89.36479949951172,
+                      94.13811492919922,
+                      92.353759765625,
+                      92.63926696777344
+                    ],
+                    "wall_values_ms": [
+                      89.40731600000618,
+                      94.17805900000076,
+                      92.39130500003512,
+                      92.68189299996266
+                    ]
+                  }
+                }
+              }
+            ],
+            "cuda_event_speedup": 0.9605442985052044,
+            "wall_speedup": 0.9606771944360298
+          },
+          {
+            "round": 2,
+            "blocks": [
+              {
+                "order": [
+                  "native",
+                  "recompute"
+                ],
+                "measurements": {
+                  "native": {
+                    "cuda_event": {
+                      "samples": 4,
+                      "median_ms": 91.4886245727539,
+                      "q25_ms": 90.41716957092285,
+                      "q75_ms": 92.6288948059082,
+                      "minimum_ms": 89.59180450439453,
+                      "maximum_ms": 93.66070556640625
+                    },
+                    "wall": {
+                      "samples": 4,
+                      "median_ms": 91.5267780000022,
+                      "q25_ms": 90.46011524999642,
+                      "q75_ms": 92.66801150000958,
+                      "minimum_ms": 89.649167999994,
+                      "maximum_ms": 93.70267100001684
+                    },
+                    "cuda_event_values_ms": [
+                      93.66070556640625,
+                      90.69229125976562,
+                      92.28495788574219,
+                      89.59180450439453
+                    ],
+                    "wall_values_ms": [
+                      93.70267100001684,
+                      90.73043099999722,
+                      92.32312500000717,
+                      89.649167999994
+                    ]
+                  },
+                  "recompute": {
+                    "cuda_event": {
+                      "samples": 4,
+                      "median_ms": 96.50457382202148,
+                      "q25_ms": 95.79824638366699,
+                      "q75_ms": 97.09082984924316,
+                      "minimum_ms": 95.20527648925781,
+                      "maximum_ms": 97.3235855102539
+                    },
+                    "wall": {
+                      "samples": 4,
+                      "median_ms": 96.54381549998448,
+                      "q25_ms": 95.83604349998609,
+                      "q75_ms": 97.12988249998489,
+                      "minimum_ms": 95.2412739999886,
+                      "maximum_ms": 97.35953699998845
+                    },
+                    "cuda_event_values_ms": [
+                      97.3235855102539,
+                      95.20527648925781,
+                      95.99590301513672,
+                      97.01324462890625
+                    ],
+                    "wall_values_ms": [
+                      97.35953699998845,
+                      95.2412739999886,
+                      96.03429999998525,
+                      97.0533309999837
+                    ]
+                  }
+                }
+              },
+              {
+                "order": [
+                  "recompute",
+                  "native"
+                ],
+                "measurements": {
+                  "recompute": {
+                    "cuda_event": {
+                      "samples": 4,
+                      "median_ms": 95.7467041015625,
+                      "q25_ms": 94.22620010375977,
+                      "q75_ms": 96.94639205932617,
+                      "minimum_ms": 93.17756652832031,
+                      "maximum_ms": 97.03257751464844
+                    },
+                    "wall": {
+                      "samples": 4,
+                      "median_ms": 95.80098949999183,
+                      "q25_ms": 94.27900350002005,
+                      "q75_ms": 97.00268949997337,
+                      "minimum_ms": 93.23542200002066,
+                      "maximum_ms": 97.08541300000206
+                    },
+                    "cuda_event_values_ms": [
+                      97.03257751464844,
+                      93.17756652832031,
+                      94.57574462890625,
+                      96.91766357421875
+                    ],
+                    "wall_values_ms": [
+                      97.08541300000206,
+                      93.23542200002066,
+                      94.62686400001985,
+                      96.97511499996381
+                    ]
+                  },
+                  "native": {
+                    "cuda_event": {
+                      "samples": 4,
+                      "median_ms": 93.03283309936523,
+                      "q25_ms": 92.62737655639648,
+                      "q75_ms": 93.81806564331055,
+                      "minimum_ms": 92.19782257080078,
+                      "maximum_ms": 95.38694763183594
+                    },
+                    "wall": {
+                      "samples": 4,
+                      "median_ms": 93.08089249998375,
+                      "q25_ms": 92.68057375000183,
+                      "q75_ms": 93.85756824997316,
+                      "minimum_ms": 92.23502200001121,
+                      "maximum_ms": 95.43219099998623
+                    },
+                    "cuda_event_values_ms": [
+                      95.38694763183594,
+                      92.77056121826172,
+                      93.29510498046875,
+                      92.19782257080078
+                    ],
+                    "wall_values_ms": [
+                      95.43219099998623,
+                      92.8290909999987,
+                      93.3326939999688,
+                      92.23502200001121
+                    ]
+                  }
+                }
+              }
+            ],
+            "cuda_event_speedup": 0.959839719440398,
+            "wall_speedup": 0.9598201828378681
+          },
+          {
+            "round": 3,
+            "blocks": [
+              {
+                "order": [
+                  "native",
+                  "recompute"
+                ],
+                "measurements": {
+                  "native": {
+                    "cuda_event": {
+                      "samples": 4,
+                      "median_ms": 91.90584182739258,
+                      "q25_ms": 91.18302536010742,
+                      "q75_ms": 92.80447387695312,
+                      "minimum_ms": 90.77718353271484,
+                      "maximum_ms": 93.73776245117188
+                    },
+                    "wall": {
+                      "samples": 4,
+                      "median_ms": 91.94140200003176,
+                      "q25_ms": 91.21980825003106,
+                      "q75_ms": 92.84027450001986,
+                      "minimum_ms": 90.8164470000088,
+                      "maximum_ms": 93.77547200000436
+                    },
+                    "cuda_event_values_ms": [
+                      90.77718353271484,
+                      93.73776245117188,
+                      91.31830596923828,
+                      92.49337768554688
+                    ],
+                    "wall_values_ms": [
+                      90.8164470000088,
+                      93.77547200000436,
+                      91.35426200003849,
+                      92.52854200002503
+                    ]
+                  },
+                  "recompute": {
+                    "cuda_event": {
+                      "samples": 4,
+                      "median_ms": 96.68720245361328,
+                      "q25_ms": 96.05711364746094,
+                      "q75_ms": 97.2651538848877,
+                      "minimum_ms": 94.83827209472656,
+                      "maximum_ms": 98.32758331298828
+                    },
+                    "wall": {
+                      "samples": 4,
+                      "median_ms": 96.73132650002003,
+                      "q25_ms": 96.10126550002462,
+                      "q75_ms": 97.30680375000134,
+                      "minimum_ms": 94.87701500000867,
+                      "maximum_ms": 98.36730299997498
+                    },
+                    "cuda_event_values_ms": [
+                      94.83827209472656,
+                      98.32758331298828,
+                      96.46339416503906,
+                      96.9110107421875
+                    ],
+                    "wall_values_ms": [
+                      94.87701500000867,
+                      98.36730299997498,
+                      96.50934900002994,
+                      96.95330400001012
+                    ]
+                  }
+                }
+              },
+              {
+                "order": [
+                  "recompute",
+                  "native"
+                ],
+                "measurements": {
+                  "recompute": {
+                    "cuda_event": {
+                      "samples": 4,
+                      "median_ms": 97.0343017578125,
+                      "q25_ms": 96.05769538879395,
+                      "q75_ms": 98.01795768737793,
+                      "minimum_ms": 95.78256225585938,
+                      "maximum_ms": 98.31423950195312
+                    },
+                    "wall": {
+                      "samples": 4,
+                      "median_ms": 97.08839349997334,
+                      "q25_ms": 96.12126099997909,
+                      "q75_ms": 98.05940999997631,
+                      "minimum_ms": 95.81816200000048,
+                      "maximum_ms": 98.37416099998109
+                    },
+                    "cuda_event_values_ms": [
+                      96.14940643310547,
+                      95.78256225585938,
+                      97.91919708251953,
+                      98.31423950195312
+                    ],
+                    "wall_values_ms": [
+                      96.22229399997195,
+                      95.81816200000048,
+                      97.95449299997472,
+                      98.37416099998109
+                    ]
+                  },
+                  "native": {
+                    "cuda_event": {
+                      "samples": 4,
+                      "median_ms": 94.9736328125,
+                      "q25_ms": 94.67855262756348,
+                      "q75_ms": 95.18681716918945,
+                      "minimum_ms": 93.9335708618164,
+                      "maximum_ms": 95.68611145019531
+                    },
+                    "wall": {
+                      "samples": 4,
+                      "median_ms": 95.01015250000933,
+                      "q25_ms": 94.71650275001764,
+                      "q75_ms": 95.22248625000884,
+                      "minimum_ms": 93.97414300002538,
+                      "maximum_ms": 95.72089800002459
+                    },
+                    "cuda_event_values_ms": [
+                      93.9335708618164,
+                      95.0203857421875,
+                      95.68611145019531,
+                      94.9268798828125
+                    ],
+                    "wall_values_ms": [
+                      93.97414300002538,
+                      95.05634900000359,
+                      95.72089800002459,
+                      94.96395600001506
+                    ]
+                  }
+                }
+              }
+            ],
+            "cuda_event_speedup": 0.9646558271222463,
+            "wall_speedup": 0.9645382602828666
+          }
+        ],
+        "memory": {
+          "native": {
+            "allocated_start_bytes": 975733760,
+            "allocated_peak_bytes": 2693433344,
+            "extra_allocated_peak_bytes": 1717699584,
+            "allocated_end_with_result_bytes": 988316672,
+            "allocated_after_result_release_bytes": 975733760
+          },
+          "recompute": {
+            "allocated_start_bytes": 975733760,
+            "allocated_peak_bytes": 2706016256,
+            "extra_allocated_peak_bytes": 1730282496,
+            "allocated_end_with_result_bytes": 988316672,
+            "allocated_after_result_release_bytes": 975733760
+          }
+        },
+        "parity": {
+          "logits": {
+            "shape": [
+              2048,
+              151936
+            ],
+            "dtype": "torch.float16",
+            "reference_dtype": "torch.float16",
+            "bitwise_equal": true,
+            "values_equal": true
+          },
+          "loss": {
+            "shape": [],
+            "dtype": "torch.float32",
+            "reference_dtype": "torch.float32",
+            "bitwise_equal": true,
+            "values_equal": true
+          },
+          "input_gradient": {
+            "shape": [
+              2048,
+              1536
+            ],
+            "dtype": "torch.float32",
+            "reference_dtype": "torch.float32",
+            "bitwise_equal": true,
+            "values_equal": true
+          }
+        },
+        "all_bitwise_equal": true,
+        "aggregate": {
+          "native": {
+            "cuda_event": {
+              "samples": 24,
+              "median_ms": 92.56632232666016,
+              "q25_ms": 91.18302536010742,
+              "q75_ms": 93.98470687866211,
+              "minimum_ms": 89.36479949951172,
+              "maximum_ms": 96.95811462402344
+            },
+            "wall": {
+              "samples": 24,
+              "median_ms": 92.60521749999384,
+              "q25_ms": 91.21980825003106,
+              "q75_ms": 94.02512200001922,
+              "minimum_ms": 89.40731600000618,
+              "maximum_ms": 96.99898700000631
+            }
+          },
+          "recompute": {
+            "cuda_event": {
+              "samples": 24,
+              "median_ms": 96.0726547241211,
+              "q25_ms": 95.14334869384766,
+              "q75_ms": 97.0180778503418,
+              "minimum_ms": 92.72732543945312,
+              "maximum_ms": 98.32758331298828
+            },
+            "wall": {
+              "samples": 24,
+              "median_ms": 96.1282969999786,
+              "q25_ms": 95.17943599998091,
+              "q75_ms": 97.06135149998829,
+              "minimum_ms": 92.76435900000024,
+              "maximum_ms": 98.37416099998109
+            }
+          }
+        },
+        "inputs_unchanged": true,
+        "labels_unchanged": true,
+        "weight_version_unchanged": true,
+        "status": "qualified_diagnostic_only"
+      }
+    ],
+    "status": "completed_diagnostic_only",
+    "diagnostic_wall_seconds": 7.584114408999994
+  },
+  "completed": true,
+  "elapsed_s": 7.590216951000002
+}

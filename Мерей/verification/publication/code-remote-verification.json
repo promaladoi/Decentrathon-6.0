@@ -1,0 +1,270 @@
+{
+  "repository": "promaladoi/Decentrathon-6.0",
+  "directory": "Мерей",
+  "commit": "b7c406dea7dbdc379149910efe044dccf155d083",
+  "code_commit": "b7c406dea7dbdc379149910efe044dccf155d083",
+  "commit_url": "https://github.com/promaladoi/Decentrathon-6.0/commit/b7c406dea7dbdc379149910efe044dccf155d083",
+  "parent": "2732b988c4cd2f90cbac1cae5d4dcd3c123d23dd",
+  "main_head_at_readback": "b7c406dea7dbdc379149910efe044dccf155d083",
+  "snapshot_sha256": "ddc7740aa180e81cbdafa886d4fa44c1698cd2f79ae1cc45e63dbd45bedb033b",
+  "kaggle_version": 363837033,
+  "remote_solution_sha256": "698b33301c9a191f3b8bfadc502a0c15d7a08870579c465cfed119a06a2d4d77",
+  "verified_solution_sha256": "698b33301c9a191f3b8bfadc502a0c15d7a08870579c465cfed119a06a2d4d77",
+  "all_solution_files_byte_identical": true,
+  "solution_files": 32,
+  "files": [
+    {
+      "path": "solution/__init__.py",
+      "sha256": "9a5426d728f558615e34caf1cb7db0c8ca428f39a6f7953014bbe25d276b6926",
+      "git_blob_sha": "6b4799a1e7cd0b9c0abe871bd6381a71ff6493a9",
+      "bytes": 1065,
+      "exact_bytes_match": true
+    },
+    {
+      "path": "solution/benchmark.py",
+      "sha256": "026264870844a77e0e2bb8fc2412f3d33226082398aa905e4f84b50750c3527d",
+      "git_blob_sha": "c37d4f39af4ac7861deb028c343827cd7d3c8e06",
+      "bytes": 3885,
+      "exact_bytes_match": true
+    },
+    {
+      "path": "solution/benchmark_frozen_head.py",
+      "sha256": "74604ec84d0f11fb8982f7086213c13b211bd8273b420fd4af66c32fce422be2",
+      "git_blob_sha": "da7db0d4628fea4144ef107957f1bfb06637097a",
+      "bytes": 8317,
+      "exact_bytes_match": true
+    },
+    {
+      "path": "solution/benchmark_half.py",
+      "sha256": "89e87d198a783633c3e0f49551a2345eba9f48f790c90b42712876e3ff74bd13",
+      "git_blob_sha": "4a185b6e07ddc457bd74ea8fffcd2adfec50c85e",
+      "bytes": 1584,
+      "exact_bytes_match": true
+    },
+    {
+      "path": "solution/benchmark_mlp_variants.py",
+      "sha256": "5dde25363cdc52e1f852f0fea2758b2b76538c1a4bb1a6cf3ccdb5341c7f44e8",
+      "git_blob_sha": "41b7b1c1d834bcdb3f5230f9e8160e02863e8600",
+      "bytes": 14401,
+      "exact_bytes_match": true
+    },
+    {
+      "path": "solution/compressed_swiglu.py",
+      "sha256": "b0ca176bf3e815fa93d1664e1b852a79550ca227bcac9e15aa7f8d690a058742",
+      "git_blob_sha": "0881545d46d7aca48f14ff39a4448bae331b4742",
+      "bytes": 5073,
+      "exact_bytes_match": true
+    },
+    {
+      "path": "solution/frozen_head.py",
+      "sha256": "6e97bac58015a010c98e133fa148384f0793cd3ec951ef176537cad392d4135e",
+      "git_blob_sha": "0b0e51a191cbfb208d58988e5b4760bcd8d5a7f3",
+      "bytes": 4394,
+      "exact_bytes_match": true
+    },
+    {
+      "path": "solution/half_loss.py",
+      "sha256": "53e7783be9b95d4fbf9db5b6e5581c741a389aaf39f966eb07854391345cbd5f",
+      "git_blob_sha": "c0af96700463ae2feaf99b7368b3c81d114dfd8e",
+      "bytes": 2732,
+      "exact_bytes_match": true
+    },
+    {
+      "path": "solution/half_metrics.py",
+      "sha256": "a0fd54cd6d641bb66d2587917ecb61acfffcefe97732c7ec7b85f8c66df4d7c5",
+      "git_blob_sha": "afd04e4ccfcc4cfd148f3325e884b6c2318d0bc4",
+      "bytes": 4033,
+      "exact_bytes_match": true
+    },
+    {
+      "path": "solution/narrow_mlp.py",
+      "sha256": "567ddc16224e90010a30b9d4678c27e7036a61067d24218a1df354d7bcef0022",
+      "git_blob_sha": "edaa5164cc81af73a3b211268a52d08673eded87",
+      "bytes": 1655,
+      "exact_bytes_match": true
+    },
+    {
+      "path": "solution/nf4.py",
+      "sha256": "daaf608b76960072ca1cf89bc245dd0ac55ad588d49bd79ec33c387c7d0245fc",
+      "git_blob_sha": "80563116e1c410a72cf202510eaba786f091fb0a",
+      "bytes": 5814,
+      "exact_bytes_match": true
+    },
+    {
+      "path": "solution/patches.py",
+      "sha256": "557d45809298c199b68c7d0e0ac2a5e1e64f77fd1c2f3796b8daddf8c9b1ae80",
+      "git_blob_sha": "175173d870a4075b26f73ef0f79be6ad8bdfb5c7",
+      "bytes": 5713,
+      "exact_bytes_match": true
+    },
+    {
+      "path": "solution/private_logits.py",
+      "sha256": "b8a5961488c45d8d922d0ab2eee4dee73bd34c3ea8818bed201ce54f270a3e9d",
+      "git_blob_sha": "38128f6d422588c89bcc7376c04ecf84a311c0da",
+      "bytes": 9572,
+      "exact_bytes_match": true
+    },
+    {
+      "path": "solution/rmsnorm.py",
+      "sha256": "466f9e7f5a4dabb9e49d73f88ac913a90973c4b008ce135fca38196486343251",
+      "git_blob_sha": "02088c047d658567fcce708d5112efac262ae3b7",
+      "bytes": 4869,
+      "exact_bytes_match": true
+    },
+    {
+      "path": "solution/rope.py",
+      "sha256": "2c93bbe09a2c7daba2b6adcabee61585da9bc8968c4030f2e8f41521b7a77b7b",
+      "git_blob_sha": "8cad0d95b76a54018d34755c5f854449ce120392",
+      "bytes": 10194,
+      "exact_bytes_match": true
+    },
+    {
+      "path": "solution/run_diagnostics.py",
+      "sha256": "438a2862d511f8abac10fe11332aee951cff4724d819ba761445597e816f5aae",
+      "git_blob_sha": "25e20a1bc82152f339d58f3df43e576aa4095210",
+      "bytes": 887,
+      "exact_bytes_match": true
+    },
+    {
+      "path": "solution/strided_accuracy.py",
+      "sha256": "7dac666dc1f2ef501f5ba24967d337f5b97fec44a2aee53927f3aa234bbc59e5",
+      "git_blob_sha": "4006c5c7085ebb794fa20604c23d142ff96c7191",
+      "bytes": 6065,
+      "exact_bytes_match": true
+    },
+    {
+      "path": "solution/swiglu.py",
+      "sha256": "249aeef5d691062e609b8445194165071c1f1690280131395a74fc38d216c346",
+      "git_blob_sha": "cd4bd77b04f3cb2330991c4386f46af5f60cff79",
+      "bytes": 3266,
+      "exact_bytes_match": true
+    },
+    {
+      "path": "solution/test_compressed_swiglu.py",
+      "sha256": "9e72cb5094277c43c4ec5c42cab38dcb046889e18f169f0755ad5e86ee6fff7b",
+      "git_blob_sha": "b278298721bc1bfb2b2b7be6e85e2ea24f3756c1",
+      "bytes": 4844,
+      "exact_bytes_match": true
+    },
+    {
+      "path": "solution/test_frozen_head.py",
+      "sha256": "92c6610559f280a3787aa75da62060c6dcba225de4d2cecbbf4a2b636acd3216",
+      "git_blob_sha": "a27eeed1f1478a0203e08ae6f0ecf8df16973967",
+      "bytes": 4209,
+      "exact_bytes_match": true
+    },
+    {
+      "path": "solution/test_half_loss.py",
+      "sha256": "696cd9d0629104de859a9557d099b33cd9e9b162d9c552a7649e88e6eb71b9ff",
+      "git_blob_sha": "f43541442d32cd5ae02668729af1f0399e9fc52d",
+      "bytes": 15295,
+      "exact_bytes_match": true
+    },
+    {
+      "path": "solution/test_half_metrics.py",
+      "sha256": "dd18632883c9c1d93c1ea711152bf1c989fd059fdad5070a891c2419532dfec5",
+      "git_blob_sha": "62deabb24771932449ddd600079098da6f0546dd",
+      "bytes": 4538,
+      "exact_bytes_match": true
+    },
+    {
+      "path": "solution/test_integration.py",
+      "sha256": "ef184eec0b8bbaefc05e3795fb8231d4d28ddd25cf5d5abb5505d3b4d217da05",
+      "git_blob_sha": "d500170eccf889bcd1d4016d7a8a764ec903d68b",
+      "bytes": 12338,
+      "exact_bytes_match": true
+    },
+    {
+      "path": "solution/test_kernels.py",
+      "sha256": "0ec810501e24829b967d252982c34f990bb2971c5558ee4fb2cee593ab5c68ef",
+      "git_blob_sha": "61ecdf38d1fe1ac9357178b5309a194382041327",
+      "bytes": 1334,
+      "exact_bytes_match": true
+    },
+    {
+      "path": "solution/test_narrow_mlp.py",
+      "sha256": "447427031c5e0182d09d9886a6006a81b9f1b800cba546f87d866e1e66d8dc22",
+      "git_blob_sha": "9d5f70e5b831b6bb2277a6f7aaa31f5a6263b9ea",
+      "bytes": 3365,
+      "exact_bytes_match": true
+    },
+    {
+      "path": "solution/test_nf4.py",
+      "sha256": "470a4ad402271c35b268c5443c4e0c64a336e26a1672c8d0fbe276140d1f2f4a",
+      "git_blob_sha": "f120e6c96e69b5dd682c4cb05f189dad5a70c8b7",
+      "bytes": 4652,
+      "exact_bytes_match": true
+    },
+    {
+      "path": "solution/test_private_logits.py",
+      "sha256": "8feb7c536ea58d637eb68395fb2683dc59f810e78f94113c35425ce177eb76e5",
+      "git_blob_sha": "bf0881102d7f54bd19a235a92a3a494289b7ae95",
+      "bytes": 13421,
+      "exact_bytes_match": true
+    },
+    {
+      "path": "solution/test_rmsnorm.py",
+      "sha256": "4223c8bd34691f083ff116bb4387b39319030381adce241c85f5ace8e9612104",
+      "git_blob_sha": "067948b69738642bd972597f46f6f0a99ab253ef",
+      "bytes": 4383,
+      "exact_bytes_match": true
+    },
+    {
+      "path": "solution/test_rope.py",
+      "sha256": "a4046f67d7897660fc3a9ef4c03748cd24e468d1a84890f8f6093728dea75cc5",
+      "git_blob_sha": "9615fb33005c3bab59b443859254c73762d5c515",
+      "bytes": 7923,
+      "exact_bytes_match": true
+    },
+    {
+      "path": "solution/test_strided_accuracy.py",
+      "sha256": "6332a971fc61b85624db9899b82a862a608e445cafcbc7884256307ebfc32fe9",
+      "git_blob_sha": "fa9e3d812a8d67d27fa7db3ffc1e5f673ade214d",
+      "bytes": 4421,
+      "exact_bytes_match": true
+    },
+    {
+      "path": "solution/test_vocab.py",
+      "sha256": "b4f1e2ca09a01ba27e4367bc594b0300244a600156b833ff944e52a8c9072d62",
+      "git_blob_sha": "70ea0caee406b20423349af1ebda39b2cd8657c1",
+      "bytes": 6205,
+      "exact_bytes_match": true
+    },
+    {
+      "path": "solution/vocab.py",
+      "sha256": "feffe6a066c83690de5b9974a3c172073d487055086e516ff46e1665b40c9486",
+      "git_blob_sha": "47ccc3947c2aa097119652b05a06d348018ed67e",
+      "bytes": 8547,
+      "exact_bytes_match": true
+    }
+  ],
+  "protected_files_checked": 15,
+  "protected_mismatches": [],
+  "outside_merey_changed": [],
+  "changed_paths": [
+    "Мерей/solution/__init__.py",
+    "Мерей/solution/patches.py",
+    "Мерей/solution/swiglu.py",
+    "Мерей/solution/test_kernels.py",
+    "Мерей/solution/benchmark_frozen_head.py",
+    "Мерей/solution/benchmark_mlp_variants.py",
+    "Мерей/solution/compressed_swiglu.py",
+    "Мерей/solution/frozen_head.py",
+    "Мерей/solution/half_metrics.py",
+    "Мерей/solution/narrow_mlp.py",
+    "Мерей/solution/private_logits.py",
+    "Мерей/solution/run_diagnostics.py",
+    "Мерей/solution/strided_accuracy.py",
+    "Мерей/solution/test_compressed_swiglu.py",
+    "Мерей/solution/test_frozen_head.py",
+    "Мерей/solution/test_half_metrics.py",
+    "Мерей/solution/test_narrow_mlp.py",
+    "Мерей/solution/test_private_logits.py",
+    "Мерей/solution/test_strided_accuracy.py"
+  ],
+  "original_platform_template_unchanged": true,
+  "platform_source_head": "fc44fd2d2bf23f624e95cef655f03fecbd87ec46",
+  "platform_source_head_unchanged": true,
+  "result_sha256": "eecdceb5343a87742d4bf2b1b87e497cd9cd072c52d39dfeb744e532ecf8bb8b",
+  "note": "Every solution file was fetched from this immutable GitHub commit with base64 encoding and compared byte-for-byte with the measured DDC snapshot. The source aggregate uses the unchanged harness solution_sha256 algorithm. Protected remote Git blobs remain unchanged; no platform write was performed."
+}

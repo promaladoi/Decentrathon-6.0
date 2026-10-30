@@ -1,0 +1,375 @@
+Kaggle version 363834978; snapshot 7baf96eaeb774ed096179b3b2741e998ad344e412cef1e17461b718336b07242
+Time#Log Message
+7.5s00.00s - Debugger warning: It seems that frozen modules are being used, which may
+
+7.5s10.00s - make the debugger miss breakpoints. Please pass -Xfrozen_modules=off
+
+7.5s20.00s - to python to disable frozen modules.
+
+7.5s30.00s - Note: Debugging will proceed. Set PYDEVD_DISABLE_FILE_VALIDATION=1 to disable this validation.
+
+8.1s40.00s - Debugger warning: It seems that frozen modules are being used, which may
+
+8.1s50.00s - make the debugger miss breakpoints. Please pass -Xfrozen_modules=off
+
+8.1s60.00s - to python to disable frozen modules.
+
+8.1s70.00s - Note: Debugging will proceed. Set PYDEVD_DISABLE_FILE_VALIDATION=1 to disable this validation.
+
+9.2s8{'mode': 'maxopt_smoke', 'snapshot_sha256': '7baf96eaeb774ed096179b3b2741e998ad344e412cef1e17461b718336b07242'}
+
+9.4s9Tesla T4
+
+9.4s10Tesla T4
+
+9.4s11
+
+10.2s12Found existing installation: torchao 0.10.0
+
+10.3s13Uninstalling torchao-0.10.0:
+
+10.6s14  Successfully uninstalled torchao-0.10.0
+
+17.7s15{'source': 'development snapshot', 'sha256': '7baf96eaeb774ed096179b3b2741e998ad344e412cef1e17461b718336b07242', 'starter_commit': 'c7c2fcd15972ce8b898d8d3ff732ee192c817ceb', 'files': 54}
+
+17.7s16{'soup-cli': '0.77.0', 'torch': '2.11.0+cu128', 'triton': '3.6.0', 'transformers': '5.16.1', 'peft': '0.20.0', 'trl': '0.29.1', 'bitsandbytes': '0.50.2', 'accelerate': '1.14.0'}
+
+75.5s17.........................................................................................................................................s.s.. [ 30%]
+
+75.6s18... [ 30%]
+
+83.0s19...........................................................F...F.............................................................................. [ 60%]
+
+83.2s20.. [ 60%]
+
+88.8s21.............................................................................................................................................. [ 90%]
+
+89.0s22. [ 90%]
+
+90.7s23...............................                                                   [100%]
+
+90.7s24=================================== FAILURES ===================================
+
+90.7s25_____________ test_cpu_private_boundary_restores_public_fp32[True] _____________
+
+90.7s26
+
+90.7s27monkeypatch = <_pytest.monkeypatch.MonkeyPatch object at 0x79de74f1cec0>
+
+90.7s28return_outputs = True
+
+90.7s29
+
+90.7s30    @pytest.mark.parametrize("return_outputs", [False, True])
+
+90.7s31    def test_cpu_private_boundary_restores_public_fp32(monkeypatch, return_outputs):
+
+90.7s32        from accelerate.utils import operations
+
+90.7s33        from transformers.modeling_outputs import CausalLMOutputWithPast
+
+90.7s34    
+
+90.7s35        observed = []
+
+90.7s36        class Base:
+
+90.7s37            def compute_loss(self, model, inputs, return_outputs=False, num_items_in_batch=None):
+
+90.7s38                logits = inputs["logits"]
+
+90.7s39                output = operations.convert_to_fp32(CausalLMOutputWithPast(
+
+90.7s40                    loss=logits.float().square().mean(), logits=logits))
+
+90.7s41                observed.append(output.logits.dtype)
+
+90.7s42                return (output.loss, output) if return_outputs else output.loss
+
+90.7s43    
+
+90.7s44        private, trainer, original_convert = _cpu_plumbing(monkeypatch, Base)
+
+90.7s45        logits = torch.randn((1, 2, 3), dtype=torch.float16, requires_grad=True)
+
+90.7s46>       result = trainer.compute_loss(object(), {"logits": logits}, return_outputs=return_outputs)
+
+90.7s47                 ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+
+90.7s48
+
+90.7s49solution/test_private_logits.py:52: 
+
+90.7s50_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ 
+
+90.7s51
+
+90.7s52self = <soup_cli.trainer.rewind_hf.RewindBase object at 0x79de14752900>
+
+90.7s53model = <object object at 0x79de146cc520>
+
+90.7s54inputs = {'logits': tensor([[[ 0.5146,  0.6997, -1.6641],
+
+90.7s55         [-1.3301,  0.0959,  0.9868]]], dtype=torch.float16,
+
+90.7s56       requires_grad=True)}
+
+90.7s57return_outputs = True, num_items_in_batch = None
+
+90.7s58
+
+90.7s59    @functools.wraps(function)
+
+90.7s60    def compute_loss(self, model, inputs, return_outputs=False,
+
+90.7s61                     num_items_in_batch=None):
+
+90.7s62        scope = _scope_for_call(self, model, inputs, return_outputs)
+
+90.7s63        # Set None as well: a nested unsupported call must suspend any outer
+
+90.7s64        # private context, otherwise it could expose half outputs to its caller.
+
+90.7s65        token = _PRIVATE_SCOPE.set(scope)
+
+90.7s66        try:
+
+90.7s67            result = original(model, inputs, return_outputs=return_outputs,
+
+90.7s68                              num_items_in_batch=num_items_in_batch)
+
+90.7s69        finally:
+
+90.7s70            _PRIVATE_SCOPE.reset(token)
+
+90.7s71        if scope is not None and (return_outputs or not isinstance(result, torch.Tensor)):
+
+90.7s72            # The boundary is outside the context and uses Accelerate's exact
+
+90.7s73            # original converter, preserving returned type, fields and dtypes.
+
+90.7s74>           return _ORIGINAL_CONVERT(result)
+
+90.7s75                   ^^^^^^^^^^^^^^^^^^^^^^^^^
+
+90.7s76E           TypeError: 'NoneType' object is not callable
+
+90.7s77
+
+90.7s78solution/private_logits.py:183: TypeError
+
+90.7s79=============================== warnings summary ===============================
+
+90.7s80solution/test_compressed_swiglu.py: 14 warnings
+
+90.7s81  /usr/local/lib/python3.13/dist-packages/torch/jit/_script.py:365: DeprecationWarning: `torch.jit.script_method` is deprecated. Please switch to `torch.compile` or `torch.export`.
+
+90.7s82    warnings.warn(
+
+90.7s83
+
+90.7s84-- Docs: https://docs.pytest.org/en/stable/how-to/capture-warnings.html
+
+90.7s85=========================== short test summary info ============================
+
+90.7s86FAILED solution/test_private_logits.py::test_cpu_private_boundary_restores_public_fp32[True]
+
+90.7s871 failed, 236 passed, 1 skipped, 14 warnings in 71.54s (0:01:11)
+
+90.8s88.............                                                   [100%]
+
+90.8s89=================================== FAILURES ===================================
+
+90.8s90_____________ test_cpu_private_boundary_restores_public_fp32[True] _____________
+
+90.8s91
+
+90.8s92monkeypatch = <_pytest.monkeypatch.MonkeyPatch object at 0x79de74f1cec0>
+
+90.8s93return_outputs = True
+
+90.8s94
+
+90.8s95    @pytest.mark.parametrize("return_outputs", [False, True])
+
+90.8s96    def test_cpu_private_boundary_restores_public_fp32(monkeypatch, return_outputs):
+
+90.8s97        from accelerate.utils import operations
+
+90.8s98        from transformers.modeling_outputs import CausalLMOutputWithPast
+
+90.8s99    
+
+90.8s100        observed = []
+
+90.8s101        class Base:
+
+90.8s102            def compute_loss(self, model, inputs, return_outputs=False, num_items_in_batch=None):
+
+90.8s103                logits = inputs["logits"]
+
+90.8s104                output = operations.convert_to_fp32(CausalLMOutputWithPast(
+
+90.8s105                    loss=logits.float().square().mean(), logits=logits))
+
+90.8s106                observed.append(output.logits.dtype)
+
+90.8s107                return (output.loss, output) if return_outputs else output.loss
+
+90.8s108    
+
+90.8s109        private, trainer, original_convert = _cpu_plumbing(monkeypatch, Base)
+
+90.8s110        logits = torch.randn((1, 2, 3), dtype=torch.float16, requires_grad=True)
+
+90.8s111>       result = trainer.compute_loss(object(), {"logits": logits}, return_outputs=return_outputs)
+
+90.8s112                 ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+
+90.8s113
+
+90.8s114solution/test_private_logits.py:52: 
+
+90.8s115_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ 
+
+90.8s116
+
+90.8s117self = <soup_cli.trainer.rewind_hf.RewindBase object at 0x79de14752900>
+
+90.8s118model = <object object at 0x79de146cc520>
+
+90.8s119inputs = {'logits': tensor([[[ 0.5146,  0.6997, -1.6641],
+
+90.8s120         [-1.3301,  0.0959,  0.9868]]], dtype=torch.float16,
+
+90.8s121       requires_grad=True)}
+
+90.8s122return_outputs = True, num_items_in_batch = None
+
+90.8s123
+
+90.8s124    @functools.wraps(function)
+
+90.8s125    def compute_loss(self, model, inputs, return_outputs=False,
+
+90.8s126                     num_items_in_batch=None):
+
+90.8s127        scope = _scope_for_call(self, model, inputs, return_outputs)
+
+90.8s128        # Set None as well: a nested unsupported call must suspend any outer
+
+90.8s129        # private context, otherwise it could expose half outputs to its caller.
+
+90.8s130        token = _PRIVATE_SCOPE.set(scope)
+
+90.8s131        try:
+
+90.8s132            result = original(model, inputs, return_outputs=return_outputs,
+
+90.8s133                              num_items_in_batch=num_items_in_batch)
+
+90.8s134        finally:
+
+90.8s135            _PRIVATE_SCOPE.reset(token)
+
+90.8s136        if scope is not None and (return_outputs or not isinstance(result, torch.Tensor)):
+
+90.8s137            # The boundary is outside the context and uses Accelerate's exact
+
+90.8s138            # original converter, preserving returned type, fields and dtypes.
+
+90.8s139>           return _ORIGINAL_CONVERT(result)
+
+90.8s140                   ^^^^^^^^^^^^^^^^^^^^^^^^^
+
+90.8s141E           TypeError: 'NoneType' object is not callable
+
+90.8s142
+
+90.8s143solution/private_logits.py:183: TypeError
+
+90.8s144=============================== warnings summary ===============================
+
+90.8s145solution/test_compressed_swiglu.py: 14 warnings
+
+90.8s146  /usr/local/lib/python3.13/dist-packages/torch/jit/_script.py:365: DeprecationWarning: `torch.jit.script_method` is deprecated. Please switch to `torch.compile` or `torch.export`.
+
+90.8s147    warnings.warn(
+
+90.8s148
+
+90.8s149-- Docs: https://docs.pytest.org/en/stable/how-to/capture-warnings.html
+
+90.8s150=========================== short test summary info ============================
+
+90.8s151FAILED solution/test_private_logits.py::test_cpu_private_boundary_restores_public_fp32[True]
+
+90.8s1521 failed, 236 passed, 1 skipped, 14 warnings in 71.54s (0:01:11)
+
+97.0s153Traceback (most recent call last):
+
+97.0s154  File "<string>", line 1, in <module>
+
+97.0s155    import sys;import papermill as pm;pm.execute_notebook("__notebook__.ipynb","__notebook__.ipynb",progress_bar=False,log_output=True,stdout_file=sys.stdout,stderr_file=sys.stderr,allow_errors=False,timeout=43200)
+
+97.0s156                                      ~~~~~~~~~~~~~~~~~~~^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+
+97.0s157  File "/usr/local/lib/python3.13/dist-packages/papermill/execute.py", line 131, in execute_notebook
+
+97.0s158    raise_for_execution_errors(nb, output_path)
+
+97.0s159    ~~~~~~~~~~~~~~~~~~~~~~~~~~^^^^^^^^^^^^^^^^^
+
+97.0s160  File "/usr/local/lib/python3.13/dist-packages/papermill/execute.py", line 251, in raise_for_execution_errors
+
+97.0s161    raise error
+
+97.0s162papermill.exceptions.PapermillExecutionError: 
+
+97.0s163---------------------------------------------------------------------------
+
+97.0s164Exception encountered at "In [5]":
+
+97.0s165---------------------------------------------------------------------------
+
+97.0s166CalledProcessError                        Traceback (most recent call last)
+
+97.0s167/tmp/ipykernel_23/199358031.py in <cell line: 0>()
+
+97.0s168----> 1 run_repo(["-m", "pytest", "solution", "-q"])
+
+97.0s169      2 run_repo(["-m", "pytest", "tests", "-q"], SOUP_APPLY_SOLUTION="1")
+
+97.0s170
+
+97.0s171/tmp/ipykernel_23/2329573584.py in run_repo(arguments, **overrides)
+
+97.0s172      5 def run_repo(arguments, **overrides):
+
+97.0s173      6     environment = dict(ENV, **overrides)
+
+97.0s174----> 7     subprocess.run([sys.executable, *arguments], cwd="/kaggle/working/repo",
+
+97.0s175      8                    env=environment, check=True)
+
+97.0s176      9 
+
+97.0s177
+
+97.0s178/usr/lib/python3.13/subprocess.py in run(input, capture_output, timeout, check, *popenargs, **kwargs)
+
+97.0s179    575         retcode = process.poll()
+
+97.0s180    576         if check and retcode:
+
+97.0s181--> 577             raise CalledProcessError(retcode, process.args,
+
+97.0s182    578                                      output=stdout, stderr=stderr)
+
+97.0s183    579     return CompletedProcess(process.args, retcode, stdout, stderr)
+
+97.0s184
+
+97.0s185CalledProcessError: Command '['/usr/bin/python3', '-m', 'pytest', 'solution', '-q']' returned non-zero exit status 1.
+
+97.0s186

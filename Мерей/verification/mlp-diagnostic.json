@@ -1,0 +1,2528 @@
+{
+  "name": "benchmark_mlp_variants",
+  "kind": "diagnostic_not_training_score",
+  "results": {
+    "kind": "paired_mlp_diagnostic_not_training_metrics",
+    "device": "Tesla T4",
+    "torch": "2.11.0+cu128",
+    "triton": "3.6.0",
+    "bitsandbytes": "0.50.2",
+    "seed": 4187,
+    "rounds": 3,
+    "samples_per_block": 3,
+    "warmups_per_variant": 3,
+    "ordering": "each candidate separately: example,candidate then candidate,example per round",
+    "weights": "seeded random diagnostic NF4 weights; same actual bnb layer types and task dimensions",
+    "baseline": "v9 organizer SwiGLU plus verified NF4 backward decode",
+    "timing": "one full forward+input-gradient, original fp32 input/output; synchronized wall and CUDA events",
+    "training_score_claim": false,
+    "quick_parity": [
+      {
+        "eligible": true,
+        "autocast_fp16": false,
+        "input_dtype": "torch.float32",
+        "upstream_dtype": "torch.float32",
+        "variants": {
+          "compressed": {
+            "output": {
+              "shape": [
+                2,
+                31,
+                64
+              ],
+              "dtype": "torch.float32",
+              "reference_dtype": "torch.float32",
+              "bitwise_equal": true,
+              "value_equal_including_nan": true,
+              "max_abs_finite_difference": 0.0,
+              "nan_count": 0,
+              "inf_count": 0
+            },
+            "input_gradient": {
+              "shape": [
+                2,
+                31,
+                64
+              ],
+              "dtype": "torch.float32",
+              "reference_dtype": "torch.float32",
+              "bitwise_equal": true,
+              "value_equal_including_nan": true,
+              "max_abs_finite_difference": 0.0,
+              "nan_count": 0,
+              "inf_count": 0
+            }
+          },
+          "narrow": {
+            "output": {
+              "shape": [
+                2,
+                31,
+                64
+              ],
+              "dtype": "torch.float32",
+              "reference_dtype": "torch.float32",
+              "bitwise_equal": true,
+              "value_equal_including_nan": true,
+              "max_abs_finite_difference": 0.0,
+              "nan_count": 0,
+              "inf_count": 0
+            },
+            "input_gradient": {
+              "shape": [
+                2,
+                31,
+                64
+              ],
+              "dtype": "torch.float32",
+              "reference_dtype": "torch.float32",
+              "bitwise_equal": true,
+              "value_equal_including_nan": true,
+              "max_abs_finite_difference": 0.0,
+              "nan_count": 0,
+              "inf_count": 0
+            }
+          }
+        },
+        "reference": {
+          "output_dtype": "torch.float32",
+          "input_gradient_dtype": "torch.float32"
+        },
+        "all_bitwise_equal": true,
+        "all_value_equal_including_nan": true,
+        "status": "passed",
+        "upstream_scale": 1.0
+      },
+      {
+        "eligible": true,
+        "autocast_fp16": false,
+        "input_dtype": "torch.float32",
+        "upstream_dtype": "torch.float32",
+        "variants": {
+          "compressed": {
+            "output": {
+              "shape": [
+                2,
+                31,
+                64
+              ],
+              "dtype": "torch.float32",
+              "reference_dtype": "torch.float32",
+              "bitwise_equal": true,
+              "value_equal_including_nan": true,
+              "max_abs_finite_difference": 0.0,
+              "nan_count": 0,
+              "inf_count": 0
+            },
+            "input_gradient": {
+              "shape": [
+                2,
+                31,
+                64
+              ],
+              "dtype": "torch.float32",
+              "reference_dtype": "torch.float32",
+              "bitwise_equal": true,
+              "value_equal_including_nan": true,
+              "max_abs_finite_difference": 0.0,
+              "nan_count": 0,
+              "inf_count": 0
+            }
+          },
+          "narrow": {
+            "output": {
+              "shape": [
+                2,
+                31,
+                64
+              ],
+              "dtype": "torch.float32",
+              "reference_dtype": "torch.float32",
+              "bitwise_equal": true,
+              "value_equal_including_nan": true,
+              "max_abs_finite_difference": 0.0,
+              "nan_count": 0,
+              "inf_count": 0
+            },
+            "input_gradient": {
+              "shape": [
+                2,
+                31,
+                64
+              ],
+              "dtype": "torch.float32",
+              "reference_dtype": "torch.float32",
+              "bitwise_equal": true,
+              "value_equal_including_nan": true,
+              "max_abs_finite_difference": 0.0,
+              "nan_count": 0,
+              "inf_count": 0
+            }
+          }
+        },
+        "reference": {
+          "output_dtype": "torch.float32",
+          "input_gradient_dtype": "torch.float32"
+        },
+        "all_bitwise_equal": true,
+        "all_value_equal_including_nan": true,
+        "status": "passed",
+        "upstream_scale": 256.0
+      },
+      {
+        "eligible": true,
+        "autocast_fp16": false,
+        "input_dtype": "torch.float32",
+        "upstream_dtype": "torch.float32",
+        "variants": {
+          "compressed": {
+            "output": {
+              "shape": [
+                2,
+                31,
+                64
+              ],
+              "dtype": "torch.float32",
+              "reference_dtype": "torch.float32",
+              "bitwise_equal": true,
+              "value_equal_including_nan": true,
+              "max_abs_finite_difference": 0.0,
+              "nan_count": 0,
+              "inf_count": 0
+            },
+            "input_gradient": {
+              "shape": [
+                2,
+                31,
+                64
+              ],
+              "dtype": "torch.float32",
+              "reference_dtype": "torch.float32",
+              "bitwise_equal": true,
+              "value_equal_including_nan": true,
+              "max_abs_finite_difference": null,
+              "nan_count": 3968,
+              "inf_count": 0
+            }
+          },
+          "narrow": {
+            "output": {
+              "shape": [
+                2,
+                31,
+                64
+              ],
+              "dtype": "torch.float32",
+              "reference_dtype": "torch.float32",
+              "bitwise_equal": true,
+              "value_equal_including_nan": true,
+              "max_abs_finite_difference": 0.0,
+              "nan_count": 0,
+              "inf_count": 0
+            },
+            "input_gradient": {
+              "shape": [
+                2,
+                31,
+                64
+              ],
+              "dtype": "torch.float32",
+              "reference_dtype": "torch.float32",
+              "bitwise_equal": true,
+              "value_equal_including_nan": true,
+              "max_abs_finite_difference": null,
+              "nan_count": 3968,
+              "inf_count": 0
+            }
+          }
+        },
+        "reference": {
+          "output_dtype": "torch.float32",
+          "input_gradient_dtype": "torch.float32"
+        },
+        "all_bitwise_equal": true,
+        "all_value_equal_including_nan": true,
+        "status": "passed",
+        "upstream_scale": 65536.0
+      },
+      {
+        "eligible": true,
+        "autocast_fp16": true,
+        "input_dtype": "torch.float32",
+        "upstream_dtype": "torch.float32",
+        "variants": {
+          "compressed": {
+            "output": {
+              "shape": [
+                2,
+                31,
+                64
+              ],
+              "dtype": "torch.float32",
+              "reference_dtype": "torch.float32",
+              "bitwise_equal": true,
+              "value_equal_including_nan": true,
+              "max_abs_finite_difference": 0.0,
+              "nan_count": 0,
+              "inf_count": 0
+            },
+            "input_gradient": {
+              "shape": [
+                2,
+                31,
+                64
+              ],
+              "dtype": "torch.float32",
+              "reference_dtype": "torch.float32",
+              "bitwise_equal": true,
+              "value_equal_including_nan": true,
+              "max_abs_finite_difference": 0.0,
+              "nan_count": 0,
+              "inf_count": 0
+            }
+          },
+          "narrow": {
+            "output": {
+              "shape": [
+                2,
+                31,
+                64
+              ],
+              "dtype": "torch.float32",
+              "reference_dtype": "torch.float32",
+              "bitwise_equal": true,
+              "value_equal_including_nan": true,
+              "max_abs_finite_difference": 0.0,
+              "nan_count": 0,
+              "inf_count": 0
+            },
+            "input_gradient": {
+              "shape": [
+                2,
+                31,
+                64
+              ],
+              "dtype": "torch.float32",
+              "reference_dtype": "torch.float32",
+              "bitwise_equal": true,
+              "value_equal_including_nan": true,
+              "max_abs_finite_difference": 0.0,
+              "nan_count": 0,
+              "inf_count": 0
+            }
+          }
+        },
+        "reference": {
+          "output_dtype": "torch.float32",
+          "input_gradient_dtype": "torch.float32"
+        },
+        "all_bitwise_equal": true,
+        "all_value_equal_including_nan": true,
+        "status": "passed",
+        "upstream_scale": 1.0
+      },
+      {
+        "eligible": true,
+        "autocast_fp16": true,
+        "input_dtype": "torch.float32",
+        "upstream_dtype": "torch.float32",
+        "variants": {
+          "compressed": {
+            "output": {
+              "shape": [
+                2,
+                31,
+                64
+              ],
+              "dtype": "torch.float32",
+              "reference_dtype": "torch.float32",
+              "bitwise_equal": true,
+              "value_equal_including_nan": true,
+              "max_abs_finite_difference": 0.0,
+              "nan_count": 0,
+              "inf_count": 0
+            },
+            "input_gradient": {
+              "shape": [
+                2,
+                31,
+                64
+              ],
+              "dtype": "torch.float32",
+              "reference_dtype": "torch.float32",
+              "bitwise_equal": true,
+              "value_equal_including_nan": true,
+              "max_abs_finite_difference": 0.0,
+              "nan_count": 0,
+              "inf_count": 0
+            }
+          },
+          "narrow": {
+            "output": {
+              "shape": [
+                2,
+                31,
+                64
+              ],
+              "dtype": "torch.float32",
+              "reference_dtype": "torch.float32",
+              "bitwise_equal": true,
+              "value_equal_including_nan": true,
+              "max_abs_finite_difference": 0.0,
+              "nan_count": 0,
+              "inf_count": 0
+            },
+            "input_gradient": {
+              "shape": [
+                2,
+                31,
+                64
+              ],
+              "dtype": "torch.float32",
+              "reference_dtype": "torch.float32",
+              "bitwise_equal": true,
+              "value_equal_including_nan": true,
+              "max_abs_finite_difference": 0.0,
+              "nan_count": 0,
+              "inf_count": 0
+            }
+          }
+        },
+        "reference": {
+          "output_dtype": "torch.float32",
+          "input_gradient_dtype": "torch.float32"
+        },
+        "all_bitwise_equal": true,
+        "all_value_equal_including_nan": true,
+        "status": "passed",
+        "upstream_scale": 256.0
+      },
+      {
+        "eligible": true,
+        "autocast_fp16": true,
+        "input_dtype": "torch.float32",
+        "upstream_dtype": "torch.float32",
+        "variants": {
+          "compressed": {
+            "output": {
+              "shape": [
+                2,
+                31,
+                64
+              ],
+              "dtype": "torch.float32",
+              "reference_dtype": "torch.float32",
+              "bitwise_equal": true,
+              "value_equal_including_nan": true,
+              "max_abs_finite_difference": 0.0,
+              "nan_count": 0,
+              "inf_count": 0
+            },
+            "input_gradient": {
+              "shape": [
+                2,
+                31,
+                64
+              ],
+              "dtype": "torch.float32",
+              "reference_dtype": "torch.float32",
+              "bitwise_equal": true,
+              "value_equal_including_nan": true,
+              "max_abs_finite_difference": null,
+              "nan_count": 3968,
+              "inf_count": 0
+            }
+          },
+          "narrow": {
+            "output": {
+              "shape": [
+                2,
+                31,
+                64
+              ],
+              "dtype": "torch.float32",
+              "reference_dtype": "torch.float32",
+              "bitwise_equal": true,
+              "value_equal_including_nan": true,
+              "max_abs_finite_difference": 0.0,
+              "nan_count": 0,
+              "inf_count": 0
+            },
+            "input_gradient": {
+              "shape": [
+                2,
+                31,
+                64
+              ],
+              "dtype": "torch.float32",
+              "reference_dtype": "torch.float32",
+              "bitwise_equal": true,
+              "value_equal_including_nan": true,
+              "max_abs_finite_difference": null,
+              "nan_count": 3968,
+              "inf_count": 0
+            }
+          }
+        },
+        "reference": {
+          "output_dtype": "torch.float32",
+          "input_gradient_dtype": "torch.float32"
+        },
+        "all_bitwise_equal": true,
+        "all_value_equal_including_nan": true,
+        "status": "passed",
+        "upstream_scale": 65536.0
+      }
+    ],
+    "cases": [
+      {
+        "shape": [
+          4,
+          128,
+          1536
+        ],
+        "intermediate_size": 8960,
+        "autocast_fp16": true,
+        "upstream_scale": 256.0,
+        "parity": {
+          "eligible": true,
+          "autocast_fp16": true,
+          "input_dtype": "torch.float32",
+          "upstream_dtype": "torch.float32",
+          "variants": {
+            "compressed": {
+              "output": {
+                "shape": [
+                  4,
+                  128,
+                  1536
+                ],
+                "dtype": "torch.float32",
+                "reference_dtype": "torch.float32",
+                "bitwise_equal": true,
+                "value_equal_including_nan": true,
+                "max_abs_finite_difference": 0.0,
+                "nan_count": 0,
+                "inf_count": 0
+              },
+              "input_gradient": {
+                "shape": [
+                  4,
+                  128,
+                  1536
+                ],
+                "dtype": "torch.float32",
+                "reference_dtype": "torch.float32",
+                "bitwise_equal": true,
+                "value_equal_including_nan": true,
+                "max_abs_finite_difference": 0.0,
+                "nan_count": 0,
+                "inf_count": 0
+              }
+            },
+            "narrow": {
+              "output": {
+                "shape": [
+                  4,
+                  128,
+                  1536
+                ],
+                "dtype": "torch.float32",
+                "reference_dtype": "torch.float32",
+                "bitwise_equal": true,
+                "value_equal_including_nan": true,
+                "max_abs_finite_difference": 0.0,
+                "nan_count": 0,
+                "inf_count": 0
+              },
+              "input_gradient": {
+                "shape": [
+                  4,
+                  128,
+                  1536
+                ],
+                "dtype": "torch.float32",
+                "reference_dtype": "torch.float32",
+                "bitwise_equal": true,
+                "value_equal_including_nan": true,
+                "max_abs_finite_difference": 0.0,
+                "nan_count": 0,
+                "inf_count": 0
+              }
+            }
+          },
+          "reference": {
+            "output_dtype": "torch.float32",
+            "input_gradient_dtype": "torch.float32"
+          },
+          "all_bitwise_equal": true,
+          "all_value_equal_including_nan": true,
+          "status": "passed"
+        },
+        "rounds": [
+          {
+            "round": 1,
+            "pairs": [
+              {
+                "candidate": "compressed",
+                "blocks": [
+                  {
+                    "order": [
+                      "example",
+                      "compressed"
+                    ],
+                    "measurements": {
+                      "example": {
+                        "cuda_event": {
+                          "samples": 3,
+                          "median_ms": 7.7460479736328125,
+                          "q25_ms": 7.73305606842041,
+                          "q75_ms": 7.750272035598755,
+                          "minimum_ms": 7.720064163208008,
+                          "maximum_ms": 7.754496097564697
+                        },
+                        "wall": {
+                          "samples": 3,
+                          "median_ms": 7.772557000009783,
+                          "q25_ms": 7.764136500014729,
+                          "q75_ms": 8.36433400002079,
+                          "minimum_ms": 7.7557160000196745,
+                          "maximum_ms": 8.956111000031797
+                        },
+                        "cuda_event_values_ms": [
+                          7.754496097564697,
+                          7.720064163208008,
+                          7.7460479736328125
+                        ],
+                        "wall_values_ms": [
+                          8.956111000031797,
+                          7.7557160000196745,
+                          7.772557000009783
+                        ]
+                      },
+                      "compressed": {
+                        "cuda_event": {
+                          "samples": 3,
+                          "median_ms": 7.9561920166015625,
+                          "q25_ms": 7.954288005828857,
+                          "q75_ms": 7.963583946228027,
+                          "minimum_ms": 7.952383995056152,
+                          "maximum_ms": 7.970975875854492
+                        },
+                        "wall": {
+                          "samples": 3,
+                          "median_ms": 7.989679999980126,
+                          "q25_ms": 7.984249999992699,
+                          "q75_ms": 7.994950999972161,
+                          "minimum_ms": 7.978820000005271,
+                          "maximum_ms": 8.000221999964197
+                        },
+                        "cuda_event_values_ms": [
+                          7.970975875854492,
+                          7.952383995056152,
+                          7.9561920166015625
+                        ],
+                        "wall_values_ms": [
+                          8.000221999964197,
+                          7.978820000005271,
+                          7.989679999980126
+                        ]
+                      }
+                    }
+                  },
+                  {
+                    "order": [
+                      "compressed",
+                      "example"
+                    ],
+                    "measurements": {
+                      "compressed": {
+                        "cuda_event": {
+                          "samples": 3,
+                          "median_ms": 7.968671798706055,
+                          "q25_ms": 7.948383808135986,
+                          "q75_ms": 7.98203182220459,
+                          "minimum_ms": 7.928095817565918,
+                          "maximum_ms": 7.995391845703125
+                        },
+                        "wall": {
+                          "samples": 3,
+                          "median_ms": 8.012659000030453,
+                          "q25_ms": 7.984608000015214,
+                          "q75_ms": 8.018192500003352,
+                          "minimum_ms": 7.956556999999975,
+                          "maximum_ms": 8.02372599997625
+                        },
+                        "cuda_event_values_ms": [
+                          7.968671798706055,
+                          7.995391845703125,
+                          7.928095817565918
+                        ],
+                        "wall_values_ms": [
+                          8.012659000030453,
+                          8.02372599997625,
+                          7.956556999999975
+                        ]
+                      },
+                      "example": {
+                        "cuda_event": {
+                          "samples": 3,
+                          "median_ms": 7.6978559494018555,
+                          "q25_ms": 7.696016073226929,
+                          "q75_ms": 7.713248014450073,
+                          "minimum_ms": 7.694176197052002,
+                          "maximum_ms": 7.728640079498291
+                        },
+                        "wall": {
+                          "samples": 3,
+                          "median_ms": 7.7300199999967845,
+                          "q25_ms": 7.724043999985497,
+                          "q75_ms": 7.743547000018225,
+                          "minimum_ms": 7.71806799997421,
+                          "maximum_ms": 7.757074000039665
+                        },
+                        "cuda_event_values_ms": [
+                          7.6978559494018555,
+                          7.728640079498291,
+                          7.694176197052002
+                        ],
+                        "wall_values_ms": [
+                          7.7300199999967845,
+                          7.757074000039665,
+                          7.71806799997421
+                        ]
+                      }
+                    }
+                  }
+                ],
+                "cuda_event_speedup": 0.9698011457596477,
+                "wall_speedup": 0.9687752552405273
+              },
+              {
+                "candidate": "narrow",
+                "blocks": [
+                  {
+                    "order": [
+                      "example",
+                      "narrow"
+                    ],
+                    "measurements": {
+                      "example": {
+                        "cuda_event": {
+                          "samples": 3,
+                          "median_ms": 6.150144100189209,
+                          "q25_ms": 6.132192134857178,
+                          "q75_ms": 6.626575946807861,
+                          "minimum_ms": 6.1142401695251465,
+                          "maximum_ms": 7.103007793426514
+                        },
+                        "wall": {
+                          "samples": 3,
+                          "median_ms": 6.205302000012125,
+                          "q25_ms": 6.1723480000068776,
+                          "q75_ms": 6.668743000005861,
+                          "minimum_ms": 6.13939400000163,
+                          "maximum_ms": 7.132183999999597
+                        },
+                        "cuda_event_values_ms": [
+                          7.103007793426514,
+                          6.150144100189209,
+                          6.1142401695251465
+                        ],
+                        "wall_values_ms": [
+                          7.132183999999597,
+                          6.205302000012125,
+                          6.13939400000163
+                        ]
+                      },
+                      "narrow": {
+                        "cuda_event": {
+                          "samples": 3,
+                          "median_ms": 4.983039855957031,
+                          "q25_ms": 4.973583936691284,
+                          "q75_ms": 5.023583889007568,
+                          "minimum_ms": 4.964128017425537,
+                          "maximum_ms": 5.0641279220581055
+                        },
+                        "wall": {
+                          "samples": 3,
+                          "median_ms": 5.0073070000280495,
+                          "q25_ms": 4.997577000011688,
+                          "q75_ms": 5.049580500013917,
+                          "minimum_ms": 4.987846999995327,
+                          "maximum_ms": 5.091853999999785
+                        },
+                        "cuda_event_values_ms": [
+                          5.0641279220581055,
+                          4.964128017425537,
+                          4.983039855957031
+                        ],
+                        "wall_values_ms": [
+                          5.091853999999785,
+                          4.987846999995327,
+                          5.0073070000280495
+                        ]
+                      }
+                    }
+                  },
+                  {
+                    "order": [
+                      "narrow",
+                      "example"
+                    ],
+                    "measurements": {
+                      "narrow": {
+                        "cuda_event": {
+                          "samples": 3,
+                          "median_ms": 4.98086404800415,
+                          "q25_ms": 4.9779040813446045,
+                          "q75_ms": 4.98304009437561,
+                          "minimum_ms": 4.974944114685059,
+                          "maximum_ms": 4.98521614074707
+                        },
+                        "wall": {
+                          "samples": 3,
+                          "median_ms": 5.008318000022882,
+                          "q25_ms": 5.004366999997956,
+                          "q75_ms": 5.014716000005137,
+                          "minimum_ms": 5.000415999973029,
+                          "maximum_ms": 5.021113999987392
+                        },
+                        "cuda_event_values_ms": [
+                          4.98086404800415,
+                          4.974944114685059,
+                          4.98521614074707
+                        ],
+                        "wall_values_ms": [
+                          5.008318000022882,
+                          5.000415999973029,
+                          5.021113999987392
+                        ]
+                      },
+                      "example": {
+                        "cuda_event": {
+                          "samples": 3,
+                          "median_ms": 5.945087909698486,
+                          "q25_ms": 5.921504020690918,
+                          "q75_ms": 5.951184034347534,
+                          "minimum_ms": 5.89792013168335,
+                          "maximum_ms": 5.957280158996582
+                        },
+                        "wall": {
+                          "samples": 3,
+                          "median_ms": 5.969655999990664,
+                          "q25_ms": 5.947544500003232,
+                          "q75_ms": 5.977397999998857,
+                          "minimum_ms": 5.925433000015801,
+                          "maximum_ms": 5.98514000000705
+                        },
+                        "cuda_event_values_ms": [
+                          5.957280158996582,
+                          5.945087909698486,
+                          5.89792013168335
+                        ],
+                        "wall_values_ms": [
+                          5.98514000000705,
+                          5.969655999990664,
+                          5.925433000015801
+                        ]
+                      }
+                    }
+                  }
+                ],
+                "cuda_event_speedup": 1.2139004877313992,
+                "wall_speedup": 1.2155988179109938
+              }
+            ]
+          },
+          {
+            "round": 2,
+            "pairs": [
+              {
+                "candidate": "compressed",
+                "blocks": [
+                  {
+                    "order": [
+                      "example",
+                      "compressed"
+                    ],
+                    "measurements": {
+                      "example": {
+                        "cuda_event": {
+                          "samples": 3,
+                          "median_ms": 5.895040035247803,
+                          "q25_ms": 5.8915040493011475,
+                          "q75_ms": 5.895823955535889,
+                          "minimum_ms": 5.887968063354492,
+                          "maximum_ms": 5.896607875823975
+                        },
+                        "wall": {
+                          "samples": 3,
+                          "median_ms": 5.919853000023068,
+                          "q25_ms": 5.917530000033366,
+                          "q75_ms": 5.922733999994989,
+                          "minimum_ms": 5.915207000043665,
+                          "maximum_ms": 5.9256149999669105
+                        },
+                        "cuda_event_values_ms": [
+                          5.896607875823975,
+                          5.895040035247803,
+                          5.887968063354492
+                        ],
+                        "wall_values_ms": [
+                          5.9256149999669105,
+                          5.919853000023068,
+                          5.915207000043665
+                        ]
+                      },
+                      "compressed": {
+                        "cuda_event": {
+                          "samples": 3,
+                          "median_ms": 6.148096084594727,
+                          "q25_ms": 6.132751941680908,
+                          "q75_ms": 6.150144100189209,
+                          "minimum_ms": 6.11740779876709,
+                          "maximum_ms": 6.152192115783691
+                        },
+                        "wall": {
+                          "samples": 3,
+                          "median_ms": 6.179485999950884,
+                          "q25_ms": 6.163583999978073,
+                          "q75_ms": 6.180606999976135,
+                          "minimum_ms": 6.147682000005261,
+                          "maximum_ms": 6.181728000001385
+                        },
+                        "cuda_event_values_ms": [
+                          6.152192115783691,
+                          6.148096084594727,
+                          6.11740779876709
+                        ],
+                        "wall_values_ms": [
+                          6.179485999950884,
+                          6.181728000001385,
+                          6.147682000005261
+                        ]
+                      }
+                    }
+                  },
+                  {
+                    "order": [
+                      "compressed",
+                      "example"
+                    ],
+                    "measurements": {
+                      "compressed": {
+                        "cuda_event": {
+                          "samples": 3,
+                          "median_ms": 5.975391864776611,
+                          "q25_ms": 5.971935987472534,
+                          "q75_ms": 5.992111921310425,
+                          "minimum_ms": 5.968480110168457,
+                          "maximum_ms": 6.008831977844238
+                        },
+                        "wall": {
+                          "samples": 3,
+                          "median_ms": 6.000351000011506,
+                          "q25_ms": 5.9968410000124095,
+                          "q75_ms": 6.019593499985376,
+                          "minimum_ms": 5.993331000013313,
+                          "maximum_ms": 6.038835999959247
+                        },
+                        "cuda_event_values_ms": [
+                          6.008831977844238,
+                          5.968480110168457,
+                          5.975391864776611
+                        ],
+                        "wall_values_ms": [
+                          6.038835999959247,
+                          5.993331000013313,
+                          6.000351000011506
+                        ]
+                      },
+                      "example": {
+                        "cuda_event": {
+                          "samples": 3,
+                          "median_ms": 5.666431903839111,
+                          "q25_ms": 5.66048002243042,
+                          "q75_ms": 5.669600009918213,
+                          "minimum_ms": 5.6545281410217285,
+                          "maximum_ms": 5.6727681159973145
+                        },
+                        "wall": {
+                          "samples": 3,
+                          "median_ms": 5.690984000011667,
+                          "q25_ms": 5.684399500012205,
+                          "q75_ms": 5.694949000002225,
+                          "minimum_ms": 5.6778150000127425,
+                          "maximum_ms": 5.698913999992783
+                        },
+                        "cuda_event_values_ms": [
+                          5.6727681159973145,
+                          5.6545281410217285,
+                          5.666431903839111
+                        ],
+                        "wall_values_ms": [
+                          5.698913999992783,
+                          5.6778150000127425,
+                          5.690984000011667
+                        ]
+                      }
+                    }
+                  }
+                ],
+                "cuda_event_speedup": 0.9535672717781056,
+                "wall_speedup": 0.9532132713609527
+              },
+              {
+                "candidate": "narrow",
+                "blocks": [
+                  {
+                    "order": [
+                      "example",
+                      "narrow"
+                    ],
+                    "measurements": {
+                      "example": {
+                        "cuda_event": {
+                          "samples": 3,
+                          "median_ms": 5.613471984863281,
+                          "q25_ms": 5.598288059234619,
+                          "q75_ms": 5.63152003288269,
+                          "minimum_ms": 5.583104133605957,
+                          "maximum_ms": 5.6495680809021
+                        },
+                        "wall": {
+                          "samples": 3,
+                          "median_ms": 5.641265999997813,
+                          "q25_ms": 5.624652999983937,
+                          "q75_ms": 5.659776500010594,
+                          "minimum_ms": 5.60803999997006,
+                          "maximum_ms": 5.678287000023374
+                        },
+                        "cuda_event_values_ms": [
+                          5.6495680809021,
+                          5.583104133605957,
+                          5.613471984863281
+                        ],
+                        "wall_values_ms": [
+                          5.678287000023374,
+                          5.60803999997006,
+                          5.641265999997813
+                        ]
+                      },
+                      "narrow": {
+                        "cuda_event": {
+                          "samples": 3,
+                          "median_ms": 4.605535984039307,
+                          "q25_ms": 4.603823900222778,
+                          "q75_ms": 4.6395039558410645,
+                          "minimum_ms": 4.60211181640625,
+                          "maximum_ms": 4.673471927642822
+                        },
+                        "wall": {
+                          "samples": 3,
+                          "median_ms": 4.63166800000181,
+                          "q25_ms": 4.628272000019251,
+                          "q75_ms": 4.666505500011908,
+                          "minimum_ms": 4.624876000036693,
+                          "maximum_ms": 4.701343000022007
+                        },
+                        "cuda_event_values_ms": [
+                          4.673471927642822,
+                          4.605535984039307,
+                          4.60211181640625
+                        ],
+                        "wall_values_ms": [
+                          4.701343000022007,
+                          4.63166800000181,
+                          4.624876000036693
+                        ]
+                      }
+                    }
+                  },
+                  {
+                    "order": [
+                      "narrow",
+                      "example"
+                    ],
+                    "measurements": {
+                      "narrow": {
+                        "cuda_event": {
+                          "samples": 3,
+                          "median_ms": 4.612095832824707,
+                          "q25_ms": 4.603855848312378,
+                          "q75_ms": 4.625407934188843,
+                          "minimum_ms": 4.595615863800049,
+                          "maximum_ms": 4.6387200355529785
+                        },
+                        "wall": {
+                          "samples": 3,
+                          "median_ms": 4.637695999974767,
+                          "q25_ms": 4.628578999984256,
+                          "q75_ms": 4.650250499992126,
+                          "minimum_ms": 4.619461999993746,
+                          "maximum_ms": 4.6628050000094845
+                        },
+                        "cuda_event_values_ms": [
+                          4.612095832824707,
+                          4.595615863800049,
+                          4.6387200355529785
+                        ],
+                        "wall_values_ms": [
+                          4.637695999974767,
+                          4.619461999993746,
+                          4.6628050000094845
+                        ]
+                      },
+                      "example": {
+                        "cuda_event": {
+                          "samples": 3,
+                          "median_ms": 5.947391986846924,
+                          "q25_ms": 5.944079875946045,
+                          "q75_ms": 5.949455976486206,
+                          "minimum_ms": 5.940767765045166,
+                          "maximum_ms": 5.951519966125488
+                        },
+                        "wall": {
+                          "samples": 3,
+                          "median_ms": 5.983246999960556,
+                          "q25_ms": 5.974437499986607,
+                          "q75_ms": 5.9839519999798085,
+                          "minimum_ms": 5.965628000012657,
+                          "maximum_ms": 5.984656999999061
+                        },
+                        "cuda_event_values_ms": [
+                          5.951519966125488,
+                          5.947391986846924,
+                          5.940767765045166
+                        ],
+                        "wall_values_ms": [
+                          5.984656999999061,
+                          5.983246999960556,
+                          5.965628000012657
+                        ]
+                      }
+                    }
+                  }
+                ],
+                "cuda_event_speedup": 1.2541868039306983,
+                "wall_speedup": 1.2540553506010013
+              }
+            ]
+          },
+          {
+            "round": 3,
+            "pairs": [
+              {
+                "candidate": "compressed",
+                "blocks": [
+                  {
+                    "order": [
+                      "example",
+                      "compressed"
+                    ],
+                    "measurements": {
+                      "example": {
+                        "cuda_event": {
+                          "samples": 3,
+                          "median_ms": 5.948768138885498,
+                          "q25_ms": 5.9444801807403564,
+                          "q75_ms": 5.949120044708252,
+                          "minimum_ms": 5.940192222595215,
+                          "maximum_ms": 5.949471950531006
+                        },
+                        "wall": {
+                          "samples": 3,
+                          "median_ms": 5.973409000034735,
+                          "q25_ms": 5.968693000028225,
+                          "q75_ms": 5.974853500021027,
+                          "minimum_ms": 5.963977000021714,
+                          "maximum_ms": 5.9762980000073185
+                        },
+                        "cuda_event_values_ms": [
+                          5.948768138885498,
+                          5.940192222595215,
+                          5.949471950531006
+                        ],
+                        "wall_values_ms": [
+                          5.9762980000073185,
+                          5.963977000021714,
+                          5.973409000034735
+                        ]
+                      },
+                      "compressed": {
+                        "cuda_event": {
+                          "samples": 3,
+                          "median_ms": 6.173408031463623,
+                          "q25_ms": 6.166912078857422,
+                          "q75_ms": 6.188719987869263,
+                          "minimum_ms": 6.160416126251221,
+                          "maximum_ms": 6.204031944274902
+                        },
+                        "wall": {
+                          "samples": 3,
+                          "median_ms": 6.1999490000062,
+                          "q25_ms": 6.192652000009957,
+                          "q75_ms": 6.23234200000411,
+                          "minimum_ms": 6.185355000013715,
+                          "maximum_ms": 6.26473500000202
+                        },
+                        "cuda_event_values_ms": [
+                          6.173408031463623,
+                          6.204031944274902,
+                          6.160416126251221
+                        ],
+                        "wall_values_ms": [
+                          6.1999490000062,
+                          6.26473500000202,
+                          6.185355000013715
+                        ]
+                      }
+                    }
+                  },
+                  {
+                    "order": [
+                      "compressed",
+                      "example"
+                    ],
+                    "measurements": {
+                      "compressed": {
+                        "cuda_event": {
+                          "samples": 3,
+                          "median_ms": 6.0805439949035645,
+                          "q25_ms": 6.070368051528931,
+                          "q75_ms": 6.096944093704224,
+                          "minimum_ms": 6.060192108154297,
+                          "maximum_ms": 6.113344192504883
+                        },
+                        "wall": {
+                          "samples": 3,
+                          "median_ms": 6.10491700001603,
+                          "q25_ms": 6.094553499991662,
+                          "q75_ms": 6.122729999987087,
+                          "minimum_ms": 6.084189999967293,
+                          "maximum_ms": 6.140542999958143
+                        },
+                        "cuda_event_values_ms": [
+                          6.113344192504883,
+                          6.060192108154297,
+                          6.0805439949035645
+                        ],
+                        "wall_values_ms": [
+                          6.140542999958143,
+                          6.084189999967293,
+                          6.10491700001603
+                        ]
+                      },
+                      "example": {
+                        "cuda_event": {
+                          "samples": 3,
+                          "median_ms": 5.903135776519775,
+                          "q25_ms": 5.875999927520752,
+                          "q75_ms": 5.910975933074951,
+                          "minimum_ms": 5.8488640785217285,
+                          "maximum_ms": 5.918816089630127
+                        },
+                        "wall": {
+                          "samples": 3,
+                          "median_ms": 5.931533000023137,
+                          "q25_ms": 5.903722499994046,
+                          "q75_ms": 5.937240000037036,
+                          "minimum_ms": 5.875911999964956,
+                          "maximum_ms": 5.9429470000509355
+                        },
+                        "cuda_event_values_ms": [
+                          5.8488640785217285,
+                          5.903135776519775,
+                          5.918816089630127
+                        ],
+                        "wall_values_ms": [
+                          5.875911999964956,
+                          5.931533000023137,
+                          5.9429470000509355
+                        ]
+                      }
+                    }
+                  }
+                ],
+                "cuda_event_speedup": 0.9672176580060142,
+                "wall_speedup": 0.9675301380229275
+              },
+              {
+                "candidate": "narrow",
+                "blocks": [
+                  {
+                    "order": [
+                      "example",
+                      "narrow"
+                    ],
+                    "measurements": {
+                      "example": {
+                        "cuda_event": {
+                          "samples": 3,
+                          "median_ms": 5.840928077697754,
+                          "q25_ms": 5.8096959590911865,
+                          "q75_ms": 5.87064003944397,
+                          "minimum_ms": 5.778463840484619,
+                          "maximum_ms": 5.9003520011901855
+                        },
+                        "wall": {
+                          "samples": 3,
+                          "median_ms": 5.864755000004607,
+                          "q25_ms": 5.833308999996234,
+                          "q75_ms": 5.897028500015722,
+                          "minimum_ms": 5.801862999987861,
+                          "maximum_ms": 5.929302000026837
+                        },
+                        "cuda_event_values_ms": [
+                          5.9003520011901855,
+                          5.840928077697754,
+                          5.778463840484619
+                        ],
+                        "wall_values_ms": [
+                          5.929302000026837,
+                          5.864755000004607,
+                          5.801862999987861
+                        ]
+                      },
+                      "narrow": {
+                        "cuda_event": {
+                          "samples": 3,
+                          "median_ms": 4.7882561683654785,
+                          "q25_ms": 4.7849440574646,
+                          "q75_ms": 4.791776180267334,
+                          "minimum_ms": 4.781631946563721,
+                          "maximum_ms": 4.7952961921691895
+                        },
+                        "wall": {
+                          "samples": 3,
+                          "median_ms": 4.814789999954883,
+                          "q25_ms": 4.8113964999743075,
+                          "q75_ms": 4.8185384999897,
+                          "minimum_ms": 4.808002999993732,
+                          "maximum_ms": 4.822287000024517
+                        },
+                        "cuda_event_values_ms": [
+                          4.781631946563721,
+                          4.7882561683654785,
+                          4.7952961921691895
+                        ],
+                        "wall_values_ms": [
+                          4.808002999993732,
+                          4.814789999954883,
+                          4.822287000024517
+                        ]
+                      }
+                    }
+                  },
+                  {
+                    "order": [
+                      "narrow",
+                      "example"
+                    ],
+                    "measurements": {
+                      "narrow": {
+                        "cuda_event": {
+                          "samples": 3,
+                          "median_ms": 4.732800006866455,
+                          "q25_ms": 4.731616020202637,
+                          "q75_ms": 4.747152090072632,
+                          "minimum_ms": 4.730432033538818,
+                          "maximum_ms": 4.761504173278809
+                        },
+                        "wall": {
+                          "samples": 3,
+                          "median_ms": 4.756455999995524,
+                          "q25_ms": 4.754776999988053,
+                          "q75_ms": 4.7724755000047026,
+                          "minimum_ms": 4.753097999980582,
+                          "maximum_ms": 4.7884950000138815
+                        },
+                        "cuda_event_values_ms": [
+                          4.761504173278809,
+                          4.732800006866455,
+                          4.730432033538818
+                        ],
+                        "wall_values_ms": [
+                          4.7884950000138815,
+                          4.756455999995524,
+                          4.753097999980582
+                        ]
+                      },
+                      "example": {
+                        "cuda_event": {
+                          "samples": 3,
+                          "median_ms": 6.473728179931641,
+                          "q25_ms": 6.18939208984375,
+                          "q75_ms": 6.482944011688232,
+                          "minimum_ms": 5.905055999755859,
+                          "maximum_ms": 6.492159843444824
+                        },
+                        "wall": {
+                          "samples": 3,
+                          "median_ms": 6.497578000050908,
+                          "q25_ms": 6.214871500048957,
+                          "q75_ms": 6.508410500032369,
+                          "minimum_ms": 5.932165000047007,
+                          "maximum_ms": 6.51924300001383
+                        },
+                        "cuda_event_values_ms": [
+                          5.905055999755859,
+                          6.473728179931641,
+                          6.492159843444824
+                        ],
+                        "wall_values_ms": [
+                          5.932165000047007,
+                          6.497578000050908,
+                          6.51924300001383
+                        ]
+                      }
+                    }
+                  }
+                ],
+                "cuda_event_speedup": 1.2938438498145604,
+                "wall_speedup": 1.292062625972639
+              }
+            ]
+          }
+        ],
+        "memory": {
+          "example": {
+            "allocated_start_bytes": 50929152,
+            "allocated_peak_bytes": 145972736,
+            "extra_allocated_peak_bytes": 95043584,
+            "allocated_end_with_result_bytes": 57220608,
+            "allocated_after_result_release_bytes": 50929152,
+            "meaning": "one MLP forward+input-gradient; allocator allocated bytes, not reserved/NVML"
+          },
+          "compressed": {
+            "allocated_start_bytes": 50929152,
+            "allocated_peak_bytes": 164322816,
+            "extra_allocated_peak_bytes": 113393664,
+            "allocated_end_with_result_bytes": 57220608,
+            "allocated_after_result_release_bytes": 50929152,
+            "meaning": "one MLP forward+input-gradient; allocator allocated bytes, not reserved/NVML"
+          },
+          "narrow": {
+            "allocated_start_bytes": 50929152,
+            "allocated_peak_bytes": 110697984,
+            "extra_allocated_peak_bytes": 59768832,
+            "allocated_end_with_result_bytes": 57220608,
+            "allocated_after_result_release_bytes": 50929152,
+            "meaning": "one MLP forward+input-gradient; allocator allocated bytes, not reserved/NVML"
+          }
+        },
+        "aggregate": {
+          "example": {
+            "cuda_event": {
+              "samples": 36,
+              "median_ms": 5.94047999382019,
+              "q25_ms": 5.878192067146301,
+              "q75_ms": 6.231040120124817,
+              "minimum_ms": 5.583104133605957,
+              "maximum_ms": 7.754496097564697
+            },
+            "wall": {
+              "samples": 36,
+              "median_ms": 5.964802500017186,
+              "q25_ms": 5.905383250023988,
+              "q75_ms": 6.278371000021821,
+              "minimum_ms": 5.60803999997006,
+              "maximum_ms": 8.956111000031797
+            }
+          },
+          "compressed": {
+            "cuda_event": {
+              "samples": 18,
+              "median_ms": 6.156304121017456,
+              "q25_ms": 6.088744044303894,
+              "q75_ms": 7.946311950683594,
+              "minimum_ms": 5.968480110168457,
+              "maximum_ms": 7.995391845703125
+            },
+            "wall": {
+              "samples": 18,
+              "median_ms": 6.18354150000755,
+              "q25_ms": 6.113823500001558,
+              "q75_ms": 7.973254250003947,
+              "minimum_ms": 5.993331000013313,
+              "maximum_ms": 8.02372599997625
+            }
+          },
+          "narrow": {
+            "cuda_event": {
+              "samples": 18,
+              "median_ms": 4.771568059921265,
+              "q25_ms": 4.6474080085754395,
+              "q75_ms": 4.972240090370178,
+              "minimum_ms": 4.595615863800049,
+              "maximum_ms": 5.0641279220581055
+            },
+            "wall": {
+              "samples": 18,
+              "median_ms": 4.798249000003807,
+              "q25_ms": 4.672439500012615,
+              "q75_ms": 4.9972737499786035,
+              "minimum_ms": 4.619461999993746,
+              "maximum_ms": 5.091853999999785
+            }
+          }
+        },
+        "inputs_unchanged": true,
+        "upstream_unchanged": true,
+        "status": "qualified_diagnostic_only"
+      },
+      {
+        "shape": [
+          4,
+          512,
+          1536
+        ],
+        "intermediate_size": 8960,
+        "autocast_fp16": true,
+        "upstream_scale": 256.0,
+        "parity": {
+          "eligible": true,
+          "autocast_fp16": true,
+          "input_dtype": "torch.float32",
+          "upstream_dtype": "torch.float32",
+          "variants": {
+            "compressed": {
+              "output": {
+                "shape": [
+                  4,
+                  512,
+                  1536
+                ],
+                "dtype": "torch.float32",
+                "reference_dtype": "torch.float32",
+                "bitwise_equal": true,
+                "value_equal_including_nan": true,
+                "max_abs_finite_difference": 0.0,
+                "nan_count": 0,
+                "inf_count": 0
+              },
+              "input_gradient": {
+                "shape": [
+                  4,
+                  512,
+                  1536
+                ],
+                "dtype": "torch.float32",
+                "reference_dtype": "torch.float32",
+                "bitwise_equal": true,
+                "value_equal_including_nan": true,
+                "max_abs_finite_difference": 0.0,
+                "nan_count": 0,
+                "inf_count": 0
+              }
+            },
+            "narrow": {
+              "output": {
+                "shape": [
+                  4,
+                  512,
+                  1536
+                ],
+                "dtype": "torch.float32",
+                "reference_dtype": "torch.float32",
+                "bitwise_equal": true,
+                "value_equal_including_nan": true,
+                "max_abs_finite_difference": 0.0,
+                "nan_count": 0,
+                "inf_count": 0
+              },
+              "input_gradient": {
+                "shape": [
+                  4,
+                  512,
+                  1536
+                ],
+                "dtype": "torch.float32",
+                "reference_dtype": "torch.float32",
+                "bitwise_equal": true,
+                "value_equal_including_nan": true,
+                "max_abs_finite_difference": 0.0,
+                "nan_count": 0,
+                "inf_count": 0
+              }
+            }
+          },
+          "reference": {
+            "output_dtype": "torch.float32",
+            "input_gradient_dtype": "torch.float32"
+          },
+          "all_bitwise_equal": true,
+          "all_value_equal_including_nan": true,
+          "status": "passed"
+        },
+        "rounds": [
+          {
+            "round": 1,
+            "pairs": [
+              {
+                "candidate": "compressed",
+                "blocks": [
+                  {
+                    "order": [
+                      "example",
+                      "compressed"
+                    ],
+                    "measurements": {
+                      "example": {
+                        "cuda_event": {
+                          "samples": 3,
+                          "median_ms": 19.959808349609375,
+                          "q25_ms": 19.809807777404785,
+                          "q75_ms": 20.128975868225098,
+                          "minimum_ms": 19.659807205200195,
+                          "maximum_ms": 20.29814338684082
+                        },
+                        "wall": {
+                          "samples": 3,
+                          "median_ms": 19.991001999983382,
+                          "q25_ms": 19.839602499985176,
+                          "q75_ms": 20.175554499985537,
+                          "minimum_ms": 19.68820299998697,
+                          "maximum_ms": 20.360106999987693
+                        },
+                        "cuda_event_values_ms": [
+                          20.29814338684082,
+                          19.959808349609375,
+                          19.659807205200195
+                        ],
+                        "wall_values_ms": [
+                          20.360106999987693,
+                          19.991001999983382,
+                          19.68820299998697
+                        ]
+                      },
+                      "compressed": {
+                        "cuda_event": {
+                          "samples": 3,
+                          "median_ms": 20.2488956451416,
+                          "q25_ms": 20.172304153442383,
+                          "q75_ms": 20.25004768371582,
+                          "minimum_ms": 20.095712661743164,
+                          "maximum_ms": 20.25119972229004
+                        },
+                        "wall": {
+                          "samples": 3,
+                          "median_ms": 20.27418000000125,
+                          "q25_ms": 20.197132000021156,
+                          "q75_ms": 20.277160999995658,
+                          "minimum_ms": 20.12008400004106,
+                          "maximum_ms": 20.280141999990065
+                        },
+                        "cuda_event_values_ms": [
+                          20.25119972229004,
+                          20.2488956451416,
+                          20.095712661743164
+                        ],
+                        "wall_values_ms": [
+                          20.280141999990065,
+                          20.27418000000125,
+                          20.12008400004106
+                        ]
+                      }
+                    }
+                  },
+                  {
+                    "order": [
+                      "compressed",
+                      "example"
+                    ],
+                    "measurements": {
+                      "compressed": {
+                        "cuda_event": {
+                          "samples": 3,
+                          "median_ms": 19.789823532104492,
+                          "q25_ms": 19.775919914245605,
+                          "q75_ms": 19.821311950683594,
+                          "minimum_ms": 19.76201629638672,
+                          "maximum_ms": 19.852800369262695
+                        },
+                        "wall": {
+                          "samples": 3,
+                          "median_ms": 19.8157940000101,
+                          "q25_ms": 19.803352000025143,
+                          "q75_ms": 19.848361500010014,
+                          "minimum_ms": 19.790910000040185,
+                          "maximum_ms": 19.880929000009928
+                        },
+                        "cuda_event_values_ms": [
+                          19.852800369262695,
+                          19.76201629638672,
+                          19.789823532104492
+                        ],
+                        "wall_values_ms": [
+                          19.880929000009928,
+                          19.790910000040185,
+                          19.8157940000101
+                        ]
+                      },
+                      "example": {
+                        "cuda_event": {
+                          "samples": 3,
+                          "median_ms": 19.39651107788086,
+                          "q25_ms": 19.265695571899414,
+                          "q75_ms": 19.511807441711426,
+                          "minimum_ms": 19.13488006591797,
+                          "maximum_ms": 19.627103805541992
+                        },
+                        "wall": {
+                          "samples": 3,
+                          "median_ms": 19.43122300002642,
+                          "q25_ms": 19.297940500024424,
+                          "q75_ms": 19.554029000005357,
+                          "minimum_ms": 19.164658000022428,
+                          "maximum_ms": 19.676834999984294
+                        },
+                        "cuda_event_values_ms": [
+                          19.13488006591797,
+                          19.39651107788086,
+                          19.627103805541992
+                        ],
+                        "wall_values_ms": [
+                          19.164658000022428,
+                          19.43122300002642,
+                          19.676834999984294
+                        ]
+                      }
+                    }
+                  }
+                ],
+                "cuda_event_speedup": 0.9829244127320431,
+                "wall_speedup": 0.9833126411707811
+              },
+              {
+                "candidate": "narrow",
+                "blocks": [
+                  {
+                    "order": [
+                      "example",
+                      "narrow"
+                    ],
+                    "measurements": {
+                      "example": {
+                        "cuda_event": {
+                          "samples": 3,
+                          "median_ms": 19.38265609741211,
+                          "q25_ms": 19.359824180603027,
+                          "q75_ms": 19.42463970184326,
+                          "minimum_ms": 19.336992263793945,
+                          "maximum_ms": 19.466623306274414
+                        },
+                        "wall": {
+                          "samples": 3,
+                          "median_ms": 19.409770999970988,
+                          "q25_ms": 19.387647499968352,
+                          "q75_ms": 19.45578499999101,
+                          "minimum_ms": 19.365523999965717,
+                          "maximum_ms": 19.501799000011033
+                        },
+                        "cuda_event_values_ms": [
+                          19.466623306274414,
+                          19.336992263793945,
+                          19.38265609741211
+                        ],
+                        "wall_values_ms": [
+                          19.501799000011033,
+                          19.365523999965717,
+                          19.409770999970988
+                        ]
+                      },
+                      "narrow": {
+                        "cuda_event": {
+                          "samples": 3,
+                          "median_ms": 15.612000465393066,
+                          "q25_ms": 15.447104454040527,
+                          "q75_ms": 16.286768436431885,
+                          "minimum_ms": 15.282208442687988,
+                          "maximum_ms": 16.961536407470703
+                        },
+                        "wall": {
+                          "samples": 3,
+                          "median_ms": 15.649415000041245,
+                          "q25_ms": 15.484738000026255,
+                          "q75_ms": 16.323074000013094,
+                          "minimum_ms": 15.320061000011265,
+                          "maximum_ms": 16.996732999984943
+                        },
+                        "cuda_event_values_ms": [
+                          15.282208442687988,
+                          15.612000465393066,
+                          16.961536407470703
+                        ],
+                        "wall_values_ms": [
+                          15.320061000011265,
+                          15.649415000041245,
+                          16.996732999984943
+                        ]
+                      }
+                    }
+                  },
+                  {
+                    "order": [
+                      "narrow",
+                      "example"
+                    ],
+                    "measurements": {
+                      "narrow": {
+                        "cuda_event": {
+                          "samples": 3,
+                          "median_ms": 16.72127914428711,
+                          "q25_ms": 16.712623596191406,
+                          "q75_ms": 16.82707118988037,
+                          "minimum_ms": 16.703968048095703,
+                          "maximum_ms": 16.932863235473633
+                        },
+                        "wall": {
+                          "samples": 3,
+                          "median_ms": 16.748952999989797,
+                          "q25_ms": 16.740596499971616,
+                          "q75_ms": 16.85753549998026,
+                          "minimum_ms": 16.732239999953435,
+                          "maximum_ms": 16.96611799997072
+                        },
+                        "cuda_event_values_ms": [
+                          16.932863235473633,
+                          16.72127914428711,
+                          16.703968048095703
+                        ],
+                        "wall_values_ms": [
+                          16.96611799997072,
+                          16.748952999989797,
+                          16.732239999953435
+                        ]
+                      },
+                      "example": {
+                        "cuda_event": {
+                          "samples": 3,
+                          "median_ms": 20.088735580444336,
+                          "q25_ms": 19.825615882873535,
+                          "q75_ms": 20.418496131896973,
+                          "minimum_ms": 19.562496185302734,
+                          "maximum_ms": 20.74825668334961
+                        },
+                        "wall": {
+                          "samples": 3,
+                          "median_ms": 20.115409000027284,
+                          "q25_ms": 19.85333850001325,
+                          "q75_ms": 20.447269500010634,
+                          "minimum_ms": 19.591267999999218,
+                          "maximum_ms": 20.779129999993984
+                        },
+                        "cuda_event_values_ms": [
+                          20.74825668334961,
+                          20.088735580444336,
+                          19.562496185302734
+                        ],
+                        "wall_values_ms": [
+                          20.779129999993984,
+                          20.115409000027284,
+                          19.591267999999218
+                        ]
+                      }
+                    }
+                  }
+                ],
+                "cuda_event_speedup": 1.2214551951452655,
+                "wall_speedup": 1.2206411660454322
+              }
+            ]
+          },
+          {
+            "round": 2,
+            "pairs": [
+              {
+                "candidate": "compressed",
+                "blocks": [
+                  {
+                    "order": [
+                      "example",
+                      "compressed"
+                    ],
+                    "measurements": {
+                      "example": {
+                        "cuda_event": {
+                          "samples": 3,
+                          "median_ms": 19.383615493774414,
+                          "q25_ms": 19.3571195602417,
+                          "q75_ms": 19.383952140808105,
+                          "minimum_ms": 19.330623626708984,
+                          "maximum_ms": 19.384288787841797
+                        },
+                        "wall": {
+                          "samples": 3,
+                          "median_ms": 19.412727000030827,
+                          "q25_ms": 19.38711350001654,
+                          "q75_ms": 19.4133450000038,
+                          "minimum_ms": 19.361500000002252,
+                          "maximum_ms": 19.413962999976775
+                        },
+                        "cuda_event_values_ms": [
+                          19.330623626708984,
+                          19.384288787841797,
+                          19.383615493774414
+                        ],
+                        "wall_values_ms": [
+                          19.361500000002252,
+                          19.413962999976775,
+                          19.412727000030827
+                        ]
+                      },
+                      "compressed": {
+                        "cuda_event": {
+                          "samples": 3,
+                          "median_ms": 20.26905632019043,
+                          "q25_ms": 20.214768409729004,
+                          "q75_ms": 20.27932834625244,
+                          "minimum_ms": 20.160480499267578,
+                          "maximum_ms": 20.289600372314453
+                        },
+                        "wall": {
+                          "samples": 3,
+                          "median_ms": 20.307006999985333,
+                          "q25_ms": 20.24889449998568,
+                          "q75_ms": 20.31660450001027,
+                          "minimum_ms": 20.19078199998603,
+                          "maximum_ms": 20.32620200003521
+                        },
+                        "cuda_event_values_ms": [
+                          20.26905632019043,
+                          20.289600372314453,
+                          20.160480499267578
+                        ],
+                        "wall_values_ms": [
+                          20.307006999985333,
+                          20.32620200003521,
+                          20.19078199998603
+                        ]
+                      }
+                    }
+                  },
+                  {
+                    "order": [
+                      "compressed",
+                      "example"
+                    ],
+                    "measurements": {
+                      "compressed": {
+                        "cuda_event": {
+                          "samples": 3,
+                          "median_ms": 19.80771255493164,
+                          "q25_ms": 19.800816535949707,
+                          "q75_ms": 19.87940788269043,
+                          "minimum_ms": 19.793920516967773,
+                          "maximum_ms": 19.95110321044922
+                        },
+                        "wall": {
+                          "samples": 3,
+                          "median_ms": 19.839176000004954,
+                          "q25_ms": 19.832909500024698,
+                          "q75_ms": 19.91118349999965,
+                          "minimum_ms": 19.82664300004444,
+                          "maximum_ms": 19.98319099999435
+                        },
+                        "cuda_event_values_ms": [
+                          19.95110321044922,
+                          19.793920516967773,
+                          19.80771255493164
+                        ],
+                        "wall_values_ms": [
+                          19.98319099999435,
+                          19.82664300004444,
+                          19.839176000004954
+                        ]
+                      },
+                      "example": {
+                        "cuda_event": {
+                          "samples": 3,
+                          "median_ms": 20.1845760345459,
+                          "q25_ms": 19.795727729797363,
+                          "q75_ms": 20.475024223327637,
+                          "minimum_ms": 19.406879425048828,
+                          "maximum_ms": 20.765472412109375
+                        },
+                        "wall": {
+                          "samples": 3,
+                          "median_ms": 20.217321999950855,
+                          "q25_ms": 19.828858499977287,
+                          "q75_ms": 20.508126499976242,
+                          "minimum_ms": 19.44039500000372,
+                          "maximum_ms": 20.79893100000163
+                        },
+                        "cuda_event_values_ms": [
+                          19.406879425048828,
+                          20.765472412109375,
+                          20.1845760345459
+                        ],
+                        "wall_values_ms": [
+                          19.44039500000372,
+                          20.79893100000163,
+                          20.217321999950855
+                        ]
+                      }
+                    }
+                  }
+                ],
+                "cuda_event_speedup": 0.9876708671772587,
+                "wall_speedup": 0.9875112842932711
+              },
+              {
+                "candidate": "narrow",
+                "blocks": [
+                  {
+                    "order": [
+                      "example",
+                      "narrow"
+                    ],
+                    "measurements": {
+                      "example": {
+                        "cuda_event": {
+                          "samples": 3,
+                          "median_ms": 19.82464027404785,
+                          "q25_ms": 19.819503784179688,
+                          "q75_ms": 19.833375930786133,
+                          "minimum_ms": 19.814367294311523,
+                          "maximum_ms": 19.842111587524414
+                        },
+                        "wall": {
+                          "samples": 3,
+                          "median_ms": 19.85906300001261,
+                          "q25_ms": 19.852859499991382,
+                          "q75_ms": 19.8659085000088,
+                          "minimum_ms": 19.846655999970153,
+                          "maximum_ms": 19.87275400000499
+                        },
+                        "cuda_event_values_ms": [
+                          19.82464027404785,
+                          19.842111587524414,
+                          19.814367294311523
+                        ],
+                        "wall_values_ms": [
+                          19.85906300001261,
+                          19.87275400000499,
+                          19.846655999970153
+                        ]
+                      },
+                      "narrow": {
+                        "cuda_event": {
+                          "samples": 3,
+                          "median_ms": 16.15398406982422,
+                          "q25_ms": 15.880879878997803,
+                          "q75_ms": 16.386351585388184,
+                          "minimum_ms": 15.607775688171387,
+                          "maximum_ms": 16.61871910095215
+                        },
+                        "wall": {
+                          "samples": 3,
+                          "median_ms": 16.18514699998741,
+                          "q25_ms": 15.912961999987374,
+                          "q75_ms": 16.416064499992444,
+                          "minimum_ms": 15.640776999987338,
+                          "maximum_ms": 16.64698199999748
+                        },
+                        "cuda_event_values_ms": [
+                          15.607775688171387,
+                          16.15398406982422,
+                          16.61871910095215
+                        ],
+                        "wall_values_ms": [
+                          15.640776999987338,
+                          16.18514699998741,
+                          16.64698199999748
+                        ]
+                      }
+                    }
+                  },
+                  {
+                    "order": [
+                      "narrow",
+                      "example"
+                    ],
+                    "measurements": {
+                      "narrow": {
+                        "cuda_event": {
+                          "samples": 3,
+                          "median_ms": 16.689311981201172,
+                          "q25_ms": 16.672911643981934,
+                          "q75_ms": 16.748064041137695,
+                          "minimum_ms": 16.656511306762695,
+                          "maximum_ms": 16.80681610107422
+                        },
+                        "wall": {
+                          "samples": 3,
+                          "median_ms": 16.71986299999162,
+                          "q25_ms": 16.702467500010698,
+                          "q75_ms": 16.779036499997346,
+                          "minimum_ms": 16.685072000029777,
+                          "maximum_ms": 16.838210000003073
+                        },
+                        "cuda_event_values_ms": [
+                          16.80681610107422,
+                          16.689311981201172,
+                          16.656511306762695
+                        ],
+                        "wall_values_ms": [
+                          16.838210000003073,
+                          16.71986299999162,
+                          16.685072000029777
+                        ]
+                      },
+                      "example": {
+                        "cuda_event": {
+                          "samples": 3,
+                          "median_ms": 20.832256317138672,
+                          "q25_ms": 20.727760314941406,
+                          "q75_ms": 21.005040168762207,
+                          "minimum_ms": 20.62326431274414,
+                          "maximum_ms": 21.177824020385742
+                        },
+                        "wall": {
+                          "samples": 3,
+                          "median_ms": 20.86267999999336,
+                          "q25_ms": 20.756992499968874,
+                          "q75_ms": 21.035750500004724,
+                          "minimum_ms": 20.651304999944387,
+                          "maximum_ms": 21.208821000016087
+                        },
+                        "cuda_event_values_ms": [
+                          21.177824020385742,
+                          20.832256317138672,
+                          20.62326431274414
+                        ],
+                        "wall_values_ms": [
+                          21.208821000016087,
+                          20.86267999999336,
+                          20.651304999944387
+                        ]
+                      }
+                    }
+                  }
+                ],
+                "cuda_event_speedup": 1.2377342654941108,
+                "wall_speedup": 1.2373856119409434
+              }
+            ]
+          },
+          {
+            "round": 3,
+            "pairs": [
+              {
+                "candidate": "compressed",
+                "blocks": [
+                  {
+                    "order": [
+                      "example",
+                      "compressed"
+                    ],
+                    "measurements": {
+                      "example": {
+                        "cuda_event": {
+                          "samples": 3,
+                          "median_ms": 20.289567947387695,
+                          "q25_ms": 20.17484760284424,
+                          "q75_ms": 20.430399894714355,
+                          "minimum_ms": 20.06012725830078,
+                          "maximum_ms": 20.571231842041016
+                        },
+                        "wall": {
+                          "samples": 3,
+                          "median_ms": 20.318748999955005,
+                          "q25_ms": 20.204040499976372,
+                          "q75_ms": 20.460939999992434,
+                          "minimum_ms": 20.08933199999774,
+                          "maximum_ms": 20.60313100002986
+                        },
+                        "cuda_event_values_ms": [
+                          20.571231842041016,
+                          20.289567947387695,
+                          20.06012725830078
+                        ],
+                        "wall_values_ms": [
+                          20.60313100002986,
+                          20.318748999955005,
+                          20.08933199999774
+                        ]
+                      },
+                      "compressed": {
+                        "cuda_event": {
+                          "samples": 3,
+                          "median_ms": 20.170719146728516,
+                          "q25_ms": 20.084463119506836,
+                          "q75_ms": 20.40003204345703,
+                          "minimum_ms": 19.998207092285156,
+                          "maximum_ms": 20.629344940185547
+                        },
+                        "wall": {
+                          "samples": 3,
+                          "median_ms": 20.199725999987095,
+                          "q25_ms": 20.11331500000324,
+                          "q75_ms": 20.43034399997623,
+                          "minimum_ms": 20.026904000019385,
+                          "maximum_ms": 20.660961999965366
+                        },
+                        "cuda_event_values_ms": [
+                          20.629344940185547,
+                          20.170719146728516,
+                          19.998207092285156
+                        ],
+                        "wall_values_ms": [
+                          20.660961999965366,
+                          20.199725999987095,
+                          20.026904000019385
+                        ]
+                      }
+                    }
+                  },
+                  {
+                    "order": [
+                      "compressed",
+                      "example"
+                    ],
+                    "measurements": {
+                      "compressed": {
+                        "cuda_event": {
+                          "samples": 3,
+                          "median_ms": 20.017152786254883,
+                          "q25_ms": 20.00977611541748,
+                          "q75_ms": 20.028400421142578,
+                          "minimum_ms": 20.002399444580078,
+                          "maximum_ms": 20.039648056030273
+                        },
+                        "wall": {
+                          "samples": 3,
+                          "median_ms": 20.046605000004547,
+                          "q25_ms": 20.03924000001689,
+                          "q75_ms": 20.059172500026534,
+                          "minimum_ms": 20.03187500002923,
+                          "maximum_ms": 20.07174000004852
+                        },
+                        "cuda_event_values_ms": [
+                          20.039648056030273,
+                          20.002399444580078,
+                          20.017152786254883
+                        ],
+                        "wall_values_ms": [
+                          20.07174000004852,
+                          20.03187500002923,
+                          20.046605000004547
+                        ]
+                      },
+                      "example": {
+                        "cuda_event": {
+                          "samples": 3,
+                          "median_ms": 19.867904663085938,
+                          "q25_ms": 19.656816482543945,
+                          "q75_ms": 19.971920013427734,
+                          "minimum_ms": 19.445728302001953,
+                          "maximum_ms": 20.07593536376953
+                        },
+                        "wall": {
+                          "samples": 3,
+                          "median_ms": 19.897624999998698,
+                          "q25_ms": 19.686461500015184,
+                          "q75_ms": 20.00153399998794,
+                          "minimum_ms": 19.47529800003167,
+                          "maximum_ms": 20.105442999977186
+                        },
+                        "cuda_event_values_ms": [
+                          19.445728302001953,
+                          19.867904663085938,
+                          20.07593536376953
+                        ],
+                        "wall_values_ms": [
+                          19.47529800003167,
+                          19.897624999998698,
+                          20.105442999977186
+                        ]
+                      }
+                    }
+                  }
+                ],
+                "cuda_event_speedup": 0.9992180666726904,
+                "wall_speedup": 0.999230312661995
+              },
+              {
+                "candidate": "narrow",
+                "blocks": [
+                  {
+                    "order": [
+                      "example",
+                      "narrow"
+                    ],
+                    "measurements": {
+                      "example": {
+                        "cuda_event": {
+                          "samples": 3,
+                          "median_ms": 20.09337615966797,
+                          "q25_ms": 20.09000015258789,
+                          "q75_ms": 20.099679946899414,
+                          "minimum_ms": 20.086624145507812,
+                          "maximum_ms": 20.10598373413086
+                        },
+                        "wall": {
+                          "samples": 3,
+                          "median_ms": 20.126825000033932,
+                          "q25_ms": 20.120452000014666,
+                          "q75_ms": 20.132149000033905,
+                          "minimum_ms": 20.1140789999954,
+                          "maximum_ms": 20.13747300003388
+                        },
+                        "cuda_event_values_ms": [
+                          20.10598373413086,
+                          20.086624145507812,
+                          20.09337615966797
+                        ],
+                        "wall_values_ms": [
+                          20.13747300003388,
+                          20.1140789999954,
+                          20.126825000033932
+                        ]
+                      },
+                      "narrow": {
+                        "cuda_event": {
+                          "samples": 3,
+                          "median_ms": 16.392192840576172,
+                          "q25_ms": 16.12492847442627,
+                          "q75_ms": 16.592896461486816,
+                          "minimum_ms": 15.857664108276367,
+                          "maximum_ms": 16.79360008239746
+                        },
+                        "wall": {
+                          "samples": 3,
+                          "median_ms": 16.42321100001709,
+                          "q25_ms": 16.155720999989853,
+                          "q75_ms": 16.624514500023224,
+                          "minimum_ms": 15.888230999962616,
+                          "maximum_ms": 16.825818000029358
+                        },
+                        "cuda_event_values_ms": [
+                          15.857664108276367,
+                          16.392192840576172,
+                          16.79360008239746
+                        ],
+                        "wall_values_ms": [
+                          15.888230999962616,
+                          16.42321100001709,
+                          16.825818000029358
+                        ]
+                      }
+                    }
+                  },
+                  {
+                    "order": [
+                      "narrow",
+                      "example"
+                    ],
+                    "measurements": {
+                      "narrow": {
+                        "cuda_event": {
+                          "samples": 3,
+                          "median_ms": 16.922399520874023,
+                          "q25_ms": 16.916303634643555,
+                          "q75_ms": 16.946127891540527,
+                          "minimum_ms": 16.910207748413086,
+                          "maximum_ms": 16.96985626220703
+                        },
+                        "wall": {
+                          "samples": 3,
+                          "median_ms": 16.953332000014143,
+                          "q25_ms": 16.94550999999933,
+                          "q75_ms": 16.975374500020735,
+                          "minimum_ms": 16.93768799998452,
+                          "maximum_ms": 16.997417000027326
+                        },
+                        "cuda_event_values_ms": [
+                          16.922399520874023,
+                          16.910207748413086,
+                          16.96985626220703
+                        ],
+                        "wall_values_ms": [
+                          16.953332000014143,
+                          16.93768799998452,
+                          16.997417000027326
+                        ]
+                      },
+                      "example": {
+                        "cuda_event": {
+                          "samples": 3,
+                          "median_ms": 20.84217643737793,
+                          "q25_ms": 20.653648376464844,
+                          "q75_ms": 21.112768173217773,
+                          "minimum_ms": 20.465120315551758,
+                          "maximum_ms": 21.383359909057617
+                        },
+                        "wall": {
+                          "samples": 3,
+                          "median_ms": 20.874435999985508,
+                          "q25_ms": 20.684016000018346,
+                          "q75_ms": 21.1470479999889,
+                          "minimum_ms": 20.493596000051184,
+                          "maximum_ms": 21.41965999999229
+                        },
+                        "cuda_event_values_ms": [
+                          21.383359909057617,
+                          20.84217643737793,
+                          20.465120315551758
+                        ],
+                        "wall_values_ms": [
+                          21.41965999999229,
+                          20.874435999985508,
+                          20.493596000051184
+                        ]
+                      }
+                    }
+                  }
+                ],
+                "cuda_event_speedup": 1.2287109245972667,
+                "wall_speedup": 1.2283995291622056
+              }
+            ]
+          }
+        ],
+        "memory": {
+          "example": {
+            "allocated_start_bytes": 88677888,
+            "allocated_peak_bytes": 468262400,
+            "extra_allocated_peak_bytes": 379584512,
+            "allocated_end_with_result_bytes": 113843712,
+            "allocated_after_result_release_bytes": 88677888,
+            "meaning": "one MLP forward+input-gradient; allocator allocated bytes, not reserved/NVML"
+          },
+          "compressed": {
+            "allocated_start_bytes": 88677888,
+            "allocated_peak_bytes": 454516224,
+            "extra_allocated_peak_bytes": 365838336,
+            "allocated_end_with_result_bytes": 113843712,
+            "allocated_after_result_release_bytes": 88677888,
+            "meaning": "one MLP forward+input-gradient; allocator allocated bytes, not reserved/NVML"
+          },
+          "narrow": {
+            "allocated_start_bytes": 88677888,
+            "allocated_peak_bytes": 284761600,
+            "extra_allocated_peak_bytes": 196083712,
+            "allocated_end_with_result_bytes": 113843712,
+            "allocated_after_result_release_bytes": 88677888,
+            "meaning": "one MLP forward+input-gradient; allocator allocated bytes, not reserved/NVML"
+          }
+        },
+        "aggregate": {
+          "example": {
+            "cuda_event": {
+              "samples": 36,
+              "median_ms": 20.009967803955078,
+              "q25_ms": 19.4613995552063,
+              "q75_ms": 20.339887619018555,
+              "minimum_ms": 19.13488006591797,
+              "maximum_ms": 21.383359909057617
+            },
+            "wall": {
+              "samples": 36,
+              "median_ms": 20.04016699999056,
+              "q25_ms": 19.495173750016193,
+              "q75_ms": 20.393479250003566,
+              "minimum_ms": 19.164658000022428,
+              "maximum_ms": 21.41965999999229
+            }
+          },
+          "compressed": {
+            "cuda_event": {
+              "samples": 18,
+              "median_ms": 20.028400421142578,
+              "q25_ms": 19.877376079559326,
+              "q75_ms": 20.22935152053833,
+              "minimum_ms": 19.76201629638672,
+              "maximum_ms": 20.629344940185547
+            },
+            "wall": {
+              "samples": 18,
+              "median_ms": 20.059172500026534,
+              "q25_ms": 19.906494500006033,
+              "q75_ms": 20.255566499997713,
+              "minimum_ms": 19.790910000040185,
+              "maximum_ms": 20.660961999965366
+            }
+          },
+          "narrow": {
+            "cuda_event": {
+              "samples": 18,
+              "median_ms": 16.696640014648438,
+              "q25_ms": 16.213536262512207,
+              "q75_ms": 16.88435983657837,
+              "minimum_ms": 15.282208442687988,
+              "maximum_ms": 16.96985626220703
+            },
+            "wall": {
+              "samples": 18,
+              "median_ms": 16.726051499972527,
+              "q25_ms": 16.24466299999483,
+              "q75_ms": 16.912818499989157,
+              "minimum_ms": 15.320061000011265,
+              "maximum_ms": 16.997417000027326
+            }
+          }
+        },
+        "inputs_unchanged": true,
+        "upstream_unchanged": true,
+        "status": "qualified_diagnostic_only"
+      }
+    ],
+    "sources": {
+      "swiglu.py": "249aeef5d691062e609b8445194165071c1f1690280131395a74fc38d216c346",
+      "nf4.py": "daaf608b76960072ca1cf89bc245dd0ac55ad588d49bd79ec33c387c7d0245fc",
+      "compressed_swiglu.py": "b0ca176bf3e815fa93d1664e1b852a79550ca227bcac9e15aa7f8d690a058742",
+      "narrow_mlp.py": "567ddc16224e90010a30b9d4678c27e7036a61067d24218a1df354d7bcef0022"
+    },
+    "layer_metadata": {
+      "gate_proj": {
+        "type": "bitsandbytes.nn.modules.Linear4bit",
+        "weight_shape": [
+          8960,
+          1536
+        ],
+        "weight_dtype": "torch.float16",
+        "compute_dtype": "torch.float16",
+        "nested": true,
+        "quant_type": "nf4",
+        "blocksize": 64,
+        "nested_blocksize": 256,
+        "all_parameters_frozen": true
+      },
+      "up_proj": {
+        "type": "bitsandbytes.nn.modules.Linear4bit",
+        "weight_shape": [
+          8960,
+          1536
+        ],
+        "weight_dtype": "torch.float16",
+        "compute_dtype": "torch.float16",
+        "nested": true,
+        "quant_type": "nf4",
+        "blocksize": 64,
+        "nested_blocksize": 256,
+        "all_parameters_frozen": true
+      },
+      "down_proj": {
+        "type": "bitsandbytes.nn.modules.Linear4bit",
+        "weight_shape": [
+          1536,
+          8960
+        ],
+        "weight_dtype": "torch.float16",
+        "compute_dtype": "torch.float16",
+        "nested": true,
+        "quant_type": "nf4",
+        "blocksize": 64,
+        "nested_blocksize": 256,
+        "all_parameters_frozen": true
+      }
+    },
+    "status": "completed_diagnostic_only",
+    "diagnostic_wall_seconds": 11.61708777399997
+  },
+  "completed": true,
+  "elapsed_s": 15.519105367999998
+}

@@ -1,0 +1,171 @@
+Kaggle version 363836042; snapshot ddc7740aa180e81cbdafa886d4fa44c1698cd2f79ae1cc45e63dbd45bedb033b
+Time#Log Message
+7.0s00.00s - Debugger warning: It seems that frozen modules are being used, which may
+
+7.0s10.00s - make the debugger miss breakpoints. Please pass -Xfrozen_modules=off
+
+7.0s20.00s - to python to disable frozen modules.
+
+7.0s30.00s - Note: Debugging will proceed. Set PYDEVD_DISABLE_FILE_VALIDATION=1 to disable this validation.
+
+7.5s40.00s - Debugger warning: It seems that frozen modules are being used, which may
+
+7.5s50.00s - make the debugger miss breakpoints. Please pass -Xfrozen_modules=off
+
+7.5s60.00s - to python to disable frozen modules.
+
+7.5s70.00s - Note: Debugging will proceed. Set PYDEVD_DISABLE_FILE_VALIDATION=1 to disable this validation.
+
+8.6s8{'mode': 'maxopt_smoke', 'snapshot_sha256': 'ddc7740aa180e81cbdafa886d4fa44c1698cd2f79ae1cc45e63dbd45bedb033b'}
+
+8.8s9Tesla T4
+
+8.8s10Tesla T4
+
+8.8s11
+
+9.6s12Found existing installation: torchao 0.10.0
+
+9.7s13Uninstalling torchao-0.10.0:
+
+10.0s14  Successfully uninstalled torchao-0.10.0
+
+17.0s15{'source': 'development snapshot', 'sha256': 'ddc7740aa180e81cbdafa886d4fa44c1698cd2f79ae1cc45e63dbd45bedb033b', 'starter_commit': 'c7c2fcd15972ce8b898d8d3ff732ee192c817ceb', 'files': 54}
+
+17.0s16{'soup-cli': '0.77.0', 'torch': '2.11.0+cu128', 'triton': '3.6.0', 'transformers': '5.16.1', 'peft': '0.20.0', 'trl': '0.29.1', 'bitsandbytes': '0.50.2', 'accelerate': '1.14.0'}
+
+71.4s17............................................................................................................................................... [ 29%]
+
+71.7s18s. [ 29%]
+
+78.8s19s............................................................................................................................................. [ 59%]
+
+79.0s20. [ 59%]
+
+84.7s21.............................................................................................................................................. [ 89%]
+
+84.8s22.. [ 89%]
+
+87.5s23.......................................                                               [100%]
+
+87.5s24=============================== warnings summary ===============================
+
+87.5s25solution/test_compressed_swiglu.py: 14 warnings
+
+87.5s26  /usr/local/lib/python3.13/dist-packages/torch/jit/_script.py:365: DeprecationWarning: `torch.jit.script_method` is deprecated. Please switch to `torch.compile` or `torch.export`.
+
+87.5s27    warnings.warn(
+
+87.5s28
+
+87.5s29-- Docs: https://docs.pytest.org/en/stable/how-to/capture-warnings.html
+
+87.5s30241 passed, 1 skipped, 14 warnings in 69.15s (0:01:09)
+
+87.6s31.............                                               [100%]
+
+87.6s32=============================== warnings summary ===============================
+
+87.6s33solution/test_compressed_swiglu.py: 14 warnings
+
+87.6s34  /usr/local/lib/python3.13/dist-packages/torch/jit/_script.py:365: DeprecationWarning: `torch.jit.script_method` is deprecated. Please switch to `torch.compile` or `torch.export`.
+
+87.6s35    warnings.warn(
+
+87.6s36
+
+87.6s37-- Docs: https://docs.pytest.org/en/stable/how-to/capture-warnings.html
+
+87.6s38241 passed, 1 skipped, 14 warnings in 69.15s (0:01:09)
+
+104.3s39.......................................................................................................................... [ 91%]
+
+104.4s40.......                                                                  [100%]
+
+104.4s41=============================== warnings summary ===============================
+
+104.4s42../../../usr/local/lib/python3.13/dist-packages/torch/jit/_script.py:365: 14 warnings
+
+104.4s43  /usr/local/lib/python3.13/dist-packages/torch/jit/_script.py:365: DeprecationWarning: `torch.jit.script_method` is deprecated. Please switch to `torch.compile` or `torch.export`.
+
+104.4s44    warnings.warn(
+
+104.4s45
+
+104.4s46-- Docs: https://docs.pytest.org/en/stable/how-to/capture-warnings.html
+
+104.4s4779 passed, 14 warnings in 8.49s
+
+104.5s48...................... [ 91%]
+
+104.5s49.......                                                                  [100%]
+
+104.5s50=============================== warnings summary ===============================
+
+104.5s51../../../usr/local/lib/python3.13/dist-packages/torch/jit/_script.py:365: 14 warnings
+
+104.5s52  /usr/local/lib/python3.13/dist-packages/torch/jit/_script.py:365: DeprecationWarning: `torch.jit.script_method` is deprecated. Please switch to `torch.compile` or `torch.export`.
+
+104.5s53    warnings.warn(
+
+104.5s54
+
+104.5s55-- Docs: https://docs.pytest.org/en/stable/how-to/capture-warnings.html
+
+104.5s5679 passed, 14 warnings in 8.49s
+
+122.6s57{
+
+122.6s58  "name": "benchmark_mlp_variants",
+
+122.6s59  "completed": true,
+
+122.6s60  "elapsed_s": 15.519105367999998
+
+122.6s61}
+
+122.8s62{
+
+122.8s63  "name": "benchmark_mlp_variants",
+
+122.8s64  "completed": true,
+
+122.8s65  "elapsed_s": 15.519105367999998
+
+122.8s66}
+
+130.2s67{
+
+130.2s68  "name": "benchmark_frozen_head",
+
+130.2s69  "completed": true,
+
+130.2s70  "elapsed_s": 7.590216951000002
+
+130.2s71}
+
+130.4s72{
+
+130.4s73  "name": "benchmark_frozen_head",
+
+130.4s74  "completed": true,
+
+130.4s75  "elapsed_s": 7.590216951000002
+
+130.4s76}
+
+134.0s77/usr/local/lib/python3.13/dist-packages/mistune.py:435: SyntaxWarning: invalid escape sequence '\|'
+
+134.0s78  cells[i][c] = re.sub('\\\\\|', '|', cell)
+
+134.2s79/usr/local/lib/python3.13/dist-packages/nbconvert/filters/filter_links.py:36: SyntaxWarning: invalid escape sequence '\_'
+
+134.2s80  text = re.sub(r'_', '\_', text) # Escape underscores in display text
+
+134.9s81[NbConvertApp] Converting notebook __notebook__.ipynb to notebook
+
+135.0s82[NbConvertApp] Writing 184754 bytes to __notebook__.ipynb
+
+137.5s83[NbConvertApp] Converting notebook __notebook__.ipynb to html
+
+138.1s84[NbConvertApp] Writing 480788 bytes to __results__.html

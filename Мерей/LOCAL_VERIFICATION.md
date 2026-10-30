@@ -1,152 +1,133 @@
-# Проверенные результаты — 30 октября 2026
+# Проверенные результаты — полный DDC запуск
 
-## Итоговая версия: half-input CE, восемь собственных кернелов
+Kaggle full version: **363837033**, [ссылка](https://www.kaggle.com/code/promaladoi/soup-kaggle-development?scriptVersionId=363837033).
+Snapshot SHA256: `ddc7740aa180e81cbdafa886d4fa44c1698cd2f79ae1cc45e63dbd45bedb033b`.
+Measured solution SHA256: `698b33301c9a191f3b8bfadc502a0c15d7a08870579c465cfed119a06a2d4d77`.
+Result SHA256: `eecdceb5343a87742d4bf2b1b87e497cd9cd072c52d39dfeb744e532ecf8bb8b`; он проверен против checks JSON.
+Рабочий code commit: [b7c406dea7dbdc379149910efe044dccf155d083](https://github.com/promaladoi/Decentrathon-6.0/commit/b7c406dea7dbdc379149910efe044dccf155d083).
+Все 32 solution-файла рабочего commit побайтно сверены с измеренным snapshot; measured solution SHA256 совпадает.
 
-[Сохранённая Kaggle-версия №363823158](https://www.kaggle.com/code/promaladoi/soup-kaggle-development?scriptVersionId=363823158)
-пока private. Она исполняет embedded source snapshot, а не clone финального
-платформенного commit. Рабочий код опубликован в личной папке `Мерей`:
-[60918ea61d91c9995799392dc350344a66e8af3e](https://github.com/promaladoi/Decentrathon-6.0/commit/60918ea61d91c9995799392dc350344a66e8af3e).
 
-Snapshot SHA256:
-`c1b9cba94e65421fc0b204c097b725509edd32587c54db5a4b1a9d28961cc7d4`.
-`solution_sha256` из реального checks:
-`9d65e00dce6240bdc5fa6de66d6df83c338941585e443ccda57b277efed59f52`.
-Хеш [result.json](verification/half-t4-result.json):
-`5f14d4db0f2a4365d165f5587362f9d891e82241d5dc08d7ab7bcc462ae9e6a1`;
-он совпадает с `result_sha256` [checks](verification/half-t4-checks.json).
+## Окружение и выполненные тесты
 
-Окружение: Python `3.13.15`, Tesla T4, torch `2.11.0+cu128`, Triton `3.6.0`,
-Soup `0.77.0`, Transformers `5.16.1`, PEFT `0.20.0`, TRL `0.29.1`,
-bitsandbytes `0.50.2`, Accelerate `1.14.0`. Несовместимый предустановленный
-optional `torchao==0.10.0` удалён до всех тестов и измерений, одинаково для
-базы и решения; установки пакетов в измеряемых процессах нет.
+python `3.13.15`, torch `2.11.0+cu128`, triton `3.6.0`, soup-cli `0.77.0`, transformers `5.16.1`, peft `0.20.0`, trl `0.29.1`, bitsandbytes `0.50.2`, accelerate `1.14.0`. T4; optional torchao удалён до всех тестов/замеров.
+**241 passed, 1 skipped** solution; **79 passed** Soup с патчами. Solution pytest: 76.39 с;
+начальный Soup pytest: 8.52 с.
+Smoke №363836042 имел 241 passed, 1 skipped и 79 passed Soup;
+текущие числа выше извлечены именно из полного [журнала](verification/t4-run.log).
 
-- Solution GPU unit/integration: **194 passed, 1 skipped**, 98.23 с.
-- Soup с `SOUP_APPLY_SOLUTION=1`: **79 passed**, 8.49 с.
-- `run_task.py --repeats 2`: все четыре запуска завершились.
-- `check_rules.py`: **ALL CHECKS PASSED**, 10/10.
-- `score.py` подтвердил привязку всех checks к этому result.json; конкурсные
-  баллы не вычисляются без результатов других команд и оценки жюри.
+Первый smoke №363834978 завершился с 236 passed, 1 failed, 1 skipped:
+повторная установка converter теряла ссылку на исходное преобразование.
+Обёртка теперь сохраняет и восстанавливает эту ссылку; добавлен regression
+test. Обучение в том неудачном запуске не выполнялось.
+[Журнал ошибки](verification/experiments/smoke-363834978-failed.log) сохранён.
+Финальная локальная CPU-проверка: 28 passed, 214 skipped; GPU-пропуски
+покрыты завершёнными T4 тестами выше.
 
 ## Полное обучение и качество
 
-Исходный порядок и значения из [result.json](verification/half-t4-result.json):
+| Показатель | База | Решение | Отношение / проверка |
+| --- | --- | --- | --- |
+| Полное время soup train, с | 88.74 | 78.18 | 1.1351× |
+| GPU peak, MiB, nvidia-smi | 14345 | 7381 | база/решение 1.9435× |
+| Public eval loss | 2.04964 | 2.04964 | JSON Δ +0.000% |
+| Собственные кернелы, steps 3+ | — | 6.60% | минимум двух запусков, ≥5% |
+| Автоматические правила | — | 10/10 PASS | публичные данные |
 
-| Запуск | Полное время, с | Пик nvidia-smi, MiB |
-|---|---|---|
-| base_1 | 86.09 | 14345 |
-| solution_1 | 72.96 | 11181 |
-| solution_2 | 72.85 | 11181 |
-| base_2 | 76.66 | 14345 |
+| Запуск | Полное время, с | GPU peak, MiB |
+| --- | --- | --- |
+| base_1 | 90.42 | 14345 |
+| solution_1 | 78.63 | 7381 |
+| solution_2 | 77.73 | 7381 |
+| base_2 | 87.06 | 14345 |
 
-`summary` из неизменённого harness:
-
-| Показатель | База | Решение |
-|---|---|---|
-| `wall_s` | 81.38 | 72.91 |
-| `gpu_peak_mib` | 14345 | 11181 |
-| `train_loop_s` | 54.27 | 50.55 |
-| `eval_loss`, публичные строки | 2.04964 | 2.04965 |
-
-`speedup=1.1162`, `memory_ratio=1.283`, `quality_delta_pct=0.0`.
-Последнее число округлено до тысячной процента, а не доказывает равенство:
-напечатанные loss различаются. Требование +0.5% пройдено. Компиляция входит
-в полное время. Harness использует медиану двух времён и максимум пиков.
-База заметно варьировалась: 86.09 и 76.66 с; это практическое ограничение
-точности одной сессии и причина сохранять оба повтора, а не лучший запуск.
-
-[UI-журнал Kaggle Logs](verification/half-t4-run.log) содержит отображённые
-строки тестов, всех четырёх запусков, оценки качества и проверок правил.
-Численные значения таблиц выше сверены с исходным result.json.
+Полное время включает компиляцию. Summary — медиана двух времён и максимум
+NVML/nvidia-smi пиков. Public eval и округлённый quality_delta_pct взяты
+из result JSON; это не заявление точного равенства loss.
 
 ## Все десять правил
 
-| № | Правило | Результат |
-|---|---|---|
-| 1 | Все запуски завершились | PASS: 2 base, 2 solution |
-| 2 | Нет запрещённых kernel libraries и установки пакетов во время замеров | PASS |
-| 3 | Собственные кернелы реально запускаются | PASS: 8; пример SwiGLU исключён |
-| 4 | Доля собственных кернелов ≥5% | PASS: 8.5%, минимум двух запусков, шаги 3+ |
-| 5 | Та же задача и выходы Soup | PASS: в исходных допусках |
-| 6 | Кривая loss следует базе | PASS: первый шаг 0.00%, среднее 0.01% |
-| 7 | Public eval loss не выше базы более чем на 0.5% | PASS: +0.000% после округления |
-| 8 | Время и память не хуже более чем на 10% | PASS: время ×0.896, память ×0.779 базы |
-| 9 | Чистый замер, T4, одна GPU, allocator и пики согласованы | PASS |
-| 10 | Регрессионные тесты Soup с патчами | PASS: 79 passed, 14 warnings, 7.85 с |
+| Проверка | Результат | Исходное detail |
+| --- | --- | --- |
+| 1. every base and solution run finished | PASS | 2 base and 2 solution runs of 2 each |
+| 2. no ready-made kernel libraries | PASS | loaded: none; imported in solution/: none; packages changed during the run: none |
+| 3. own @triton.jit kernels in solution/ run in training | PASS | soup_nf4_unpack_kernel (solution/nf4.py), soup_rmsnorm_backward_kernel (solution/rmsnorm.py), soup_rmsnorm_forward_kernel (solution/rmsnorm.py), soup_rope_backward_kernel (solution/rope.py), soup_rope_forward_kernel (solution/rope.py), vocabulary_finish_kernel (solution/vocab.py), vocabulary_gradient_kernel (solution/vocab.py), vocabulary_partials_kernel (solution/vocab.py); the example's kernels do not count, under any name: example_swiglu_fwd_kernel, example_swiglu_bwd_kernel |
+| 4. own kernels together take >= 5% of the training time | PASS | 6.6% of the training time (lowest of 2 runs, steps 3+) |
+| 5. same task and Soup outputs (steps, adapter, settings, tokens, metrics, rewind) | PASS | identical within tolerance |
+| 6. loss curve follows the base | PASS | base_2: first step 0.00%, mean of all steps 0.01%; solution_1: first step 0.00%, mean of all steps 0.01%; solution_2: first step 0.00%, mean of all steps 0.01% (max 1% and 3%) |
+| 7. quality: eval loss at most 0.5% above the base | PASS | +0.000% |
+| 8. not worse than the base on time or memory (10% margin) | PASS | time x0.881, memory x0.515 of the base |
+| 9. clean measurement (a T4, idle GPUs, one GPU, harness allocator, peaks agree) | PASS | clean |
+| 10. Soup regression tests with your patches | PASS | 79 passed, 14 warnings in 8.08s |
 
-Public train/eval rows и seed этого запуска не заменяют скрытую выборку
-жюри. Автоматический результат предварительный; авторство и итоговый
-допуск определяет жюри.
+## Доля собственных кернелов
 
-## Что проверено у half-input пути
+| Собственный @triton.jit | Операция | Мин. доля времени |
+| --- | --- | --- |
+| vocabulary_partials_kernel | Частичные max, exp-sum и момент энтропии | 0.97% |
+| vocabulary_finish_kernel | Объединение статистики CE/энтропии | 0.53% |
+| vocabulary_gradient_kernel | Градиент CE с исходной нормировкой | 0.52% |
+| soup_rmsnorm_forward_kernel | Frozen Qwen2 RMSNorm | 0.61% |
+| soup_rmsnorm_backward_kernel | Градиент RMSNorm по активациям | 0.83% |
+| soup_rope_forward_kernel | Парное вращение Q/K | 0.58% |
+| soup_rope_backward_kernel | Градиент RoPE | 0.45% |
+| soup_nf4_unpack_kernel | NF4 и double-quant scales для MatMul4Bit backward | 2.10% |
 
-Instance-only hook сохраняет оригинальные Qwen forward, глобальный
-`LOSS_MAPPING` и Accelerate FP32 output conversion. Кернел читает FP16,
-считает FP32, записывает градиент FP16, как исходный CastBackward. Новых
-JIT-функций не добавлено: те же восемь кернелов четырёх семейств.
+| Запуск | timed_loop_s, шаги 3+ | Сумма собственных кернелов |
+| --- | --- | --- |
+| solution_1 | 47.497 | 6.60% |
+| solution_2 | 47.107 | 6.63% |
 
-Тесты включают none/sum/mean, нестандартный ignore_index, полностью
-игнорируемые цели, integer/CPU/GPU normalizer, explicit shift_labels fallback,
-ignored kwargs, GradScaler-подобный upstream, реальные Qwen/PEFT LoRA под
-Accelerate AMP и градиенты адаптера. Подтверждены реальные FP16 вход и DX
-Triton-кернела при прежних FP32 outputs для метрик.
+Формула: `100 * sum(own_kernel_ms) / (timed_loop_s * 1000)` только для
+восьми символов из source audit. Fully-qualified имена сопоставлены по
+последнему символу; organizer SwiGLU исключён. Итоговый минимум — 6.60%.
 
-Сохранён edge case `num_items_in_batch=0`: loss Inf/NaN и градиенты совпадают
-с native NLL/log-softmax. Для бесконечного upstream half-ветка использует
-`sparse(-scale at target) + probability*scale`; конечная half-формула и
-FP32 путь не меняются. Тест не ослаблялся и не удалялся.
+## Дополнительные диагностические сравнения
 
-## Отдельный half-CE microbenchmark
+[MLP diagnostic](verification/mlp-diagnostic.json) и
+[head diagnostic](verification/head-diagnostic.json) используют одинаковые
+случайные веса, три сбалансированных AB/BA раунда, CUDA events и wall time
+после прогрева. Forward/input gradients совпали побитно; у head совпали
+также logits и loss. Память — дополнительный PyTorch allocated peak одного
+вызова, а не NVML peak обучения. Сводные baseline MLP median объединяют
+оба сравнения; внутри исходного JSON сохранены отдельные парные раунды.
+`narrow` выбран по устойчивому выигрышу обоих размеров. Compressed-only
+SwiGLU и пересчёт frozen LM head **не установлены в обучении**: первый
+уступает narrow, второй медленнее с большим измеренным extra peak.
 
-[Исходный JSON](verification/half-ce-microbenchmark.json): словарь 151936,
-FP16 logits, сравнение прежнего собственного CE после явного `.float()`
-с новым half-input CE. CUDA events после прогрева; 20 повторов, компиляция
-исключена. Память — дополнительный PyTorch allocated peak, не полная
-nvidia-smi память обучения и не итоговый score.
 
-| Строк | Float-upcast, median ms | Half-input, median ms | Float-upcast, extra MiB | Half-input, extra MiB |
-|---|---|---|---|---|
-| 256 | 4.4798078536987305 | 1.2645919919013977 | 296.75341796875 | 74.19091796875 |
-| 1024 | 16.882176399230957 | 4.329855918884277 | 1187.00927734375 | 296.75927734375 |
-| 2048 | 32.442543029785156 | 8.422240257263184 | 2374.01708984375 | 593.51708984375 |
+| Синтетическая операция | Вариант | База ms | Вариант ms | База extra bytes | Вариант extra bytes |
+| --- | --- | --- | --- | --- | --- |
+| MLP [4, 128, 1536] | compressed | 5.94047999382019 | 6.156304121017456 | 95043584 | 113393664 |
+| MLP [4, 128, 1536] | narrow | 5.94047999382019 | 4.771568059921265 | 95043584 | 59768832 |
+| MLP [4, 512, 1536] | compressed | 20.009967803955078 | 20.028400421142578 | 379584512 | 365838336 |
+| MLP [4, 512, 1536] | narrow | 20.009967803955078 | 16.696640014648438 | 379584512 | 196083712 |
+| LM head rows=256 | recompute | 14.494607925415039 | 19.51755142211914 | 623117312 | 624690176 |
+| LM head rows=2048 | recompute | 92.56632232666016 | 96.0726547241211 | 1717699584 | 1730282496 |
 
-[Другой синтетический benchmark](verification/half-t4-microbenchmark.json)
-проверяет FP32 CE, энтропию и RMSNorm отдельно. База энтропии там — dense
-`logsumexp - sum(softmax*logits)`, не chunked TRL entropy. Ни один из этих
-микрозамеров не заменяет полное обучение и оценку адаптера.
+Историческая v9 №363823158 имела solution `wall_s=72.91`
+и peak `11181 MiB`; текущие значения — `78.18`
+и `7381 MiB`. Это **разные Kaggle-сессии**, не парный
+v9/new A/B. Разница не приписывается одному изменению; текущий speedup
+вычислен неизменённым harness относительно базы той же новой сессии.
 
-## Сопоставление версий и отклонённые варианты
 
-Предыдущая восьмикернельная версия №363806584 прошла 10/10 checks с FP32
-входом CE; peak решения был 12381 MiB. Новый peak 11181 MiB ниже ещё на
-1200 MiB (9.7%). Времена старой и новой сессий не являются парным A/B:
-менялось и время базы, поэтому разница 81.82 → 72.91 с не объявляется
-чистым причинным ускорением half CE.
+## Источники и границы проверки
 
-Ещё более ранняя пятикернельная версия прошла 9/10 правил: собственная доля
-4.4% не достигала 5%. RoPE и NF4 добавлены как используемые операции.
-Первая half-input попытка №363821762 остановилась на одном unit test
-нулевого denominator; обучение не запускалось. После исправления Inf/NaN
-семантики версия №363823158 прошла полный цикл, приведённый выше.
+[result](verification/t4-result.json), [checks](verification/t4-checks.json), [Kaggle UI log](verification/t4-run.log), [source audit](verification/source-audit.json). Result SHA256, solution SHA256 и snapshot SHA256
+взаимно сверены. Source audit подтверждает восемь собственных kernels,
+отсутствие запрещённых импортов/копий и неизменность 15 защищённых файлов.
+Все изменения кода относительно v9 находятся только в solution/.
+Тесты охватывают реальные Qwen/PEFT/Accelerate paths, публичные outputs,
+метрики, rewind и LoRA gradients, а также отдельные MLP и head контракты.
+Численная точность полного обучения проверена исходными допусками harness.
+Авторство и финальный допуск не выводятся из одного public запуска.
 
-Проверялись другие launch-конфигурации vocabulary/RMSNorm/RoPE, NF4 grouping
-и дополнительный kernel слияния scalar reductions CE. Они не включены:
-были потери точности либо непостоянный/малый синтетический выигрыш без
-подтверждённого улучшения полного обучения. Текущий вариант сохраняет
-исходные launch-конфигурации и не добавляет aggregate JIT.
+Работа ведётся в [личной папке Мерей](https://github.com/promaladoi/Decentrathon-6.0/tree/main/%D0%9C%D0%B5%D1%80%D0%B5%D0%B9).
+По указанию пользователя [платформенный репозиторий](https://github.com/BAITC-Hacks/hack-a5a4072f-wither-ai) и папки
+других участников не изменяются. Для сдачи ещё нужны финальный commit в
+требуемом платформой репозитории, публичный сохранённый notebook из исходного
+шаблона с этим commit и успешным Run All, данные команды, демо до трёх минут
+и презентация. Скрытые строки и другие seed не проверены; финальный допуск
+и конкурсный результат определяются отдельно. Текущая development версия private.
 
-## Аудит исходников и оставшаяся сдача
-
-[half-source-audit.json](verification/half-source-audit.json) связывает код
-с измеренным snapshot. `harness/`, `tests/`, `task/` не менялись по содержимому;
-различия CRLF/LF при checkout учитываются отдельно. Измеренный SHA256
-solution выше не объявляется побайтовым хешем всей GitHub-копии.
-Исходный пример SwiGLU не переписан и не включён в собственную долю.
-
-Работа ведётся в личной папке `Мерей`; платформа по указанию пользователя
-не изменялась. Подготовлен working clone-notebook с commit 60918ea..., но
-сам он ещё не запускался. Текущий `kaggle_notebook_dev.ipynb` содержит
-точный C1 embedded snapshot v9; подтверждённый результат получен из его
-private сохранённой Kaggle-версии. Для сдачи ещё нужны финальный commit платформенного
-репозитория, публичный notebook из шаблона с этим commit и успешным Run All,
-данные команды, демо до трёх минут и презентация.
