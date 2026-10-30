@@ -1,0 +1,104 @@
+{
+  "kind": "synthetic head forward/backward screen, not full-task admission",
+  "cases": [
+    {
+      "rows": 512,
+      "median_ms": {
+        "128": null,
+        "256": null,
+        "512": 21.96601676940918
+      },
+      "extra_peak_mib": {
+        "128": null,
+        "256": null,
+        "512": 102.83740234375
+      },
+      "errors": {
+        "128": {
+          "qualified": false,
+          "loss_abs": 0.0,
+          "gradient_max_abs": 0.001220703125,
+          "argmax_differences": 0
+        },
+        "256": {
+          "qualified": false,
+          "loss_abs": 0.0,
+          "gradient_max_abs": 0.001220703125,
+          "argmax_differences": 0
+        },
+        "512": {
+          "qualified": true,
+          "loss_abs": 0.0,
+          "gradient_max_abs": 0.0,
+          "argmax_differences": 0
+        }
+      }
+    },
+    {
+      "rows": 1024,
+      "median_ms": {
+        "128": null,
+        "256": 46.065921783447266,
+        "512": 44.3135986328125
+      },
+      "extra_peak_mib": {
+        "128": null,
+        "256": 80.96728515625,
+        "512": 155.90673828125
+      },
+      "errors": {
+        "128": {
+          "qualified": false,
+          "loss_abs": 0.0,
+          "gradient_max_abs": 0.0003662109375,
+          "argmax_differences": 0
+        },
+        "256": {
+          "qualified": true,
+          "loss_abs": 0.0,
+          "gradient_max_abs": 0.0,
+          "argmax_differences": 0
+        },
+        "512": {
+          "qualified": true,
+          "loss_abs": 0.0,
+          "gradient_max_abs": 0.0,
+          "argmax_differences": 0
+        }
+      }
+    },
+    {
+      "rows": 1536,
+      "median_ms": {
+        "128": null,
+        "256": 63.231998443603516,
+        "512": 60.52454376220703
+      },
+      "extra_peak_mib": {
+        "128": null,
+        "256": 83.98095703125,
+        "512": 159.67041015625
+      },
+      "errors": {
+        "128": {
+          "qualified": false,
+          "loss_abs": 0.0,
+          "gradient_max_abs": 0.000244140625,
+          "argmax_differences": 0
+        },
+        "256": {
+          "qualified": true,
+          "loss_abs": 0.0,
+          "gradient_max_abs": 0.0,
+          "argmax_differences": 0
+        },
+        "512": {
+          "qualified": true,
+          "loss_abs": 0.0,
+          "gradient_max_abs": 0.0,
+          "argmax_differences": 0
+        }
+      }
+    }
+  ]
+}
