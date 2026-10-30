@@ -1,6 +1,7 @@
 {
   "selected": "speed-v4",
   "source_commit": "2d77f774725a18c2b16f86d76fe6ec481fe61562",
+  "published_solution_commit": "3cf4a00160c88598fc1ec2ebe990c39ffe45c82b",
   "original_source": "Владимир/saved/v2-d080f2b/solution",
   "attribution": "Vladimir team kernels, with Anais runtime frozen-weight caching and speed experiments. First-layer norm/warm-up simplification follows Vladimir commit 987da36e1efa90652e1a7f8c48afef50685dbc40 description.",
   "solution_sha256": "f9ae1ef6766ac68031f68fcf24e4245d55b917919e702c29f4c660f882fdf145",
