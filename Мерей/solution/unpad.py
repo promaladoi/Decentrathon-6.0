@@ -39,6 +39,7 @@ from . import warmup as _warmup
 from .rmsnorm import add_rmsnorm
 from .dropout import real_row_dropout, _supported as _real_dropout_supported
 from .batch_metadata import compact_batch_metadata
+from .backward_sums import sum_half_gradients
 
 # Static candidate configuration: no harness/test/environment-dependent switch.
 REAL_ROW_DROPOUT = True
@@ -326,12 +327,15 @@ class QKV4bit(torch.autograd.Function):
 
     @staticmethod
     def backward(ctx, *grads):
-        dx = None
+        parts = []
         for layer, grad in zip(ctx.layers, grads):
             if grad is None:
                 continue
-            part = torch.matmul(grad.to(ctx.dtype), _weight(layer, ctx.dtype)).float()
-            dx = part if dx is None else dx.add_(part)
+            # Keep each GEMM's native half rounding, then widen and sum in
+            # the same q -> k -> v order in one elementwise launch.
+            parts.append(torch.matmul(grad.to(ctx.dtype), _weight(layer, ctx.dtype)))
+        dx = (sum_half_gradients(parts) if len(parts) > 1
+              else parts[0].float() if parts else None)
         return dx.to(ctx.x_dtype) if dx is not None else None, None, None, None, None
 
 
