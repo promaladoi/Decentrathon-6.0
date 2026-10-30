@@ -47,10 +47,11 @@ def apply():
     patch_bnb_matmul_4bit()  # ours: one-launch NF4 (double-quant) dequantization for 4-bit layers
     if UNPAD:
         patch_qwen2_causal_lm()  # ours: real tokens only, padded only for attention; fused loss
-        from .lazy_package_metadata import defer_trl_package_scan
-        # Preserve the native import order. TRL's full package scan is done by
-        # the original stdlib function if its mapping is actually consulted.
-        with defer_trl_package_scan():
+        from .package_metadata_snapshot import reuse_transformers_package_metadata
+        # Preserve the native import order and package/version lookups. In the
+        # pinned installed environment Transformers already scanned this same
+        # metadata; give TRL an independent copy instead of rescanning it.
+        with reuse_transformers_package_metadata():
             from .private_scope import install as install_private_scope
             install_private_scope()
             from .tokenization_map import install as install_tokenization_map
