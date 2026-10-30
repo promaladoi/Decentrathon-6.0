@@ -95,6 +95,10 @@ def test_nf4_decoder_matches_bitsandbytes(nested, dtype, shape, blocksize):
     torch.testing.assert_close(actual_out, expected, rtol=0, atol=0)
     transposed = dequantize_nf4(packed.t(), state)
     torch.testing.assert_close(transposed, expected.t(), rtol=0, atol=0)
+    if dtype == torch.float16:
+        wide_output = torch.empty(state.shape, dtype=torch.float32, device="cuda")
+        widened = dequantize_nf4(packed, state, wide_output)
+        torch.testing.assert_close(widened, expected.float(), rtol=0, atol=0)
 
 
 @pytest.mark.parametrize("nested", [False, True])

@@ -18,7 +18,7 @@ _codebooks = {}
 def decode_nf4_weights(packed, scales, code4, scale_code, scale_absmax,
                        offset, out, N: tl.constexpr, GROUP: tl.constexpr,
                        SCALE_GROUP: tl.constexpr, NESTED: tl.constexpr,
-                       BLOCK: tl.constexpr):
+                       BLOCK: tl.constexpr, ROUND_HALF: tl.constexpr = False):
     i = tl.program_id(0) * BLOCK + tl.arange(0, BLOCK)
     byte = tl.load(packed + i // 2, i < N, other=0).to(tl.int32)
     code = tl.where(i % 2 == 0, byte >> 4, byte & 15)
@@ -31,7 +31,10 @@ def decode_nf4_weights(packed, scales, code4, scale_code, scale_absmax,
         scale = scale_value * outer_scale + tl.load(offset).to(tl.float32)
     else:
         scale = tl.load(scales + group, i < N, other=0).to(tl.float32)
-    tl.store(out + i, value * scale, i < N)
+    result = value * scale
+    if ROUND_HALF:
+        result = result.to(tl.float16).to(tl.float32)
+    tl.store(out + i, result, i < N)
 
 
 def dequantize_nf4(packed, state, out=None):
@@ -46,6 +49,7 @@ def dequantize_nf4(packed, state, out=None):
         out, math.prod(state.shape), state.blocksize,
         state.state2.blocksize if nested else 1, nested, 1024,
         num_warps=4, enable_fp_fusion=False,
+        ROUND_HALF=state.dtype == torch.float16 and out.dtype == torch.float32,
     )
     return out.t() if packed.shape[0] == 1 else out
 
@@ -134,3 +138,25 @@ def patch_nf4_decoder():
 
     linear._soup_team_nf4 = True
     ops._dequant_linear_fallback = linear
+
+    from bitsandbytes.autograd._functions import MatMul4Bit
+    original_backward = MatMul4Bit.backward
+    if getattr(original_backward, "_team_decode_cast", False):
+        return
+
+    def backward(ctx, grad_output):
+        if (ctx.is_empty or not ctx.needs_input_grad[0] or ctx.needs_input_grad[1]
+                or grad_output.dtype != torch.float32 or not grad_output.is_cuda
+                or ctx.state.dtype != torch.float16 or ctx.state.quant_type != "nf4"):
+            return original_backward(ctx, grad_output)
+        _, packed = ctx.tensors
+        if not packed.is_contiguous() or packed.shape[1] != 1:
+            return original_backward(ctx, grad_output)
+        dense = torch.empty(ctx.state.shape, dtype=grad_output.dtype, device=grad_output.device)
+        dense = dequantize_nf4(packed, ctx.state, dense)
+        grad_a = torch.matmul(grad_output, dense)
+        grad_bias = grad_output.sum(0, dtype=ctx.dtype_bias) if ctx.needs_input_grad[3] else None
+        return grad_a, None, None, grad_bias, None
+
+    backward._team_decode_cast = True
+    MatMul4Bit.backward = staticmethod(backward)
