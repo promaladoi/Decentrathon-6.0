@@ -205,7 +205,7 @@ def test_decoder_layer_matches_original(monkeypatch):
 
 def test_warmup_signatures_compile():
     """kernel.warmup must accept the signatures warmup.py passes (the thread swallows errors)."""
-    from solution import mlp, nf4, rmsnorm, rope
+    from solution.team_vladimir import mlp, nf4, rmsnorm, rope
 
     for step in (nf4.warmup, rmsnorm.warmup, rope.warmup, mlp.warmup):
         step()

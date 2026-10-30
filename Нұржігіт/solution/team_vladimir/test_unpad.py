@@ -233,7 +233,7 @@ def test_fast_forward_matches_original(monkeypatch, lengths):
 
 
 def test_warmup_signatures_compile_unpad():
-    from solution import lmhead, unpad
+    from solution.team_vladimir import lmhead, unpad
 
     unpad.warmup()
     lmhead.warmup()
