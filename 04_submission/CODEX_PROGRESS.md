@@ -40,7 +40,18 @@ The unchanged starter verification notebook is
 `templates/original_starter_kaggle.ipynb`. Import it into Kaggle, select GPU T4 x2
 and Internet On, then Run All. It pins the organizer commit and uses no GitHub
 token. Checks 3 and 4 are expected to fail for the organizer example. A direct
-verification run is in progress; its results are not yet recorded here.
+verification of organizer commit `c7c2fcd15972ce8b898d8d3ff732ee192c817ceb`
+finished on Kaggle T4: base **79.03 s / 14345 MiB / loss 2.04961**, starter
+solution **86.24 s / 12385 MiB / loss 2.04968**. The four starter kernel tests
+and 79 Soup regression tests passed. Checks 3 and 4 failed as expected; the other
+eight checks passed. This is one paired run, not a directly comparable absolute
+time against a different experiment. Use the paired speedup ratio.
+
+Experimental code `12b9f58` avoids a redundant float32 decoded-weight buffer
+when the existing linear operation already uses CUDA fp16 autocast. Additional
+tests compare forward values and input gradients with the original backend,
+with and without autocast. Its T4 validation is in progress; it has not replaced
+the validated v3 candidate.
 
 Verify the unchanged public starter directly, then investigate remaining
 training-time bottlenecks. Record each finished experiment, including failures,
