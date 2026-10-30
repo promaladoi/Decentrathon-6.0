@@ -1,3 +1,12 @@
+# Archived failed v15 experiment
+
+v15 failed all six dropout tests and never trained. Its archived source was
+downloaded and verified against commit 389f037. The initial RNG diagnosis below
+was not established: the actual code error was reading noncontiguous row-index
+views as unit-stride arrays. See CODEX_V16_EXPERIMENT.md for the correction.
+
+## Original experiment description (superseded diagnosis)
+
 # v15: repair dropout equivalence and compile active kernels at model startup
 
 The participant's T4 execution of v14 `fd5e482` passed 106 tests but failed all

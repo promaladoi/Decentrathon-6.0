@@ -1,7 +1,7 @@
 # Нұржігіт — Codex нұсқасы
 
 Команда мүшесінің жұмыс папкасы. Бұл жерде код, notebook және нақты өлшеу есептері бар.
-Платформа репозиторийінен алынған snapshot: `4a5cfd20fd79e597e15919f3f19f959a6b4d689a`.
+Платформа репозиторийінен алынған snapshot: `0d7b3552eb460a888228760863e3a9ead4127ac2`.
 Kaggle ноутбугындағы бекітілген COMMIT қай код өлшенгенін анықтайды.
 Бүкіл commit тарихы `codex/kernel-v1` branch-інде сақталады.
 
@@ -14,12 +14,13 @@ Code: `13eaa8a`. **106 kernel tests + 79 Soup tests**, own-kernel share **11.3%*
 The participant supplied the final console output; the raw archive still needs
 local download/hash verification. [Reproduce v13](templates/codex_v13.ipynb).
 
-The branch tip contains the **unverified v15 repair + startup compilation experiment**.
-[Experiment details](CODEX_V15_EXPERIMENT.md). The original v14 failed four exact
-dropout tests and stopped before training. The repaired version uses the original
-dropout operator and retains zero-tolerance equivalence tests. No v15 speedup is claimed.
-[Fully archived v12 fallback](CODEX_V12_RESULT.md) · [Current status](CURRENT_STATUS.md) ·
-[Component credits](TEAM_INTEGRATION.md) · [All variants](03_validation/VERSION_COMPARISON.md).
+The branch tip contains the **unverified v16 index-layout repair**.
+[Failure analysis and experiment](CODEX_V16_EXPERIMENT.md).
+v14 and v15 failed exact dropout tests and never trained. Their kernel read
+strided row-index views as dense arrays. v16 normalizes indices and preserves
+all strict value/gradient/RNG checks; its GPU result is pending.
+[Retry v16](templates/run_v16_cell.py) · [Fresh notebook](templates/codex_v16.ipynb) ·
+[Current status](CURRENT_STATUS.md) · [All variants](03_validation/VERSION_COMPARISON.md).
 The final team submission is not selected.
 
 ## Earlier v3 candidate (archive)
