@@ -26,3 +26,7 @@ Repair 3016d55 uses the same public functional.dropout operator as the original.
 v15 ef10dd1 registers current kernels before the existing shared compile thread
 starts, so compilation overlaps model startup. No prebuilt cache or harness
 timing change is introduced. Both revisions still need GPU validation.
+
+Correction after v15 failure: the RNG-mapping diagnosis above was not established.
+The compact kernel assumed contiguous row-index storage; tests passed stride-2/3
+views. v16 normalizes the indices and retains strict output/gradient/RNG tests.

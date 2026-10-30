@@ -23,7 +23,8 @@
 | Combined v13 | 13eaa8a | 10 PASS (participant console) | 1.398x | 2.490x | -0.001% | 106 tests; own share 11.3%; 2 paired runs; raw archive pending download |
 | Combined v14 | fd5e482 | 4 unit tests FAIL | — | — | — | Exact dropout mask mismatch; no benchmark; raw console log saved |
 | v14 repair | 3016d55 | Pending | — | — | — | Original dropout operator; 6 exact dropout tests before training |
-| Combined v15 | ef10dd1 | Pending | — | — | — | Mask repair + compile active kernels while loading the model |
+| Combined v15 | 389f037 | 6 unit tests FAIL | — | — | — | No training; downloaded source matches Git; row-stride bug identified |
+| Combined v16 | 4a5cfd2 | Pending | — | — | — | Contiguous row-index repair; 8 dropout / 115 kernel tests before benchmark |
 | Анаис | әлі берілмеген | әлі берілмеген | жоқ | жоқ | жоқ | |
 | Владимир (user-reported) | main/d080f2b component | Full checks not supplied | 1.468x | 2.543x | -0.0% | User summary: 93.2 / 63.5 s, 14345 / 5641 MiB; not independently validated here |
 | Мерей | әлі берілмеген | әлі берілмеген | жоқ | жоқ | жоқ | |
