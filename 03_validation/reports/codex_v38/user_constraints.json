@@ -1,0 +1,17 @@
+{
+  "original_ten_passed": true,
+  "max_solution_peak_mib": 7171,
+  "memory_limit_mib": 7151,
+  "every_run_within_memory_limit": false,
+  "reported_eval_loss_nonincreasing": true,
+  "base_eval_loss": 2.04967,
+  "solution_eval_loss": 2.04966,
+  "median_total_seconds": 44.89,
+  "target_total_seconds": 30,
+  "target_met": false,
+  "eligible_within_memory_and_quality": false,
+  "all_requested_constraints_met": false,
+  "quality_note": "Compares the reported rounded evaluation loss; original loss-curve checks remain required.",
+  "result_sha256": "56c5771b266aeb791c45e31567f67c239d62fed9c2a0eea36303e0c6a0f9bce7",
+  "solution_sha256": "9a1e7d1268f9a1f9f40fa6dad3ddc7b9fdbb63cd9ec7d0c05521bc7610d12a9b"
+}
