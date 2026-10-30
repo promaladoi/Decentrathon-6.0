@@ -32,6 +32,12 @@ def attention(q, k, v, plan, scale):
     return out
 
 
+def can_skip_dense_mask(step,meta):
+    """Only when every layer uses independently delimited causal sequences."""
+    return (getattr(step,'_varlen_plan',None) is not None and meta['dim']<=128 and
+            all(getattr(layer.self_attn,'is_causal',True) for layer,_ in meta['layers']))
+
+
 def make_batch_init(original):
     def init(self, rows, batch, seq_len):
         original(self, rows, batch, seq_len)
@@ -67,6 +73,7 @@ def make_attention(original):
         step.done_with(a)
         return o if lo is None else o + lo
     forward._varlen_attention = True
+    forward._can_skip_dense_mask = can_skip_dense_mask
     return forward
 
 

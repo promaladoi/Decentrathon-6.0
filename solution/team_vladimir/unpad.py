@@ -477,10 +477,16 @@ def fast_forward(model, meta, input_ids, attention_mask, labels, num_items_in_ba
     h = inner.embed_tokens(input_ids.reshape(-1).index_select(0, rows))
     cos, sin = inner.rotary_emb(h, (rows % seq_len)[None])  # the positions of the base run
     cos, sin = cos[0].contiguous(), sin[0].contiguous()
-    stand_in = h.new_empty(1).expand(batch, seq_len, h.shape[-1])  # shape, dtype, device only
-    mask = modeling_qwen2.create_causal_mask(
-        config=inner.config, inputs_embeds=stand_in, attention_mask=attention_mask,
-        past_key_values=None, position_ids=torch.arange(seq_len, device=h.device)[None])
+    # Nurzhigit's native variable-length operator already delimits every
+    # sequence and applies causality. Build the dense mask only for fallbacks.
+    skip_mask = getattr(_attention, '_can_skip_dense_mask', None)
+    if skip_mask is not None and skip_mask(step, meta):
+        mask = None
+    else:
+        stand_in = h.new_empty(1).expand(batch, seq_len, h.shape[-1])  # shape, dtype, device only
+        mask = modeling_qwen2.create_causal_mask(
+            config=inner.config, inputs_embeds=stand_in, attention_mask=attention_mask,
+            past_key_values=None, position_ids=torch.arange(seq_len, device=h.device)[None])
 
     mlp_out = None
     for layer, projections in meta["layers"]:
