@@ -31,9 +31,9 @@ BLOCK_V = 4096
 GRAD_SCALE = 1024.0  # keeps small probabilities out of fp16 subnormals; divided out in backward
 
 
-@triton.jit
+@triton.jit(do_not_specialize=['WITH_GRAD'])
 def lm_ce_kernel(LOGITS, TARGET, ENT, AMAX, CE, stride, V, grad_scale, BLOCK_V: tl.constexpr,
-                 WITH_GRAD: tl.constexpr):
+                 WITH_GRAD):
     row = tl.program_id(0)
     ptr = LOGITS + row.to(tl.int64) * stride
     target = -1
@@ -108,7 +108,14 @@ class LMHeadLoss(torch.autograd.Function):
     def forward(ctx, x, weight, targets, denom, stats):
         tokens, hidden = x.shape
         x16 = x.to(torch.float16)
-        w16 = weight.to(torch.float16)  # what autocast feeds lm_head
+        cached = getattr(weight, '_anais_frozen_head', None)
+        key = (weight._version, weight.device, weight.dtype, tuple(weight.shape))
+        if not weight.requires_grad and cached is not None and cached[0] == key:
+            w16 = cached[1]
+        else:
+            w16 = weight.to(torch.float16)  # identical to autocast, retained only if frozen
+            if not weight.requires_grad:
+                weight._anais_frozen_head = (key, w16)
         ent = torch.empty(tokens, device=x.device)
         amax = torch.empty(tokens, device=x.device, dtype=torch.int64)
         ce = torch.zeros(tokens, device=x.device)

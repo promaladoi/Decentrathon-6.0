@@ -157,9 +157,9 @@ def rope_pad_bwd_kernel(DQP, DKP, DVP, COS, SIN, ROWS, DQ, DLQ, DK, DLK, DV, DLV
         tl.store(DLV + dstk + HALF, gv2.to(dt), mask=mk)
 
 
-@triton.jit(do_not_specialize=["seq_len"])
+@triton.jit(do_not_specialize=["seq_len", "TO_FLAT"])
 def heads_rows_kernel(FLAT, PAD, ROWS, sp_b, sp_h, sp_l, seq_len, H: tl.constexpr,
-                      D: tl.constexpr, BLOCK_H: tl.constexpr, TO_FLAT: tl.constexpr):
+                      D: tl.constexpr, BLOCK_H: tl.constexpr, TO_FLAT):
     """(batch, heads, seq_len, D) <-> (tokens, heads * D) for the real tokens."""
     t = tl.program_id(0).to(tl.int64)
     r = tl.load(ROWS + t)
@@ -438,6 +438,7 @@ def _lora_out(parts, x, step):
 
 
 def _attention(layer, projections, x, cos, sin, mask, step, meta):
+    from .trim_attention import trimmed_sdpa
     attn = layer.self_attn
     q_parts, k_parts, v_parts, o_parts = projections
     q, k, v = QKV4bit.apply(x, q_parts[0], k_parts[0], v_parts[0], torch.float16)
@@ -452,9 +453,8 @@ def _attention(layer, projections, x, cos, sin, mask, step, meta):
                                step.seq_len, meta["hq"], meta["hk"], meta["dim"], rep)
     is_causal = mask is None and step.seq_len > 1 and getattr(attn, "is_causal", True)
     kwargs = {"enable_gqa": True} if use_gqa else {}
-    out = torch.nn.functional.scaled_dot_product_attention(
-        qp, kp, vp, attn_mask=mask, dropout_p=0.0, scale=attn.scaling, is_causal=is_causal,
-        **kwargs)
+    out = trimmed_sdpa(qp, kp, vp, mask, step.spans,
+                       scale=attn.scaling, is_causal=is_causal, **kwargs)
     del qp, kp, vp
     a = UnpadHeads.apply(out, step.rows, step.seq_len)
     o = MatMulNF4.apply(a, o_parts[0].weight, None, o_parts[0].weight.quant_state)
@@ -472,6 +472,8 @@ def fast_forward(model, meta, input_ids, attention_mask, labels, num_items_in_ba
     batch, seq_len = input_ids.shape
     rows = attention_mask.reshape(-1).nonzero().squeeze(1)
     step = _Batch(rows, batch, seq_len)
+    from .trim_attention import occupied_spans
+    step.spans = occupied_spans(attention_mask)
 
     h = inner.embed_tokens(input_ids.reshape(-1).index_select(0, rows))
     cos, sin = inner.rotary_emb(h, (rows % seq_len)[None])  # the positions of the base run
@@ -485,7 +487,10 @@ def fast_forward(model, meta, input_ids, attention_mask, labels, num_items_in_ba
     for layer, projections in meta["layers"]:
         norm = layer.input_layernorm
         if mlp_out is None:
-            x = rmsnorm(h, norm.weight, norm.variance_epsilon)
+            # Reuse the fused fp32+fp16 norm signature instead of compiling a
+            # separate first-layer-only kernel (Vladimir's warm-up simplification).
+            _, x = add_rmsnorm(h, torch.zeros_like(h, dtype=torch.float16),
+                               norm.weight, norm.variance_epsilon)
         else:
             h, x = add_rmsnorm(h, mlp_out, norm.weight, norm.variance_epsilon)
         o = _attention(layer, projections, x, cos, sin, mask, step, meta)

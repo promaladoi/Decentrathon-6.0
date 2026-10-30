@@ -23,7 +23,24 @@ from .swiglu import BLOCK as SWIGLU_BLOCK, example_swiglu_bwd_kernel, example_sw
 
 
 def _weight(layer, dtype):
-    return dequantize_nf4(layer.weight, layer.weight.quant_state, dtype)
+    # Anais: frozen MLP weights are invariant across steps. Keep one dense copy per
+    # projection rather than unpacking it six times per layer/step. The quantized
+    # parameter stays intact; this is a run-local auxiliary tensor, never a disk cache.
+    packed = layer.weight
+    state = packed.quant_state
+    if packed.requires_grad:
+        return dequantize_nf4(packed, state, dtype)
+    tensors = [packed, state.absmax, state.code]
+    if state.nested:
+        tensors += [state.state2.absmax, state.state2.code, state.offset]
+    signature = (dtype, packed.device, id(state), tuple(state.shape), state.blocksize,
+                 tuple((id(t), t._version) for t in tensors))
+    cached = getattr(layer, '_anais_frozen_mlp', None)
+    if cached is not None and cached[0] == signature:
+        return cached[1]
+    weight = dequantize_nf4(packed, state, dtype)
+    layer._anais_frozen_mlp = (signature, weight)
+    return weight
 
 
 class MLP4bit(torch.autograd.Function):

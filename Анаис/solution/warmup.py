@@ -21,9 +21,9 @@ def _compile_all(unpad):
     if not torch.cuda.is_available():
         return
     torch.cuda.set_device(torch.cuda.current_device())
-    steps = [nf4.warmup, rmsnorm.warmup, mlp.warmup]
+    steps = [lambda: rmsnorm.warmup(standalone=not unpad), nf4.warmup]
     # the unpadded forward does RoPE inside its own kernel; rope.py is its fallback
-    steps += [unpad_module.warmup, lmhead.warmup] if unpad else [rope.warmup]
+    steps += [unpad_module.warmup, mlp.warmup, lmhead.warmup] if unpad else [rope.warmup, mlp.warmup]
     for step in steps:
         try:
             step()
