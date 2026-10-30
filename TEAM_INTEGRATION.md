@@ -45,3 +45,10 @@ v26 adapts Vladimir's `13d377043fa4cdad121973a3f6179d546918e9f4` launcher prepar
 idea through `launcher_warmup.py`, including all already-loaded shared and
 Nurzhigit kernels, with function/kernel alias deduplication. Attribution remains
 with Vladimir for this startup optimization; no timeline module is imported.
+
+v36 imports Merei's `backward_sums.py`, `batch_metadata.py` and associated tests
+from exact source `29419f43d9b9173d1ba5d6824a31589ad3b84df7` under
+`solution/team_merei/`. Their authorship remains with Merei and his tools. We
+adapt warmup/package imports and integrate the metadata with our native varlen
+plan. Ordered FP32 sums use the original native GEMMs; no new dot algorithm is
+enabled. The imported strict tests remain in the production validation suite.
