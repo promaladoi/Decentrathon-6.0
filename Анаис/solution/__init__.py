@@ -10,6 +10,8 @@ def apply():
     global _applied
     if _applied:
         return
+    from .lazy_train_cli import patch_lazy_train_cli
+    patch_lazy_train_cli()
     from . import warmup
     from .layer import patch_qwen2_decoder_layer
     from .mlp import patch_qwen2_mlp_4bit

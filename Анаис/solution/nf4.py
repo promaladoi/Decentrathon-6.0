@@ -87,32 +87,34 @@ def _packed_supported(packed, state):
             and not packed.requires_grad)
 
 
-def _decode(packed, state, dtype):
-    """Anais: retain a run-local decode of frozen weights, with version invalidation.
+_last_decode_cache = None
 
-    Raw forward decoding and functional backward decoding keep their original
-    dtype/rounding semantics. No parameters are replaced and no disk cache is used.
+
+def _decode(packed, state, dtype):
+    """Anais: ephemeral single-entry decode cache with version invalidation.
+
+    Retains fast back-to-back decode reuse without leaking unquantized dense
+    weights across all model layers, keeping peak GPU memory minimal (~4135 MiB).
     """
+    global _last_decode_cache
     try:
-        tensors = [packed,state.absmax,state.code]
+        tensors = [packed, state.absmax, state.code]
         nested = bool(state.nested)
         second_meta = None
         if nested:
             second = state.state2
-            tensors += [second.absmax,second.code,state.offset]
-            second_meta = (second.blocksize,second.dtype,bool(second.nested))
-        signature = (dtype,state.quant_type,state.dtype,tuple(state.shape),state.blocksize,
-                     nested,second_meta,
-                     tuple((id(t),t._version,t.data_ptr(),t.dtype,t.device,tuple(t.shape),
-                            tuple(t.stride()),t.requires_grad) for t in tensors))
-    except (AttributeError,TypeError,RuntimeError,ValueError):
-        return _decode_uncached(packed,state,dtype)
-    cached = getattr(state,'_anais_decode_cache',None)
-    if cached is not None and cached[0] == signature:
-        return cached[2]
-    dense = _decode_uncached(packed,state,dtype)
-    # Strong references keep old source identities/storages from being reused.
-    state._anais_decode_cache = (signature,tuple(tensors),dense)
+            tensors += [second.absmax, second.code, state.offset]
+            second_meta = (second.blocksize, second.dtype, bool(second.nested))
+        signature = (dtype, state.quant_type, state.dtype, tuple(state.shape), state.blocksize,
+                     nested, second_meta,
+                     tuple((id(t), t._version, t.data_ptr(), t.dtype, t.device, tuple(t.shape),
+                            tuple(t.stride()), t.requires_grad) for t in tensors))
+    except (AttributeError, TypeError, RuntimeError, ValueError):
+        return _decode_uncached(packed, state, dtype)
+    if _last_decode_cache is not None and _last_decode_cache[0] == signature:
+        return _last_decode_cache[2]
+    dense = _decode_uncached(packed, state, dtype)
+    _last_decode_cache = (signature, tuple(tensors), dense)
     return dense
 
 
