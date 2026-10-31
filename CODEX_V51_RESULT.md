@@ -16,9 +16,11 @@ The <=7151 MiB bound and nonincreasing reported eval-loss requirement pass.
 The <=27-second whole-command target is **not met**. The training-loop median
 is 28.69 s and must not be presented as the whole-command time.
 
-Public selection stays v45 (historical 45.03 s / 4135 MiB / 10/10). Different
-sessions include timing noise; a same-session v45 performance control is being
-collected before attributing this difference solely to the v51 change.
+Public selection stays v45 (historical 45.03 s / 4135 MiB / 10/10).
+Same-session solution-only v45 control measured 48.55 s / 4135 MiB, versus
+v51 49.03 s. The 0.48 s difference does not establish any speed advantage
+for v51; timing noise remains. The control is not a new ten-check admission.
+[Control evidence](03_validation/reports/v45_same_session_control/README.md).
 
 [Exact collection proof](03_validation/reports/codex_v51/collection_proof.json).
 [Original checks](03_validation/reports/codex_v51/checks.json).

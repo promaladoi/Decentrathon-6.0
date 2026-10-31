@@ -19,3 +19,7 @@ Pinned reproducible notebook: `templates/codex_v45.ipynb`.
 Development HEAD may contain experimental code; use the exact measured commit.
 
 [Measured v51 result](CODEX_V51_RESULT.md). No confirmed improvement; v45 stays selected.
+
+Same-session v45 solution-only control: 48.55 s / 4135 MiB; v51: 49.03 s.
+v52/v52r1 explicit-MMA prototypes matched sampled native values but were slower
+and were not integrated. See `03_validation/reports/v52r1_research/README.md`.

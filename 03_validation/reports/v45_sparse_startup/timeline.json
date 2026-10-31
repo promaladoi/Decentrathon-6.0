@@ -1,0 +1,209 @@
+{
+  "kind": "instrumented startup timeline; not a contest score",
+  "mode": "statements",
+  "total_instrumented_seconds": 47.15694452899993,
+  "intervals_are_inclusive": true,
+  "intervals_must_not_be_summed": true,
+  "intervals": [
+    {
+      "module": "harness._train",
+      "function": "0: parser = argparse.ArgumentParser(description=__doc__.splitlines()[0])",
+      "start_s": 0.018371290000004592,
+      "end_s": 0.01862940899991372,
+      "duration_s": 0.00025811899990912934
+    },
+    {
+      "module": "harness._train",
+      "function": "1: parser.add_argument(\"--config\", required=True)",
+      "start_s": 0.018631358999982695,
+      "end_s": 0.018654728999990766,
+      "duration_s": 2.3370000008071656e-05
+    },
+    {
+      "module": "harness._train",
+      "function": "2: parser.add_argument(\"--metrics\", required=True)",
+      "start_s": 0.01865587699990101,
+      "end_s": 0.018673901000056503,
+      "duration_s": 1.8024000155492104e-05
+    },
+    {
+      "module": "harness._train",
+      "function": "3: parser.add_argument(\"--solution\", action=\"store_true\")",
+      "start_s": 0.018674658000009003,
+      "end_s": 0.018694946000096024,
+      "duration_s": 2.028800008702092e-05
+    },
+    {
+      "module": "harness._train",
+      "function": "4: parser.add_argument(\"--profile\", help=\"write a per-kernel GPU time table here and stop early\")",
+      "start_s": 0.018695581999963906,
+      "end_s": 0.0187174430000141,
+      "duration_s": 2.186100005019398e-05
+    },
+    {
+      "module": "harness._train",
+      "function": "5: args = parser.parse_args()",
+      "start_s": 0.01871821200006707,
+      "end_s": 0.018768607000083648,
+      "duration_s": 5.0395000016578706e-05
+    },
+    {
+      "module": "harness._train",
+      "function": "6: sys.argv = [\"soup\", \"train\", \"--config\", args.config, \"--yes\"]",
+      "start_s": 0.01876939399994626,
+      "end_s": 0.018770471999914662,
+      "duration_s": 1.0779999684018549e-06
+    },
+    {
+      "module": "harness._train",
+      "function": "7: sys.modules[\"unsloth\"] = None",
+      "start_s": 0.018770978000020477,
+      "end_s": 0.01877169599993067,
+      "duration_s": 7.179999101936119e-07
+    },
+    {
+      "module": "harness._train",
+      "function": "8: sys.modules[\"unsloth_zoo\"] = None",
+      "start_s": 0.018772162000004755,
+      "end_s": 0.018772667000121146,
+      "duration_s": 5.050001163908746e-07
+    },
+    {
+      "module": "harness._train",
+      "function": "9: import torch",
+      "start_s": 0.018773323999994318,
+      "end_s": 1.6601478000000043,
+      "duration_s": 1.64137447600001
+    },
+    {
+      "module": "harness._train",
+      "function": "10: torch.empty(1, device=\"cuda\")",
+      "start_s": 1.6601511660001051,
+      "end_s": 2.044450631000018,
+      "duration_s": 0.38429946499991274
+    },
+    {
+      "module": "harness._train",
+      "function": "11: import transformers",
+      "start_s": 2.0444558659999075,
+      "end_s": 5.2425002600000425,
+      "duration_s": 3.198044394000135
+    },
+    {
+      "module": "harness._train",
+      "function": "12: watch = TritonWatch(torch)",
+      "start_s": 5.242503242000112,
+      "end_s": 5.362141367000049,
+      "duration_s": 0.11963812499993765
+    },
+    {
+      "module": "harness._train",
+      "function": "13: apply_s = None",
+      "start_s": 5.362144304999902,
+      "end_s": 5.362144913000066,
+      "duration_s": 6.080001639929833e-07
+    },
+    {
+      "module": "harness._train",
+      "function": "14: if args.solution:",
+      "start_s": 5.362145962000113,
+      "end_s": 10.95298452399993,
+      "duration_s": 5.590838561999817
+    },
+    {
+      "module": "harness._train",
+      "function": "15: marks = {\"first_step_begin\": None, \"last_step_end\": None, \"step_s\": [], \"trainer\": None}",
+      "start_s": 10.9529873890001,
+      "end_s": 10.952989074000016,
+      "duration_s": 1.6849999155965634e-06
+    },
+    {
+      "module": "harness._train",
+      "function": "16: prof = None",
+      "start_s": 10.952989937999973,
+      "end_s": 10.952990834000047,
+      "duration_s": 8.960000741353724e-07
+    },
+    {
+      "module": "harness._train",
+      "function": "17: if args.profile:",
+      "start_s": 10.9529919229999,
+      "end_s": 10.952994092999916,
+      "duration_s": 2.170000016121776e-06
+    },
+    {
+      "module": "harness._train",
+      "function": "18: class Probe(transformers.TrainerCallback):",
+      "start_s": 10.95299486099998,
+      "end_s": 11.146708362000027,
+      "duration_s": 0.19371350100004747
+    },
+    {
+      "module": "harness._train",
+      "function": "19: original_init = transformers.Trainer.__init__",
+      "start_s": 11.146711332999985,
+      "end_s": 11.181429533000028,
+      "duration_s": 0.034718200000043
+    },
+    {
+      "module": "harness._train",
+      "function": "20: def init(self, *init_args, **init_kwargs):",
+      "start_s": 11.181432072999996,
+      "end_s": 11.18143365800006,
+      "duration_s": 1.5850000636419281e-06
+    },
+    {
+      "module": "harness._train",
+      "function": "21: transformers.Trainer.__init__ = init",
+      "start_s": 11.181434508999928,
+      "end_s": 11.181436319000113,
+      "duration_s": 1.8100001852872083e-06
+    },
+    {
+      "module": "harness._train",
+      "function": "22: code = 0",
+      "start_s": 11.18143708699995,
+      "end_s": 11.18143757100006,
+      "duration_s": 4.840001111006131e-07
+    },
+    {
+      "module": "harness._train",
+      "function": "23: try:",
+      "start_s": 11.181438663000108,
+      "end_s": 47.04942733300004,
+      "duration_s": 35.86798866999993
+    },
+    {
+      "module": "harness._train",
+      "function": "24: steps = marks[\"step_s\"]",
+      "start_s": 47.0494310009999,
+      "end_s": 47.049432744000114,
+      "duration_s": 1.7430002117180265e-06
+    },
+    {
+      "module": "harness._train",
+      "function": "25: metrics = {",
+      "start_s": 47.0494340539999,
+      "end_s": 47.15638935800007,
+      "duration_s": 0.1069553040001665
+    },
+    {
+      "module": "harness._train",
+      "function": "26: if prof is not None:",
+      "start_s": 47.15639311299992,
+      "end_s": 47.15639404400008,
+      "duration_s": 9.310001587437e-07
+    },
+    {
+      "module": "harness._train",
+      "function": "27: write_json(args.metrics, metrics)",
+      "start_s": 47.156394886000044,
+      "end_s": 47.15693001499994,
+      "duration_s": 0.0005351289998998254
+    }
+  ],
+  "source_commit": "7a3db8fd5e24bbcb58affb475007a5cf93c56f07",
+  "exit_code": 0,
+  "diagnostic_outer_wall_s": 49.55,
+  "diagnostic_peak_mib": 4135
+}
