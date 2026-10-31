@@ -25,6 +25,8 @@ and a locally verified archive/source/checksum chain.
 | v67 | 84.38 | 48.50 | 4135 | 2.04966 → 2.04968 | 10/10 | FAIL: user limits |
 | v68 | 84.17 | 46.20 | 6879 | 2.04967 → 2.04963 | 10/10 | pass |
 | v69 | 82.05 | 46.73 | 3959 | 2.04964 → 2.04962 | 10/10 | pass |
+| v70 | 82.53 | 48.30 | 3959 | 2.04965 → 2.04968 | 10/10 | FAIL: user limits |
+| v71 | 85.33 | 49.06 | 3959 | 2.04967 → 2.04962 | 10/10 | pass |
 
 The current <=25-second whole-command target is not met. Historical reports keep their original target. The lowest observed memory among these candidates satisfying original admission and the strict user loss requirement is now 3915 MiB (v64r2), 220 MiB below v45. No speed improvement was established in its same-session control. Separate runs are not a simultaneous
 candidate-to-candidate A/B test, and differences this small may include noise.
@@ -91,3 +93,7 @@ The v57-v63 investigation is complete. Both the active development implementatio
 [v68 original measured outcome](CODEX_V68_RESULT.md): original admission and user memory/quality passed; speed comparison pending.
 
 [v69 original measured outcome](CODEX_V69_RESULT.md): original admission and user memory/quality passed; speed comparison pending.
+
+[v70 original measured outcome](CODEX_V70_RESULT.md): not selected; original admission or user requirements failed.
+
+[v71 original measured outcome](CODEX_V71_RESULT.md): original admission and user memory/quality passed; speed comparison pending.

@@ -1,0 +1,8 @@
+..........................................                               [100%]
+=============================== warnings summary ===============================
+solution/test_direct_dropout.py::test_private_lora_projection_uses_direct_mask_and_preserves_all_gradients[0.05]
+  /usr/local/lib/python3.13/dist-packages/torch/autograd/graph.py:869: UserWarning: Attempting to run cuBLAS, but there was no current CUDA context! Attempting to set the primary context... (Triggered internally at /pytorch/aten/src/ATen/cuda/CublasHandlePool.cpp:335.)
+    return Variable._execution_engine.run_backward(  # Calls into the C++ engine to run the backward pass
+
+-- Docs: https://docs.pytest.org/en/stable/how-to/capture-warnings.html
+42 passed, 1 warning in 10.50s

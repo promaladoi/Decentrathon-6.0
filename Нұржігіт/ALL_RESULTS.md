@@ -170,3 +170,7 @@
 [v68 original evidence](CODEX_V68_RESULT.md).
 
 [v69 original evidence](CODEX_V69_RESULT.md).
+
+[v70 original evidence](CODEX_V70_RESULT.md).
+
+[v71 original evidence](CODEX_V71_RESULT.md).

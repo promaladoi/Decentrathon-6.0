@@ -1,0 +1,8 @@
+{
+  "adapter": "/kaggle/working/codex_v71_3a887cc6/runs_codex_v71/base_1/adapter",
+  "eval_file": "/kaggle/working/codex_v71_3a887cc6/data/eval_public.jsonl",
+  "rows": 256,
+  "skipped_rows": 0,
+  "tokens": 38109,
+  "mean_loss": 2.04967
+}
