@@ -36,3 +36,5 @@ Development HEAD may contain experimental code; use the exact measured commit.
 [v53/v53r1 verified outcome](CODEX_V53_RESULT.md): 47.51 s / 4109 MiB, original 10/10; user nonincreasing-loss requirement failed. Not selected.
 
 [v54 native NF4 screen](03_validation/reports/v54_research): large MLP projections were slower; limited narrow-projection opportunity remains unintegrated. No new full-task score.
+
+[v55 activation recomputation](experiments/v55): ten exact targeted GPU tests passed; full original validation running. Smaller saved activation storage is tested; no full-command speed or peak-memory result is claimed yet.

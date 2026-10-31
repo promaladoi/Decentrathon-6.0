@@ -1,0 +1,11 @@
+{
+  "version": "v55",
+  "source_commit": "1569729553dd219249cf95c17ca37c865917fac7",
+  "status": "ten targeted GPU tests passed; full original validation running",
+  "starting_source": "7a3db8fd5e24bbcb58affb475007a5cf93c56f07",
+  "production_selection": "verified v45",
+  "target_total_seconds": 27,
+  "original_checks_required": 10,
+  "memory_limit_mib": 7151,
+  "reported_eval_loss_may_increase": false
+}
