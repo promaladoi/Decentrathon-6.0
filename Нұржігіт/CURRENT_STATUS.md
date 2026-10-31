@@ -38,3 +38,5 @@ Development HEAD may contain experimental code; use the exact measured commit.
 [v54 native NF4 screen](03_validation/reports/v54_research): large MLP projections were slower; limited narrow-projection opportunity remains unintegrated. No new full-task score.
 
 [v55 activation recomputation](experiments/v55): ten exact targeted GPU tests passed; full original validation running. Smaller saved activation storage is tested; no full-command speed or peak-memory result is claimed yet.
+
+[v56 narrow NF4 dispatch](experiments/v56): separate v45-based speed candidate; pending serial qualification after v55. No result or selection claimed.

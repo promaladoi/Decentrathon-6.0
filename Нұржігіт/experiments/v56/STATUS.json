@@ -1,0 +1,10 @@
+{
+  "version": "v56",
+  "source_commit": "1dc91c6a7cf7ed73baf42c1519ea393757a03bef",
+  "status": "prepared; awaiting serial GPU validation after v55",
+  "production_selection": "verified v45",
+  "starting_source": "7a3db8fd5e24bbcb58affb475007a5cf93c56f07",
+  "target_total_seconds": 27,
+  "memory_limit_mib": 7151,
+  "reported_eval_loss_may_increase": false
+}
