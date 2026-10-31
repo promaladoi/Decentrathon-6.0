@@ -1,7 +1,7 @@
 {
   "version": "v64r2",
   "source_commit": "5c36601c8302da8e0910b7697637fea4b3a0393d",
-  "status": "original 10/10 and user memory/quality passed; comparison pending",
+  "status": "verified lower-memory alternative; not selected for time",
   "production_selection": "verified v45",
   "target_total_seconds": 25,
   "memory_limit_mib": 7151,
@@ -54,5 +54,12 @@
     "eligible_within_memory_and_quality": true,
     "all_requested_constraints_met": false,
     "quality_note": "Compares the reported rounded evaluation loss; original loss-curve checks remain required."
+  },
+  "selection_reason": "220 MiB less memory, observed median 0.34 s slower than same-session exact v45; no speed improvement established",
+  "same_session_control": {
+    "version": "v45",
+    "wall_s": 47.27,
+    "peak_mib": 4135,
+    "full_task_admission": false
   }
 }

@@ -20,3 +20,5 @@ LoRA-A backward inputs are reconstructed with the same arithmetic from shared RM
 Current public selection stays measured v45 until an explicit evidence-backed comparison/selection decision.
 
 [Source/result proof](03_validation/reports/codex_v64r2/collection_proof.json). [User limits](03_validation/reports/codex_v64r2/user_constraints.json). [Candidate description](CODEX_V64R2_EXPERIMENT.md).
+
+[Completed same-session comparison and selection decision](CODEX_V64_COMPARISON.md).

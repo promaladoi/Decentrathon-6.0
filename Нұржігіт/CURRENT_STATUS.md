@@ -64,4 +64,6 @@ The v57-v63 investigation is complete. Both the active development implementatio
 [v64 original fixture failure](CODEX_V64_RESULT.md). [v64r1 measured outcome](CODEX_V64R1_RESULT.md): failed before complete original admission; not selected.
 
 
-[v64r2 original measured outcome](CODEX_V64R2_RESULT.md): original 10/10 and user memory/quality passed; comparison pending.
+[v64r2 original measured outcome](CODEX_V64R2_RESULT.md): verified lower-memory alternative; no speed improvement established; v45 selected.
+
+[v64 revisions completed comparison](CODEX_V64_COMPARISON.md): v64r2 is a verified lower-memory alternative; selected v45 remains exact. No 25-second claim.
