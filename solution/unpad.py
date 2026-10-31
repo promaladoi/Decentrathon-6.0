@@ -34,7 +34,7 @@ import triton.language as tl
 
 from .lmhead import LazyLogits, lm_head_loss, patch_metric_readers
 from .mlp import MLP4bit, _compute_dtype
-from .nf4 import MatMulNF4, dequantize_nf4, supported as nf4_supported, _linear_forward
+from .nf4 import MatMulNF4, dequantize_nf4, supported as nf4_supported, _linear_forward, _readonly_weight
 from . import warmup as _warmup
 from .rmsnorm import add_rmsnorm
 from .dropout import real_row_dropout, _supported as _real_dropout_supported
@@ -396,7 +396,7 @@ class QKV4bit(torch.autograd.Function):
 
 
 def _weight(layer, dtype):
-    return dequantize_nf4(layer.weight, layer.weight.quant_state, dtype)
+    return _readonly_weight(layer.weight, layer.weight.quant_state, dtype)
 
 
 # ---------------------------------------------------------------- model inspection
