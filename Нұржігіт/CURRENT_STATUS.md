@@ -75,3 +75,5 @@ The v57-v63 investigation is complete. Both the active development implementatio
 [v65 original measured outcome](CODEX_V65_RESULT.md): not selected; original admission or user requirements failed.
 
 [v66 speed-priority candidate](CODEX_V66_EXPERIMENT.md): full original validation running; selected v45 unchanged. No new elapsed-time claim.
+
+[v67 speed-priority candidate](CODEX_V67_EXPERIMENT.md): full original validation running; selected v45 unchanged. No new elapsed-time claim.
