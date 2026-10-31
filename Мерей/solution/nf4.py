@@ -13,12 +13,89 @@ dequantize_4bit does, before converting to grad_output.dtype.
 
 import functools
 import math
+import threading
+import weakref
+from dataclasses import dataclass
 
 import torch
 import triton
 import triton.language as tl
 
 BLOCK = 1024
+
+# Merey: retain Anais's exact run-local decode with fixed byte reservations.
+# Attention's 294 MiB cannot be consumed by the MLP: the first 18 fixed-model
+# MLP matrices use 472.5 MiB of their separate 474 MiB reservation. Remaining
+# MLP matrices decode normally, without eviction or repeated cache churn.
+# These are allocation bounds, not a measurement-dependent policy; there are
+# no driver/memory/benchmark queries and no cross-run persistence.
+# Guaranteed uncached routes skip signature work; existing entries still use
+# all source/output/stream checks before any reuse.
+DECODE_CACHE_MAX_BYTES = 768 * 1024 * 1024
+DECODE_CACHE_CATEGORY_MAX_BYTES = {'attention': 294 * 1024 * 1024,
+                                  'mlp': 474 * 1024 * 1024}
+DECODE_CACHE_MAX_DIM = 1536
+DECODE_CACHE_MLP_SHAPES = ((8960, 1536), (1536, 8960))
+
+
+@dataclass(eq=False)
+class _DecodeEntry:
+    signature: tuple
+    sources: tuple
+    dense: torch.Tensor
+    dense_signature: tuple
+
+
+_decode_cache_lock = threading.RLock()
+_decode_cache_entries = {}
+_decode_cache_bytes = 0
+_decode_cache_category_bytes = {'attention': 0, 'mlp': 0}
+
+
+def _tensor_signature(tensor):
+    return (id(tensor), tensor._version, tensor.data_ptr(), tensor.dtype,
+            tensor.device, tuple(tensor.shape), tuple(tensor.stride()),
+            tensor.storage_offset(), tensor.requires_grad)
+
+
+def _entry_expired(key, reference):
+    global _decode_cache_bytes
+    with _decode_cache_lock:
+        registered = _decode_cache_entries.get(key)
+        if registered is not None and registered[0] is reference:
+            _decode_cache_bytes -= registered[1]
+            _decode_cache_category_bytes[registered[2]] -= registered[1]
+            del _decode_cache_entries[key]
+
+
+def _discard_decode_cache(state):
+    """Forget one slot before replacement, keeping old user-held tensors valid."""
+    global _decode_cache_bytes
+    entry = getattr(state, '_anais_decode_cache', None)
+    if entry is None:
+        return
+    state._anais_decode_cache = None
+    registered = _decode_cache_entries.pop(id(entry), None)
+    if registered is not None:
+        _decode_cache_bytes -= registered[1]
+        _decode_cache_category_bytes[registered[2]] -= registered[1]
+
+
+def _cache_category(state, dtype):
+    shape = getattr(state, 'shape', None)
+    if not (dtype == torch.float16 and getattr(state, 'dtype', None) == torch.float16
+            and isinstance(shape, (tuple, list, torch.Size)) and len(shape) == 2
+            and all(isinstance(n, int) and n > 0 for n in shape)):
+        return None
+    if all(n <= DECODE_CACHE_MAX_DIM for n in shape):
+        return 'attention'
+    if tuple(shape) in DECODE_CACHE_MLP_SHAPES:
+        return 'mlp'
+    return None
+
+
+def _cache_shape_supported(state, dtype):
+    return _cache_category(state, dtype) is not None
 
 
 @triton.jit
@@ -88,6 +165,76 @@ def _packed_supported(packed, state):
 
 
 def _decode(packed, state, dtype):
+    """Anais cache, with separate bounded attention/MLP FP16 reservations.
+
+    Raw forward decoding and functional backward decoding keep their original
+    dtype/rounding semantics. Sources and returned values are version checked;
+    another CUDA stream gets a fresh decode on that stream. The weak registry
+    accounts for bytes without extending the model or QuantState lifetime.
+    """
+    global _decode_cache_bytes
+    category = _cache_category(state, dtype)
+    if category is None:
+        # Ordinary unsupported shapes do not need a cache lock. A state
+        # changed from an eligible shape still releases its previous slot.
+        if getattr(state, '_anais_decode_cache', None) is not None:
+            with _decode_cache_lock:
+                _discard_decode_cache(state)
+        return _decode_uncached(packed, state, dtype)
+    with _decode_cache_lock:
+        cached = getattr(state, '_anais_decode_cache', None)
+        size = math.prod(state.shape) * 2
+        # This state has no reusable entry and cannot fit either reservation.
+        # Preserve its raw decode without building six source signatures.
+        if cached is None and (
+                _decode_cache_bytes + size > DECODE_CACHE_MAX_BYTES
+                or _decode_cache_category_bytes[category] + size
+                > DECODE_CACHE_CATEGORY_MAX_BYTES[category]):
+            return _decode_uncached(packed, state, dtype)
+        try:
+            tensors = [packed, state.absmax, state.code]
+            nested = bool(state.nested)
+            second_meta = None
+            if nested:
+                second = state.state2
+                tensors += [second.absmax, second.code, state.offset]
+                second_meta = (second.blocksize, second.dtype, bool(second.nested))
+            stream = (torch.cuda.current_stream(packed.device).cuda_stream
+                      if packed.is_cuda else None)
+            signature = (dtype, state.quant_type, state.dtype, tuple(state.shape),
+                         state.blocksize, nested, second_meta, stream,
+                         tuple(_tensor_signature(t) for t in tensors))
+            if (isinstance(cached, _DecodeEntry) and cached.signature == signature
+                    and all(ref() is tensor for ref, tensor in zip(cached.sources, tensors))
+                    and _tensor_signature(cached.dense) == cached.dense_signature):
+                return cached.dense
+        except (AttributeError, TypeError, RuntimeError, ValueError):
+            _discard_decode_cache(state)
+            return _decode_uncached(packed, state, dtype)
+        # Invalidation must not retain a dead dense copy during the next decode.
+        _discard_decode_cache(state)
+        del cached
+        if (_decode_cache_bytes + size > DECODE_CACHE_MAX_BYTES
+                or _decode_cache_category_bytes[category] + size
+                > DECODE_CACHE_CATEGORY_MAX_BYTES[category]):
+            return _decode_uncached(packed, state, dtype)
+        # A caller's inference_mode must not poison a later training graph.
+        with torch.inference_mode(False), torch.no_grad():
+            dense = _decode_uncached(packed, state, dtype)
+        # Identity-checked weak source refs prevent address/id reuse (ABA),
+        # without a Params4bit -> QuantState -> entry -> Params4bit cycle.
+        entry = _DecodeEntry(signature, tuple(weakref.ref(t) for t in tensors),
+                             dense, _tensor_signature(dense))
+        key = id(entry)
+        reference = weakref.ref(entry, lambda ref: _entry_expired(key, ref))
+        state._anais_decode_cache = entry
+        _decode_cache_entries[key] = (reference, size, category)
+        _decode_cache_bytes += size
+        _decode_cache_category_bytes[category] += size
+        return dense
+
+
+def _decode_uncached(packed, state, dtype):
     """Raw decode to the destination dtype, as CUDA forward fallback does."""
     if not _packed_supported(packed, state) or dtype not in (torch.float16, torch.float32):
         raise ValueError('unsupported CUDA NF4 input')

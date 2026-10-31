@@ -1,0 +1,14 @@
+{
+  "OPTIMIZATION_NOTES.md": {
+    "previous_runtime_commit": "766d0a39fe8394be8a1cd280401af1adde6d5206",
+    "bytes": 8805,
+    "sha256": "5ec2dc2fc20926a17c07d8f479e9f1e14659d34c621fa9483ea72d25f29156a9",
+    "git_blob_sha": "fdd328efb83fafe8be74f11379261dbb0ac54ca9"
+  },
+  "optimization_validation.ipynb": {
+    "previous_runtime_commit": "766d0a39fe8394be8a1cd280401af1adde6d5206",
+    "bytes": 14456,
+    "sha256": "b56d7830590d0b6adf1db01e4ee312c16bb455c8c357041402e94501e8bfd306",
+    "git_blob_sha": "127223c6f622c6bbeb1e55a2afbf31cf4d59c01d"
+  }
+}

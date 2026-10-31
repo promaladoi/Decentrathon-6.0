@@ -1,0 +1,6 @@
+native metadata snapshot parity: {"native_mapping_equal": true, "independent_dict_and_lists": true, "entries": 978, "helper_lookups": {"transformers": [true, "5.16.1"], "torch": [true, "2.11.0+cu128"], "packaging": [true, "26.3"], "sys": [true, "N/A"], "_merey_missing_metadata_probe_7f293c": [false, "N/A"]}, "cuda_initialized": false, "cpu_probe_gpu_hidden": true, "real_setup_prefix_seconds": 17.79542168199987, "fresh_native_scan_seconds": 2.2372479450000355, "native_scan_callers_during_setup": [], "actual_snapshot_returns_to_trl": 1, "setup_calls": {"wrapper": 1, "native": 1}, "stopped_before_seed_and_model": true, "setup_idempotent": true, "function_restored": true}
+.
+----------------------------------------------------------------------
+Ran 1 test in 24.658s
+
+OK

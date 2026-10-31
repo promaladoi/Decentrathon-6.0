@@ -1,5 +1,14 @@
 # Мерей — состояние работы
 
+## Этап 3: шаги быстрее на 4.834%, память ≤ 5039 MiB
+
+Текущий Мерей 766 → выбранный вариант E на основе Анаис: **23.191 → 22.07 с для шагов 3–64**, медианы четырёх запусков каждого варианта, два блока ABBA. Полная команда: **43.51 → 42.46 с**. Во всех парных и официальных solution runs пик≤5175 MiB. **10/10 правил PASS**, 428 solution tests + отдельный native parity 1 PASS; Soup 79 PASS. Это ускорение самих повторяющихся шагов; секунды прошлых сессий и обязательного native admission с этой парой не смешиваются.
+
+Runtime [`ce2c4e4ab547088abd17dde87997e16f798a4695`](https://github.com/promaladoi/Decentrathon-6.0/commit/ce2c4e4ab547088abd17dde87997e16f798a4695).
+[Отчёт и все восемь запусков](verification/codex_stage3/optimization-report.md) · [Checks](verification/codex_stage3/final-checks.json) · [Происхождение](verification/codex_stage3/attribution.md) · [Source proof](verification/codex_stage3/final-source-proof.json) · [Чистый reproduction notebook](templates/stage3_reproduction.ipynb).
+
+Публикуется точный измеренный solution tree `1791f95ed4509df573e61a0230163482caac440d`; отчёт и notebook находятся вне solution. Анаис, остальные папки участников и исходные harness/task/tests сохранены. Ниже — история предыдущих этапов.
+
 ## Этап 2: ещё −3.7% полного времени при прежних 5175 MiB
 
 В новой парной серии Kaggle T4 текущий Мерей (`ae2e088`) и выбранный
