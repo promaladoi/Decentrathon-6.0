@@ -1,0 +1,9 @@
+{
+  "code_commit": "0d12b9ee8aada7269c11bf1c5cdea776f305477a",
+  "version": "v65",
+  "status": "accepted",
+  "checks_passed": 10,
+  "eligible_within_memory_and_quality": false,
+  "target_total_seconds": 25,
+  "target_met": false
+}

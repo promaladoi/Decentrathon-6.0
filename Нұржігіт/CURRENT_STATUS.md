@@ -12,6 +12,7 @@
 | v56 | 85.69 | 49.69 | 4135 | 2.04960 → 2.04968 | 10/10 | FAIL: user limits |
 | v63 | 83.68 | 48.69 | 4115 | 2.04962 → 2.04963 | 10/10 | FAIL: user limits |
 | v64r2 | 86.33 | 47.61 | 3915 | 2.04966 → 2.04963 | 10/10 | pass |
+| v65 | 81.69 | 43.77 | 6659 | 2.04965 → 2.04966 | 10/10 | FAIL: user limits |
 
 Public main: selected v45, 45.03 seconds / 4135 MiB / original 10/10.
 v48 and v49 are measured memory alternatives (4115 MiB), not replacements.
@@ -70,4 +71,7 @@ The v57-v63 investigation is complete. Both the active development implementatio
 
 [Four original ZIPs and checksum manifest](https://github.com/promaladoi/Decentrathon-6.0/releases/tag/nurzhigit-evidence-through-v64r2-20261031): failed v64, failed v64r1, admitted v64r2 and the exact same-session v45 control. Five release assets have verified server SHA-256 digests and public download links. [Publication receipt](04_submission/v64_revisions_publication.json). [Protected-file/source audit](04_submission/v64_revisions_source_audit.json). [Selection and source verification](04_submission/v64_revisions_selection.json).
 
-[v65 speed-priority candidate](CODEX_V65_EXPERIMENT.md): full original validation running; selected v45 unchanged. No new elapsed-time claim.
+
+[v65 original measured outcome](CODEX_V65_RESULT.md): not selected; original admission or user requirements failed.
+
+[v66 speed-priority candidate](CODEX_V66_EXPERIMENT.md): full original validation running; selected v45 unchanged. No new elapsed-time claim.
