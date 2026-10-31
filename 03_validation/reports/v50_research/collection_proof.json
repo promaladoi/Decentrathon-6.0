@@ -1,0 +1,13 @@
+{
+  "version": "v50",
+  "kind": "isolated inactive native-BMM research",
+  "source_commit": "cce30e91aaae3329b20df98931ec5c372347b47f",
+  "archive_sha256": "d9e1bc9788a1301d6fc6a4b015265fd8a54b2964be1fc6cd1c5a498d81c41550",
+  "exact_source_verified": true,
+  "status": "rejected_numerical_gate",
+  "production_solution_changed": false,
+  "full_task_run": false,
+  "accepted_as_solution": false,
+  "exact_cases": 2,
+  "cases": 14
+}
