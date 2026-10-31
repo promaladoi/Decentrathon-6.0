@@ -8,6 +8,7 @@
 | v49 | 80.08 | 45.69 | 4115 | 2.04967 → 2.04966 | 10/10 | pass |
 | v51 | 84.20 | 49.03 | 4135 | 2.04964 → 2.04963 | 10/10 | pass |
 | v53r1 | 83.14 | 47.51 | 4109 | 2.04961 → 2.04965 | 10/10 | FAIL: loss increased |
+| v55 | 83.80 | 52.23 | 3555 | 2.04964 → 2.04967 | 10/10 | FAIL: user limits |
 
 Public main: selected v45, 45.03 seconds / 4135 MiB / original 10/10.
 v48 and v49 are measured memory alternatives (4115 MiB), not replacements.
@@ -37,6 +38,7 @@ Development HEAD may contain experimental code; use the exact measured commit.
 
 [v54 native NF4 screen](03_validation/reports/v54_research): large MLP projections were slower; limited narrow-projection opportunity remains unintegrated. No new full-task score.
 
-[v55 activation recomputation](experiments/v55): ten exact targeted GPU tests passed; full original validation running. Smaller saved activation storage is tested; no full-command speed or peak-memory result is claimed yet.
 
 [v56 narrow NF4 dispatch](experiments/v56): separate v45-based speed candidate; pending serial qualification after v55. No result or selection claimed.
+
+[v55 measured outcome](CODEX_V55_RESULT.md): not selected; original admission or stricter user requirement failed. The 27-second target remains unmet.

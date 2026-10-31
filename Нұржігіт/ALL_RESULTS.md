@@ -142,3 +142,5 @@
 
 [v53/v53r1 original result and rejected user quality](CODEX_V53_RESULT.md).
 [v54 inactive native dispatch screen](03_validation/reports/v54_research).
+
+[v55 measured outcome](CODEX_V55_RESULT.md).
