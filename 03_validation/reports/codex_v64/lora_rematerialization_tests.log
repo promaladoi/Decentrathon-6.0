@@ -1,0 +1,74 @@
+.......F...                                                              [100%]
+=================================== FAILURES ===================================
+_______ test_dispatch_preserves_observers_and_native_fallback[override] ________
+
+monkeypatch = <_pytest.monkeypatch.MonkeyPatch object at 0x7c651e3518c0>
+hooked = 'override'
+
+    @pytest.mark.parametrize('hooked',['none','linear','dropout','override','frozen','no_amp'])
+    def test_dispatch_preserves_observers_and_native_fallback(monkeypatch,hooked):
+        from solution import lora_remat
+        from solution.rmsnorm import add_rmsnorm_with_stats
+        from solution.unpad import _Batch,_lora_out
+        torch.manual_seed(641)
+        rows=_rows(4,384,(384,201,27,110))
+        residual=torch.randn((rows.numel(),1536),device='cuda',requires_grad=True)
+        h,x,rstd=add_rmsnorm_with_stats(residual,torch.zeros_like(residual,dtype=torch.float16),
+                                      torch.ones(1536,device='cuda'),1e-6)
+        norm_weight=torch.ones(1536,device='cuda')
+        a=nn.Linear(1536,16,bias=False,device='cuda',dtype=torch.float32)
+        b=nn.Linear(16,256,bias=False,device='cuda',dtype=torch.float32)
+        dropout=nn.Dropout(0.05)
+        calls=[]
+        if hooked=='linear': a.register_forward_hook(lambda *args:calls.append('observer'))
+        if hooked=='dropout': dropout.register_forward_hook(lambda *args:calls.append('observer'))
+        if hooked=='override':
+            original=a.forward
+            def replaced(value):
+                calls.append('observer')
+                return original(value)
+            a.forward=replaced
+        if hooked=='frozen': a.weight.requires_grad_(False)
+        original=lora_remat.lora_input_projection
+        def traced(*args):
+            calls.append('remat')
+            return original(*args)
+        monkeypatch.setattr(lora_remat,'lora_input_projection',traced)
+        step=_Batch(rows,4,384,packed_metadata={})
+        with torch.autocast('cuda',dtype=torch.float16,enabled=hooked!='no_amp'):
+>           result=_lora_out((None,a,b,dropout,2.0),x,step,norm_descriptor=(h,norm_weight,rstd))
+                   ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+
+solution/test_lora_remat.py:104: 
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ 
+solution/unpad.py:649: in _lora_out
+    projected = lora_a(step.dropout(dropout, x))
+                ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+/usr/local/lib/python3.13/dist-packages/torch/nn/modules/module.py:1779: in _wrapped_call_impl
+    return self._call_impl(*args, **kwargs)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+/usr/local/lib/python3.13/dist-packages/torch/nn/modules/module.py:1790: in _call_impl
+    return forward_call(*args, **kwargs)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ 
+
+value = tensor([[-0.5214, -0.8654, -0.2375,  ..., -0.6297,  0.4435, -0.7548],
+        [-1.3654,  1.0934, -1.3112,  ...,  0.000...0.1924, -0.4919,  0.6188,  ...,  2.5747,  1.0344,  0.4399]],
+       device='cuda:0', grad_fn=<_RealRowDropoutBackward>)
+
+    def replaced(value):
+        calls.append('observer')
+>       return original(value)
+               ^^^^^^^^^^^^^^^
+E       TypeError: lora_input_projection() missing 6 required positional arguments: 'a_weight', 'descriptor', 'rows', 'batch', 'sequence', and 'p'
+
+solution/test_lora_remat.py:94: TypeError
+=============================== warnings summary ===============================
+solution/test_lora_remat.py::test_two_lora_branches_exact_values_gradients_rng_and_retained_graph[0.05-31-17-lengths0]
+  /usr/local/lib/python3.13/dist-packages/torch/autograd/graph.py:869: UserWarning: Attempting to run cuBLAS, but there was no current CUDA context! Attempting to set the primary context... (Triggered internally at /pytorch/aten/src/ATen/cuda/CublasHandlePool.cpp:335.)
+    return Variable._execution_engine.run_backward(  # Calls into the C++ engine to run the backward pass
+
+-- Docs: https://docs.pytest.org/en/stable/how-to/capture-warnings.html
+=========================== short test summary info ============================
+FAILED solution/test_lora_remat.py::test_dispatch_preserves_observers_and_native_fallback[override]
+1 failed, 10 passed, 1 warning in 13.54s

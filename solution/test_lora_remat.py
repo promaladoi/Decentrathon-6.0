@@ -88,16 +88,16 @@ def test_dispatch_preserves_observers_and_native_fallback(monkeypatch,hooked):
     if hooked=='linear': a.register_forward_hook(lambda *args:calls.append('observer'))
     if hooked=='dropout': dropout.register_forward_hook(lambda *args:calls.append('observer'))
     if hooked=='override':
-        original=a.forward
+        native_linear_forward=a.forward
         def replaced(value):
             calls.append('observer')
-            return original(value)
+            return native_linear_forward(value)
         a.forward=replaced
     if hooked=='frozen': a.weight.requires_grad_(False)
-    original=lora_remat.lora_input_projection
+    remat_projection=lora_remat.lora_input_projection
     def traced(*args):
         calls.append('remat')
-        return original(*args)
+        return remat_projection(*args)
     monkeypatch.setattr(lora_remat,'lora_input_projection',traced)
     step=_Batch(rows,4,384,packed_metadata={})
     with torch.autocast('cuda',dtype=torch.float16,enabled=hooked!='no_amp'):

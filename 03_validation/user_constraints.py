@@ -5,7 +5,7 @@ import json
 from pathlib import Path
 
 
-def evaluate(result, checks, target_seconds=27):
+def evaluate(result, checks, target_seconds=25):
     solutions = result['runs']['solution']
     base, solution = result['summary']['base'], result['summary']['solution']
     original_ten = len(checks['checks']) == 10 and all(c['ok'] for c in checks['checks'])
