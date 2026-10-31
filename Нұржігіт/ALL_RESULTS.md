@@ -13,7 +13,7 @@
 
 - [v50: отклонённый GPU-эксперимент с батчевыми GEMM](03_validation/reports/v50_research/README.md), [исходный ZIP](03_validation/reports/v50_research/original_archive.zip).
 - [Инструментированная диагностика запуска v45](03_validation/reports/v45_startup_timeline/README.md), [исходный ZIP](03_validation/reports/v45_startup_timeline/original_archive.zip). Время с профайлером не является соревновательным результатом.
-- [v51: проверка нового кандидата выполняется](experiments/v51); выбранный v45 пока сохранён.
+- [v51: исходные 10/10, 49.03 с / 4135 MiB](CODEX_V51_RESULT.md); выбранный v45 сохранён.
 
 [Текущие решения](CODEX_OPTIMIZATION_RESULTS.md) · [Выбранный код](PUBLICATION_PROOF.json) · [Все отчёты](03_validation/reports) · [Хэши файлов](04_submission/all_results_manifest.json)
 
