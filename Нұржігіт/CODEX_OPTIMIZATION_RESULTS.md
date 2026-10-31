@@ -16,6 +16,7 @@ and a locally verified archive/source/checksum chain.
 | v55 | 83.80 | 52.23 | 3555 | 2.04964 → 2.04967 | 10/10 | FAIL: user limits |
 | v56 | 85.69 | 49.69 | 4135 | 2.04960 → 2.04968 | 10/10 | FAIL: user limits |
 | v63 | 83.68 | 48.69 | 4115 | 2.04962 → 2.04963 | 10/10 | FAIL: user limits |
+| v64r2 | 86.33 | 47.61 | 3915 | 2.04966 → 2.04963 | 10/10 | pass |
 
 The current <=27-second whole-command target is not met. Historical reports keep their original target. The best observed memory among
 these candidates that also satisfy the strict user loss requirement is 4115 MiB (v48/v49), only 20 MiB below v45's 4135 MiB. Their
@@ -68,4 +69,5 @@ The v57-v63 investigation is complete. Both the active development implementatio
 
 [v64 original fixture failure](CODEX_V64_RESULT.md). [v64r1 measured outcome](CODEX_V64R1_RESULT.md): failed before complete original admission; not selected.
 
-[v64r2 compatibility correction](CODEX_V64R2_EXPERIMENT.md): qualification then full original paired validation running; selected v45 unchanged. No new performance claim.
+
+[v64r2 original measured outcome](CODEX_V64R2_RESULT.md): original 10/10 and user memory/quality passed; comparison pending.

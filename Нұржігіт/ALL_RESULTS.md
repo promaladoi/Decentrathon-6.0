@@ -156,3 +156,5 @@
 [v57-v63 original archives](https://github.com/promaladoi/Decentrathon-6.0/releases/tag/nurzhigit-evidence-through-v63-20261031).
 
 [v64 and corrected v64r1 evidence](CODEX_V64R1_RESULT.md).
+
+[v64-v64r2 original evidence](CODEX_V64R2_RESULT.md).
