@@ -1,0 +1,170 @@
+{
+  "duration_seconds": 152.7,
+  "voice_seconds": 146.68,
+  "voice_start_seconds": 2.0,
+  "size": [
+    1920,
+    1080
+  ],
+  "fps": 30,
+  "known_words": 300,
+  "aligned_words": 245,
+  "captions": 35,
+  "chapters": [
+    {
+      "title": "IVNEX v69",
+      "start": 0.0,
+      "end": 15.73
+    },
+    {
+      "title": "Фиксированная задача",
+      "start": 15.73,
+      "end": 35.06
+    },
+    {
+      "title": "Обработка батча",
+      "start": 35.06,
+      "end": 50.9
+    },
+    {
+      "title": "Кернелы и память",
+      "start": 50.9,
+      "end": 72.11
+    },
+    {
+      "title": "Результат полной команды",
+      "start": 72.11,
+      "end": 92.41
+    },
+    {
+      "title": "Проверка 10/10",
+      "start": 92.41,
+      "end": 112.22
+    },
+    {
+      "title": "Воспроизведение",
+      "start": 112.22,
+      "end": 132.83
+    },
+    {
+      "title": "Границы результата",
+      "start": 132.83,
+      "end": 152.7
+    }
+  ],
+  "visuals": [
+    {
+      "image": "00.png",
+      "start": 0.0,
+      "end": 15.73
+    },
+    {
+      "image": "01.png",
+      "start": 15.73,
+      "end": 35.06
+    },
+    {
+      "image": "02.png",
+      "start": 35.06,
+      "end": 50.9
+    },
+    {
+      "image": "03.png",
+      "start": 50.9,
+      "end": 72.11
+    },
+    {
+      "image": "04.png",
+      "start": 72.11,
+      "end": 80.11
+    },
+    {
+      "image": "05.png",
+      "start": 80.11,
+      "end": 92.41
+    },
+    {
+      "image": "06.png",
+      "start": 92.41,
+      "end": 96.41
+    },
+    {
+      "image": "07.png",
+      "start": 96.41,
+      "end": 112.22
+    },
+    {
+      "image": "08.png",
+      "start": 112.22,
+      "end": 121.22
+    },
+    {
+      "image": "09.png",
+      "start": 121.22,
+      "end": 132.83
+    },
+    {
+      "image": "10.png",
+      "start": 132.83,
+      "end": 152.7
+    }
+  ],
+  "claim": "Overview of a saved genuine Kaggle execution, not a new live training run.",
+  "mp4_sha256": "d61f1e4b664a2e11f1153640aa67a2161e8a7a3088f8e800ecbcbd4eb2858b34",
+  "mp4_bytes": 5931164,
+  "verification": {
+    "full_mp4_audio_video_decode": "passed",
+    "duration_seconds": 152.7,
+    "duration_under_180_seconds": true,
+    "video_codec": "H.264",
+    "audio_codec": "AAC",
+    "pixel_format": "yuv420p",
+    "audio_max_dbfs": -1.4,
+    "visual_qa_samples": 11,
+    "pdf_pages": 8,
+    "pptx_slides": 8,
+    "presentation_package_and_first_party_import": "passed",
+    "native_PowerPoint_opening_verified": false,
+    "visual_samples_reviewed": true,
+    "pdf_all_pages_rendered_and_reviewed": true,
+    "pptx_rendered_slides_reviewed": true
+  },
+  "files": {
+    "IVNEX_v69_Demo.mp4": {
+      "bytes": 5931164,
+      "sha256": "d61f1e4b664a2e11f1153640aa67a2161e8a7a3088f8e800ecbcbd4eb2858b34"
+    },
+    "IVNEX_v69_Demo_RU.srt": {
+      "bytes": 5365,
+      "sha256": "253edb057381e0c8c96814601ad9f1f334eb50c67ab9cd97893b14aef44d54d7"
+    },
+    "IVNEX_v69_Presentation.pdf": {
+      "bytes": 891141,
+      "sha256": "d64577e061fee89c4ff5f79ba5220743e5bc86055c87ffeeaaccf02599b0f1b3"
+    },
+    "IVNEX_v69_Presentation.pptx": {
+      "bytes": 143366,
+      "sha256": "7d0a5f7d805d835ba3f3d39690f92cf5fca028c45fb059d125588152d909f99f"
+    },
+    "README.md": {
+      "bytes": 3758,
+      "sha256": "1c3cb88fe7d92ff846fd090056b987fcf8e688eb586c3f1a99761edf979b2895"
+    }
+  },
+  "provenance": {
+    "team": "IVNEX",
+    "measured_official_commit": "a5d04eee1d8988c2b73cf5adeb9c82440ca5c0e2",
+    "solution_sha256": "2d07aa71f99dc7858655ed8a3f2b9367b1ff0bba1aa9312517bf14b39bd1d71d",
+    "result_sha256": "eccf9685ef704c19f6a9bee4932d613029b00d44f40db36e53ed8d1030082a6b",
+    "kaggle": "https://www.kaggle.com/code/nellzmi/ivnex-v69-verified-t4-results?scriptVersionId=364282526",
+    "voice": {
+      "provider": "Hansora AI",
+      "kind": "synthetic neutral narrator",
+      "language": "ru",
+      "impersonation": false
+    },
+    "screenshots": "Actual visible Kaggle page captures; no fabricated outputs.",
+    "presentation": "8 slides, editable native PowerPoint charts and table; PDF is a raster viewing copy.",
+    "runtime_changed_by_media_commit": false
+  }
+}
