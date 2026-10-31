@@ -1,0 +1,14 @@
+{
+  "archive": "codex_direct_dropout_screen_22eaa2bd.zip",
+  "archive_sha256": "9a24e921596c0c9c8aed111a26fd62f833a3be0d4fed06b5f0e6137a1a86fcd5",
+  "source_python_files_verified": 4,
+  "kind": "isolated inactive numerical/performance research",
+  "source_commit": "5c16965b3c91936d9faead96c7bbbe2074fe89a4",
+  "production_solution_changed": false,
+  "full_task_admission": false,
+  "protected_files_verified": 15,
+  "numerical_tests.log": 0,
+  "microbenchmark.log": 0,
+  "status": "isolated_screen_passed; not full-task admission",
+  "gate_up_bmm.log": 0
+}
