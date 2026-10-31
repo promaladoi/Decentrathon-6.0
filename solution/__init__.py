@@ -10,6 +10,8 @@ def apply():
     global _applied
     if _applied:
         return
+    from .lazy_train_cli import patch_lazy_train_cli
+    patch_lazy_train_cli()
     from . import warmup
     from .layer import patch_qwen2_decoder_layer
     from .mlp import patch_qwen2_mlp_4bit
@@ -19,9 +21,7 @@ def apply():
     from .swiglu import patch_qwen2_mlp
     from .unpad import patch_qwen2_causal_lm
     from .frozen_storage import patch_frozen_storage
-    from .nf4 import enable_resident_weights
     _applied = True
-    enable_resident_weights()
     warmup.start(unpad=True)
     patch_qwen2_mlp()
     patch_qwen2_mlp_4bit()

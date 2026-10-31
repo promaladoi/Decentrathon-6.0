@@ -14,22 +14,21 @@ fp32 exactly as autograd adds the two casts' gradients. Every value equals trans
 with Linear4bit, while the saved activations of the MLP take half the memory and the fp32 casts
 around the three matmuls disappear.
 
-Our NF4 kernel (nf4.py) preserves exact decoded weights. Internal read-only matmuls may reuse
-them within the enabled per-process byte budget; overflow uses fresh decode. Public decoder
-calls still return fresh tensors. silu(gate) * up uses the unchanged organizers' example kernels;
+The weights are unpacked by our NF4 kernel (nf4.py) right before each matmul and dropped after it,
+as bitsandbytes does. silu(gate) * up runs on the organizers' example SwiGLU kernels, unchanged;
 they are theirs and do not count as ours.
 """
 
 import torch
 import triton
 
-from .nf4 import _linear_forward, dequantize_nf4, supported as nf4_supported, _readonly_weight
+from .nf4 import _linear_forward, dequantize_nf4, supported as nf4_supported
 from .swiglu import BLOCK as SWIGLU_BLOCK, example_swiglu_bwd_kernel, example_swiglu_fwd_kernel
 from .backward_sums import sum_half_gradients
 
 
 def _weight(layer, dtype):
-    return _readonly_weight(layer.weight, layer.weight.quant_state, dtype)
+    return dequantize_nf4(layer.weight, layer.weight.quant_state, dtype)
 
 
 class MLP4bit(torch.autograd.Function):

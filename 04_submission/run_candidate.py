@@ -63,6 +63,9 @@ def main():
         if active:
             raise RuntimeError('Another GPU process is active. Stop it before measurement.')
         outcome['status'] = 'testing'
+        if (repo/'solution/test_lazy_train_cli.py').is_file():
+            run([sys.executable, '-m', 'pytest', 'solution/test_lazy_train_cli.py', '-q'],
+                'lazy_cli_tests.log')
         if (repo/'solution/test_resident_nf4.py').is_file():
             run([sys.executable, '-m', 'pytest', 'solution/test_resident_nf4.py', '-q'],
                 'resident_nf4_tests.log')
