@@ -78,3 +78,5 @@ The v57-v63 investigation is complete. Both the active development implementatio
 [v68 original measured outcome](CODEX_V68_RESULT.md): original admission and user memory/quality passed; speed comparison pending.
 
 [v69 speed-priority candidate](CODEX_V69_EXPERIMENT.md): GPU qualification then full original paired validation running; not selected; selected v45 unchanged. No new elapsed-time claim.
+
+[Verified public original v65-v68 archives and same-session v45 control](https://github.com/promaladoi/Decentrathon-6.0/releases/tag/nurzhigit-speed-through-v68-20261031). Six assets verified by SHA-256 and public download.

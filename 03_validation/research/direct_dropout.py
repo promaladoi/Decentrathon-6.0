@@ -16,7 +16,7 @@ import triton.language as tl
 from triton.language.random import philox
 
 
-@triton.jit
+@triton.jit(do_not_specialize=['Seed','Counter'])
 def real_philox_gather_kernel(X, Rows, Out, Mask, Groups,
                              Seed, Counter, THREADS: tl.constexpr,
                              WIDTH: tl.constexpr, KEEP: tl.constexpr,
