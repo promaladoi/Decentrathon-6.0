@@ -43,10 +43,14 @@ def main():
             graphs={}
             retained={}
             for name,fn in functions.items():
-                for _ in range(3): fn()
+                stream=torch.cuda.Stream()
+                stream.wait_stream(torch.cuda.current_stream())
+                with torch.cuda.stream(stream):
+                    for _ in range(3): fn()
+                torch.cuda.current_stream().wait_stream(stream)
                 torch.cuda.synchronize()
                 graph=torch.cuda.CUDAGraph()
-                with torch.cuda.graph(graph):
+                with torch.cuda.graph(graph,stream=stream):
                     for _ in range(4): retained[name]=fn()
                 graph.replay()
                 torch.cuda.synchronize()
