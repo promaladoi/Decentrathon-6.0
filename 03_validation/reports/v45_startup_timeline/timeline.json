@@ -1,0 +1,222 @@
+{
+  "kind": "instrumented main-thread timeline; not a contest score",
+  "total_instrumented_seconds": 80.11053101200002,
+  "intervals_are_inclusive": true,
+  "intervals_must_not_be_summed": true,
+  "intervals": [
+    {
+      "module": "torch",
+      "function": "<module>",
+      "start_s": 0.010011291000068923,
+      "end_s": 2.5153603460000795,
+      "duration_s": 2.5053490550000106
+    },
+    {
+      "module": "transformers",
+      "function": "<module>",
+      "start_s": 2.894137287000035,
+      "end_s": 15.67315601200005,
+      "duration_s": 12.779018725000014
+    },
+    {
+      "module": "triton",
+      "function": "<module>",
+      "start_s": 15.674028571999997,
+      "end_s": 16.044116469000073,
+      "duration_s": 0.3700878970000758
+    },
+    {
+      "module": "solution",
+      "function": "apply",
+      "start_s": 16.045229027999994,
+      "end_s": 29.455493950999994,
+      "duration_s": 13.410264923
+    },
+    {
+      "module": "transformers",
+      "function": "<module>",
+      "start_s": 23.514117650000003,
+      "end_s": 23.585761346000027,
+      "duration_s": 0.07164369600002374
+    },
+    {
+      "module": "bitsandbytes",
+      "function": "<module>",
+      "start_s": 23.664607087000036,
+      "end_s": 27.297850670000003,
+      "duration_s": 3.6332435829999667
+    },
+    {
+      "module": "soup_cli.trainer.sft",
+      "function": "<module>",
+      "start_s": 27.304063764000034,
+      "end_s": 28.079302661000042,
+      "duration_s": 0.7752388970000084
+    },
+    {
+      "module": "peft",
+      "function": "<module>",
+      "start_s": 29.47891302200003,
+      "end_s": 29.775453933999984,
+      "duration_s": 0.2965409119999549
+    },
+    {
+      "module": "soup_cli.cli",
+      "function": "<module>",
+      "start_s": 30.427470077000066,
+      "end_s": 30.785068445000093,
+      "duration_s": 0.3575983680000263
+    },
+    {
+      "module": "soup_cli.trainer.sft",
+      "function": "SFTTrainerWrapper.__init__",
+      "start_s": 31.311523101000034,
+      "end_s": 31.31155732600007,
+      "duration_s": 3.422500003580353e-05
+    },
+    {
+      "module": "trl",
+      "function": "<module>",
+      "start_s": 31.332223760000034,
+      "end_s": 31.390112490000092,
+      "duration_s": 0.057888730000058786
+    },
+    {
+      "module": "transformers.tokenization_utils_base",
+      "function": "PreTrainedTokenizerBase.from_pretrained",
+      "start_s": 33.45063454300009,
+      "end_s": 34.090382793,
+      "duration_s": 0.6397482499999114
+    },
+    {
+      "module": "transformers.tokenization_utils_base",
+      "function": "PreTrainedTokenizerBase._from_pretrained",
+      "start_s": 33.458971287000054,
+      "end_s": 34.09036560800007,
+      "duration_s": 0.6313943210000161
+    },
+    {
+      "module": "transformers.modeling_utils",
+      "function": "PreTrainedModel.from_pretrained",
+      "start_s": 34.11223265300009,
+      "end_s": 37.530105836000075,
+      "duration_s": 3.4178731829999833
+    },
+    {
+      "module": "transformers.modeling_utils",
+      "function": "PreTrainedModel._load_pretrained_model",
+      "start_s": 34.84382373300002,
+      "end_s": 37.45012788500003,
+      "duration_s": 2.606304152000007
+    },
+    {
+      "module": "soup_cli.trainer.sft",
+      "function": "SFTTrainerWrapper._build_rewind_trainer",
+      "start_s": 39.83237732700002,
+      "end_s": 40.04800512700001,
+      "duration_s": 0.21562779999999293
+    },
+    {
+      "module": "soup_cli.trainer.rewind_hf",
+      "function": "<module>",
+      "start_s": 39.836927436999986,
+      "end_s": 39.83890275100009,
+      "duration_s": 0.0019753140001057545
+    },
+    {
+      "module": "trl.trainer.sft_trainer",
+      "function": "SFTTrainer.__init__",
+      "start_s": 39.839038462000076,
+      "end_s": 40.04362763900008,
+      "duration_s": 0.20458917700000256
+    },
+    {
+      "module": "trl.trainer.sft_trainer",
+      "function": "__create_fn__.<locals>.__init__",
+      "start_s": 39.96275166800001,
+      "end_s": 39.96275722100006,
+      "duration_s": 5.553000050895207e-06
+    },
+    {
+      "module": "trl.trainer.sft_trainer",
+      "function": "SFTTrainer._prepare_dataset",
+      "start_s": 39.96277063100001,
+      "end_s": 40.00014414999998,
+      "duration_s": 0.037373518999970656
+    },
+    {
+      "module": "transformers.trainer",
+      "function": "Trainer.__init__",
+      "start_s": 40.000176109999984,
+      "end_s": 40.04342185600001,
+      "duration_s": 0.043245746000025065
+    },
+    {
+      "module": "soup_cli.trainer.rewind_hf",
+      "function": "RewindState.__init__",
+      "start_s": 40.04614304699999,
+      "end_s": 40.04614996700002,
+      "duration_s": 6.920000032550888e-06
+    },
+    {
+      "module": "soup_cli.trainer.sft",
+      "function": "SFTTrainerWrapper.train",
+      "start_s": 40.05547969500003,
+      "end_s": 79.84804544899998,
+      "duration_s": 39.79256575399995
+    },
+    {
+      "module": "transformers.trainer",
+      "function": "Trainer.train",
+      "start_s": 40.34860519000006,
+      "end_s": 79.50466168399998,
+      "duration_s": 39.15605649399993
+    },
+    {
+      "module": "soup_cli.trainer.rewind_hf",
+      "function": "make_rewind_trainer_class.<locals>.IndexRecordingSampler.__init__",
+      "start_s": 40.67724847300008,
+      "end_s": 40.67725273799999,
+      "duration_s": 4.2649999159039e-06
+    },
+    {
+      "module": "transformers.trainer",
+      "function": "Trainer._save_checkpoint",
+      "start_s": 79.05576768200001,
+      "end_s": 79.49087003500006,
+      "duration_s": 0.4351023530000475
+    },
+    {
+      "module": "transformers.trainer",
+      "function": "Trainer.save_model",
+      "start_s": 79.05589926200003,
+      "end_s": 79.37835937200009,
+      "duration_s": 0.32246011000006547
+    },
+    {
+      "module": "safetensors.torch",
+      "function": "save_file",
+      "start_s": 79.21639183900004,
+      "end_s": 79.245921813,
+      "duration_s": 0.029529973999956383
+    },
+    {
+      "module": "transformers.trainer",
+      "function": "Trainer.save_model",
+      "start_s": 79.53908326200008,
+      "end_s": 79.75528291900002,
+      "duration_s": 0.21619965699994736
+    },
+    {
+      "module": "safetensors.torch",
+      "function": "save_file",
+      "start_s": 79.63231823000001,
+      "end_s": 79.653425384,
+      "duration_s": 0.02110715399999208
+    }
+  ],
+  "source_commit": "7a3db8fd5e24bbcb58affb475007a5cf93c56f07",
+  "exit_code": 0,
+  "diagnostic_outer_wall_s": 82.42,
+  "diagnostic_peak_mib": 4135
+}
