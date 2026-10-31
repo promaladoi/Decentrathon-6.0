@@ -23,16 +23,12 @@ import triton.language as tl
 
 BLOCK = 1024
 
-# Merey: retain Anais's exact run-local decode with fixed byte reservations.
-# Attention's 294 MiB cannot be consumed by the MLP: the first 18 fixed-model
-# MLP matrices use 472.5 MiB of their separate 474 MiB reservation. Remaining
-# MLP matrices decode normally, without eviction or repeated cache churn.
-# These are allocation bounds, not a measurement-dependent policy; there are
-# no driver/memory/benchmark queries and no cross-run persistence.
-DECODE_CACHE_MAX_BYTES = 768 * 1024 * 1024
-DECODE_CACHE_CATEGORY_MAX_BYTES = {'attention': 294 * 1024 * 1024,
-                                  'mlp': 474 * 1024 * 1024}
-DECODE_CACHE_MAX_DIM = 1536
+# Merey: retain Anais's exact run-local decode only for the fixed model's large
+# MLP matrices. A fixed 900 MiB allocation bound retains the first 34 matrices
+# (892.5 MiB); all later matrices decode normally, without eviction or churn.
+# Attention takes the ordinary uncached path before any cache signature work.
+# This policy never queries driver/memory/benchmark state or persists data.
+DECODE_CACHE_MAX_BYTES = 900 * 1024 * 1024
 DECODE_CACHE_MLP_SHAPES = ((8960, 1536), (1536, 8960))
 
 
@@ -47,7 +43,6 @@ class _DecodeEntry:
 _decode_cache_lock = threading.RLock()
 _decode_cache_entries = {}
 _decode_cache_bytes = 0
-_decode_cache_category_bytes = {'attention': 0, 'mlp': 0}
 
 
 def _tensor_signature(tensor):
@@ -62,7 +57,6 @@ def _entry_expired(key, reference):
         registered = _decode_cache_entries.get(key)
         if registered is not None and registered[0] is reference:
             _decode_cache_bytes -= registered[1]
-            _decode_cache_category_bytes[registered[2]] -= registered[1]
             del _decode_cache_entries[key]
 
 
@@ -76,24 +70,14 @@ def _discard_decode_cache(state):
     registered = _decode_cache_entries.pop(id(entry), None)
     if registered is not None:
         _decode_cache_bytes -= registered[1]
-        _decode_cache_category_bytes[registered[2]] -= registered[1]
-
-
-def _cache_category(state, dtype):
-    shape = getattr(state, 'shape', None)
-    if not (dtype == torch.float16 and getattr(state, 'dtype', None) == torch.float16
-            and isinstance(shape, (tuple, list, torch.Size)) and len(shape) == 2
-            and all(isinstance(n, int) and n > 0 for n in shape)):
-        return None
-    if all(n <= DECODE_CACHE_MAX_DIM for n in shape):
-        return 'attention'
-    if tuple(shape) in DECODE_CACHE_MLP_SHAPES:
-        return 'mlp'
-    return None
 
 
 def _cache_shape_supported(state, dtype):
-    return _cache_category(state, dtype) is not None
+    shape = getattr(state, 'shape', None)
+    return (dtype == torch.float16 and getattr(state, 'dtype', None) == torch.float16
+            and isinstance(shape, (tuple, list, torch.Size)) and len(shape) == 2
+            and all(isinstance(n, int) for n in shape)
+            and tuple(shape) in DECODE_CACHE_MLP_SHAPES)
 
 
 @triton.jit
@@ -163,7 +147,7 @@ def _packed_supported(packed, state):
 
 
 def _decode(packed, state, dtype):
-    """Anais cache, with separate bounded attention/MLP FP16 reservations.
+    """Anais cache, bounded by Merey to fixed-shape FP16 frozen MLP weights.
 
     Raw forward decoding and functional backward decoding keep their original
     dtype/rounding semantics. Sources and returned values are version checked;
@@ -171,10 +155,19 @@ def _decode(packed, state, dtype):
     accounts for bytes without extending the model or QuantState lifetime.
     """
     global _decode_cache_bytes
+    if not _cache_shape_supported(state, dtype):
+        # Ordinary attention never enters the lock/signature path. A state
+        # changed from an eligible shape still releases its old slot safely.
+        if getattr(state, '_anais_decode_cache', None) is not None:
+            with _decode_cache_lock:
+                _discard_decode_cache(state)
+        return _decode_uncached(packed, state, dtype)
     with _decode_cache_lock:
-        category = _cache_category(state, dtype)
-        if category is None:
-            _discard_decode_cache(state)
+        cached = getattr(state, '_anais_decode_cache', None)
+        size = math.prod(state.shape) * 2
+        # The remaining MLP matrices cannot be retained once the fixed budget
+        # is full. Avoid building source signatures on those ordinary misses.
+        if cached is None and _decode_cache_bytes + size > DECODE_CACHE_MAX_BYTES:
             return _decode_uncached(packed, state, dtype)
         try:
             tensors = [packed, state.absmax, state.code]
@@ -189,7 +182,6 @@ def _decode(packed, state, dtype):
             signature = (dtype, state.quant_type, state.dtype, tuple(state.shape),
                          state.blocksize, nested, second_meta, stream,
                          tuple(_tensor_signature(t) for t in tensors))
-            cached = getattr(state, '_anais_decode_cache', None)
             if (isinstance(cached, _DecodeEntry) and cached.signature == signature
                     and all(ref() is tensor for ref, tensor in zip(cached.sources, tensors))
                     and _tensor_signature(cached.dense) == cached.dense_signature):
@@ -200,10 +192,7 @@ def _decode(packed, state, dtype):
         # Invalidation must not retain a dead dense copy during the next decode.
         _discard_decode_cache(state)
         del cached
-        size = math.prod(state.shape) * 2
-        if (_decode_cache_bytes + size > DECODE_CACHE_MAX_BYTES
-                or _decode_cache_category_bytes[category] + size
-                > DECODE_CACHE_CATEGORY_MAX_BYTES[category]):
+        if _decode_cache_bytes + size > DECODE_CACHE_MAX_BYTES:
             return _decode_uncached(packed, state, dtype)
         # A caller's inference_mode must not poison a later training graph.
         with torch.inference_mode(False), torch.no_grad():
@@ -215,9 +204,8 @@ def _decode(packed, state, dtype):
         key = id(entry)
         reference = weakref.ref(entry, lambda ref: _entry_expired(key, ref))
         state._anais_decode_cache = entry
-        _decode_cache_entries[key] = (reference, size, category)
+        _decode_cache_entries[key] = (reference, size)
         _decode_cache_bytes += size
-        _decode_cache_category_bytes[category] += size
         return dense
 
 

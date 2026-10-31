@@ -6,8 +6,6 @@ value output is discarded; the used mask is gathered while applying it to the
 actual unpadded values. The backward reads only the saved real-row mask bits,
 eight per byte. Packing shares the gather/apply launch; it does not draw RNG.
 No RNG state is read, reset, or manually advanced by this production path.
-The private native-Linear FP16-AMP entry writes half after the same FP32
-arithmetic, combining its following cast without changing the generic API.
 
 The original Triton kernels below implement gather plus two multiplications;
 they do not implement/copy Philox or a third-party dropout kernel. Contracts:
@@ -99,63 +97,37 @@ def reference_dropout(x, rows, batch, seq_len, p=0.05, training=True):
 class _RealRowDropout(torch.autograd.Function):
     @staticmethod
     def forward(ctx, x, rows, batch, seq_len, p):
-        return _forward(ctx, x, rows, batch, seq_len, p, torch.float32)
+        forward_scale, backward_scale = _scales(p)
+        dummy = torch.empty((batch, seq_len, x.shape[1]), device=x.device,
+                            dtype=torch.float32, memory_format=torch.contiguous_format)
+        # Both the original index_copy allocation and this allocation start
+        # at an allocator-aligned address. This keeps native vectorization
+        # and its per-element RNG mapping identical under the harness allocator.
+        if dummy.data_ptr() % 16:
+            raise RuntimeError('native dropout candidate requires aligned CUDA allocation')
+        discarded, full_mask = torch.ops.aten.native_dropout.default(dummy, float(p), True)
+        del discarded, dummy
+        output = torch.empty_like(x)
+        n = x.numel()
+        packed_mask = torch.empty((triton.cdiv(n, 8),), dtype=torch.uint8, device=x.device)
+        real_dropout_gather_kernel[(triton.cdiv(n, BLOCK),)](
+            x, full_mask, rows, output, packed_mask, n, batch * seq_len,
+            x.shape[1], forward_scale, BLOCK, num_warps=4, enable_fp_fusion=False)
+        ctx.save_for_backward(packed_mask)
+        ctx.backward_scale = backward_scale
+        return output
 
     @staticmethod
     @once_differentiable
     def backward(ctx, grad_output):
-        return _backward(ctx, grad_output), None, None, None, None
-
-
-class _RealRowDropoutHalf(torch.autograd.Function):
-    """Private Linear-AMP input: combine the existing dropout with its cast."""
-
-    @staticmethod
-    def forward(ctx, x, rows, batch, seq_len, p):
-        return _forward(ctx, x, rows, batch, seq_len, p, torch.float16)
-
-    @staticmethod
-    @once_differentiable
-    def backward(ctx, grad_output):
-        return _backward(ctx, grad_output), None, None, None, None
-
-
-def _forward(ctx, x, rows, batch, seq_len, p, output_dtype):
-    forward_scale, backward_scale = _scales(p)
-    dummy = torch.empty((batch, seq_len, x.shape[1]), device=x.device,
-                        dtype=torch.float32, memory_format=torch.contiguous_format)
-    # Both the original index_copy allocation and this allocation start
-    # at an allocator-aligned address. This keeps native vectorization
-    # and its per-element RNG mapping identical under the harness allocator.
-    if dummy.data_ptr() % 16:
-        raise RuntimeError('native dropout candidate requires aligned CUDA allocation')
-    discarded, full_mask = torch.ops.aten.native_dropout.default(dummy, float(p), True)
-    del discarded, dummy
-    # The kernel still multiplies twice in FP32. A half destination then
-    # performs the same final rounding as the separate native AMP cast.
-    output = torch.empty_like(x, dtype=output_dtype)
-    n = x.numel()
-    packed_mask = torch.empty((triton.cdiv(n, 8),), dtype=torch.uint8, device=x.device)
-    real_dropout_gather_kernel[(triton.cdiv(n, BLOCK),)](
-        x, full_mask, rows, output, packed_mask, n, batch * seq_len,
-        x.shape[1], forward_scale, BLOCK, num_warps=4, enable_fp_fusion=False)
-    ctx.save_for_backward(packed_mask)
-    ctx.backward_scale = backward_scale
-    ctx.input_dtype = x.dtype
-    return output
-
-
-def _backward(ctx, grad_output):
-    packed_mask, = ctx.saved_tensors
-    grad_output = grad_output.contiguous()
-    # For the private half-output variant this folds CastBackward's
-    # half-to-float conversion into the load, while returning FP32 DX.
-    dx = torch.empty_like(grad_output, dtype=ctx.input_dtype)
-    n = grad_output.numel()
-    real_dropout_backward_kernel[(triton.cdiv(n, BLOCK),)](
-        grad_output, packed_mask, dx, n, ctx.backward_scale, BLOCK,
-        num_warps=4, enable_fp_fusion=False)
-    return dx
+        packed_mask, = ctx.saved_tensors
+        grad_output = grad_output.contiguous()
+        dx = torch.empty_like(grad_output)
+        n = grad_output.numel()
+        real_dropout_backward_kernel[(triton.cdiv(n, BLOCK),)](
+            grad_output, packed_mask, dx, n, ctx.backward_scale, BLOCK,
+            num_warps=4, enable_fp_fusion=False)
+        return dx, None, None, None, None
 
 
 def real_row_dropout(x, rows, batch, seq_len, p=0.05, training=True, *, rows_from_nonzero=False):
@@ -172,19 +144,6 @@ def real_row_dropout(x, rows, batch, seq_len, p=0.05, training=True, *, rows_fro
     return _RealRowDropout.apply(x, rows, batch, seq_len, p)
 
 
-def real_row_dropout_linear_input(x, rows, batch, seq_len, p=0.05, *, rows_from_nonzero=False):
-    """Private equivalent of ``real_row_dropout(...).to(torch.float16)``.
-
-    The caller must establish an unobserved native Linear under CUDA FP16
-    autocast. Unsupported tensors keep the generic dropout followed by a cast.
-    The public real_row_dropout API always retains its original FP32 result.
-    """
-    if not _supported(x, rows, batch, seq_len, p, True, rows_from_nonzero):
-        return real_row_dropout(x, rows, batch, seq_len, p,
-                                rows_from_nonzero=rows_from_nonzero).to(torch.float16)
-    return _RealRowDropoutHalf.apply(x, rows, batch, seq_len, p)
-
-
 def warmup(width=1536, p=0.05):
     """Compile only the original gather/apply kernels; never draw random bits."""
     from .warmup import load_compiled
@@ -196,11 +155,4 @@ def warmup(width=1536, p=0.05):
         num_warps=4, enable_fp_fusion=False))
     load_compiled(real_dropout_backward_kernel.warmup(
         torch.float32, torch.uint8, torch.float32, 16 * width, backward, BLOCK,
-        grid=(1,), num_warps=4, enable_fp_fusion=False))
-    load_compiled(real_dropout_gather_kernel.warmup(
-        torch.float32, torch.bool, torch.int64, torch.float16, torch.uint8,
-        16 * width, 16, width, forward, BLOCK, grid=(1,),
-        num_warps=4, enable_fp_fusion=False))
-    load_compiled(real_dropout_backward_kernel.warmup(
-        torch.float16, torch.uint8, torch.float32, 16 * width, backward, BLOCK,
         grid=(1,), num_warps=4, enable_fp_fusion=False))
