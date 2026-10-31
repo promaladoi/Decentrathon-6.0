@@ -1,6 +1,6 @@
 """Real-row dropout with native full-shape CUDA RNG and packed saved masks.
 
-The existing large-shape dispatch in unpad.py is unchanged. RNG remains PyTorch's native
+The qualified dispatch in unpad.py includes supported small batches. RNG remains PyTorch's native
 dropout on a fresh, contiguous FP32 [batch, sequence, hidden] allocation. Its
 value output is discarded; the used mask is gathered while applying it to the
 actual unpadded values. The backward reads only the saved real-row mask bits,
@@ -149,10 +149,14 @@ def warmup(width=1536, p=0.05):
     from .warmup import load_compiled
 
     forward, backward = _scales(p)
-    load_compiled(real_dropout_gather_kernel.warmup(
-        torch.float32, torch.bool, torch.int64, torch.float32, torch.uint8,
-        16 * width, 16, width, forward, BLOCK, grid=(1,),
-        num_warps=4, enable_fp_fusion=False))
+    # Smaller variable-length batches can have a full-row count outside
+    # Triton's divisible-by-16 specialization. Compile both scalar classes,
+    # without launching a kernel or consuming dropout RNG.
+    for full_rows in (16, 17):
+        load_compiled(real_dropout_gather_kernel.warmup(
+            torch.float32, torch.bool, torch.int64, torch.float32, torch.uint8,
+            16 * width, full_rows, width, forward, BLOCK, grid=(1,),
+            num_warps=4, enable_fp_fusion=False))
     load_compiled(real_dropout_backward_kernel.warmup(
         torch.float32, torch.uint8, torch.float32, 16 * width, backward, BLOCK,
         grid=(1,), num_warps=4, enable_fp_fusion=False))

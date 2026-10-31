@@ -43,7 +43,9 @@ from .backward_sums import sum_half_gradients
 
 # Static candidate configuration: no harness/test/environment-dependent switch.
 REAL_ROW_DROPOUT = True
-REAL_ROW_DROPOUT_MIN_PADDED_ELEMENTS = 4 * 384 * 1536
+# v53: retain the existing exact native-RNG bit-packed mask path at every
+# supported size. Unsupported modules/layouts keep all existing fallbacks.
+REAL_ROW_DROPOUT_MIN_PADDED_ELEMENTS = 0
 _NATIVE_DROPOUT_FORWARD = torch.nn.Dropout.forward
 
 
@@ -748,15 +750,9 @@ def fast_forward(model, meta, input_ids, attention_mask, labels, num_items_in_ba
     _, x = add_rmsnorm(h, mlp_out, norm.weight, norm.variance_epsilon)
 
     # ForCausalLMLoss: the label of position t is labels[t + 1]; -100 past the end
-    targets = packed_metadata.get("targets")
-    partitions = None
-    if targets is None:
-        shifted = torch.cat([labels[:, 1:], labels.new_full((batch, 1), -100)], dim=1)
-        targets = shifted.reshape(-1).index_select(0, rows)
-    else:
-        partitions = (packed_metadata["labelled"], packed_metadata["prompt"])
-    loss, stats = lm_head_loss(x, model.lm_head.weight, targets, num_items_in_batch,
-                               _partition_indices=partitions)
+    shifted = torch.cat([labels[:, 1:], labels.new_full((batch, 1), -100)], dim=1)
+    targets = shifted.reshape(-1).index_select(0, rows)
+    loss, stats = lm_head_loss(x, model.lm_head.weight, targets, num_items_in_batch)
     logits = LazyLogits(batch, seq_len, model.lm_head.weight.shape[0], rows, stats)
     return CausalLMOutputWithPast(loss=loss, logits=logits)
 

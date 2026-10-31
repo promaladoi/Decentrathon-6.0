@@ -63,6 +63,9 @@ def main():
         if active:
             raise RuntimeError('Another GPU process is active. Stop it before measurement.')
         outcome['status'] = 'testing'
+        if (repo/'solution/test_small_dropout_dispatch.py').is_file():
+            run([sys.executable, '-m', 'pytest', 'solution/test_small_dropout_dispatch.py', '-q'],
+                'small_dropout_dispatch_tests.log')
         if (repo/'solution/test_target_metadata.py').is_file():
             run([sys.executable, '-m', 'pytest', 'solution/test_target_metadata.py',
                  'solution/test_batch_metadata.py', '-q'], 'target_metadata_tests.log')

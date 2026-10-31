@@ -2,9 +2,7 @@
 
 This only replaces metadata construction. It preserves row order, the original
 right-prefix/label guards and the native attention sequence boundaries. One
-small host read obtains validity and exact row/target counts; no RNG is used.
-The same launch shifts labels and builds stable supervised/prompt partitions,
-so the head need not synchronize twice after the full model forward.
+small host read obtains validity and the exact real-token count; no RNG is used.
 Larger or unsupported layouts return NotImplemented for the existing fallback.
 """
 
@@ -20,7 +18,6 @@ MAX_SEQUENCE = 512
 @triton.jit(do_not_specialize=["batch", "sequence", "mask_stride0", "mask_stride1",
                                "label_stride0", "label_stride1"])
 def compact_batch_metadata_kernel(MASK, LABELS, ROWS, CUMULATIVE, SUMMARY,
-                                  TARGETS, LABELLED, PROMPT,
                                   batch, sequence, mask_stride0, mask_stride1,
                                   label_stride0, label_stride1,
                                   BLOCK_B: tl.constexpr, BLOCK_S: tl.constexpr):
@@ -53,29 +50,14 @@ def compact_batch_metadata_kernel(MASK, LABELS, ROWS, CUMULATIVE, SUMMARY,
               (row[:, None] < batch) & (col[None, :] < counts[:, None]))
     tl.store(SUMMARY, good.to(tl.int32))
     tl.store(SUMMARY + 1, total)
-    # Causal targets use labels[t+1] before row compaction, exactly as the
-    # ordinary loss path. Stable scans preserve both original nonzero orders.
-    next_labels = tl.load(LABELS + row[:, None] * label_stride0 + (col[None, :] + 1) * label_stride1,
-                          (row[:, None] < batch) & (col[None, :] + 1 < sequence), other=-100)
-    live = (row[:, None] < batch) & (col[None, :] < counts[:, None])
-    supervised = live & (next_labels != -100)
-    ignored = live & (next_labels == -100)
-    labelled_rank = tl.reshape(tl.cumsum(tl.reshape(supervised.to(tl.int32),
-                                                  (BLOCK_B * BLOCK_S,)), axis=0), (BLOCK_B, BLOCK_S))
-    prompt_rank = tl.reshape(tl.cumsum(tl.reshape(ignored.to(tl.int32),
-                                                (BLOCK_B * BLOCK_S,)), axis=0), (BLOCK_B, BLOCK_S))
-    tl.store(TARGETS + destination, next_labels, live)
-    tl.store(LABELLED + labelled_rank - 1, destination.to(tl.int64), supervised)
-    tl.store(PROMPT + prompt_rank - 1, destination.to(tl.int64), ignored)
-    tl.store(SUMMARY + 2, tl.sum(tl.sum(supervised.to(tl.int32), axis=1), axis=0))
 
 
 @torch.no_grad()
 def compact_batch_metadata(attention_mask, labels):
     """Return metadata, None for invalid batches, or NotImplemented to fall back.
 
-    Four retained index/target views each own at most 4 * 512 * 8 bytes.
-    This small capacity avoids copies after the single explicit synchronization.
+    The retained rows view owns at most 4 * 512 * 8 bytes. This small capacity
+    avoids a second allocation/copy after the single explicit synchronization.
     Overall GPU peak is still qualified with the unchanged contest harness.
     """
     if (not isinstance(attention_mask, torch.Tensor) or not isinstance(labels, torch.Tensor)
@@ -90,20 +72,15 @@ def compact_batch_metadata(attention_mask, labels):
     batch, sequence = attention_mask.shape
     rows_storage = torch.empty(batch * sequence, device=attention_mask.device, dtype=torch.int64)
     cumulative = torch.empty(batch + 1, device=attention_mask.device, dtype=torch.int32)
-    summary = torch.empty(3, device=attention_mask.device, dtype=torch.int32)
-    targets = torch.empty_like(rows_storage)
-    labelled = torch.empty_like(rows_storage)
-    prompt = torch.empty_like(rows_storage)
+    summary = torch.empty(2, device=attention_mask.device, dtype=torch.int32)
     compact_batch_metadata_kernel[(1,)](
-        attention_mask, labels, rows_storage, cumulative, summary, targets, labelled, prompt, batch, sequence,
+        attention_mask, labels, rows_storage, cumulative, summary, batch, sequence,
         *attention_mask.stride(), *labels.stride(),
         BLOCK_B=MAX_BATCH, BLOCK_S=MAX_SEQUENCE, num_warps=4)
-    valid, count, labelled_count = summary.tolist()
+    valid, count = summary.tolist()
     if not valid:
         return None
-    return {"cumulative": cumulative, "maximum": sequence, "rows": rows_storage[:count],
-            "targets": targets[:count], "labelled": labelled[:labelled_count],
-            "prompt": prompt[:count - labelled_count]}
+    return {"cumulative": cumulative, "maximum": sequence, "rows": rows_storage[:count]}
 
 
 def warmup():
@@ -112,6 +89,5 @@ def warmup():
 
     load_compiled(compact_batch_metadata_kernel.warmup(
         torch.int64, torch.int64, torch.int64, torch.int32, torch.int32,
-        torch.int64, torch.int64, torch.int64,
         MAX_BATCH, MAX_SEQUENCE, MAX_SEQUENCE, 1, MAX_SEQUENCE, 1,
         BLOCK_B=MAX_BATCH, BLOCK_S=MAX_SEQUENCE, grid=(1,), num_warps=4))
