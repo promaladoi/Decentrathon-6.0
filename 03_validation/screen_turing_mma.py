@@ -15,6 +15,7 @@ import zipfile
 def main():
     p=argparse.ArgumentParser(description=__doc__)
     p.add_argument('--output',type=Path,required=True)
+    p.add_argument('--version',default='v52')
     a=p.parse_args()
     assert not a.output.exists(), 'preserve prior screens'
     assert not subprocess.check_output(['nvidia-smi','--query-compute-apps=pid',
@@ -24,7 +25,7 @@ def main():
     import torch
     import torch.nn.functional as F
     from turing_mma import explicit_linear
-    report=dict(version='v52',kind='inactive explicit-MMA mapping/performance research',
+    report=dict(version=a.version,kind='inactive explicit-MMA mapping/performance research',
                 source_commit=subprocess.check_output(['git','rev-parse','HEAD'],cwd=repo,text=True).strip(),
                 production_solution_changed=False,full_task_admission=False,target_27_seconds_claimed=False,
                 gpu=torch.cuda.get_device_name(0),torch=torch.__version__,cases=[],timing=[])
@@ -42,6 +43,7 @@ def main():
             ptx=compiled.asm['ptx']
             mma=bool(re.search(r'\bmma\.sync\.aligned\.m16n8k8\.',ptx))
             row=dict(m=m,n=n,k=k,tensor_core_mma_found=mma,
+                     registers=getattr(compiled,'n_regs',None),spills=getattr(compiled,'n_spills',None),
                      max_abs_vs_fp64=float(error.max()),
                      relative_l2_vs_fp64=float(error.norm()/reference.norm().clamp_min(1e-12)),
                      half_max_abs_vs_native=float(native_error.max()),
@@ -50,7 +52,7 @@ def main():
             print('TURING_MMA_PROOF',json.dumps(row),flush=True)
             if not mma or row['relative_l2_vs_fp64'] > 1e-5:
                 raise RuntimeError('MMA instruction/mapping numerical gate failed')
-            (a.output.parent/'v52_mma.ptx').write_text(ptx)
+            a.output.with_suffix('.ptx').write_text(ptx)
         # A simple prototype is timed before any integration work. Timing does
         # not waive native arithmetic/gradient or original full-task checks.
         for m in (512,832):
@@ -75,7 +77,9 @@ def main():
                      median_ms={key:statistics.median(values) for key,values in samples.items()},samples_ms=samples)
             report['timing'].append(row)
             print('TURING_MMA_TIMING',json.dumps(row),flush=True)
-        report['status']='screen_complete_not_integrated'
+        report['status']=('screen_passed_not_integrated' if all(row['native_close'] and
+            row['median_ms']['prototype'] < row['median_ms']['native'] for row in report['timing'])
+            else 'research_rejected_performance')
     except Exception as exc:
         report.update(status='research_rejected',error=type(exc).__name__+': '+str(exc))
         print('TURING_MMA_STOP',report['error'],flush=True)
@@ -83,12 +87,12 @@ def main():
     archive=a.output.with_suffix('.zip')
     with zipfile.ZipFile(archive,'x',zipfile.ZIP_DEFLATED) as z:
         z.write(a.output,a.output.name)
-        if (a.output.parent/'v52_mma.ptx').is_file(): z.write(a.output.parent/'v52_mma.ptx','v52_mma.ptx')
+        if a.output.with_suffix('.ptx').is_file(): z.write(a.output.with_suffix('.ptx'),a.output.with_suffix('.ptx').name)
         for name in ('02_kernel_research/turing_mma.py','03_validation/screen_turing_mma.py'):
             z.write(repo/name,name)
     print('V52_SCREEN_ARCHIVE',json.dumps(dict(path=str(archive),sha256=hashlib.sha256(archive.read_bytes()).hexdigest(),
           status=report['status'])),flush=True)
-    return 0 if report['status']=='screen_complete_not_integrated' else 2
+    return 0 if report['status']=='screen_passed_not_integrated' else 2
 
 
 if __name__=='__main__': raise SystemExit(main())

@@ -31,7 +31,11 @@ def _mma(a0, a1, b, c0, c1, c2, c3):
 
 
 @triton.jit
-def _load_pair(P, base, mask0, mask1):
+def _load_pair(P, base, mask0, mask1, ALIGNED: tl.constexpr):
+    if ALIGNED:
+        # Even row strides and aligned base pointers make this exactly the
+        # same two FP16 bit patterns, with one 32-bit load and no repacking.
+        return tl.load(P.to(tl.pointer_type(tl.uint32))+base//2, mask0, other=0)
     return _pair(tl.load(P+base, mask0, other=0), tl.load(P+base+1, mask1, other=0))
 
 
@@ -44,7 +48,8 @@ def _store_fragment(Y, r, n, a, b, c, d, M: tl.constexpr, N: tl.constexpr):
 
 
 @triton.jit
-def explicit_turing_mma_kernel(X, W, Y, M: tl.constexpr, N: tl.constexpr, K: tl.constexpr):
+def explicit_turing_mma_kernel(X, W, Y, M: tl.constexpr, N: tl.constexpr, K: tl.constexpr,
+                               ALIGNED: tl.constexpr):
     thread = tl.arange(0, 128)
     lane, warp = thread % 32, thread // 32
     group, pair_column = lane // 4, (lane % 4)*2
@@ -60,18 +65,21 @@ def explicit_turing_mma_kernel(X, W, Y, M: tl.constexpr, N: tl.constexpr, K: tl.
     c22=tl.full((128,),0,tl.float32); c23=tl.full((128,),0,tl.float32)
     c30=tl.full((128,),0,tl.float32); c31=tl.full((128,),0,tl.float32)
     c32=tl.full((128,),0,tl.float32); c33=tl.full((128,),0,tl.float32)
-    for block in range(tl.cdiv(K,8)):
-        k = block*8 + pair_column
-        a0 = _load_pair(X,r*K+k,(r < M) & (k < K),(r < M) & (k+1 < K))
-        a1 = _load_pair(X,(r+8)*K+k,(r+8 < M) & (k < K),(r+8 < M) & (k+1 < K))
-        b0 = _load_pair(W,bn*K+k,(bn < N) & (k < K),(bn < N) & (k+1 < K))
-        b1 = _load_pair(W,(bn+8)*K+k,(bn+8 < N) & (k < K),(bn+8 < N) & (k+1 < K))
-        b2 = _load_pair(W,(bn+16)*K+k,(bn+16 < N) & (k < K),(bn+16 < N) & (k+1 < K))
-        b3 = _load_pair(W,(bn+24)*K+k,(bn+24 < N) & (k < K),(bn+24 < N) & (k+1 < K))
-        c00,c01,c02,c03 = _mma(a0,a1,b0,c00,c01,c02,c03)
-        c10,c11,c12,c13 = _mma(a0,a1,b1,c10,c11,c12,c13)
-        c20,c21,c22,c23 = _mma(a0,a1,b2,c20,c21,c22,c23)
-        c30,c31,c32,c33 = _mma(a0,a1,b3,c30,c31,c32,c33)
+    for block in range(tl.cdiv(K,32)):
+        # Preserve the K accumulation order, exposing four successive groups
+        # to the compiler together for scheduling and fewer loop branches.
+        for inner in tl.static_range(4):
+            k = block*32 + inner*8 + pair_column
+            a0 = _load_pair(X,r*K+k,(r < M) & (k < K),(r < M) & (k+1 < K),ALIGNED)
+            a1 = _load_pair(X,(r+8)*K+k,(r+8 < M) & (k < K),(r+8 < M) & (k+1 < K),ALIGNED)
+            b0 = _load_pair(W,bn*K+k,(bn < N) & (k < K),(bn < N) & (k+1 < K),ALIGNED)
+            b1 = _load_pair(W,(bn+8)*K+k,(bn+8 < N) & (k < K),(bn+8 < N) & (k+1 < K),ALIGNED)
+            b2 = _load_pair(W,(bn+16)*K+k,(bn+16 < N) & (k < K),(bn+16 < N) & (k+1 < K),ALIGNED)
+            b3 = _load_pair(W,(bn+24)*K+k,(bn+24 < N) & (k < K),(bn+24 < N) & (k+1 < K),ALIGNED)
+            c00,c01,c02,c03 = _mma(a0,a1,b0,c00,c01,c02,c03)
+            c10,c11,c12,c13 = _mma(a0,a1,b1,c10,c11,c12,c13)
+            c20,c21,c22,c23 = _mma(a0,a1,b2,c20,c21,c22,c23)
+            c30,c31,c32,c33 = _mma(a0,a1,b3,c30,c31,c32,c33)
     _store_fragment(Y,r,cn,c00,c01,c02,c03,M,N)
     _store_fragment(Y,r,cn+8,c10,c11,c12,c13,M,N)
     _store_fragment(Y,r,cn+16,c20,c21,c22,c23,M,N)
@@ -89,5 +97,6 @@ def explicit_linear(x, weight, *, fp32_output=False):
     n = weight.shape[0]
     output = torch.empty((m,n),device=x.device,dtype=torch.float32 if fp32_output else torch.float16)
     compiled = explicit_turing_mma_kernel[(triton.cdiv(m,64),triton.cdiv(n,32))](
-        x,weight,output,m,n,k,num_warps=4,enable_fp_fusion=False)
+        x,weight,output,m,n,k,k%2==0 and x.data_ptr()%4==0 and weight.data_ptr()%4==0,
+        num_warps=4,enable_fp_fusion=False)
     return output,compiled
