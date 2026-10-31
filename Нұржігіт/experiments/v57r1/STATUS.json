@@ -1,0 +1,12 @@
+{
+  "version": "v57r1",
+  "source_commit": "cf6efa174aaa5d3c035a937ce7daa65ff1bf4fc0",
+  "source_files_verified": 2,
+  "archive_sha256": "c01ac6952c06756429e7180369073ac100aa26a16ba4918e1c57702dea935d75",
+  "status": "research_rejected",
+  "production_selection": "verified v45",
+  "full_task_admission": false,
+  "target_27_seconds_claimed": false,
+  "numerical_cases": 0,
+  "timing_cases": 0
+}

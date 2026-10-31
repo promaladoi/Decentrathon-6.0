@@ -46,3 +46,5 @@ Development HEAD may contain experimental code; use the exact measured commit.
 [v56 measured outcome](CODEX_V56_RESULT.md): not selected; original admission or stricter user requirement failed. The 27-second target remains unmet.
 
 [All five new original ZIPs and checksum index](https://github.com/promaladoi/Decentrathon-6.0/releases/tag/nurzhigit-evidence-through-v56-20261031). [Selected-source and protected-file audit](04_submission/v53_v56_source_audit.json). All tested new runtime candidates failed the stricter nonincreasing reported-loss rule. Both the active development runtime and public selected solution are restored/verified as exact v45. The <=27-second whole-command target has not been achieved.
+
+[v57 shared-MMA research](CODEX_V57_EXPERIMENT.md): finite GPU screen pending; selected v45 unchanged. Two initial compilation failures are retained, without any training claim.
