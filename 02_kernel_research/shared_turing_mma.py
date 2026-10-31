@@ -99,8 +99,8 @@ def assembly(block_m, fp32_output):
     return '\n'.join(lines)
 
 
-@triton.jit
-def shared_turing_mma_kernel(X, W, Y, M: tl.constexpr, N: tl.constexpr, K: tl.constexpr,
+@triton.jit(do_not_specialize=['M', 'N', 'K'])
+def shared_turing_mma_kernel(X, W, Y, M, N, K,
                               BM: tl.constexpr, GROUP_M: tl.constexpr,
                               ASM: tl.constexpr):
     pid = tl.program_id(0)
