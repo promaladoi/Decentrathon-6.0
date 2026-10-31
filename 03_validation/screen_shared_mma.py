@@ -29,7 +29,7 @@ def main():
         gpu=torch.cuda.get_device_name(0),torch=torch.__version__,cases=[],timing=[])
     try:
         torch.manual_seed(5701)
-        configurations=((64,64,4),(128,64,4),(128,128,8),(64,128,4))
+        configurations=((128,128,8),(256,128,8),(256,64,8))
         for bm,bn,warps in configurations:
             for m,n,k in ((1,1,32),(17,9,64),(63,65,96),(129,137,256)):
                 x=torch.randn(m,k,device='cuda',dtype=torch.float16)*.1

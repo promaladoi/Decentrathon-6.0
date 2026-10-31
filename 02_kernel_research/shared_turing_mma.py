@@ -1,4 +1,4 @@
-"""Original v59 SM75 pipelined shared-memory MMA; not a production patch.
+"""Original v60 SM75 pipelined shared-memory MMA; not a production patch.
 
 Four warps reuse a coalesced FP16 A/W tile in statically allocated shared
 memory. Full-address XOR preserves aligned 16-byte rows for ldmatrix.
@@ -23,7 +23,7 @@ def assembly(block_m, block_n, warps, fp32_output):
     warp_rows=block_m//(warps//warp_columns)
     fragments=warp_rows//16
     threads=warps*32
-    assert fragments in (1,2) and block_n in (64,128)
+    assert fragments in (1,2,4) and block_n in (64,128)
     count = fragments * 32
     a_bytes = block_m * 32 * 2
     lines = ['{', f'.shared .align 16 .b8 smem[{a_bytes + block_n*64}];',
@@ -82,11 +82,13 @@ def assembly(block_m, block_n, warps, fp32_output):
     lines += load_vectors('nextK')
     lines += ['SHARED_COMPUTE:']
     for k_fragment in range(4):
-        regs=', '.join('af'+str(i) for i in range(fragments*2))
         lines += [f'xor.b32 aAdr, aBase, {k_fragment*4};', 'shl.b32 aAdr, aAdr, 2;',
-            'add.u32 aAdr, aAdr, sbase;',
-            f'ldmatrix.sync.aligned.m8n8.x{fragments*2}.shared.b16 {{{regs}}}, [aAdr];',
-            f'xor.b32 bAdr, bBase, {k_fragment*4};', 'shl.b32 bAdr, bAdr, 2;',
+            'add.u32 aAdr, aAdr, sbase;']
+        for chunk in range(triton.cdiv(fragments,2)):
+            register_count=min(4,fragments*2)
+            regs=', '.join('af'+str(chunk*4+i) for i in range(register_count))
+            lines += [f'ldmatrix.sync.aligned.m8n8.x{register_count}.shared.b16 {{{regs}}}, [aAdr+{chunk*2048}];']
+        lines += [f'xor.b32 bAdr, bBase, {k_fragment*4};', 'shl.b32 bAdr, bAdr, 2;',
             f'add.u32 bAdr, bAdr, {a_bytes};','add.u32 bAdr, bAdr, sbase;']
         for n_fragment in range(8):
             lines += [f'ldmatrix.sync.aligned.m8n8.x1.shared.b16 {{b0}}, [bAdr+{n_fragment*512}];']
@@ -144,7 +146,7 @@ def shared_linear(x, weight, *, block_m=64, block_n=64, warps=4, group_m=8, fp32
                 for t in (x,weight)) or x.shape[1] != weight.shape[1]
             or x.device != weight.device or min(*x.shape,weight.shape[0]) <= 0
             or x.shape[1] % 32 or max(x.numel(), weight.numel(),x.shape[0]*weight.shape[0]) >= 2**31
-            or (block_m,block_n,warps) not in ((64,64,4),(128,64,4),(128,128,8),(64,128,4))
+            or (block_m,block_n,warps) not in ((64,64,4),(128,64,4),(128,128,8),(64,128,4),(256,128,8),(256,64,8))
             or group_m not in (1,4,8,16)):
         raise ValueError('contiguous CUDA FP16 X[M,K], W[N,K], K multiple of 32 and safe dimensions required')
     if torch.cuda.get_device_capability(x.device) != (7,5):
