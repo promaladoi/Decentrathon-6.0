@@ -103,8 +103,8 @@ def try_gather(x,rows,batch,sequence,p):
     Foreign Python workers, public calls and CUDA graph capture use native
     dropout. The reservation is serialized and consumes the full padded count.
     """
-    from .private_scope import expected_loss_scale
-    if (expected_loss_scale() is None or x.shape[1]!=1536
+    from .private_scope import _SCOPE
+    if (_SCOPE.get() is None or x.shape[1]!=1536
             or batch*sequence*x.shape[1] < 4*384*1536
             or str(torch.__version__).split('+',1)[0]!='2.11.0'
             or triton.__version__!='3.6.0' or not _known_rng_threads()

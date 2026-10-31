@@ -16,6 +16,8 @@ def main():
     parser = argparse.ArgumentParser()
     parser.add_argument('--version', default='v16')
     parser.add_argument('--tests-only', action='store_true')
+    parser.add_argument('--no-duplicate-unit-tests', action='store_true',
+                        help='run the complete solution suite once; do not pre-run duplicate subsets')
     parser.add_argument('--nf4-analysis', action='store_true',
                         help='run an independent decoder microbenchmark before the contest harness')
     args = parser.parse_args()
@@ -63,57 +65,58 @@ def main():
         if active:
             raise RuntimeError('Another GPU process is active. Stop it before measurement.')
         outcome['status'] = 'testing'
-        if (repo/'solution/test_direct_dropout.py').is_file():
-            run([sys.executable, '-m', 'pytest', 'solution/test_direct_dropout.py', '-q'],
-                'direct_dropout_tests.log')
-        if (repo/'solution/test_lazy_train_cli.py').is_file():
-            run([sys.executable, '-m', 'pytest', 'solution/test_lazy_train_cli.py', '-q'],
-                'lazy_cli_tests.log')
-        if (repo/'solution/test_resident_nf4.py').is_file():
-            run([sys.executable, '-m', 'pytest', 'solution/test_resident_nf4.py', '-q'],
-                'resident_nf4_tests.log')
-        if (repo/'solution/test_lora_remat.py').is_file():
-            run([sys.executable, '-m', 'pytest', 'solution/test_lora_remat.py',
-                 'solution/test_lora_scaling.py', '-q'],
-                'lora_rematerialization_tests.log')
-        if (repo/'solution/test_nf4_launch_geometry.py').is_file():
-            run([sys.executable, '-m', 'pytest', 'solution/test_nf4_launch_geometry.py', '-q'],
-                'nf4_launch_geometry_tests.log')
-        if (repo/'solution/test_narrow_nf4.py').is_file():
-            run([sys.executable, '-m', 'pytest', 'solution/test_narrow_nf4.py', '-q'],
-                'narrow_nf4_tests.log')
-        if (repo/'solution/test_mlp_recompute.py').is_file():
-            run([sys.executable, '-m', 'pytest', 'solution/test_mlp_recompute.py', '-q'],
-                'mlp_recompute_tests.log')
-        if (repo/'solution/test_small_dropout_dispatch.py').is_file():
-            run([sys.executable, '-m', 'pytest', 'solution/test_small_dropout_dispatch.py', '-q'],
-                'small_dropout_dispatch_tests.log')
-        if (repo/'solution/test_target_metadata.py').is_file():
-            run([sys.executable, '-m', 'pytest', 'solution/test_target_metadata.py',
-                 'solution/test_batch_metadata.py', '-q'], 'target_metadata_tests.log')
-        if (repo/'solution/deferred_metadata.py').is_file():
-            run([sys.executable, '03_validation/verify_startup_metadata.py'],
-                'startup_metadata_parity.log')
-        # The earlier path and the corrected low-memory team path use different
-        # dropout modules. Both retain their complete strict tests.
-        dropout_test = ('solution/test_compact_dropout.py'
-                        if (repo/'solution/test_compact_dropout.py').is_file()
-                        else 'solution/test_dropout.py')
-        run([sys.executable, '-m', 'pytest', dropout_test, '-q'],
-            'dropout_tests.log')
-        if (repo/'solution/test_storage_integration.py').is_file():
-            run([sys.executable, '-m', 'pytest', 'solution/test_storage_integration.py', '-q'],
-                'storage_integration_tests.log')
-            run([sys.executable, '-c',
-                 "import os,pytest;os.environ['MEREY_NATIVE_METADATA_SNAPSHOT_PARITY']='1';"
-                 "raise SystemExit(pytest.main(['solution/test_package_metadata_snapshot.py',"
-                 "'-q','-k','real_native_setup_prefix']))"], 'native_metadata_parity.log')
-        if (repo/'solution/test_head_lifetime.py').is_file():
-            run([sys.executable, '-m', 'pytest', 'solution/test_head_lifetime.py',
-                 'solution/test_lmhead_scaled.py', '-q'], 'head_lifetime_and_gradient_tests.log')
-        if args.nf4_analysis:
-            run([sys.executable, '-m', 'pytest', 'solution/test_paired_nf4.py', '-q'],
-                'paired_nf4_tests.log')
+        if not args.no_duplicate_unit_tests:
+            if (repo/'solution/test_direct_dropout.py').is_file():
+                run([sys.executable, '-m', 'pytest', 'solution/test_direct_dropout.py', '-q'],
+                    'direct_dropout_tests.log')
+            if (repo/'solution/test_lazy_train_cli.py').is_file():
+                run([sys.executable, '-m', 'pytest', 'solution/test_lazy_train_cli.py', '-q'],
+                    'lazy_cli_tests.log')
+            if (repo/'solution/test_resident_nf4.py').is_file():
+                run([sys.executable, '-m', 'pytest', 'solution/test_resident_nf4.py', '-q'],
+                    'resident_nf4_tests.log')
+            if (repo/'solution/test_lora_remat.py').is_file():
+                run([sys.executable, '-m', 'pytest', 'solution/test_lora_remat.py',
+                     'solution/test_lora_scaling.py', '-q'],
+                    'lora_rematerialization_tests.log')
+            if (repo/'solution/test_nf4_launch_geometry.py').is_file():
+                run([sys.executable, '-m', 'pytest', 'solution/test_nf4_launch_geometry.py', '-q'],
+                    'nf4_launch_geometry_tests.log')
+            if (repo/'solution/test_narrow_nf4.py').is_file():
+                run([sys.executable, '-m', 'pytest', 'solution/test_narrow_nf4.py', '-q'],
+                    'narrow_nf4_tests.log')
+            if (repo/'solution/test_mlp_recompute.py').is_file():
+                run([sys.executable, '-m', 'pytest', 'solution/test_mlp_recompute.py', '-q'],
+                    'mlp_recompute_tests.log')
+            if (repo/'solution/test_small_dropout_dispatch.py').is_file():
+                run([sys.executable, '-m', 'pytest', 'solution/test_small_dropout_dispatch.py', '-q'],
+                    'small_dropout_dispatch_tests.log')
+            if (repo/'solution/test_target_metadata.py').is_file():
+                run([sys.executable, '-m', 'pytest', 'solution/test_target_metadata.py',
+                     'solution/test_batch_metadata.py', '-q'], 'target_metadata_tests.log')
+            if (repo/'solution/deferred_metadata.py').is_file():
+                run([sys.executable, '03_validation/verify_startup_metadata.py'],
+                    'startup_metadata_parity.log')
+            # The earlier path and the corrected low-memory team path use different
+            # dropout modules. Both retain their complete strict tests.
+            dropout_test = ('solution/test_compact_dropout.py'
+                            if (repo/'solution/test_compact_dropout.py').is_file()
+                            else 'solution/test_dropout.py')
+            run([sys.executable, '-m', 'pytest', dropout_test, '-q'],
+                'dropout_tests.log')
+            if (repo/'solution/test_storage_integration.py').is_file():
+                run([sys.executable, '-m', 'pytest', 'solution/test_storage_integration.py', '-q'],
+                    'storage_integration_tests.log')
+                run([sys.executable, '-c',
+                     "import os,pytest;os.environ['MEREY_NATIVE_METADATA_SNAPSHOT_PARITY']='1';"
+                     "raise SystemExit(pytest.main(['solution/test_package_metadata_snapshot.py',"
+                     "'-q','-k','real_native_setup_prefix']))"], 'native_metadata_parity.log')
+            if (repo/'solution/test_head_lifetime.py').is_file():
+                run([sys.executable, '-m', 'pytest', 'solution/test_head_lifetime.py',
+                     'solution/test_lmhead_scaled.py', '-q'], 'head_lifetime_and_gradient_tests.log')
+            if args.nf4_analysis:
+                run([sys.executable, '-m', 'pytest', 'solution/test_paired_nf4.py', '-q'],
+                    'paired_nf4_tests.log')
         run([sys.executable, '-m', 'pytest', 'solution', '-q'], 'kernel_tests.log')
         env_command = [sys.executable, '-c',
                        "import os,pytest;os.environ['SOUP_APPLY_SOLUTION']='1';"

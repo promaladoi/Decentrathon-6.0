@@ -66,7 +66,8 @@ def test_exceptional_values_half_output_and_backward_mask_bits():
 
 
 @pytest.mark.parametrize('p',[.05,.37])
-def test_private_lora_projection_uses_direct_mask_and_preserves_all_gradients(monkeypatch,p):
+@pytest.mark.parametrize('scope_loss_scale',[None,65536.])
+def test_private_lora_projection_uses_direct_mask_and_preserves_all_gradients(monkeypatch,p,scope_loss_scale):
     from solution import private_scope
     from solution.test_lora_remat import test_two_lora_branches_exact_values_gradients_rng_and_retained_graph
     original=direct.try_gather
@@ -76,7 +77,7 @@ def test_private_lora_projection_uses_direct_mask_and_preserves_all_gradients(mo
         if result is not None: used.append(True)
         return result
     monkeypatch.setattr(direct,'try_gather',traced)
-    token=private_scope._SCOPE.set(private_scope._Scope(None,None,None,None,65536.))
+    token=private_scope._SCOPE.set(private_scope._Scope(None,None,None,None,scope_loss_scale))
     try:
         test_two_lora_branches_exact_values_gradients_rng_and_retained_graph(
             1536,384,(384,211,37,90),p)
