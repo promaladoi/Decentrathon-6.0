@@ -47,4 +47,6 @@ The v57-v63 investigation is complete. Both the active development implementatio
 
 [Original v57-v63 evidence release](https://github.com/promaladoi/Decentrathon-6.0/releases/tag/nurzhigit-evidence-through-v63-20261031): eight exact research ZIPs inside a bundle, the original full v63 ZIP, and a source/checksum manifest. All three release assets have verified public download links and server SHA-256 digests. [Publication receipt](04_submission/v57_v63_publication.json). [Selected-source and protected-file audit](04_submission/v57_v63_source_audit.json).
 
-[v64 shared-RMS LoRA input rematerialization](CODEX_V64_EXPERIMENT.md): native values/gradients/RNG qualification first, then full original paired validation. No new result or 27-second claim; measured v45 remains selected.
+
+
+[v64 original fixture failure](CODEX_V64_RESULT.md). [v64r1 measured outcome](CODEX_V64R1_RESULT.md): failed before complete original admission; not selected.

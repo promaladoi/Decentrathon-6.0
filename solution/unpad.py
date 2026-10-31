@@ -673,9 +673,16 @@ def _attention(layer, projections, x, cos, sin, mask, step, meta, norm_descripto
     # the LoRA branches in the base order (q, k, v): same dropout draws
     fuse_scaling = (k_parts[1] is None
                     and _can_fuse_lora_scaling(q_parts, v_parts, x, step))
-    lq = _lora_out(q_parts, x, step, apply_scale=not fuse_scaling, norm_descriptor=norm_descriptor)
-    lk = _lora_out(k_parts, x, step, norm_descriptor=norm_descriptor)
-    lv = _lora_out(v_parts, x, step, apply_scale=not fuse_scaling, norm_descriptor=norm_descriptor)
+    if norm_descriptor is None:
+        # Preserve the existing helper call contract for legacy attention
+        # consumers, including observer/fallback qualification fixtures.
+        lq = _lora_out(q_parts, x, step, apply_scale=not fuse_scaling)
+        lk = _lora_out(k_parts, x, step)
+        lv = _lora_out(v_parts, x, step, apply_scale=not fuse_scaling)
+    else:
+        lq = _lora_out(q_parts, x, step, apply_scale=not fuse_scaling, norm_descriptor=norm_descriptor)
+        lk = _lora_out(k_parts, x, step, norm_descriptor=norm_descriptor)
+        lv = _lora_out(v_parts, x, step, apply_scale=not fuse_scaling, norm_descriptor=norm_descriptor)
     if fuse_scaling and (lq.dtype != torch.float16 or lv.dtype != torch.float16):
         # An unexpected module result keeps the original arithmetic, with no
         # second dropout draw or projection replay.
