@@ -36,7 +36,7 @@ from .lmhead import LazyLogits, lm_head_loss, patch_metric_readers
 from .mlp import MLP4bit, _compute_dtype
 from .nf4 import MatMulNF4, dequantize_nf4, supported as nf4_supported, _linear_forward
 from . import warmup as _warmup
-from .rmsnorm import add_rmsnorm
+from .rmsnorm import add_rmsnorm, add_rmsnorm_with_stats
 from .dropout import real_row_dropout, _supported as _real_dropout_supported
 from .batch_metadata import compact_batch_metadata
 from .backward_sums import sum_half_gradients
@@ -593,15 +593,8 @@ class _Batch:
         self.packed_metadata = packed_metadata
         self._padded = {}
 
-    def dropout(self, dropout, x):
-        """dropout(x) of the real tokens, drawn on the (batch, seq_len, features) tensor of the
-        base run, so the random masks are the same."""
-        if type(dropout) is torch.nn.Identity:
-            return x
-        # self.rows is the matching attention_mask.reshape(-1).nonzero()
-        # producer, hence unique and in range. Native dropout still draws on
-        # the identical full shape; only real values/masks enter autograd.
-        if (REAL_ROW_DROPOUT
+    def real_dropout_eligible(self, dropout, x):
+        return (REAL_ROW_DROPOUT
                 and self.batch * self.seq_len * x.shape[-1] >= REAL_ROW_DROPOUT_MIN_PADDED_ELEMENTS
                 and type(dropout) is torch.nn.Dropout
                 and dropout.training is True and dropout.inplace is False
@@ -618,7 +611,17 @@ class _Batch:
                     "_global_backward_hooks", "_global_backward_pre_hooks"))
                 and str(torch.__version__).split("+", 1)[0] == "2.11.0"
                 and _real_dropout_supported(x, self.rows, self.batch, self.seq_len,
-                                             dropout.p, True, True)):
+                                             dropout.p, True, True))
+
+    def dropout(self, dropout, x):
+        """dropout(x) of the real tokens, drawn on the (batch, seq_len, features) tensor of the
+        base run, so the random masks are the same."""
+        if type(dropout) is torch.nn.Identity:
+            return x
+        # self.rows is the matching attention_mask.reshape(-1).nonzero()
+        # producer, hence unique and in range. Native dropout still draws on
+        # the identical full shape; only real values/masks enter autograd.
+        if self.real_dropout_eligible(dropout, x):
             return real_row_dropout(x, self.rows, self.batch, self.seq_len,
                                     dropout.p, rows_from_nonzero=True)
         key = id(x)
@@ -633,11 +636,18 @@ class _Batch:
         self._padded.pop(id(x), None)
 
 
-def _lora_out(parts, x, step, *, apply_scale=True):
+def _lora_out(parts, x, step, *, apply_scale=True, norm_descriptor=None):
     base, lora_a, lora_b, dropout, scaling = parts
     if lora_a is None:
         return None
-    output = lora_b(lora_a(step.dropout(dropout, x)))
+    from .lora_remat import supported as remat_supported, lora_input_projection
+    if (norm_descriptor is not None and step.real_dropout_eligible(dropout, x)
+            and remat_supported(x, lora_a, norm_descriptor)):
+        projected = lora_input_projection(x, lora_a.weight, norm_descriptor, step.rows,
+                                         step.batch, step.seq_len, dropout.p)
+    else:
+        projected = lora_a(step.dropout(dropout, x))
+    output = lora_b(projected)
     return output * scaling if apply_scale else output
 
 
@@ -656,16 +666,16 @@ def _can_fuse_lora_scaling(q_parts, v_parts, x, step):
     return expected_loss_scale() is not None
 
 
-def _attention(layer, projections, x, cos, sin, mask, step, meta):
+def _attention(layer, projections, x, cos, sin, mask, step, meta, norm_descriptor=None):
     attn = layer.self_attn
     q_parts, k_parts, v_parts, o_parts = projections
     q, k, v = QKV4bit.apply(x, q_parts[0], k_parts[0], v_parts[0], torch.float16)
     # the LoRA branches in the base order (q, k, v): same dropout draws
     fuse_scaling = (k_parts[1] is None
                     and _can_fuse_lora_scaling(q_parts, v_parts, x, step))
-    lq = _lora_out(q_parts, x, step, apply_scale=not fuse_scaling)
-    lk = _lora_out(k_parts, x, step)
-    lv = _lora_out(v_parts, x, step, apply_scale=not fuse_scaling)
+    lq = _lora_out(q_parts, x, step, apply_scale=not fuse_scaling, norm_descriptor=norm_descriptor)
+    lk = _lora_out(k_parts, x, step, norm_descriptor=norm_descriptor)
+    lv = _lora_out(v_parts, x, step, apply_scale=not fuse_scaling, norm_descriptor=norm_descriptor)
     if fuse_scaling and (lq.dtype != torch.float16 or lv.dtype != torch.float16):
         # An unexpected module result keeps the original arithmetic, with no
         # second dropout draw or projection replay.
@@ -738,8 +748,9 @@ def fast_forward(model, meta, input_ids, attention_mask, labels, num_items_in_ba
         norm = layer.input_layernorm
         if mlp_out is None:  # layer 0: h + 0 is h; the same kernel as the other norms
             mlp_out = h.new_zeros(h.shape, dtype=torch.float16)
-        h, x = add_rmsnorm(h, mlp_out, norm.weight, norm.variance_epsilon)
-        o = _attention(layer, projections, x, cos, sin, mask, step, meta)
+        h, x, rstd = add_rmsnorm_with_stats(h, mlp_out, norm.weight, norm.variance_epsilon)
+        o = _attention(layer, projections, x, cos, sin, mask, step, meta,
+                       norm_descriptor=(h, norm.weight, rstd))
         norm = layer.post_attention_layernorm
         h, x = add_rmsnorm(h, o, norm.weight, norm.variance_epsilon)
         mlp = layer.mlp
