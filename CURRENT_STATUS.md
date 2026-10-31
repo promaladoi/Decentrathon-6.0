@@ -76,3 +76,5 @@ The v57-v63 investigation is complete. Both the active development implementatio
 [v67 original measured outcome](CODEX_V67_RESULT.md): not selected; original admission or user requirements failed.
 
 [v68 original measured outcome](CODEX_V68_RESULT.md): original admission and user memory/quality passed; speed comparison pending.
+
+[v69 speed-priority candidate](CODEX_V69_EXPERIMENT.md): GPU qualification then full original paired validation running; not selected; selected v45 unchanged. No new elapsed-time claim.
