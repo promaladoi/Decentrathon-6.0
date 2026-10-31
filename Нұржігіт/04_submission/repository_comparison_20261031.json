@@ -1,0 +1,2021 @@
+{
+  "repository": "promaladoi/Decentrathon-6.0",
+  "analyzed_commit": "7ac72aea56f1f3dd5a666c91df1640140526fe13",
+  "kind": "read-only audit of existing evidence; no new GPU measurement",
+  "hash_bound_admitted_report_count_including_duplicates": 55,
+  "normalizers_from_this_repository_only": {
+    "best_speedup": 1.8664,
+    "best_memory_ratio": 4.0352
+  },
+  "score_limits": "Illustrative only. Includes 20 correctness points, excludes up to 15 README points. Official normalization uses all admitted teams. Reports include duplicate copies and historical alternatives, not 54 independent teams.",
+  "measurement_limits": "Different sessions are not a direct head-to-head performance measurement. Whole-command time differs from training-loop time. Rounded eval loss is not proof on hidden data. Check hashes bind reports, not a fresh execution.",
+  "protected_git_trees": {
+    "Нұржігіт": {
+      "harness": "6c8e1b84d0965673aeca8b39c312adfdc78fb562",
+      "task": "52af8441d2ed87ab137296a5d6a5983835edb57e",
+      "tests": "1822b0872025982b3baa0e5b66db4bbfe622d5b7"
+    },
+    "Мерей": {
+      "harness": "6c8e1b84d0965673aeca8b39c312adfdc78fb562",
+      "task": "52af8441d2ed87ab137296a5d6a5983835edb57e",
+      "tests": "1822b0872025982b3baa0e5b66db4bbfe622d5b7"
+    },
+    "Анаис": {
+      "harness": "6c8e1b84d0965673aeca8b39c312adfdc78fb562",
+      "task": "52af8441d2ed87ab137296a5d6a5983835edb57e",
+      "tests": "1822b0872025982b3baa0e5b66db4bbfe622d5b7"
+    },
+    "Владимир": {
+      "harness": "6c8e1b84d0965673aeca8b39c312adfdc78fb562",
+      "task": "52af8441d2ed87ab137296a5d6a5983835edb57e",
+      "tests": "1822b0872025982b3baa0e5b66db4bbfe622d5b7"
+    }
+  },
+  "protected_trees_equal": true,
+  "fastest_whole_command_report": "Мерей/verification/codex_stage3/final-result.json",
+  "lowest_memory_report": "Нұржігіт/03_validation/reports/codex_v55/result.json",
+  "highest_illustrative_score_report": "Нұржігіт/03_validation/reports/codex_v64r2/result.json",
+  "vladimir_evidence_limit": "Current README documents speedup 1.738x, memory ratio 3.469x and 10/10 from pasted output, without current raw result/checks JSON and whole-command seconds. Excluded from hash-bound score ranking; not evidence of a failed solution.",
+  "reports": [
+    {
+      "result_path": "Нұржігіт/03_validation/reports/codex_v64r2/result.json",
+      "checks_path": "Нұржігіт/03_validation/reports/codex_v64r2/checks.json",
+      "result_sha256": "b4902afc72f01c21fdb076e42b6968758af03a0f1a7e8c6f62aa47e497322d84",
+      "solution_sha256": "a2b40323a6f8e8a9967bd73cdbda7dc1d0a67ffe1827865e5150ec89a5ef7a35",
+      "participant": "Нұржігіт",
+      "summary": {
+        "base": {
+          "ok": true,
+          "runs": 2,
+          "wall_s": 86.33,
+          "gpu_peak_mib": 14345,
+          "train_loop_s": 60.54,
+          "eval_loss": 2.04966
+        },
+        "solution": {
+          "ok": true,
+          "runs": 2,
+          "wall_s": 47.61,
+          "gpu_peak_mib": 3915,
+          "train_loop_s": 28.36,
+          "eval_loss": 2.04963
+        },
+        "ratios": {
+          "speedup": 1.8133,
+          "memory_ratio": 3.6641,
+          "quality_delta_pct": -0.001
+        }
+      },
+      "checks_passed": 10,
+      "reported_loss_nonincreasing": true,
+      "summary_memory_within_7151_mib": true,
+      "speedup": 1.8133,
+      "memory_ratio": 3.6641,
+      "illustrative_repository_only_points_out_of_85": 81.31
+    },
+    {
+      "result_path": "Нұржігіт/03_validation/reports/codex_v45/result.json",
+      "checks_path": "Нұржігіт/03_validation/reports/codex_v45/checks.json",
+      "result_sha256": "d74b291499ec6dd6597fccb6f6db11dce11e1b6c9eb72431cc3fc6c7267b06fe",
+      "solution_sha256": "8568c6f9abfb6458bfa4248c044cc2cf0169c104a487f8aeb4af4ae67702a787",
+      "participant": "Нұржігіт",
+      "summary": {
+        "base": {
+          "ok": true,
+          "runs": 2,
+          "wall_s": 79.56,
+          "gpu_peak_mib": 14345,
+          "train_loop_s": 58.38,
+          "eval_loss": 2.04963
+        },
+        "solution": {
+          "ok": true,
+          "runs": 2,
+          "wall_s": 45.03,
+          "gpu_peak_mib": 4135,
+          "train_loop_s": 26.54,
+          "eval_loss": 2.0496
+        },
+        "ratios": {
+          "speedup": 1.7668,
+          "memory_ratio": 3.4692,
+          "quality_delta_pct": -0.001
+        }
+      },
+      "checks_passed": 10,
+      "reported_loss_nonincreasing": true,
+      "summary_memory_within_7151_mib": true,
+      "speedup": 1.7668,
+      "memory_ratio": 3.4692,
+      "illustrative_repository_only_points_out_of_85": 78.67
+    },
+    {
+      "result_path": "Нұржігіт/DeepSeek_V4_1_Flash_1017/evidence/v45/result.json",
+      "checks_path": "Нұржігіт/DeepSeek_V4_1_Flash_1017/evidence/v45/checks.json",
+      "result_sha256": "d74b291499ec6dd6597fccb6f6db11dce11e1b6c9eb72431cc3fc6c7267b06fe",
+      "solution_sha256": "8568c6f9abfb6458bfa4248c044cc2cf0169c104a487f8aeb4af4ae67702a787",
+      "participant": "Нұржігіт",
+      "summary": {
+        "base": {
+          "ok": true,
+          "runs": 2,
+          "wall_s": 79.56,
+          "gpu_peak_mib": 14345,
+          "train_loop_s": 58.38,
+          "eval_loss": 2.04963
+        },
+        "solution": {
+          "ok": true,
+          "runs": 2,
+          "wall_s": 45.03,
+          "gpu_peak_mib": 4135,
+          "train_loop_s": 26.54,
+          "eval_loss": 2.0496
+        },
+        "ratios": {
+          "speedup": 1.7668,
+          "memory_ratio": 3.4692,
+          "quality_delta_pct": -0.001
+        }
+      },
+      "checks_passed": 10,
+      "reported_loss_nonincreasing": true,
+      "summary_memory_within_7151_mib": true,
+      "speedup": 1.7668,
+      "memory_ratio": 3.4692,
+      "illustrative_repository_only_points_out_of_85": 78.67
+    },
+    {
+      "result_path": "Нұржігіт/Nemotron_3_Ultra/evidence/v45/result.json",
+      "checks_path": "Нұржігіт/Nemotron_3_Ultra/evidence/v45/checks.json",
+      "result_sha256": "d74b291499ec6dd6597fccb6f6db11dce11e1b6c9eb72431cc3fc6c7267b06fe",
+      "solution_sha256": "8568c6f9abfb6458bfa4248c044cc2cf0169c104a487f8aeb4af4ae67702a787",
+      "participant": "Нұржігіт",
+      "summary": {
+        "base": {
+          "ok": true,
+          "runs": 2,
+          "wall_s": 79.56,
+          "gpu_peak_mib": 14345,
+          "train_loop_s": 58.38,
+          "eval_loss": 2.04963
+        },
+        "solution": {
+          "ok": true,
+          "runs": 2,
+          "wall_s": 45.03,
+          "gpu_peak_mib": 4135,
+          "train_loop_s": 26.54,
+          "eval_loss": 2.0496
+        },
+        "ratios": {
+          "speedup": 1.7668,
+          "memory_ratio": 3.4692,
+          "quality_delta_pct": -0.001
+        }
+      },
+      "checks_passed": 10,
+      "reported_loss_nonincreasing": true,
+      "summary_memory_within_7151_mib": true,
+      "speedup": 1.7668,
+      "memory_ratio": 3.4692,
+      "illustrative_repository_only_points_out_of_85": 78.67
+    },
+    {
+      "result_path": "Нұржігіт/03_validation/reports/codex_v49/result.json",
+      "checks_path": "Нұржігіт/03_validation/reports/codex_v49/checks.json",
+      "result_sha256": "39d0abf6cf1898cafe25e54bf84e2ab2d2256b10cd3d96afc2502b6c2eb1ce06",
+      "solution_sha256": "9c6f953289ed85b6f3a8eb1a06cd7d511e76589184abb71ba57709f805acb06d",
+      "participant": "Нұржігіт",
+      "summary": {
+        "base": {
+          "ok": true,
+          "runs": 2,
+          "wall_s": 80.08,
+          "gpu_peak_mib": 14345,
+          "train_loop_s": 58.34,
+          "eval_loss": 2.04967
+        },
+        "solution": {
+          "ok": true,
+          "runs": 2,
+          "wall_s": 45.69,
+          "gpu_peak_mib": 4115,
+          "train_loop_s": 26.76,
+          "eval_loss": 2.04966
+        },
+        "ratios": {
+          "speedup": 1.7527,
+          "memory_ratio": 3.486,
+          "quality_delta_pct": -0.0
+        }
+      },
+      "checks_passed": 10,
+      "reported_loss_nonincreasing": true,
+      "summary_memory_within_7151_mib": true,
+      "speedup": 1.7527,
+      "memory_ratio": 3.486,
+      "illustrative_repository_only_points_out_of_85": 78.33
+    },
+    {
+      "result_path": "Нұржігіт/03_validation/reports/codex_v53r1/result.json",
+      "checks_path": "Нұржігіт/03_validation/reports/codex_v53r1/checks.json",
+      "result_sha256": "f359e8db87fcab460c0fc92ed6ac7163aafecf3ce61257c64efbee59bc1dbfd6",
+      "solution_sha256": "eeabf0556d56511f759fc9b23b881ef68734eb296ca261cc3cb5600d3d945deb",
+      "participant": "Нұржігіт",
+      "summary": {
+        "base": {
+          "ok": true,
+          "runs": 2,
+          "wall_s": 83.14,
+          "gpu_peak_mib": 14345,
+          "train_loop_s": 60.52,
+          "eval_loss": 2.04961
+        },
+        "solution": {
+          "ok": true,
+          "runs": 2,
+          "wall_s": 47.51,
+          "gpu_peak_mib": 4109,
+          "train_loop_s": 27.71,
+          "eval_loss": 2.04965
+        },
+        "ratios": {
+          "speedup": 1.7499,
+          "memory_ratio": 3.4911,
+          "quality_delta_pct": 0.002
+        }
+      },
+      "checks_passed": 10,
+      "reported_loss_nonincreasing": false,
+      "summary_memory_within_7151_mib": true,
+      "speedup": 1.7499,
+      "memory_ratio": 3.4911,
+      "illustrative_repository_only_points_out_of_85": 78.27
+    },
+    {
+      "result_path": "Нұржігіт/03_validation/reports/codex_v48/result.json",
+      "checks_path": "Нұржігіт/03_validation/reports/codex_v48/checks.json",
+      "result_sha256": "4d244d8c665d82265bfb4d3a375bd68448a91a8603af25e04b462fff74248d8d",
+      "solution_sha256": "ea6e9b3ad39857b38e0d973a82662b35e7931ae51779225dc9cc8dfc384901ea",
+      "participant": "Нұржігіт",
+      "summary": {
+        "base": {
+          "ok": true,
+          "runs": 2,
+          "wall_s": 81.01,
+          "gpu_peak_mib": 14345,
+          "train_loop_s": 58.59,
+          "eval_loss": 2.04968
+        },
+        "solution": {
+          "ok": true,
+          "runs": 2,
+          "wall_s": 46.59,
+          "gpu_peak_mib": 4115,
+          "train_loop_s": 26.96,
+          "eval_loss": 2.04964
+        },
+        "ratios": {
+          "speedup": 1.7388,
+          "memory_ratio": 3.486,
+          "quality_delta_pct": -0.002
+        }
+      },
+      "checks_passed": 10,
+      "reported_loss_nonincreasing": true,
+      "summary_memory_within_7151_mib": true,
+      "speedup": 1.7388,
+      "memory_ratio": 3.486,
+      "illustrative_repository_only_points_out_of_85": 77.88
+    },
+    {
+      "result_path": "Нұржігіт/03_validation/reports/codex_v46/result.json",
+      "checks_path": "Нұржігіт/03_validation/reports/codex_v46/checks.json",
+      "result_sha256": "a5f2788e1de407e449c971a8f0c9e1ec6e13ad4218f8e1b371c63b991337e344",
+      "solution_sha256": "4342183e1dfc41ac14e33cb047e7121597899e9a41bbcc220de5a385005044e3",
+      "participant": "Нұржігіт",
+      "summary": {
+        "base": {
+          "ok": true,
+          "runs": 2,
+          "wall_s": 79.69,
+          "gpu_peak_mib": 14345,
+          "train_loop_s": 57.8,
+          "eval_loss": 2.04963
+        },
+        "solution": {
+          "ok": true,
+          "runs": 2,
+          "wall_s": 45.75,
+          "gpu_peak_mib": 4135,
+          "train_loop_s": 26.69,
+          "eval_loss": 2.04967
+        },
+        "ratios": {
+          "speedup": 1.7419,
+          "memory_ratio": 3.4692,
+          "quality_delta_pct": 0.002
+        }
+      },
+      "checks_passed": 10,
+      "reported_loss_nonincreasing": false,
+      "summary_memory_within_7151_mib": true,
+      "speedup": 1.7419,
+      "memory_ratio": 3.4692,
+      "illustrative_repository_only_points_out_of_85": 77.88
+    },
+    {
+      "result_path": "Нұржігіт/03_validation/reports/codex_v67/result.json",
+      "checks_path": "Нұржігіт/03_validation/reports/codex_v67/checks.json",
+      "result_sha256": "91319e0013a6809c7b60fea732294db94473b335a91c7550d6355b07b70b79ca",
+      "solution_sha256": "68428abaa4c04fb314ea004b6bb17453127c21c33417c3a100eef865731ea62b",
+      "participant": "Нұржігіт",
+      "summary": {
+        "base": {
+          "ok": true,
+          "runs": 2,
+          "wall_s": 84.38,
+          "gpu_peak_mib": 14345,
+          "train_loop_s": 62.16,
+          "eval_loss": 2.04966
+        },
+        "solution": {
+          "ok": true,
+          "runs": 2,
+          "wall_s": 48.5,
+          "gpu_peak_mib": 4135,
+          "train_loop_s": 29.61,
+          "eval_loss": 2.04968
+        },
+        "ratios": {
+          "speedup": 1.7398,
+          "memory_ratio": 3.4692,
+          "quality_delta_pct": 0.001
+        }
+      },
+      "checks_passed": 10,
+      "reported_loss_nonincreasing": false,
+      "summary_memory_within_7151_mib": true,
+      "speedup": 1.7398,
+      "memory_ratio": 3.4692,
+      "illustrative_repository_only_points_out_of_85": 77.81
+    },
+    {
+      "result_path": "Нұржігіт/03_validation/reports/codex_v56/result.json",
+      "checks_path": "Нұржігіт/03_validation/reports/codex_v56/checks.json",
+      "result_sha256": "063257c64c8c731d8f3d0dbf838fdf233fde1f19149a7ffab984ab99fa998f8c",
+      "solution_sha256": "d4d6a8b08fec6d3334a77dd64468f19d9e0170bcb5f0b7c438b9c29f73f8ffb9",
+      "participant": "Нұржігіт",
+      "summary": {
+        "base": {
+          "ok": true,
+          "runs": 2,
+          "wall_s": 85.69,
+          "gpu_peak_mib": 14345,
+          "train_loop_s": 63.25,
+          "eval_loss": 2.0496
+        },
+        "solution": {
+          "ok": true,
+          "runs": 2,
+          "wall_s": 49.69,
+          "gpu_peak_mib": 4135,
+          "train_loop_s": 30.02,
+          "eval_loss": 2.04968
+        },
+        "ratios": {
+          "speedup": 1.7245,
+          "memory_ratio": 3.4692,
+          "quality_delta_pct": 0.004
+        }
+      },
+      "checks_passed": 10,
+      "reported_loss_nonincreasing": false,
+      "summary_memory_within_7151_mib": true,
+      "speedup": 1.7245,
+      "memory_ratio": 3.4692,
+      "illustrative_repository_only_points_out_of_85": 77.31
+    },
+    {
+      "result_path": "Нұржігіт/03_validation/reports/codex_v63/result.json",
+      "checks_path": "Нұржігіт/03_validation/reports/codex_v63/checks.json",
+      "result_sha256": "d883e512d97382f8e41a93b832873f6a58f7db052893658dc07460c798b4641a",
+      "solution_sha256": "c5be93144b19ccf7898c88fdb04796a149a3f2a1f13e864b751c42ea6d683ae2",
+      "participant": "Нұржігіт",
+      "summary": {
+        "base": {
+          "ok": true,
+          "runs": 2,
+          "wall_s": 83.68,
+          "gpu_peak_mib": 14345,
+          "train_loop_s": 60.81,
+          "eval_loss": 2.04962
+        },
+        "solution": {
+          "ok": true,
+          "runs": 2,
+          "wall_s": 48.69,
+          "gpu_peak_mib": 4115,
+          "train_loop_s": 28.63,
+          "eval_loss": 2.04963
+        },
+        "ratios": {
+          "speedup": 1.7186,
+          "memory_ratio": 3.486,
+          "quality_delta_pct": 0.0
+        }
+      },
+      "checks_passed": 10,
+      "reported_loss_nonincreasing": false,
+      "summary_memory_within_7151_mib": true,
+      "speedup": 1.7186,
+      "memory_ratio": 3.486,
+      "illustrative_repository_only_points_out_of_85": 77.23
+    },
+    {
+      "result_path": "Нұржігіт/03_validation/reports/codex_v51/result.json",
+      "checks_path": "Нұржігіт/03_validation/reports/codex_v51/checks.json",
+      "result_sha256": "67178cf8c18d08414c216d2ee4cca50c83f58f85eb3eb3e204b31aac3c4935e1",
+      "solution_sha256": "1e5ab9b9281dde802af9ecb1d06f414bec9bc5927c703072e3f03f89d0f139a4",
+      "participant": "Нұржігіт",
+      "summary": {
+        "base": {
+          "ok": true,
+          "runs": 2,
+          "wall_s": 84.2,
+          "gpu_peak_mib": 14345,
+          "train_loop_s": 61.02,
+          "eval_loss": 2.04964
+        },
+        "solution": {
+          "ok": true,
+          "runs": 2,
+          "wall_s": 49.03,
+          "gpu_peak_mib": 4135,
+          "train_loop_s": 28.69,
+          "eval_loss": 2.04963
+        },
+        "ratios": {
+          "speedup": 1.7173,
+          "memory_ratio": 3.4692,
+          "quality_delta_pct": -0.0
+        }
+      },
+      "checks_passed": 10,
+      "reported_loss_nonincreasing": true,
+      "summary_memory_within_7151_mib": true,
+      "speedup": 1.7173,
+      "memory_ratio": 3.4692,
+      "illustrative_repository_only_points_out_of_85": 77.08
+    },
+    {
+      "result_path": "Нұржігіт/03_validation/reports/codex_v55/result.json",
+      "checks_path": "Нұржігіт/03_validation/reports/codex_v55/checks.json",
+      "result_sha256": "89538bdeb520b820b5479a00ed5e9c33fa72510557dc96b14ad4851cae42dbf6",
+      "solution_sha256": "3c4d951e9db2b5140e311ae2671984de30f91f8f3b498c4d3d3f31c9ba9921e0",
+      "participant": "Нұржігіт",
+      "summary": {
+        "base": {
+          "ok": true,
+          "runs": 2,
+          "wall_s": 83.8,
+          "gpu_peak_mib": 14345,
+          "train_loop_s": 61.24,
+          "eval_loss": 2.04964
+        },
+        "solution": {
+          "ok": true,
+          "runs": 2,
+          "wall_s": 52.23,
+          "gpu_peak_mib": 3555,
+          "train_loop_s": 32.51,
+          "eval_loss": 2.04967
+        },
+        "ratios": {
+          "speedup": 1.6044,
+          "memory_ratio": 4.0352,
+          "quality_delta_pct": 0.001
+        }
+      },
+      "checks_passed": 10,
+      "reported_loss_nonincreasing": false,
+      "summary_memory_within_7151_mib": true,
+      "speedup": 1.6044,
+      "memory_ratio": 4.0352,
+      "illustrative_repository_only_points_out_of_85": 76.52
+    },
+    {
+      "result_path": "Мерей/verification/codex_stage3/final-result.json",
+      "checks_path": "Мерей/verification/codex_stage3/final-checks.json",
+      "result_sha256": "49dc63651388b1db928a2cfb826c7a7a49b71417cc1e62349fc7cf114c85eaca",
+      "solution_sha256": "a7aa443b124b4a20e28591ef89039b6c4f3e92c3e164d12e5257af6d9e199016",
+      "participant": "Мерей",
+      "summary": {
+        "base": {
+          "ok": true,
+          "runs": 2,
+          "wall_s": 78.3,
+          "gpu_peak_mib": 14345,
+          "train_loop_s": 56.84,
+          "eval_loss": 2.04966
+        },
+        "solution": {
+          "ok": true,
+          "runs": 2,
+          "wall_s": 42.78,
+          "gpu_peak_mib": 5039,
+          "train_loop_s": 24.03,
+          "eval_loss": 2.04963
+        },
+        "ratios": {
+          "speedup": 1.8303,
+          "memory_ratio": 2.8468,
+          "quality_delta_pct": -0.001
+        }
+      },
+      "checks_passed": 10,
+      "reported_loss_nonincreasing": true,
+      "summary_memory_within_7151_mib": true,
+      "speedup": 1.8303,
+      "memory_ratio": 2.8468,
+      "illustrative_repository_only_points_out_of_85": 76.4
+    },
+    {
+      "result_path": "Нұржігіт/03_validation/reports/codex_v35/result.json",
+      "checks_path": "Нұржігіт/03_validation/reports/codex_v35/checks.json",
+      "result_sha256": "790d7b97109020bc28f9d91779de088379721c4eabeff77ca806de9b994d3fb8",
+      "solution_sha256": "390f2a0cd9279c092bff66d6009edd8aa5d62de93a7e4b34bc9fa5423e5cb9f0",
+      "participant": "Нұржігіт",
+      "summary": {
+        "base": {
+          "ok": true,
+          "runs": 2,
+          "wall_s": 80.81,
+          "gpu_peak_mib": 14345,
+          "train_loop_s": 59.34,
+          "eval_loss": 2.04964
+        },
+        "solution": {
+          "ok": true,
+          "runs": 2,
+          "wall_s": 46.46,
+          "gpu_peak_mib": 4651,
+          "train_loop_s": 26.51,
+          "eval_loss": 2.04972
+        },
+        "ratios": {
+          "speedup": 1.7393,
+          "memory_ratio": 3.0843,
+          "quality_delta_pct": 0.004
+        }
+      },
+      "checks_passed": 10,
+      "reported_loss_nonincreasing": false,
+      "summary_memory_within_7151_mib": true,
+      "speedup": 1.7393,
+      "memory_ratio": 3.0843,
+      "illustrative_repository_only_points_out_of_85": 75.27
+    },
+    {
+      "result_path": "Мерей/verification/codex_stage2/final-result.json",
+      "checks_path": "Мерей/verification/codex_stage2/final-checks.json",
+      "result_sha256": "c7639ddfc699cc42e2c5fe64b2a053094c423aea8309eb0a37f27c4ef765b699",
+      "solution_sha256": "13b4f54b39b9a691519d5840ac844d104aeb7b52d2e7b9827e7e19933bbbfd4d",
+      "participant": "Мерей",
+      "summary": {
+        "base": {
+          "ok": true,
+          "runs": 2,
+          "wall_s": 89.69,
+          "gpu_peak_mib": 14345,
+          "train_loop_s": 67.66,
+          "eval_loss": 2.04969
+        },
+        "solution": {
+          "ok": true,
+          "runs": 2,
+          "wall_s": 51.24,
+          "gpu_peak_mib": 5175,
+          "train_loop_s": 32.05,
+          "eval_loss": 2.04965
+        },
+        "ratios": {
+          "speedup": 1.7504,
+          "memory_ratio": 2.772,
+          "quality_delta_pct": -0.002
+        }
+      },
+      "checks_passed": 10,
+      "reported_loss_nonincreasing": true,
+      "summary_memory_within_7151_mib": true,
+      "speedup": 1.7504,
+      "memory_ratio": 2.772,
+      "illustrative_repository_only_points_out_of_85": 73.33
+    },
+    {
+      "result_path": "Нұржігіт/03_validation/reports/codex_v65/result.json",
+      "checks_path": "Нұржігіт/03_validation/reports/codex_v65/checks.json",
+      "result_sha256": "937151a95cd6d605550301678794f7d6471a6217a82878da5ec842cbaa9d617d",
+      "solution_sha256": "93700cf9b31ecdc9621bb3ce694328966b8916bcef7083629e738f907322892f",
+      "participant": "Нұржігіт",
+      "summary": {
+        "base": {
+          "ok": true,
+          "runs": 2,
+          "wall_s": 81.69,
+          "gpu_peak_mib": 14345,
+          "train_loop_s": 59.89,
+          "eval_loss": 2.04965
+        },
+        "solution": {
+          "ok": true,
+          "runs": 2,
+          "wall_s": 43.77,
+          "gpu_peak_mib": 6659,
+          "train_loop_s": 24.88,
+          "eval_loss": 2.04966
+        },
+        "ratios": {
+          "speedup": 1.8663,
+          "memory_ratio": 2.1542,
+          "quality_delta_pct": 0.0
+        }
+      },
+      "checks_passed": 10,
+      "reported_loss_nonincreasing": false,
+      "summary_memory_within_7151_mib": true,
+      "speedup": 1.8663,
+      "memory_ratio": 2.1542,
+      "illustrative_repository_only_points_out_of_85": 71.5
+    },
+    {
+      "result_path": "Анаис/v7-result.json",
+      "checks_path": "Анаис/v7-checks.json",
+      "result_sha256": "d46c413335adf4d51889825848247a9b531dc231b14f8af4dc37a273bf9186d5",
+      "solution_sha256": "a73756b138f85ab6febe52614a8175aa92eea741ea7e2ab8cdf71d0d904e37fd",
+      "participant": "Анаис",
+      "summary": {
+        "base": {
+          "ok": true,
+          "runs": 2,
+          "wall_s": 83.43,
+          "gpu_peak_mib": 14506,
+          "train_loop_s": 61.88,
+          "eval_loss": 2.04963
+        },
+        "solution": {
+          "ok": true,
+          "runs": 2,
+          "wall_s": 44.7,
+          "gpu_peak_mib": 7040,
+          "train_loop_s": 25.94,
+          "eval_loss": 2.04963
+        },
+        "ratios": {
+          "speedup": 1.8664,
+          "memory_ratio": 2.0605,
+          "quality_delta_pct": 0.0
+        }
+      },
+      "checks_passed": 10,
+      "reported_loss_nonincreasing": true,
+      "summary_memory_within_7151_mib": true,
+      "speedup": 1.8664,
+      "memory_ratio": 2.0605,
+      "illustrative_repository_only_points_out_of_85": 70.55
+    },
+    {
+      "result_path": "Мерей/verification/codex_optimization/final-result.json",
+      "checks_path": "Мерей/verification/codex_optimization/final-checks.json",
+      "result_sha256": "a5a0b82bcaee70fa1e3c9fc407a188da20ad20ed0243996d4e4b4c9125646e72",
+      "solution_sha256": "91ac07291fd907a8ecdce3c873b84c3dd813a4eb8d41e4d4486b77d13b532885",
+      "participant": "Мерей",
+      "summary": {
+        "base": {
+          "ok": true,
+          "runs": 2,
+          "wall_s": 80.6,
+          "gpu_peak_mib": 14345,
+          "train_loop_s": 58.12,
+          "eval_loss": 2.04972
+        },
+        "solution": {
+          "ok": true,
+          "runs": 2,
+          "wall_s": 49.02,
+          "gpu_peak_mib": 5175,
+          "train_loop_s": 27.43,
+          "eval_loss": 2.04966
+        },
+        "ratios": {
+          "speedup": 1.6442,
+          "memory_ratio": 2.772,
+          "quality_delta_pct": -0.003
+        }
+      },
+      "checks_passed": 10,
+      "reported_loss_nonincreasing": true,
+      "summary_memory_within_7151_mib": true,
+      "speedup": 1.6442,
+      "memory_ratio": 2.772,
+      "illustrative_repository_only_points_out_of_85": 69.82
+    },
+    {
+      "result_path": "Нұржігіт/03_validation/reports/codex_v40/result.json",
+      "checks_path": "Нұржігіт/03_validation/reports/codex_v40/checks.json",
+      "result_sha256": "ed9bc787bd0136e3f2eb5d25a5ef5ca47d9feda5960a69fa0b892350817d13f0",
+      "solution_sha256": "ef7c0de446d9c9994ed0d8c1aaf70031e3b8061891e6caa182cc178aee6ed3f3",
+      "participant": "Нұржігіт",
+      "summary": {
+        "base": {
+          "ok": true,
+          "runs": 2,
+          "wall_s": 80.77,
+          "gpu_peak_mib": 14345,
+          "train_loop_s": 59.24,
+          "eval_loss": 2.04964
+        },
+        "solution": {
+          "ok": true,
+          "runs": 2,
+          "wall_s": 44.53,
+          "gpu_peak_mib": 7011,
+          "train_loop_s": 24.13,
+          "eval_loss": 2.04968
+        },
+        "ratios": {
+          "speedup": 1.8138,
+          "memory_ratio": 2.0461,
+          "quality_delta_pct": 0.002
+        }
+      },
+      "checks_passed": 10,
+      "reported_loss_nonincreasing": false,
+      "summary_memory_within_7151_mib": true,
+      "speedup": 1.8138,
+      "memory_ratio": 2.0461,
+      "illustrative_repository_only_points_out_of_85": 68.79
+    },
+    {
+      "result_path": "Нұржігіт/03_validation/reports/codex_v36/result.json",
+      "checks_path": "Нұржігіт/03_validation/reports/codex_v36/checks.json",
+      "result_sha256": "469dc606bc0f04a4486cd6454f47bf44706255a5ecd55d5652d1f66d2e5de41c",
+      "solution_sha256": "070d57ff2863ea0ae094d0bdc70cbb892160c2ba6e58cdfe1fb3bf34304d11d2",
+      "participant": "Нұржігіт",
+      "summary": {
+        "base": {
+          "ok": true,
+          "runs": 2,
+          "wall_s": 80.96,
+          "gpu_peak_mib": 14345,
+          "train_loop_s": 59.4,
+          "eval_loss": 2.04963
+        },
+        "solution": {
+          "ok": true,
+          "runs": 2,
+          "wall_s": 44.39,
+          "gpu_peak_mib": 7151,
+          "train_loop_s": 24.15,
+          "eval_loss": 2.04966
+        },
+        "ratios": {
+          "speedup": 1.8238,
+          "memory_ratio": 2.006,
+          "quality_delta_pct": 0.001
+        }
+      },
+      "checks_passed": 10,
+      "reported_loss_nonincreasing": false,
+      "summary_memory_within_7151_mib": true,
+      "speedup": 1.8238,
+      "memory_ratio": 2.006,
+      "illustrative_repository_only_points_out_of_85": 68.68
+    },
+    {
+      "result_path": "Нұржігіт/03_validation/reports/codex_v28/result.json",
+      "checks_path": "Нұржігіт/03_validation/reports/codex_v28/checks.json",
+      "result_sha256": "dd844fe7e38916c580a95d521ff2051f53e8c1385570fab1ee06c1667e335d64",
+      "solution_sha256": "2a162d51db7e3d09555949cdb8f5226ce6f11f62bf6878685055cfbad75d4374",
+      "participant": "Нұржігіт",
+      "summary": {
+        "base": {
+          "ok": true,
+          "runs": 2,
+          "wall_s": 80.75,
+          "gpu_peak_mib": 14345,
+          "train_loop_s": 59.37,
+          "eval_loss": 2.04968
+        },
+        "solution": {
+          "ok": true,
+          "runs": 2,
+          "wall_s": 44.43,
+          "gpu_peak_mib": 7153,
+          "train_loop_s": 24.64,
+          "eval_loss": 2.04967
+        },
+        "ratios": {
+          "speedup": 1.8175,
+          "memory_ratio": 2.0055,
+          "quality_delta_pct": -0.0
+        }
+      },
+      "checks_passed": 10,
+      "reported_loss_nonincreasing": true,
+      "summary_memory_within_7151_mib": false,
+      "speedup": 1.8175,
+      "memory_ratio": 2.0055,
+      "illustrative_repository_only_points_out_of_85": 68.48
+    },
+    {
+      "result_path": "Нұржігіт/03_validation/reports/codex_v39/result.json",
+      "checks_path": "Нұржігіт/03_validation/reports/codex_v39/checks.json",
+      "result_sha256": "cd137b703e6163bcdf2d1a1ed6aa424ab4ea2976ecdd86583623c5b20454790e",
+      "solution_sha256": "d4d3d65e66e4297a86ffa6fbcebd8320629f0633865a44ba00c2421486628fd4",
+      "participant": "Нұржігіт",
+      "summary": {
+        "base": {
+          "ok": true,
+          "runs": 2,
+          "wall_s": 80.81,
+          "gpu_peak_mib": 14345,
+          "train_loop_s": 59.28,
+          "eval_loss": 2.04963
+        },
+        "solution": {
+          "ok": true,
+          "runs": 2,
+          "wall_s": 44.48,
+          "gpu_peak_mib": 7171,
+          "train_loop_s": 24.09,
+          "eval_loss": 2.0497
+        },
+        "ratios": {
+          "speedup": 1.8168,
+          "memory_ratio": 2.0004,
+          "quality_delta_pct": 0.003
+        }
+      },
+      "checks_passed": 10,
+      "reported_loss_nonincreasing": false,
+      "summary_memory_within_7151_mib": false,
+      "speedup": 1.8168,
+      "memory_ratio": 2.0004,
+      "illustrative_repository_only_points_out_of_85": 68.4
+    },
+    {
+      "result_path": "Нұржігіт/03_validation/reports/codex_v38/result.json",
+      "checks_path": "Нұржігіт/03_validation/reports/codex_v38/checks.json",
+      "result_sha256": "56c5771b266aeb791c45e31567f67c239d62fed9c2a0eea36303e0c6a0f9bce7",
+      "solution_sha256": "9a1e7d1268f9a1f9f40fa6dad3ddc7b9fdbb63cd9ec7d0c05521bc7610d12a9b",
+      "participant": "Нұржігіт",
+      "summary": {
+        "base": {
+          "ok": true,
+          "runs": 2,
+          "wall_s": 81.13,
+          "gpu_peak_mib": 14345,
+          "train_loop_s": 59.34,
+          "eval_loss": 2.04967
+        },
+        "solution": {
+          "ok": true,
+          "runs": 2,
+          "wall_s": 44.89,
+          "gpu_peak_mib": 7171,
+          "train_loop_s": 24.29,
+          "eval_loss": 2.04966
+        },
+        "ratios": {
+          "speedup": 1.8073,
+          "memory_ratio": 2.0004,
+          "quality_delta_pct": -0.0
+        }
+      },
+      "checks_passed": 10,
+      "reported_loss_nonincreasing": true,
+      "summary_memory_within_7151_mib": false,
+      "speedup": 1.8073,
+      "memory_ratio": 2.0004,
+      "illustrative_repository_only_points_out_of_85": 68.11
+    },
+    {
+      "result_path": "Нұржігіт/03_validation/reports/codex_v66/result.json",
+      "checks_path": "Нұржігіт/03_validation/reports/codex_v66/checks.json",
+      "result_sha256": "e8ef9b237fbb232c12411f443bf01c52d02d69904f26fc66db6572685cae2911",
+      "solution_sha256": "f288e2acdf989de96e60f2587e2316d1b081fa582e5db0bbfde59c2e20053bb4",
+      "participant": "Нұржігіт",
+      "summary": {
+        "base": {
+          "ok": true,
+          "runs": 2,
+          "wall_s": 82.67,
+          "gpu_peak_mib": 14345,
+          "train_loop_s": 60.97,
+          "eval_loss": 2.04965
+        },
+        "solution": {
+          "ok": true,
+          "runs": 2,
+          "wall_s": 46.2,
+          "gpu_peak_mib": 7039,
+          "train_loop_s": 27.33,
+          "eval_loss": 2.04964
+        },
+        "ratios": {
+          "speedup": 1.7894,
+          "memory_ratio": 2.0379,
+          "quality_delta_pct": -0.0
+        }
+      },
+      "checks_passed": 10,
+      "reported_loss_nonincreasing": true,
+      "summary_memory_within_7151_mib": true,
+      "speedup": 1.7894,
+      "memory_ratio": 2.0379,
+      "illustrative_repository_only_points_out_of_85": 67.95
+    },
+    {
+      "result_path": "Нұржігіт/03_validation/reports/codex_v26/result.json",
+      "checks_path": "Нұржігіт/03_validation/reports/codex_v26/checks.json",
+      "result_sha256": "6fb6c086f79c5826615af484c40d53c5d77aabcb50a7cfd5257171160e5eb587",
+      "solution_sha256": "0732dbd92c4d57f8a7bf89a814a0acfcbae0c239b7ff7b56be4d69f45362b0b4",
+      "participant": "Нұржігіт",
+      "summary": {
+        "base": {
+          "ok": true,
+          "runs": 2,
+          "wall_s": 80.84,
+          "gpu_peak_mib": 14345,
+          "train_loop_s": 59.36,
+          "eval_loss": 2.04966
+        },
+        "solution": {
+          "ok": true,
+          "runs": 2,
+          "wall_s": 46.38,
+          "gpu_peak_mib": 6651,
+          "train_loop_s": 25.01,
+          "eval_loss": 2.04965
+        },
+        "ratios": {
+          "speedup": 1.743,
+          "memory_ratio": 2.1568,
+          "quality_delta_pct": -0.0
+        }
+      },
+      "checks_passed": 10,
+      "reported_loss_nonincreasing": true,
+      "summary_memory_within_7151_mib": true,
+      "speedup": 1.743,
+      "memory_ratio": 2.1568,
+      "illustrative_repository_only_points_out_of_85": 67.69
+    },
+    {
+      "result_path": "Нұржігіт/03_validation/reports/codex_v34/result.json",
+      "checks_path": "Нұржігіт/03_validation/reports/codex_v34/checks.json",
+      "result_sha256": "5a2166df0b3fd68a242703f5a9aeefd967194ae837d4d943c6048899ac12747f",
+      "solution_sha256": "389255c234e362a1a444a1758d11cf05e9fe30dfdf56540b7e3aacfa5658e5b4",
+      "participant": "Нұржігіт",
+      "summary": {
+        "base": {
+          "ok": true,
+          "runs": 2,
+          "wall_s": 78.68,
+          "gpu_peak_mib": 14345,
+          "train_loop_s": 57.29,
+          "eval_loss": 2.04963
+        },
+        "solution": {
+          "ok": true,
+          "runs": 2,
+          "wall_s": 43.91,
+          "gpu_peak_mib": 7151,
+          "train_loop_s": 23.98,
+          "eval_loss": 2.04961
+        },
+        "ratios": {
+          "speedup": 1.7918,
+          "memory_ratio": 2.006,
+          "quality_delta_pct": -0.001
+        }
+      },
+      "checks_passed": 10,
+      "reported_loss_nonincreasing": true,
+      "summary_memory_within_7151_mib": true,
+      "speedup": 1.7918,
+      "memory_ratio": 2.006,
+      "illustrative_repository_only_points_out_of_85": 67.68
+    },
+    {
+      "result_path": "Нұржігіт/03_validation/reports/codex_v37/result.json",
+      "checks_path": "Нұржігіт/03_validation/reports/codex_v37/checks.json",
+      "result_sha256": "5d4bd0feecc07bb287a17df98e545406745825d56c8e6c07efe8f1febd496ad8",
+      "solution_sha256": "28baffb460300c4db930672fbf2af91816f3dec9b72ec57efb097c6c75d834d0",
+      "participant": "Нұржігіт",
+      "summary": {
+        "base": {
+          "ok": true,
+          "runs": 2,
+          "wall_s": 79.54,
+          "gpu_peak_mib": 14345,
+          "train_loop_s": 57.7,
+          "eval_loss": 2.04968
+        },
+        "solution": {
+          "ok": true,
+          "runs": 2,
+          "wall_s": 44.64,
+          "gpu_peak_mib": 7151,
+          "train_loop_s": 24.18,
+          "eval_loss": 2.04963
+        },
+        "ratios": {
+          "speedup": 1.7818,
+          "memory_ratio": 2.006,
+          "quality_delta_pct": -0.002
+        }
+      },
+      "checks_passed": 10,
+      "reported_loss_nonincreasing": true,
+      "summary_memory_within_7151_mib": true,
+      "speedup": 1.7818,
+      "memory_ratio": 2.006,
+      "illustrative_repository_only_points_out_of_85": 67.37
+    },
+    {
+      "result_path": "Нұржігіт/03_validation/reports/codex_v22/result.json",
+      "checks_path": "Нұржігіт/03_validation/reports/codex_v22/checks.json",
+      "result_sha256": "da5d9f66cbba66f91fd48faa74a6b84e335827d4b655eac27daa7d647e32743f",
+      "solution_sha256": "af8bb6ccd51c9a94d6486c5c1dcfc68c43743e4cb3478576d7fb8da6fc69caaa",
+      "participant": "Нұржігіт",
+      "summary": {
+        "base": {
+          "ok": true,
+          "runs": 2,
+          "wall_s": 80.7,
+          "gpu_peak_mib": 14345,
+          "train_loop_s": 59.33,
+          "eval_loss": 2.04966
+        },
+        "solution": {
+          "ok": true,
+          "runs": 2,
+          "wall_s": 54.64,
+          "gpu_peak_mib": 4467,
+          "train_loop_s": 32.27,
+          "eval_loss": 2.04969
+        },
+        "ratios": {
+          "speedup": 1.4769,
+          "memory_ratio": 3.2113,
+          "quality_delta_pct": 0.001
+        }
+      },
+      "checks_passed": 10,
+      "reported_loss_nonincreasing": false,
+      "summary_memory_within_7151_mib": true,
+      "speedup": 1.4769,
+      "memory_ratio": 3.2113,
+      "illustrative_repository_only_points_out_of_85": 66.96
+    },
+    {
+      "result_path": "Нұржігіт/03_validation/reports/codex_v27/result.json",
+      "checks_path": "Нұржігіт/03_validation/reports/codex_v27/checks.json",
+      "result_sha256": "2705b9cf388e791d7515a0730009cf57072471b19a7ddb55fbbbd5287ae443d3",
+      "solution_sha256": "786e08cf12282e5f3c85b35aa14c9a9b1b584cfa0887f7ad927ed6c2ef38b1b1",
+      "participant": "Нұржігіт",
+      "summary": {
+        "base": {
+          "ok": true,
+          "runs": 2,
+          "wall_s": 80.79,
+          "gpu_peak_mib": 14345,
+          "train_loop_s": 59.39,
+          "eval_loss": 2.04965
+        },
+        "solution": {
+          "ok": true,
+          "runs": 2,
+          "wall_s": 45.83,
+          "gpu_peak_mib": 7153,
+          "train_loop_s": 24.64,
+          "eval_loss": 2.0497
+        },
+        "ratios": {
+          "speedup": 1.7628,
+          "memory_ratio": 2.0055,
+          "quality_delta_pct": 0.002
+        }
+      },
+      "checks_passed": 10,
+      "reported_loss_nonincreasing": false,
+      "summary_memory_within_7151_mib": false,
+      "speedup": 1.7628,
+      "memory_ratio": 2.0055,
+      "illustrative_repository_only_points_out_of_85": 66.76
+    },
+    {
+      "result_path": "Нұржігіт/03_validation/reports/codex_v21/result.json",
+      "checks_path": "Нұржігіт/03_validation/reports/codex_v21/checks.json",
+      "result_sha256": "d69606ec6aceccddbe2149ce45dbc4f19f3461a3bb60c522440619d7d4b4e34b",
+      "solution_sha256": "206c0b05d1c1b4ce164a0d564eec982e317b13bf69d19b3c8d5f37275f196923",
+      "participant": "Нұржігіт",
+      "summary": {
+        "base": {
+          "ok": true,
+          "runs": 2,
+          "wall_s": 80.84,
+          "gpu_peak_mib": 14345,
+          "train_loop_s": 59.22,
+          "eval_loss": 2.04971
+        },
+        "solution": {
+          "ok": true,
+          "runs": 2,
+          "wall_s": 55.48,
+          "gpu_peak_mib": 4467,
+          "train_loop_s": 32.28,
+          "eval_loss": 2.04968
+        },
+        "ratios": {
+          "speedup": 1.4571,
+          "memory_ratio": 3.2113,
+          "quality_delta_pct": -0.001
+        }
+      },
+      "checks_passed": 10,
+      "reported_loss_nonincreasing": true,
+      "summary_memory_within_7151_mib": true,
+      "speedup": 1.4571,
+      "memory_ratio": 3.2113,
+      "illustrative_repository_only_points_out_of_85": 66.2
+    },
+    {
+      "result_path": "Нұржігіт/03_validation/reports/codex_v20r1/result.json",
+      "checks_path": "Нұржігіт/03_validation/reports/codex_v20r1/checks.json",
+      "result_sha256": "f33701c6279e53bbf64d8a23b5d4baf846d4150db531cb1d3b9c768947762560",
+      "solution_sha256": "486419f789a54c7079bddfc784c4151982f4f260566d090751f80d32d1bf69a9",
+      "participant": "Нұржігіт",
+      "summary": {
+        "base": {
+          "ok": true,
+          "runs": 2,
+          "wall_s": 81.23,
+          "gpu_peak_mib": 14345,
+          "train_loop_s": 59.28,
+          "eval_loss": 2.04969
+        },
+        "solution": {
+          "ok": true,
+          "runs": 2,
+          "wall_s": 55.81,
+          "gpu_peak_mib": 4467,
+          "train_loop_s": 32.66,
+          "eval_loss": 2.04968
+        },
+        "ratios": {
+          "speedup": 1.4555,
+          "memory_ratio": 3.2113,
+          "quality_delta_pct": -0.0
+        }
+      },
+      "checks_passed": 10,
+      "reported_loss_nonincreasing": true,
+      "summary_memory_within_7151_mib": true,
+      "speedup": 1.4555,
+      "memory_ratio": 3.2113,
+      "illustrative_repository_only_points_out_of_85": 66.14
+    },
+    {
+      "result_path": "Мерей/verification/reference-result.json",
+      "checks_path": "Мерей/verification/reference-checks.json",
+      "result_sha256": "017aa14b371566d5f798b9587d9a7b803177012e6bbfa0486c5f679f40d9f3a6",
+      "solution_sha256": "471325dcf47b53f93bdb61a0ef685313bdffc02ff22c9a63e37cf4b08a01efc4",
+      "participant": "Мерей",
+      "summary": {
+        "base": {
+          "ok": true,
+          "runs": 2,
+          "wall_s": 81.83,
+          "gpu_peak_mib": 14345,
+          "train_loop_s": 55.5,
+          "eval_loss": 2.04968
+        },
+        "solution": {
+          "ok": true,
+          "runs": 2,
+          "wall_s": 52.32,
+          "gpu_peak_mib": 5641,
+          "train_loop_s": 29.66,
+          "eval_loss": 2.04968
+        },
+        "ratios": {
+          "speedup": 1.564,
+          "memory_ratio": 2.543,
+          "quality_delta_pct": 0.0
+        }
+      },
+      "checks_passed": 10,
+      "reported_loss_nonincreasing": true,
+      "summary_memory_within_7151_mib": true,
+      "speedup": 1.564,
+      "memory_ratio": 2.543,
+      "illustrative_repository_only_points_out_of_85": 65.16
+    },
+    {
+      "result_path": "Нұржігіт/03_validation/reports/codex_v18r1/result.json",
+      "checks_path": "Нұржігіт/03_validation/reports/codex_v18r1/checks.json",
+      "result_sha256": "327246c8bb67b925f3c5afd9344aba8cf8d6a1968fb15039f98a75be43a0be92",
+      "solution_sha256": "4fdef5d6fcae8efab93a8a6071e1dc6c9fccb83ddac898194a41d7f4d359dff8",
+      "participant": "Нұржігіт",
+      "summary": {
+        "base": {
+          "ok": true,
+          "runs": 2,
+          "wall_s": 80.94,
+          "gpu_peak_mib": 14345,
+          "train_loop_s": 59.36,
+          "eval_loss": 2.04964
+        },
+        "solution": {
+          "ok": true,
+          "runs": 2,
+          "wall_s": 55.61,
+          "gpu_peak_mib": 4701,
+          "train_loop_s": 32.5,
+          "eval_loss": 2.04965
+        },
+        "ratios": {
+          "speedup": 1.4555,
+          "memory_ratio": 3.0515,
+          "quality_delta_pct": 0.0
+        }
+      },
+      "checks_passed": 10,
+      "reported_loss_nonincreasing": false,
+      "summary_memory_within_7151_mib": true,
+      "speedup": 1.4555,
+      "memory_ratio": 3.0515,
+      "illustrative_repository_only_points_out_of_85": 65.04
+    },
+    {
+      "result_path": "Нұржігіт/03_validation/reports/codex_v17r1/result.json",
+      "checks_path": "Нұржігіт/03_validation/reports/codex_v17r1/checks.json",
+      "result_sha256": "d9dc1de60bdccfde7f6afe46c6e7a9edb0ad506dab532d0e45b4b44ea3c4e1f9",
+      "solution_sha256": "15868b164bb82cee9c1534da349f1ad940c7dab41b0eaf407430dd4d51c9d593",
+      "participant": "Нұржігіт",
+      "summary": {
+        "base": {
+          "ok": true,
+          "runs": 2,
+          "wall_s": 84.28,
+          "gpu_peak_mib": 14345,
+          "train_loop_s": 57.3,
+          "eval_loss": 2.04968
+        },
+        "solution": {
+          "ok": true,
+          "runs": 2,
+          "wall_s": 54.19,
+          "gpu_peak_mib": 5601,
+          "train_loop_s": 31.47,
+          "eval_loss": 2.04963
+        },
+        "ratios": {
+          "speedup": 1.5553,
+          "memory_ratio": 2.5611,
+          "quality_delta_pct": -0.002
+        }
+      },
+      "checks_passed": 10,
+      "reported_loss_nonincreasing": true,
+      "summary_memory_within_7151_mib": true,
+      "speedup": 1.5553,
+      "memory_ratio": 2.5611,
+      "illustrative_repository_only_points_out_of_85": 65.0
+    },
+    {
+      "result_path": "Нұржігіт/03_validation/reports/codex_v25/result.json",
+      "checks_path": "Нұржігіт/03_validation/reports/codex_v25/checks.json",
+      "result_sha256": "a063f3c29a6b0d9e4e48c863e166030cdeb270aaddb7e7c1eeebd5825e877a5b",
+      "solution_sha256": "53a4dfcadb8344adb005edfe84d6d588f3956ad138e1d36e0711c58827c87dad",
+      "participant": "Нұржігіт",
+      "summary": {
+        "base": {
+          "ok": true,
+          "runs": 2,
+          "wall_s": 80.87,
+          "gpu_peak_mib": 14345,
+          "train_loop_s": 59.42,
+          "eval_loss": 2.04966
+        },
+        "solution": {
+          "ok": true,
+          "runs": 2,
+          "wall_s": 48.97,
+          "gpu_peak_mib": 6651,
+          "train_loop_s": 28.42,
+          "eval_loss": 2.04967
+        },
+        "ratios": {
+          "speedup": 1.6514,
+          "memory_ratio": 2.1568,
+          "quality_delta_pct": 0.0
+        }
+      },
+      "checks_passed": 10,
+      "reported_loss_nonincreasing": false,
+      "summary_memory_within_7151_mib": true,
+      "speedup": 1.6514,
+      "memory_ratio": 2.1568,
+      "illustrative_repository_only_points_out_of_85": 64.66
+    },
+    {
+      "result_path": "Анаис/speed-result.json",
+      "checks_path": "Анаис/speed-checks.json",
+      "result_sha256": "830160b0d57e5c5cafe975b1b56ce3acebd916169f1169e94d66216549a0e8bc",
+      "solution_sha256": "00b805d323911e88632416bdf726e38a8441c46e4f41eb0ff4d4ee0a943f176e",
+      "participant": "Анаис",
+      "summary": {
+        "base": {
+          "ok": true,
+          "runs": 1,
+          "wall_s": 90.19,
+          "gpu_peak_mib": 14345,
+          "train_loop_s": 58.12,
+          "eval_loss": 2.04965
+        },
+        "solution": {
+          "ok": true,
+          "runs": 1,
+          "wall_s": 52.4,
+          "gpu_peak_mib": 7977,
+          "train_loop_s": 27.02,
+          "eval_loss": 2.0497
+        },
+        "ratios": {
+          "speedup": 1.7212,
+          "memory_ratio": 1.7983,
+          "quality_delta_pct": 0.002
+        }
+      },
+      "checks_passed": 10,
+      "reported_loss_nonincreasing": false,
+      "summary_memory_within_7151_mib": false,
+      "speedup": 1.7212,
+      "memory_ratio": 1.7983,
+      "illustrative_repository_only_points_out_of_85": 63.08
+    },
+    {
+      "result_path": "Мерей/verification/final-result.json",
+      "checks_path": "Мерей/verification/final-checks.json",
+      "result_sha256": "53b72beee7141c1b18cb2b7d6b6ea60f796ecbdd23dbb8b05c1b945b9c8b8a7b",
+      "solution_sha256": "60216a16a1f993117f90e6028e93e4096fbacc4fb21afefbccd3f7f3a2e3a7f0",
+      "participant": "Мерей",
+      "summary": {
+        "base": {
+          "ok": true,
+          "runs": 2,
+          "wall_s": 82.19,
+          "gpu_peak_mib": 14345,
+          "train_loop_s": 58.83,
+          "eval_loss": 2.04962
+        },
+        "solution": {
+          "ok": true,
+          "runs": 2,
+          "wall_s": 56.09,
+          "gpu_peak_mib": 5275,
+          "train_loop_s": 31.78,
+          "eval_loss": 2.04965
+        },
+        "ratios": {
+          "speedup": 1.4653,
+          "memory_ratio": 2.7194,
+          "quality_delta_pct": 0.001
+        }
+      },
+      "checks_passed": 10,
+      "reported_loss_nonincreasing": false,
+      "summary_memory_within_7151_mib": true,
+      "speedup": 1.4653,
+      "memory_ratio": 2.7194,
+      "illustrative_repository_only_points_out_of_85": 62.94
+    },
+    {
+      "result_path": "Нұржігіт/03_validation/reports/codex_v24/result.json",
+      "checks_path": "Нұржігіт/03_validation/reports/codex_v24/checks.json",
+      "result_sha256": "8330a1cb3e84204d86e5264ebf609ddeb22b7f32603cc409532c70521eb83b8d",
+      "solution_sha256": "b836378b357fa236a68f950f2e1c04259d044e860f27457257dd48e518ec7aca",
+      "participant": "Нұржігіт",
+      "summary": {
+        "base": {
+          "ok": true,
+          "runs": 2,
+          "wall_s": 78.99,
+          "gpu_peak_mib": 14345,
+          "train_loop_s": 57.56,
+          "eval_loss": 2.04971
+        },
+        "solution": {
+          "ok": true,
+          "runs": 2,
+          "wall_s": 50.95,
+          "gpu_peak_mib": 6651,
+          "train_loop_s": 28.41,
+          "eval_loss": 2.04969
+        },
+        "ratios": {
+          "speedup": 1.5503,
+          "memory_ratio": 2.1568,
+          "quality_delta_pct": -0.001
+        }
+      },
+      "checks_passed": 10,
+      "reported_loss_nonincreasing": true,
+      "summary_memory_within_7151_mib": true,
+      "speedup": 1.5503,
+      "memory_ratio": 2.1568,
+      "illustrative_repository_only_points_out_of_85": 61.12
+    },
+    {
+      "result_path": "Нұржігіт/03_validation/reports/codex_v23/result.json",
+      "checks_path": "Нұржігіт/03_validation/reports/codex_v23/checks.json",
+      "result_sha256": "71c8f1e218b2ffb2b65271ea14e5d435525ac591144a8ec3ae52f888d693af34",
+      "solution_sha256": "9fa87fe3a8316538f41dab5a5eb2bd6bfeb5e292ccce86240c3f6f6715bea552",
+      "participant": "Нұржігіт",
+      "summary": {
+        "base": {
+          "ok": true,
+          "runs": 2,
+          "wall_s": 80.68,
+          "gpu_peak_mib": 14345,
+          "train_loop_s": 59.36,
+          "eval_loss": 2.04969
+        },
+        "solution": {
+          "ok": true,
+          "runs": 2,
+          "wall_s": 52.76,
+          "gpu_peak_mib": 6747,
+          "train_loop_s": 30.43,
+          "eval_loss": 2.04963
+        },
+        "ratios": {
+          "speedup": 1.5292,
+          "memory_ratio": 2.1261,
+          "quality_delta_pct": -0.003
+        }
+      },
+      "checks_passed": 10,
+      "reported_loss_nonincreasing": true,
+      "summary_memory_within_7151_mib": true,
+      "speedup": 1.5292,
+      "memory_ratio": 2.1261,
+      "illustrative_repository_only_points_out_of_85": 60.04
+    },
+    {
+      "result_path": "Нұржігіт/03_validation/reports/codex_v16/result.json",
+      "checks_path": "Нұржігіт/03_validation/reports/codex_v16/checks.json",
+      "result_sha256": "87781c901965841fdfeccca5c85bab60c8568d10b0a9bde4258e0fc1086849ab",
+      "solution_sha256": "1d46ffc3baf289ac741413a9907830efa4ac9100ec2f39358e0e343a30138ebe",
+      "participant": "Нұржігіт",
+      "summary": {
+        "base": {
+          "ok": true,
+          "runs": 2,
+          "wall_s": 85.07,
+          "gpu_peak_mib": 14345,
+          "train_loop_s": 62.16,
+          "eval_loss": 2.04966
+        },
+        "solution": {
+          "ok": true,
+          "runs": 2,
+          "wall_s": 60.41,
+          "gpu_peak_mib": 5601,
+          "train_loop_s": 36.3,
+          "eval_loss": 2.04968
+        },
+        "ratios": {
+          "speedup": 1.4082,
+          "memory_ratio": 2.5611,
+          "quality_delta_pct": 0.001
+        }
+      },
+      "checks_passed": 10,
+      "reported_loss_nonincreasing": false,
+      "summary_memory_within_7151_mib": true,
+      "speedup": 1.4082,
+      "memory_ratio": 2.5611,
+      "illustrative_repository_only_points_out_of_85": 59.42
+    },
+    {
+      "result_path": "Анаис/candidate-evidence/result.json",
+      "checks_path": "Анаис/candidate-evidence/checks.json",
+      "result_sha256": "b7d5b8303a117c936d993752731dd8b4a66eb5e10e9316e4e2015f4336e6d1b2",
+      "solution_sha256": "22f5bc5d23a4e712f4538028bc8aa97f0fce6280a84cc0f0671b5efbc745f6ea",
+      "participant": "Анаис",
+      "summary": {
+        "base": {
+          "ok": true,
+          "runs": 1,
+          "wall_s": 81.26,
+          "gpu_peak_mib": 14345,
+          "train_loop_s": 55.26,
+          "eval_loss": 2.04965
+        },
+        "solution": {
+          "ok": true,
+          "runs": 1,
+          "wall_s": 59.34,
+          "gpu_peak_mib": 5641,
+          "train_loop_s": 31.82,
+          "eval_loss": 2.04964
+        },
+        "ratios": {
+          "speedup": 1.3694,
+          "memory_ratio": 2.543,
+          "quality_delta_pct": -0.0
+        }
+      },
+      "checks_passed": 10,
+      "reported_loss_nonincreasing": true,
+      "summary_memory_within_7151_mib": true,
+      "speedup": 1.3694,
+      "memory_ratio": 2.543,
+      "illustrative_repository_only_points_out_of_85": 57.7
+    },
+    {
+      "result_path": "Анаис/candidate-result.json",
+      "checks_path": "Анаис/candidate-checks.json",
+      "result_sha256": "b7d5b8303a117c936d993752731dd8b4a66eb5e10e9316e4e2015f4336e6d1b2",
+      "solution_sha256": "22f5bc5d23a4e712f4538028bc8aa97f0fce6280a84cc0f0671b5efbc745f6ea",
+      "participant": "Анаис",
+      "summary": {
+        "base": {
+          "ok": true,
+          "runs": 1,
+          "wall_s": 81.26,
+          "gpu_peak_mib": 14345,
+          "train_loop_s": 55.26,
+          "eval_loss": 2.04965
+        },
+        "solution": {
+          "ok": true,
+          "runs": 1,
+          "wall_s": 59.34,
+          "gpu_peak_mib": 5641,
+          "train_loop_s": 31.82,
+          "eval_loss": 2.04964
+        },
+        "ratios": {
+          "speedup": 1.3694,
+          "memory_ratio": 2.543,
+          "quality_delta_pct": -0.0
+        }
+      },
+      "checks_passed": 10,
+      "reported_loss_nonincreasing": true,
+      "summary_memory_within_7151_mib": true,
+      "speedup": 1.3694,
+      "memory_ratio": 2.543,
+      "illustrative_repository_only_points_out_of_85": 57.7
+    },
+    {
+      "result_path": "Нұржігіт/03_validation/reports/codex_v12/result.json",
+      "checks_path": "Нұржігіт/03_validation/reports/codex_v12/checks.json",
+      "result_sha256": "ba687c8c7e5bdc1114439668cc24bb921a66f9faf472259c1fe24858b568023a",
+      "solution_sha256": "47a9d5bb1fc4f61594d77557cd46ef05c524ead9a98812958d10dfc3c6006916",
+      "participant": "Нұржігіт",
+      "summary": {
+        "base": {
+          "ok": true,
+          "runs": 2,
+          "wall_s": 86.12,
+          "gpu_peak_mib": 14345,
+          "train_loop_s": 63.88,
+          "eval_loss": 2.04964
+        },
+        "solution": {
+          "ok": true,
+          "runs": 2,
+          "wall_s": 74.19,
+          "gpu_peak_mib": 7385,
+          "train_loop_s": 51.27,
+          "eval_loss": 2.04963
+        },
+        "ratios": {
+          "speedup": 1.1608,
+          "memory_ratio": 1.9425,
+          "quality_delta_pct": -0.0
+        }
+      },
+      "checks_passed": 10,
+      "reported_loss_nonincreasing": true,
+      "summary_memory_within_7151_mib": false,
+      "speedup": 1.1608,
+      "memory_ratio": 1.9425,
+      "illustrative_repository_only_points_out_of_85": 42.64
+    },
+    {
+      "result_path": "Мерей/verification/t4-result.json",
+      "checks_path": "Мерей/verification/t4-checks.json",
+      "result_sha256": "eecdceb5343a87742d4bf2b1b87e497cd9cd072c52d39dfeb744e532ecf8bb8b",
+      "solution_sha256": "698b33301c9a191f3b8bfadc502a0c15d7a08870579c465cfed119a06a2d4d77",
+      "participant": "Мерей",
+      "summary": {
+        "base": {
+          "ok": true,
+          "runs": 2,
+          "wall_s": 88.74,
+          "gpu_peak_mib": 14345,
+          "train_loop_s": 61.87,
+          "eval_loss": 2.04964
+        },
+        "solution": {
+          "ok": true,
+          "runs": 2,
+          "wall_s": 78.18,
+          "gpu_peak_mib": 7381,
+          "train_loop_s": 55.34,
+          "eval_loss": 2.04964
+        },
+        "ratios": {
+          "speedup": 1.1351,
+          "memory_ratio": 1.9435,
+          "quality_delta_pct": 0.0
+        }
+      },
+      "checks_passed": 10,
+      "reported_loss_nonincreasing": true,
+      "summary_memory_within_7151_mib": false,
+      "speedup": 1.1351,
+      "memory_ratio": 1.9435,
+      "illustrative_repository_only_points_out_of_85": 41.4
+    },
+    {
+      "result_path": "Нұржігіт/03_validation/reports/codex_v10/result.json",
+      "checks_path": "Нұржігіт/03_validation/reports/codex_v10/checks.json",
+      "result_sha256": "f2cecf704561a1da031d7bc6b55d15dec5327a780dc834ca317adc38e7a47a1e",
+      "solution_sha256": "ea50b3d08ef085322068804a8b823395bc354fe467114864096a62aa97df31e1",
+      "participant": "Нұржігіт",
+      "summary": {
+        "base": {
+          "ok": true,
+          "runs": 2,
+          "wall_s": 86.59,
+          "gpu_peak_mib": 14345,
+          "train_loop_s": 64.48,
+          "eval_loss": 2.04968
+        },
+        "solution": {
+          "ok": true,
+          "runs": 2,
+          "wall_s": 77.62,
+          "gpu_peak_mib": 7385,
+          "train_loop_s": 55.19,
+          "eval_loss": 2.04966
+        },
+        "ratios": {
+          "speedup": 1.1156,
+          "memory_ratio": 1.9425,
+          "quality_delta_pct": -0.001
+        }
+      },
+      "checks_passed": 10,
+      "reported_loss_nonincreasing": true,
+      "summary_memory_within_7151_mib": false,
+      "speedup": 1.1156,
+      "memory_ratio": 1.9425,
+      "illustrative_repository_only_points_out_of_85": 40.41
+    },
+    {
+      "result_path": "Нұржігіт/03_validation/reports/codex_v9/result.json",
+      "checks_path": "Нұржігіт/03_validation/reports/codex_v9/checks.json",
+      "result_sha256": "2ad6483a602282cd89a2858b8bbdc86cc863a9fa08947ec53df35d5d2c69435c",
+      "solution_sha256": "262cac75325ab21c1f88b3f02c38ae3743f682b8fb19ab0509eb8b5a374dae89",
+      "participant": "Нұржігіт",
+      "summary": {
+        "base": {
+          "ok": true,
+          "runs": 2,
+          "wall_s": 87.39,
+          "gpu_peak_mib": 14345,
+          "train_loop_s": 64.66,
+          "eval_loss": 2.04966
+        },
+        "solution": {
+          "ok": true,
+          "runs": 2,
+          "wall_s": 78.91,
+          "gpu_peak_mib": 9165,
+          "train_loop_s": 56.02,
+          "eval_loss": 2.04964
+        },
+        "ratios": {
+          "speedup": 1.1075,
+          "memory_ratio": 1.5652,
+          "quality_delta_pct": -0.001
+        }
+      },
+      "checks_passed": 10,
+      "reported_loss_nonincreasing": true,
+      "summary_memory_within_7151_mib": false,
+      "speedup": 1.1075,
+      "memory_ratio": 1.5652,
+      "illustrative_repository_only_points_out_of_85": 35.36
+    },
+    {
+      "result_path": "Нұржігіт/03_validation/reports/codex_v6/result.json",
+      "checks_path": "Нұржігіт/03_validation/reports/codex_v6/checks.json",
+      "result_sha256": "51261e893699e414f84b790fb1b48c97fe23c690b1426ff1244cbd8bec179cb4",
+      "solution_sha256": "56bd770cf3d6d966c193280ce3e3b6a13f598aab882b8296a0648aab204d0c65",
+      "participant": "Нұржігіт",
+      "summary": {
+        "base": {
+          "ok": true,
+          "runs": 2,
+          "wall_s": 86.66,
+          "gpu_peak_mib": 14345,
+          "train_loop_s": 64.69,
+          "eval_loss": 2.04967
+        },
+        "solution": {
+          "ok": true,
+          "runs": 2,
+          "wall_s": 78.55,
+          "gpu_peak_mib": 10345,
+          "train_loop_s": 56.47,
+          "eval_loss": 2.04967
+        },
+        "ratios": {
+          "speedup": 1.1032,
+          "memory_ratio": 1.3867,
+          "quality_delta_pct": 0.0
+        }
+      },
+      "checks_passed": 10,
+      "reported_loss_nonincreasing": true,
+      "summary_memory_within_7151_mib": false,
+      "speedup": 1.1032,
+      "memory_ratio": 1.3867,
+      "illustrative_repository_only_points_out_of_85": 32.54
+    },
+    {
+      "result_path": "Мерей/verification/half-t4-result.json",
+      "checks_path": "Мерей/verification/half-t4-checks.json",
+      "result_sha256": "5f14d4db0f2a4365d165f5587362f9d891e82241d5dc08d7ab7bcc462ae9e6a1",
+      "solution_sha256": "9d65e00dce6240bdc5fa6de66d6df83c338941585e443ccda57b277efed59f52",
+      "participant": "Мерей",
+      "summary": {
+        "base": {
+          "ok": true,
+          "runs": 2,
+          "wall_s": 81.38,
+          "gpu_peak_mib": 14345,
+          "train_loop_s": 54.27,
+          "eval_loss": 2.04964
+        },
+        "solution": {
+          "ok": true,
+          "runs": 2,
+          "wall_s": 72.91,
+          "gpu_peak_mib": 11181,
+          "train_loop_s": 50.55,
+          "eval_loss": 2.04965
+        },
+        "ratios": {
+          "speedup": 1.1162,
+          "memory_ratio": 1.283,
+          "quality_delta_pct": 0.0
+        }
+      },
+      "checks_passed": 10,
+      "reported_loss_nonincreasing": false,
+      "summary_memory_within_7151_mib": false,
+      "speedup": 1.1162,
+      "memory_ratio": 1.283,
+      "illustrative_repository_only_points_out_of_85": 31.52
+    },
+    {
+      "result_path": "Нұржігіт/03_validation/reports/codex_v5/result.json",
+      "checks_path": "Нұржігіт/03_validation/reports/codex_v5/checks.json",
+      "result_sha256": "305f5710f1ef6f3ebd15adf6d28dbcab6c4853daff12ff26aded1f54bb38f4b6",
+      "solution_sha256": "5e0966ef889ade124ec5017a2ed6e4eeb137c0d12556500d130e6e40ca56efac",
+      "participant": "Нұржігіт",
+      "summary": {
+        "base": {
+          "ok": true,
+          "runs": 2,
+          "wall_s": 83.11,
+          "gpu_peak_mib": 14345,
+          "train_loop_s": 61.14,
+          "eval_loss": 2.04964
+        },
+        "solution": {
+          "ok": true,
+          "runs": 2,
+          "wall_s": 78.14,
+          "gpu_peak_mib": 10345,
+          "train_loop_s": 56.16,
+          "eval_loss": 2.04963
+        },
+        "ratios": {
+          "speedup": 1.0636,
+          "memory_ratio": 1.3867,
+          "quality_delta_pct": -0.0
+        }
+      },
+      "checks_passed": 10,
+      "reported_loss_nonincreasing": true,
+      "summary_memory_within_7151_mib": false,
+      "speedup": 1.0636,
+      "memory_ratio": 1.3867,
+      "illustrative_repository_only_points_out_of_85": 30.49
+    },
+    {
+      "result_path": "Нұржігіт/03_validation/reports/codex_v8/result.json",
+      "checks_path": "Нұржігіт/03_validation/reports/codex_v8/checks.json",
+      "result_sha256": "4027877c2f7a97e960f2906eaf738e912c1e6cbfd30f9d8f716b30c9775cde77",
+      "solution_sha256": "9ed90285892dc252a96d2e7025e43dae19a0e94bb4e236542ad5d4b3dfc305bb",
+      "participant": "Нұржігіт",
+      "summary": {
+        "base": {
+          "ok": true,
+          "runs": 2,
+          "wall_s": 86.13,
+          "gpu_peak_mib": 14345,
+          "train_loop_s": 64.52,
+          "eval_loss": 2.04963
+        },
+        "solution": {
+          "ok": true,
+          "runs": 2,
+          "wall_s": 84.91,
+          "gpu_peak_mib": 9143,
+          "train_loop_s": 63.23,
+          "eval_loss": 2.04967
+        },
+        "ratios": {
+          "speedup": 1.0144,
+          "memory_ratio": 1.569,
+          "quality_delta_pct": 0.002
+        }
+      },
+      "checks_passed": 10,
+      "reported_loss_nonincreasing": false,
+      "summary_memory_within_7151_mib": false,
+      "speedup": 1.0144,
+      "memory_ratio": 1.569,
+      "illustrative_repository_only_points_out_of_85": 29.69
+    },
+    {
+      "result_path": "Нұржігіт/03_validation/reports/codex_v7/result.json",
+      "checks_path": "Нұржігіт/03_validation/reports/codex_v7/checks.json",
+      "result_sha256": "7adab44abd994a9680a6a0516143687cbbe06137e3761fc1c79bb2af856d4faf",
+      "solution_sha256": "0d25c9e649ec107e6657cae9752bf7a3f6ba7c4afc46ade53c0c4ae3ef6ac2e2",
+      "participant": "Нұржігіт",
+      "summary": {
+        "base": {
+          "ok": true,
+          "runs": 2,
+          "wall_s": 86.69,
+          "gpu_peak_mib": 14345,
+          "train_loop_s": 64.67,
+          "eval_loss": 2.04966
+        },
+        "solution": {
+          "ok": true,
+          "runs": 2,
+          "wall_s": 86.73,
+          "gpu_peak_mib": 10343,
+          "train_loop_s": 64.52,
+          "eval_loss": 2.04962
+        },
+        "ratios": {
+          "speedup": 0.9995,
+          "memory_ratio": 1.3869,
+          "quality_delta_pct": -0.002
+        }
+      },
+      "checks_passed": 10,
+      "reported_loss_nonincreasing": true,
+      "summary_memory_within_7151_mib": false,
+      "speedup": 0.9995,
+      "memory_ratio": 1.3869,
+      "illustrative_repository_only_points_out_of_85": 27.03
+    },
+    {
+      "result_path": "Нұржігіт/03_validation/reports/codex_v2/result.json",
+      "checks_path": "Нұржігіт/03_validation/reports/codex_v2/checks.json",
+      "result_sha256": "4265ec52d59e8a625a28993b0342d80c0d4da76490505893ef8b9c6750f14ebc",
+      "solution_sha256": "eb1542ab4435329cda220f51412f30b48c136ce868cf2d057df027ee11f5b57e",
+      "participant": "Нұржігіт",
+      "summary": {
+        "base": {
+          "ok": true,
+          "runs": 2,
+          "wall_s": 87.72,
+          "gpu_peak_mib": 14345,
+          "train_loop_s": 62.83,
+          "eval_loss": 2.04961
+        },
+        "solution": {
+          "ok": true,
+          "runs": 2,
+          "wall_s": 87.94,
+          "gpu_peak_mib": 12383,
+          "train_loop_s": 62.72,
+          "eval_loss": 2.04967
+        },
+        "ratios": {
+          "speedup": 0.9975,
+          "memory_ratio": 1.1584,
+          "quality_delta_pct": 0.003
+        }
+      },
+      "checks_passed": 10,
+      "reported_loss_nonincreasing": false,
+      "summary_memory_within_7151_mib": false,
+      "speedup": 0.9975,
+      "memory_ratio": 1.1584,
+      "illustrative_repository_only_points_out_of_85": 23.16
+    },
+    {
+      "result_path": "Нұржігіт/03_validation/reports/codex_v3/result.json",
+      "checks_path": "Нұржігіт/03_validation/reports/codex_v3/checks.json",
+      "result_sha256": "81ef39c4330dc3e6638e714dc82f0d3446fb5281777eefab2173aaa04ec58a3c",
+      "solution_sha256": "2915f6d303888bd4398fac43f8fa9a643ba7afed6ffcc0804698322a7e39b69b",
+      "participant": "Нұржігіт",
+      "summary": {
+        "base": {
+          "ok": true,
+          "runs": 2,
+          "wall_s": 88.08,
+          "gpu_peak_mib": 14345,
+          "train_loop_s": 64.09,
+          "eval_loss": 2.04963
+        },
+        "solution": {
+          "ok": true,
+          "runs": 2,
+          "wall_s": 85.3,
+          "gpu_peak_mib": 12385,
+          "train_loop_s": 61.95,
+          "eval_loss": 2.04963
+        },
+        "ratios": {
+          "speedup": 1.0326,
+          "memory_ratio": 1.1583,
+          "quality_delta_pct": 0.0
+        }
+      },
+      "checks_passed": 10,
+      "reported_loss_nonincreasing": true,
+      "summary_memory_within_7151_mib": false,
+      "speedup": 1.0326,
+      "memory_ratio": 1.1583,
+      "illustrative_repository_only_points_out_of_85": 23.16
+    },
+    {
+      "result_path": "Нұржігіт/03_validation/reports/codex_v4/result.json",
+      "checks_path": "Нұржігіт/03_validation/reports/codex_v4/checks.json",
+      "result_sha256": "42ea0a9d1448193c189dbed29bee7f505afec0dc74de19d20f69fb0be0f55c2a",
+      "solution_sha256": "9f45d39b185db60e38a3bcd359ac5bf304a8259425ac50fbb34bcaa4b979e30e",
+      "participant": "Нұржігіт",
+      "summary": {
+        "base": {
+          "ok": true,
+          "runs": 2,
+          "wall_s": 86.17,
+          "gpu_peak_mib": 14345,
+          "train_loop_s": 64.59,
+          "eval_loss": 2.04967
+        },
+        "solution": {
+          "ok": true,
+          "runs": 2,
+          "wall_s": 83.18,
+          "gpu_peak_mib": 12385,
+          "train_loop_s": 61.27,
+          "eval_loss": 2.04968
+        },
+        "ratios": {
+          "speedup": 1.0359,
+          "memory_ratio": 1.1583,
+          "quality_delta_pct": 0.0
+        }
+      },
+      "checks_passed": 10,
+      "reported_loss_nonincreasing": false,
+      "summary_memory_within_7151_mib": false,
+      "speedup": 1.0359,
+      "memory_ratio": 1.1583,
+      "illustrative_repository_only_points_out_of_85": 23.16
+    }
+  ]
+}
