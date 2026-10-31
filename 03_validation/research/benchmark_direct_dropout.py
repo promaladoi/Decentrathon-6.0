@@ -25,8 +25,8 @@ for count in (384,768,1280):
             BLOCK,num_warps=4,enable_fp_fusion=False)
         return out,packed
     def candidate(): return direct.gather(x,rows,batch,sequence,.05,1,0,torch.float16)
-    a=float(triton.testing.do_bench(native,warmup=30,rep=100,quantiles=[.5])[0])
-    b=float(triton.testing.do_bench(candidate,warmup=30,rep=100,quantiles=[.5])[0])
+    a=float(triton.testing.do_bench(native,warmup=30,rep=100,quantiles=[.5]))
+    b=float(triton.testing.do_bench(candidate,warmup=30,rep=100,quantiles=[.5]))
     results.append(dict(real_rows=count,native_gpu_ms=a,candidate_gpu_ms=b,gpu_ratio=a/b))
 record=dict(kind='isolated GPU launch-chain timing; fixed explicit candidate RNG coordinates',
             full_task_admission=False,gpu=torch.cuda.get_device_name(),torch=torch.__version__,

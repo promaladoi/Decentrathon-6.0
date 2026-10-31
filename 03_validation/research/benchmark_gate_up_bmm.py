@@ -17,8 +17,8 @@ for rows in (384,768,1280):
     actual=batched()
     equal=all(torch.equal(actual[i],expected[i]) for i in range(2))
     max_error=max(float((actual[i]-expected[i]).abs().max()) for i in range(2))
-    a=float(triton.testing.do_bench(separate,warmup=50,rep=200,quantiles=[.5])[0])
-    b=float(triton.testing.do_bench(batched,warmup=50,rep=200,quantiles=[.5])[0])
+    a=float(triton.testing.do_bench(separate,warmup=50,rep=200,quantiles=[.5]))
+    b=float(triton.testing.do_bench(batched,warmup=50,rep=200,quantiles=[.5]))
     result=dict(real_rows=rows,bit_exact=equal,max_abs_error=max_error,
                 separate_gpu_ms=a,batched_gpu_ms=b,gpu_ratio=a/b,
                 extra_live_decoded_weight_bytes=8960*1536*2)
