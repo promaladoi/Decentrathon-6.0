@@ -1,0 +1,7 @@
+{
+  "code_commit": "373c904735bc5061c7ea06dd3cad553ee695be4c",
+  "version": "v53",
+  "status": "failed",
+  "failed_stage": "testing",
+  "error": "Command '['/usr/bin/python3', '-m', 'pytest', 'solution', '-q']' returned non-zero exit status 1."
+}

@@ -139,3 +139,6 @@
 - [v47_research](03_validation/reports/v47_research)
 - [v48_research](03_validation/reports/v48_research)
 - [v49_research](03_validation/reports/v49_research)
+
+[v53/v53r1 original result and rejected user quality](CODEX_V53_RESULT.md).
+[v54 inactive native dispatch screen](03_validation/reports/v54_research).
