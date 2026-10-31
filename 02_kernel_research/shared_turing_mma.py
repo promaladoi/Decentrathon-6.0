@@ -113,7 +113,8 @@ def shared_turing_mma_kernel(X, W, Y, M, N, K,
     pid_n = (pid % per_group) // active_m
     unused = tl.inline_asm_elementwise(ASM,
         constraints='=r,l,l,l,r,r,r,r,r,r',
-        args=[X,W,Y,M,N,K,pid_m,pid_n,tl.arange(0,128)],dtype=tl.int32,
+        args=[X.to(tl.uint64),W.to(tl.uint64),Y.to(tl.uint64),
+              M,N,K,pid_m,pid_n,tl.arange(0,128)],dtype=tl.int32,
         is_pure=False,pack=1)
 
 
