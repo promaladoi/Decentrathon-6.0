@@ -1,0 +1,13 @@
+{
+  "version": "v70",
+  "source_commit": "878afbc5d0d7a1a6ce90d62b7737f409bc65cb8c",
+  "status": "GPU qualification then full original paired validation running; not selected",
+  "python_source_count": 54,
+  "starting_source": "7a3db8fd5e24bbcb58affb475007a5cf93c56f07",
+  "production_selection": "verified v45",
+  "target_total_seconds": 25,
+  "memory_limit_mib": 7151,
+  "reported_eval_loss_may_increase": false,
+  "original_checks_required": 10,
+  "priority": "whole-command time"
+}
