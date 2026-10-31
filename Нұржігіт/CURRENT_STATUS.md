@@ -79,3 +79,5 @@ The v57-v63 investigation is complete. Both the active development implementatio
 [v67 speed-priority candidate](CODEX_V67_EXPERIMENT.md): full original validation running; selected v45 unchanged. No new elapsed-time claim.
 
 [v66 original measured outcome](CODEX_V66_RESULT.md): original admission and user memory/quality passed; speed comparison pending.
+
+[v68 speed-priority candidate](CODEX_V68_EXPERIMENT.md): prepared; not yet executed; not selected; selected v45 unchanged. No new elapsed-time claim.
