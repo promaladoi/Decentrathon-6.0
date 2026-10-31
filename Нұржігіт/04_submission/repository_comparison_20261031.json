@@ -7,7 +7,7 @@
     "best_speedup": 1.8664,
     "best_memory_ratio": 4.0352
   },
-  "score_limits": "Illustrative only. Includes 20 correctness points, excludes up to 15 README points. Official normalization uses all admitted teams. Reports include duplicate copies and historical alternatives, not 54 independent teams.",
+  "score_limits": "Illustrative only. Includes 20 correctness points, excludes up to 15 README points. Official normalization uses all admitted teams. Reports include duplicate copies and historical alternatives; report count is not the count of independent teams.",
   "measurement_limits": "Different sessions are not a direct head-to-head performance measurement. Whole-command time differs from training-loop time. Rounded eval loss is not proof on hidden data. Check hashes bind reports, not a fresh execution.",
   "protected_git_trees": {
     "Нұржігіт": {

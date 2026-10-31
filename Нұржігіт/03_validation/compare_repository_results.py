@@ -61,7 +61,7 @@ def compare(repo, ref):
             "kind": "read-only audit of existing evidence; no new GPU measurement",
             "hash_bound_admitted_report_count_including_duplicates": len(rows),
             "normalizers_from_this_repository_only": {"best_speedup": best_s, "best_memory_ratio": best_m},
-            "score_limits": "Illustrative only. Includes 20 correctness points, excludes up to 15 README points. Official normalization uses all admitted teams. Reports include duplicate copies and historical alternatives, not 54 independent teams.",
+            "score_limits": "Illustrative only. Includes 20 correctness points, excludes up to 15 README points. Official normalization uses all admitted teams. Reports include duplicate copies and historical alternatives; report count is not the count of independent teams.",
             "measurement_limits": "Different sessions are not a direct head-to-head performance measurement. Whole-command time differs from training-loop time. Rounded eval loss is not proof on hidden data. Check hashes bind reports, not a fresh execution.",
             "protected_git_trees": protected,
             "protected_trees_equal": all(value == protected["Нұржігіт"] for value in protected.values()),
