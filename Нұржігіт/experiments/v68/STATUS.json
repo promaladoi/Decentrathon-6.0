@@ -1,7 +1,7 @@
 {
   "version": "v68",
   "source_commit": "46fea8a4d636e8cb24c1a1522d788443cf363a79",
-  "status": "prepared; not yet executed; not selected",
+  "status": "GPU qualification and full original paired validation running; not selected",
   "python_source_count": 52,
   "starting_source": "7a3db8fd5e24bbcb58affb475007a5cf93c56f07",
   "production_selection": "verified v45",

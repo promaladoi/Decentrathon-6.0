@@ -164,3 +164,5 @@
 [v65 original evidence](CODEX_V65_RESULT.md).
 
 [v66 original evidence](CODEX_V66_RESULT.md).
+
+[v67 original evidence](CODEX_V67_RESULT.md).
