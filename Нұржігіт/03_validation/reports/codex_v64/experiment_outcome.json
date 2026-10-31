@@ -1,0 +1,7 @@
+{
+  "code_commit": "155972c13b59f8955a2eb8dd7651b0f2cc5c8b9f",
+  "version": "v64",
+  "status": "failed",
+  "failed_stage": "testing",
+  "error": "Command '['/usr/bin/python3', '-m', 'pytest', 'solution/test_lora_remat.py', '-q']' returned non-zero exit status 1."
+}

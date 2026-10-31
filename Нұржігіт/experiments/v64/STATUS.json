@@ -1,11 +1,22 @@
 {
   "version": "v64",
   "source_commit": "155972c13b59f8955a2eb8dd7651b0f2cc5c8b9f",
-  "status": "native numerical/RNG qualification, then full original paired validation; not selected",
+  "status": "failed qualification fixture before training; not selected",
   "starting_source": "7a3db8fd5e24bbcb58affb475007a5cf93c56f07",
   "production_selection": "verified v45",
   "target_total_seconds": 27,
   "memory_limit_mib": 7151,
   "reported_eval_loss_may_increase": false,
-  "original_checks_required": 10
+  "original_checks_required": 10,
+  "collection_proof": {
+    "version": "v64",
+    "source_commit": "155972c13b59f8955a2eb8dd7651b0f2cc5c8b9f",
+    "source_files_verified": 50,
+    "solution_sha256": "ee5da72860c87bd2bd87862cd00fb449e1cff33e8af25c311bef062973af840f",
+    "status": "failed",
+    "checks_passed": null,
+    "accepted": false,
+    "summary": null,
+    "archive_sha256": "1d96d1398bbd6e08a640c064b92df8464e5df70c6ab8103e0ee41fb4e4ce3280"
+  }
 }
