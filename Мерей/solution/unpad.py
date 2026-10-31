@@ -37,7 +37,8 @@ from .mlp import MLP4bit, _compute_dtype
 from .nf4 import MatMulNF4, dequantize_nf4, supported as nf4_supported, _linear_forward
 from . import warmup as _warmup
 from .rmsnorm import add_rmsnorm
-from .dropout import real_row_dropout, _supported as _real_dropout_supported
+from .dropout import (real_row_dropout, real_row_dropout_linear_input,
+                      _supported as _real_dropout_supported)
 from .batch_metadata import compact_batch_metadata
 from .backward_sums import sum_half_gradients
 
@@ -45,6 +46,10 @@ from .backward_sums import sum_half_gradients
 REAL_ROW_DROPOUT = True
 REAL_ROW_DROPOUT_MIN_PADDED_ELEMENTS = 4 * 384 * 1536
 _NATIVE_DROPOUT_FORWARD = torch.nn.Dropout.forward
+_NATIVE_LINEAR_FORWARD = torch.nn.Linear.forward
+_NATIVE_LINEAR_FUNCTION = torch.nn.functional.linear
+_NATIVE_MODULE_CALL = torch.nn.Module.__call__
+_NATIVE_MODULE_CALL_IMPL = torch.nn.Module._call_impl
 
 
 @triton.jit(do_not_specialize=["seq_len"])
@@ -593,7 +598,7 @@ class _Batch:
         self.packed_metadata = packed_metadata
         self._padded = {}
 
-    def dropout(self, dropout, x):
+    def dropout(self, dropout, x, *, linear_input=None):
         """dropout(x) of the real tokens, drawn on the (batch, seq_len, features) tensor of the
         base run, so the random masks are the same."""
         if type(dropout) is torch.nn.Identity:
@@ -619,6 +624,10 @@ class _Batch:
                 and str(torch.__version__).split("+", 1)[0] == "2.11.0"
                 and _real_dropout_supported(x, self.rows, self.batch, self.seq_len,
                                              dropout.p, True, True)):
+            if _can_cast_dropout_for_linear(linear_input, x):
+                return real_row_dropout_linear_input(
+                    x, self.rows, self.batch, self.seq_len, dropout.p,
+                    rows_from_nonzero=True)
             return real_row_dropout(x, self.rows, self.batch, self.seq_len,
                                     dropout.p, rows_from_nonzero=True)
         key = id(x)
@@ -633,11 +642,34 @@ class _Batch:
         self._padded.pop(id(x), None)
 
 
+def _can_cast_dropout_for_linear(linear, x):
+    """Only native, unobserved Linear immediately performing the same AMP cast."""
+    return (type(linear) is torch.nn.Linear
+            and torch.nn.Linear.forward is _NATIVE_LINEAR_FORWARD
+            and getattr(linear.forward, "__func__", None) is _NATIVE_LINEAR_FORWARD
+            and getattr(_NATIVE_LINEAR_FORWARD, "__module__", None) == "torch.nn.modules.linear"
+            and getattr(_NATIVE_LINEAR_FORWARD, "__qualname__", None) == "Linear.forward"
+            and not hasattr(_NATIVE_LINEAR_FORWARD, "__wrapped__")
+            and torch.nn.functional.linear is _NATIVE_LINEAR_FUNCTION
+            and getattr(_NATIVE_LINEAR_FUNCTION, "__module__", None) == "torch._C._nn"
+            and torch.nn.Module.__call__ is _NATIVE_MODULE_CALL
+            and type(linear).__call__ is _NATIVE_MODULE_CALL
+            and torch.nn.Module._call_impl is _NATIVE_MODULE_CALL_IMPL
+            and getattr(linear._call_impl, "__func__", None) is _NATIVE_MODULE_CALL_IMPL
+            and getattr(linear, "_compiled_call_impl", None) is None
+            and _no_hooks(linear)
+            and x.is_cuda and x.dtype == torch.float32
+            and linear.weight.device == x.device
+            and linear.weight.dtype in (torch.float16, torch.float32)
+            and torch.is_autocast_enabled("cuda")
+            and torch.get_autocast_dtype("cuda") == torch.float16)
+
+
 def _lora_out(parts, x, step, *, apply_scale=True):
     base, lora_a, lora_b, dropout, scaling = parts
     if lora_a is None:
         return None
-    output = lora_b(lora_a(step.dropout(dropout, x)))
+    output = lora_b(lora_a(step.dropout(dropout, x, linear_input=lora_a)))
     return output * scaling if apply_scale else output
 
 

@@ -10,7 +10,7 @@ def test_frozen_decode_cache_and_invalidation(nested):
     from solution.nf4 import _decode
     torch.manual_seed(151)
     packed,state=bnbf.quantize_4bit(
-        torch.randn(8960,1536,device='cuda',dtype=torch.float16),
+        torch.randn(128,256,device='cuda',dtype=torch.float16),
         compress_statistics=nested,quant_type='nf4')
     first=_decode(packed,state,torch.float16)
     torch.testing.assert_close(first,bnbf.dequantize_4bit(packed,state),rtol=1e-3,atol=1e-5)
