@@ -1,0 +1,8 @@
+{
+  "source_commit": "7a3db8fd5e24bbcb58affb475007a5cf93c56f07",
+  "source_files_verified": 48,
+  "archive_sha256": "da11af1077dd031cf0955d93f04ba1b68f22665d44a0651375be8898d9b5e2c9",
+  "result_sha256": "6cc1d1c812de0da844e9c94f6c38e8baf7bf9d3b5abb5241b7b755a1db540a28",
+  "kind": "same-session solution-only performance control; not ten-check admission",
+  "original_ten_asserted": false
+}

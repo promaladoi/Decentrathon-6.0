@@ -1,0 +1,11 @@
+{
+  "source_commit": "108d694085892b532cb61a7ee9c5e1a34afc78f1",
+  "source_files_verified": 2,
+  "archive_sha256": "f088c7d590598cd6ec558a20a98c2a1aa065dceabd430157b1a1757c00a233e6",
+  "kind": "inactive explicit-MMA mapping/performance research",
+  "mapping_cases": 6,
+  "large_native_exact_cases": 2,
+  "selected_for_production": false,
+  "full_task_admission": false,
+  "decision": "rejected for performance; retain native GEMMs"
+}

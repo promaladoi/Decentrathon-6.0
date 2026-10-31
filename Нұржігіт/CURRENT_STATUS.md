@@ -22,6 +22,11 @@ v51 moves stable causal-target partitions into the existing metadata kernel.
 Original 10/10, 412 tests and the user memory/quality limits passed.
 [Measured v51 result](CODEX_V51_RESULT.md). It is not selected; the 27-second target remains unmet.
 
+[Same-session v45 control](03_validation/reports/v45_same_session_control/README.md):
+48.55 seconds / 4135 MiB, solution-only diagnostic. No v51 speed advantage established.
+v52/v52r1 explicit-MMA research matched sampled native values but was slower;
+[both screens](03_validation/reports/v52r1_research/README.md) were kept inactive.
+
 [Latest decisions and evidence](CODEX_OPTIMIZATION_RESULTS.md).
 [Selected result](CODEX_V45_RESULT.md). [Selected source proof](PUBLICATION_PROOF.json).
 Pinned reproducible notebook: `templates/codex_v45.ipynb`.

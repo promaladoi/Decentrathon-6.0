@@ -1,0 +1,16 @@
+{
+  "kind": "same-session solution-only performance control; not ten-check admission",
+  "source_commit": "7a3db8fd5e24bbcb58affb475007a5cf93c56f07",
+  "summary": {
+    "solution": {
+      "ok": true,
+      "runs": 2,
+      "wall_s": 48.55,
+      "gpu_peak_mib": 4135,
+      "train_loop_s": 28.16,
+      "eval_loss": 2.04962
+    }
+  },
+  "immutable_files_verified": 15,
+  "full_task_admission": false
+}

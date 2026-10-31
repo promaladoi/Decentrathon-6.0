@@ -39,4 +39,6 @@ remain archived. `PUBLICATION_PROOF.json` identifies selected source. Final
 platform submission and a public saved executed Kaggle notebook are separate.
 
 - v50: native BMM research rejected before integration (12/14 numerical cases failed).
-- v51: exact target partitions passed original 10/10 and strict user memory/quality, but measured 49.03 s / 4135 MiB. v45 control in the same session is pending.
+- v51: exact target partitions passed original 10/10 and strict user memory/quality, but measured 49.03 s / 4135 MiB. same-session v45 control was 48.55 s / 4135 MiB; no speed advantage was established.
+
+- v52/v52r1: explicit T4 MMA mapping and sampled FP16 parity passed, but both inactive prototypes were slower than native GEMM. Neither was integrated.

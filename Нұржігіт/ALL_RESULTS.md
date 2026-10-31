@@ -5,7 +5,7 @@
 Опубликовано. Все 48 файлов доступны без входа; размеры и SHA-256 сверены с GitHub.
 [Подтверждение сохранения](04_submission/all_results_publication.json).
 
-Сохранены 596 файлов отчётов в 58 папках, 46 уникальных исходных/экспортированных ZIP-архивов и 58 исторических файлов notebook, запусков, таблиц и скриншотов.
+Архив до v49 содержит 596 файлов отчётов в 58 папках, 46 уникальных исходных/экспортированных ZIP-архивов и 58 исторических файлов notebook, запусков, таблиц и скриншотов.
 
 Выбранная версия остаётся **v45: 45.03 с, 4135 MiB, исходные 10/10**. v49: 45.69 с, 4115 MiB, 10/10. Текущая цель полной команды — 27 секунд; она не достигнута.
 
@@ -14,6 +14,9 @@
 - [v50: отклонённый GPU-эксперимент с батчевыми GEMM](03_validation/reports/v50_research/README.md), [исходный ZIP](03_validation/reports/v50_research/original_archive.zip).
 - [Инструментированная диагностика запуска v45](03_validation/reports/v45_startup_timeline/README.md), [исходный ZIP](03_validation/reports/v45_startup_timeline/original_archive.zip). Время с профайлером не является соревновательным результатом.
 - [v51: исходные 10/10, 49.03 с / 4135 MiB](CODEX_V51_RESULT.md); выбранный v45 сохранён.
+- [v45 в той же сессии: 48.55 с / 4135 MiB](03_validation/reports/v45_same_session_control/README.md). Это контроль скорости без нового допуска 10/10.
+- [v52](03_validation/reports/v52_research/README.md) и [v52r1](03_validation/reports/v52r1_research/README.md): точность на тестовых матрицах подтверждена, производительность хуже native GEMM; в обучение не добавлены.
+- [Диагностика с редкими метками времени](03_validation/reports/v45_sparse_startup/README.md); соревновательным результатом не является.
 
 [Текущие решения](CODEX_OPTIMIZATION_RESULTS.md) · [Выбранный код](PUBLICATION_PROOF.json) · [Все отчёты](03_validation/reports) · [Хэши файлов](04_submission/all_results_manifest.json)
 

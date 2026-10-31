@@ -42,5 +42,11 @@
     "quality_note": "Compares the reported rounded evaluation loss; original loss-curve checks remain required."
   },
   "production_selection": "verified v45",
-  "selection_reason": "No confirmed speed or memory advantage over selected v45; same-session v45 control running"
+  "selection_reason": "No speed/memory improvement established: same-session v45 control 48.55 s / 4135 MiB, v51 49.03 s / 4135 MiB",
+  "same_session_control": {
+    "version": "v45",
+    "whole_command_s": 48.55,
+    "peak_mib": 4135,
+    "full_task_admission": false
+  }
 }
