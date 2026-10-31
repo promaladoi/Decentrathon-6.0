@@ -1,0 +1,14 @@
+{
+  "archive": "codex_direct_dropout_screen_6d7b6758.zip",
+  "archive_sha256": "0bf03eb8f35d7696ba2ac25134c0626c26e30719cd439fbf536c64a93cf9b040",
+  "source_python_files_verified": 4,
+  "kind": "isolated inactive numerical/performance research",
+  "source_commit": "123fceea433783c96e3fb7254a658682fd3b20df",
+  "production_solution_changed": false,
+  "full_task_admission": false,
+  "protected_files_verified": 15,
+  "numerical_tests.log": 0,
+  "microbenchmark.log": 1,
+  "status": "research_rejected",
+  "gate_up_bmm.log": 1
+}

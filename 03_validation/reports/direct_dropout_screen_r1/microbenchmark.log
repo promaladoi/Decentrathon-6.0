@@ -1,0 +1,5 @@
+Traceback (most recent call last):
+  File "/kaggle/working/codex_direct_dropout_700cfb86/03_validation/research/benchmark_direct_dropout.py", line 28, in <module>
+    a=float(triton.testing.do_bench(native,warmup=30,rep=100,quantiles=[.5])[0])
+            ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~^^^
+TypeError: 'float' object is not subscriptable

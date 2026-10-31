@@ -1,0 +1,11 @@
+{
+  "kind": "isolated inactive numerical/performance research",
+  "source_commit": "123fceea433783c96e3fb7254a658682fd3b20df",
+  "production_solution_changed": false,
+  "full_task_admission": false,
+  "protected_files_verified": 15,
+  "numerical_tests.log": 0,
+  "microbenchmark.log": 1,
+  "status": "research_rejected",
+  "gate_up_bmm.log": 1
+}

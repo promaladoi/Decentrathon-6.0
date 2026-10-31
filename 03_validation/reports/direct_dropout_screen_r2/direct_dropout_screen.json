@@ -1,0 +1,27 @@
+{
+  "kind": "isolated GPU launch-chain timing; fixed explicit candidate RNG coordinates",
+  "full_task_admission": false,
+  "gpu": "Tesla T4",
+  "torch": "2.11.0+cu128",
+  "triton": "3.6.0",
+  "results": [
+    {
+      "real_rows": 384,
+      "native_gpu_ms": 0.15430399775505066,
+      "candidate_gpu_ms": 0.02280000038444996,
+      "gpu_ratio": 6.767719085666725
+    },
+    {
+      "real_rows": 768,
+      "native_gpu_ms": 0.16793599724769592,
+      "candidate_gpu_ms": 0.03481600061058998,
+      "gpu_ratio": 4.823529248118604
+    },
+    {
+      "real_rows": 1280,
+      "native_gpu_ms": 0.19127999991178513,
+      "candidate_gpu_ms": 0.05398400127887726,
+      "gpu_ratio": 3.5432719950425153
+    }
+  ]
+}
