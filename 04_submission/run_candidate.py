@@ -63,6 +63,9 @@ def main():
         if active:
             raise RuntimeError('Another GPU process is active. Stop it before measurement.')
         outcome['status'] = 'testing'
+        if (repo/'solution/test_nf4_launch_geometry.py').is_file():
+            run([sys.executable, '-m', 'pytest', 'solution/test_nf4_launch_geometry.py', '-q'],
+                'nf4_launch_geometry_tests.log')
         if (repo/'solution/test_narrow_nf4.py').is_file():
             run([sys.executable, '-m', 'pytest', 'solution/test_narrow_nf4.py', '-q'],
                 'narrow_nf4_tests.log')

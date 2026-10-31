@@ -1,0 +1,11 @@
+{
+  "version": "v62",
+  "source_commit": "beba70f021e37ab4ae3036b76c69fc02c6fe1fae",
+  "source_files_verified": 2,
+  "archive_sha256": "260b878a1b219065dd34a6f18693499898a33a975d0801d2c0da36d43c2b705b",
+  "status": "screen_complete_not_integrated",
+  "native_exact_cases": 36,
+  "production_solution_changed": false,
+  "full_task_admission": false,
+  "target_27_seconds_claimed": false
+}

@@ -21,6 +21,22 @@ import triton.language as tl
 BLOCK = 1024
 
 
+@functools.lru_cache(maxsize=128)
+def _launch_config(elements, dtype, device_index, nested, quant_block):
+    """v63: hardware/geometry choice from native-exact v62 measurements.
+
+    No model data, step, metric or test flag participates. Other dtype,
+    quantization and hardware cases retain the selected v45 launch.
+    """
+    if (dtype == torch.float16 and nested and quant_block == 64
+            and torch.cuda.get_device_capability(device_index) == (7, 5)):
+        if elements >= 8 * 1024 * 1024:
+            return 1024, 8
+        if elements >= 2 * 1024 * 1024:
+            return 2048, 4
+    return BLOCK, 4
+
+
 @triton.jit
 def nf4_dequant_kernel(Packed, Absmax, Code4, Absmax2, Code8, Offset, Out,
                        N, QUANT_BLOCK: tl.constexpr, NESTED: tl.constexpr,
@@ -98,10 +114,11 @@ def _decode(packed, state, dtype):
     else:
         second_max = code8 = offset = state.absmax
     elements = dense.numel()
-    nf4_dequant_kernel[(triton.cdiv(elements, BLOCK),)](
+    block, warps = _launch_config(elements, dtype, packed.device.index, nested, state.blocksize)
+    nf4_dequant_kernel[(triton.cdiv(elements, block),)](
         packed, state.absmax, state.code, second_max, code8, offset, dense,
-        elements, state.blocksize, nested, 256, BLOCK,
-        num_warps=4, enable_fp_fusion=False)
+        elements, state.blocksize, nested, 256, block,
+        num_warps=warps, enable_fp_fusion=False)
     return dense
 
 
@@ -188,6 +205,8 @@ def warmup():
     from .warmup import load_compiled
 
     f32, u8 = torch.float32, torch.uint8
-    load_compiled(nf4_dequant_kernel.warmup(u8, u8, f32, f32, f32, f32, torch.float16,
-                              16 * 1536, 64, True, 256, BLOCK, grid=(1,),
-                              num_warps=4, enable_fp_fusion=False))
+    # Compile/load only, in this timed command. No kernel arithmetic or RNG.
+    for block, warps in ((BLOCK,4),(2048,4),(1024,8)):
+        load_compiled(nf4_dequant_kernel.warmup(u8, u8, f32, f32, f32, f32, torch.float16,
+                              16 * 1536, 64, True, 256, block, grid=(1,),
+                              num_warps=warps, enable_fp_fusion=False))
