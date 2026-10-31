@@ -1,0 +1,14 @@
+{
+  "version": "v57",
+  "kind": "inactive shared-memory SM75 MMA research",
+  "source_commit": "ec0c5b822dc4e6f67207c1335984b24d28d1140f",
+  "production_solution_changed": false,
+  "full_task_admission": false,
+  "target_27_seconds_claimed": false,
+  "gpu": "Tesla T4",
+  "torch": "2.11.0+cu128",
+  "cases": [],
+  "timing": [],
+  "status": "research_rejected",
+  "error": "CompilationError: at 12:13:\ndef shared_turing_mma_kernel(X, W, Y, M, N, K,\n                              BM: tl.constexpr, GROUP_M: tl.constexpr,\n                              ASM: tl.constexpr):\n    pid = tl.program_id(0)\n    nm, nn = tl.cdiv(M, BM), tl.cdiv(N, 64)\n    per_group = GROUP_M * nn\n    group = pid // per_group\n    first_m = group * GROUP_M\n    active_m = tl.minimum(nm-first_m, GROUP_M)\n    pid_m = first_m+(pid % per_group) % active_m\n    pid_n = (pid % per_group) // active_m\n    unused = tl.inline_asm_elementwise(ASM,\n             ^\ninvalid operands of type pointer<fp32> and pointer<fp16>"
+}

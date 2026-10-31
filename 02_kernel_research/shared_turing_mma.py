@@ -24,7 +24,7 @@ def assembly(block_m, fp32_output):
     lines = ['{', f'.shared .align 16 .b8 smem[{a_bytes + 4096}];',
         '.reg .u32 tid, lane, warp, group, pair, bm, bn, szM, szN, szK, posK;',
         '.reg .u32 sbase, idx, row, col, sw, sw2, dst, gRow, lin, tmp, aAdr, bAdr;',
-        '.reg .u32 outRow, outCol, a0, a1, b0;',
+        '.reg .u32 outRow, outCol;', '.reg .b32 a0, a1, b0;',
         '.reg .u64 byteOffset, address;', '.reg .pred valid, vr, vc, more;',
         '.reg .b32 vec<4>;', f'.reg .f32 acc<{count}>;', '.reg .b16 half;',
         'mov.u32 tid, %tid.x;', 'and.b32 lane, tid, 31;', 'shr.u32 warp, tid, 5;',
