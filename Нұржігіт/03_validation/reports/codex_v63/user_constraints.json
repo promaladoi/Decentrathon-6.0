@@ -1,0 +1,15 @@
+{
+  "original_ten_passed": true,
+  "max_solution_peak_mib": 4115,
+  "memory_limit_mib": 7151,
+  "every_run_within_memory_limit": true,
+  "reported_eval_loss_nonincreasing": false,
+  "base_eval_loss": 2.04962,
+  "solution_eval_loss": 2.04963,
+  "median_total_seconds": 48.69,
+  "target_total_seconds": 27,
+  "target_met": false,
+  "eligible_within_memory_and_quality": false,
+  "all_requested_constraints_met": false,
+  "quality_note": "Compares the reported rounded evaluation loss; original loss-curve checks remain required."
+}

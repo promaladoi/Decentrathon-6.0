@@ -1,0 +1,61 @@
+{
+  "public_source_commit": "78a2ec998ca7b665d1aa70299aeb6f2f2a105a57",
+  "development_source_commit": "d53a1feac90e9df34657e5b94ad80e50158a5877",
+  "selected_version": "v45",
+  "selected_source_commit": "7a3db8fd5e24bbcb58affb475007a5cf93c56f07",
+  "selected_python_files_verified": 48,
+  "public_selected_v45_unchanged": true,
+  "active_development_v45_restored": true,
+  "protected_organizer_files_per_candidate": 15,
+  "candidates": {
+    "v57": {
+      "source_commit": "ec0c5b822dc4e6f67207c1335984b24d28d1140f",
+      "archive_sha256": "8718ae60c53dba0c63869e80f270c1f6b6716ec844cf96a29e0860c9177a7c84",
+      "protected_organizer_files_unchanged": 15
+    },
+    "v57r1": {
+      "source_commit": "cf6efa174aaa5d3c035a937ce7daa65ff1bf4fc0",
+      "archive_sha256": "c01ac6952c06756429e7180369073ac100aa26a16ba4918e1c57702dea935d75",
+      "protected_organizer_files_unchanged": 15
+    },
+    "v57r2": {
+      "source_commit": "06d0c8ae93812ace8ec0030037b68e9c5022a5e2",
+      "archive_sha256": "b54ab509507d2ac39f2f304b364f0290fb6b8cafd2798746840235faabc927f8",
+      "protected_organizer_files_unchanged": 15
+    },
+    "v58": {
+      "source_commit": "4e9d8dd511ab067862297d2681c5e1e82b8a689f",
+      "archive_sha256": "d307e6b94a7a14a2c3c248b584a72ea47cdddf6d8726fd60adb173ecca00a69e",
+      "protected_organizer_files_unchanged": 15
+    },
+    "v59": {
+      "source_commit": "3ce18628790835638d9ef1ed4cbee60a43a8d6e6",
+      "archive_sha256": "17a17069dfee1b477f5189e70513b9cd73a03d2e3670b6183cbc7d24e4628e61",
+      "protected_organizer_files_unchanged": 15
+    },
+    "v60": {
+      "source_commit": "c4cbc6b50c8e2756b79482bf9cb51f3f3b22d5db",
+      "archive_sha256": "6565948099819e1a6415251fdf949af0e0d2dd13e641868b733f37f5b28474b0",
+      "protected_organizer_files_unchanged": 15
+    },
+    "v61": {
+      "source_commit": "ba1b399df1da67433c80fa391a4cbaf1acfb2aaa",
+      "archive_sha256": "5588e5a94e56293a237eec4c206ae6c2f09f7af49174e6b22b5b9de459d4ad53",
+      "protected_organizer_files_unchanged": 15
+    },
+    "v62": {
+      "source_commit": "beba70f021e37ab4ae3036b76c69fc02c6fe1fae",
+      "archive_sha256": "260b878a1b219065dd34a6f18693499898a33a975d0801d2c0da36d43c2b705b",
+      "protected_organizer_files_unchanged": 15
+    },
+    "v63": {
+      "source_commit": "48cef7c3fe1993ef699b96b7f2336ca795fb5a4d",
+      "archive_sha256": "58d25c0e5bc12c4a8d0d6226bce869ebcb74681107653eb950540bc3f3d6fdb7",
+      "protected_organizer_files_unchanged": 15,
+      "public_experiment_python_files_verified": 49,
+      "selected": false,
+      "original_checks_passed": 10
+    }
+  },
+  "target_27_seconds_met": false
+}

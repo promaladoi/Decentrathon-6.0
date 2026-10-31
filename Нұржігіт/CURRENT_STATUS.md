@@ -10,6 +10,7 @@
 | v53r1 | 83.14 | 47.51 | 4109 | 2.04961 → 2.04965 | 10/10 | FAIL: loss increased |
 | v55 | 83.80 | 52.23 | 3555 | 2.04964 → 2.04967 | 10/10 | FAIL: user limits |
 | v56 | 85.69 | 49.69 | 4135 | 2.04960 → 2.04968 | 10/10 | FAIL: user limits |
+| v63 | 83.68 | 48.69 | 4115 | 2.04962 → 2.04963 | 10/10 | FAIL: user limits |
 
 Public main: selected v45, 45.03 seconds / 4135 MiB / original 10/10.
 v48 and v49 are measured memory alternatives (4115 MiB), not replacements.
@@ -48,6 +49,9 @@ Development HEAD may contain experimental code; use the exact measured commit.
 [All five new original ZIPs and checksum index](https://github.com/promaladoi/Decentrathon-6.0/releases/tag/nurzhigit-evidence-through-v56-20261031). [Selected-source and protected-file audit](04_submission/v53_v56_source_audit.json). All tested new runtime candidates failed the stricter nonincreasing reported-loss rule. Both the active development runtime and public selected solution are restored/verified as exact v45. The <=27-second whole-command target has not been achieved.
 
 
-[v57-v61 measured inactive research](CODEX_V57_EXPERIMENT.md): sampled numerical cases passed, but native GEMM stayed faster. v62 completed 36 native-exact shape/launch checks and motivates a small decoder launch candidate. No new complete-task result; selected v45 unchanged.
+[v57-v62 measured inactive research](CODEX_V57_EXPERIMENT.md): the shared-memory Tensor Core prototypes matched the sampled native results, but stayed slower than native GEMM. v62 passed 36 exact NF4 shape/launch checks. Its launch policy was tested in [v63](CODEX_V63_RESULT.md): 48.69 s / 4115 MiB / original 10/10, with reported eval loss 2.04962 -> 2.04963. No demonstrated whole-command gain or strict nonincreasing-loss result supports replacing v45.
 
-[v63 exact launch/lifetime candidate](CODEX_V63_EXPERIMENT.md): complete original validation running; measured v45 remains selected until a justified result. The 27-second whole-command goal is not claimed.
+
+[v63 measured outcome](CODEX_V63_RESULT.md): not selected; original admission or stricter user requirement failed. The 27-second target remains unmet.
+
+The v57-v63 investigation is complete. Both the active development implementation and the public selected implementation are restored to exact measured v45. The candidate remains available under `experiments/v63`; it is not selected. Historical selected whole-command time is **45.03 s**, peak **4135 MiB**, original **10/10**, reported eval loss **2.04963 -> 2.04960**. Its 26.54-second training loop is only part of the whole command. The <=27-second whole-command target remains **unmet**. Research measurements do not establish a hardware speed limit.

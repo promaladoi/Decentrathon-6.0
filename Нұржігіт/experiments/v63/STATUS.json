@@ -1,11 +1,59 @@
 {
   "version": "v63",
   "source_commit": "48cef7c3fe1993ef699b96b7f2336ca795fb5a4d",
-  "status": "full original validation running; not selected",
+  "status": "not selected; original admission or stricter user requirement failed",
   "starting_source": "7a3db8fd5e24bbcb58affb475007a5cf93c56f07",
   "production_selection": "verified v45",
   "target_total_seconds": 27,
   "memory_limit_mib": 7151,
   "reported_eval_loss_may_increase": false,
-  "original_checks_required": 10
+  "original_checks_required": 10,
+  "collection_proof": {
+    "version": "v63",
+    "source_commit": "48cef7c3fe1993ef699b96b7f2336ca795fb5a4d",
+    "source_files_verified": 49,
+    "solution_sha256": "c5be93144b19ccf7898c88fdb04796a149a3f2a1f13e864b751c42ea6d683ae2",
+    "status": "accepted",
+    "checks_passed": 10,
+    "accepted": true,
+    "summary": {
+      "base": {
+        "ok": true,
+        "runs": 2,
+        "wall_s": 83.68,
+        "gpu_peak_mib": 14345,
+        "train_loop_s": 60.81,
+        "eval_loss": 2.04962
+      },
+      "solution": {
+        "ok": true,
+        "runs": 2,
+        "wall_s": 48.69,
+        "gpu_peak_mib": 4115,
+        "train_loop_s": 28.63,
+        "eval_loss": 2.04963
+      },
+      "ratios": {
+        "speedup": 1.7186,
+        "memory_ratio": 3.486,
+        "quality_delta_pct": 0.0
+      }
+    },
+    "archive_sha256": "58d25c0e5bc12c4a8d0d6226bce869ebcb74681107653eb950540bc3f3d6fdb7"
+  },
+  "user_constraints": {
+    "original_ten_passed": true,
+    "max_solution_peak_mib": 4115,
+    "memory_limit_mib": 7151,
+    "every_run_within_memory_limit": true,
+    "reported_eval_loss_nonincreasing": false,
+    "base_eval_loss": 2.04962,
+    "solution_eval_loss": 2.04963,
+    "median_total_seconds": 48.69,
+    "target_total_seconds": 27,
+    "target_met": false,
+    "eligible_within_memory_and_quality": false,
+    "all_requested_constraints_met": false,
+    "quality_note": "Compares the reported rounded evaluation loss; original loss-curve checks remain required."
+  }
 }
