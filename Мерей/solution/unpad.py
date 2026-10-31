@@ -471,7 +471,9 @@ def _inspect(model):
         return None
     head = model.lm_head
     if (type(head) is not torch.nn.Linear or head.bias is not None
-            or not head.weight.is_cuda or head.weight.requires_grad
+            or not (head.weight.is_cuda or (head.weight.device.type == 'cpu'
+                    and model.__dict__.get('_solution_cpu_streaming_ready', False)))
+            or head.weight.requires_grad
             or type(inner.norm) is not modeling_qwen2.Qwen2RMSNorm
             or inner.norm.weight.requires_grad or not inner.norm.weight.is_cuda
             or inner.embed_tokens.weight.requires_grad):
@@ -513,7 +515,7 @@ def _inspect(model):
         for base in bases:
             state = getattr(base.weight, "quant_state", None)
             if base.compute_dtype != torch.float16 or not nf4_supported(state) or \
-                    not base.weight.is_cuda or any(p.requires_grad for p in base.parameters()):
+                    not (base.weight.is_cuda or getattr(state, "_solution_cpu_streamed", False)) or any(p.requires_grad for p in base.parameters()):
                 return None
         if bases[3].bias is not None:
             return None
@@ -741,7 +743,7 @@ def _attention(layer, projections, x, cos, sin, mask, step, meta):
     return o if lo is None else o + lo
 
 
-def fast_forward(model, meta, input_ids, attention_mask, labels, num_items_in_batch,
+def _fast_forward_eager(model, meta, input_ids, attention_mask, labels, num_items_in_batch,
                  packed_metadata=None):
     from transformers.modeling_outputs import CausalLMOutputWithPast
 
@@ -785,6 +787,16 @@ def fast_forward(model, meta, input_ids, attention_mask, labels, num_items_in_ba
     loss, stats = lm_head_loss(x, model.lm_head.weight, targets, num_items_in_batch)
     logits = LazyLogits(batch, seq_len, model.lm_head.weight.shape[0], rows, stats)
     return CausalLMOutputWithPast(loss=loss, logits=logits)
+
+
+def fast_forward(model, *args, **kwargs):
+    if model.__dict__.get('_solution_cpu_streaming_ready', False):
+        # CPU-saved activations are restored for each autograd consumer. This
+        # is our code's offload, not the forbidden Soup offload switch.
+        from .activation_storage import activation_storage
+        with activation_storage(model):
+            return _fast_forward_eager(model, *args, **kwargs)
+    return _fast_forward_eager(model, *args, **kwargs)
 
 
 _ALLOWED_KWARGS = {"num_items_in_batch", "output_attentions", "output_hidden_states",

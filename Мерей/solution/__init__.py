@@ -20,6 +20,8 @@ def apply():
     from .unpad import patch_qwen2_causal_lm
     from .frozen_storage import patch_frozen_storage
     _applied = True
+    from .cpu_streaming import install as install_cpu_streaming
+    install_cpu_streaming()
     warmup.start(unpad=True)
     patch_qwen2_mlp()
     patch_qwen2_mlp_4bit()
