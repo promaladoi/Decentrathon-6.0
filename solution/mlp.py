@@ -22,13 +22,13 @@ they are theirs and do not count as ours.
 import torch
 import triton
 
-from .nf4 import _linear_forward, dequantize_nf4, supported as nf4_supported
+from .nf4 import _linear_forward, dequantize_nf4, supported as nf4_supported, _readonly_weight
 from .swiglu import BLOCK as SWIGLU_BLOCK, example_swiglu_bwd_kernel, example_swiglu_fwd_kernel
 from .backward_sums import sum_half_gradients
 
 
 def _weight(layer, dtype):
-    return dequantize_nf4(layer.weight, layer.weight.quant_state, dtype)
+    return _readonly_weight(layer.weight, layer.weight.quant_state, dtype)
 
 
 class MLP4bit(torch.autograd.Function):

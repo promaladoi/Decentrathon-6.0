@@ -19,6 +19,7 @@ import triton
 import triton.language as tl
 
 BLOCK = 1024
+_resident_cache = None
 
 
 @triton.jit
@@ -114,6 +115,31 @@ def dequantize_nf4(packed, state, dtype):
     return _decode(packed, state, state.dtype).to(dtype)
 
 
+def enable_resident_weights(max_bytes=2_400_000_000):
+    """Enable bounded, per-process storage for internal frozen consumers."""
+    global _resident_cache
+    from .resident_nf4 import FrozenWeightCache
+    if _resident_cache is None:
+        _resident_cache = FrozenWeightCache(_decode, max_bytes=max_bytes)
+    return _resident_cache
+
+
+def _linear_weight(packed, state, dtype):
+    # The forward fallback decodes directly to its compute dtype. Preserve
+    # this distinction when QuantState.dtype differs from that dtype.
+    if (_resident_cache is not None and dtype == torch.float16
+            and getattr(state,'dtype',None) == torch.float16
+            and isinstance(packed,torch.Tensor) and packed.is_cuda
+            and packed.dtype == torch.uint8 and not packed.requires_grad):
+        return _resident_cache.get(packed,state,dtype)
+    return _decode(packed,state,dtype)
+
+
+def _readonly_weight(packed, state, dtype):
+    """Internal backward consumer: native state-dtype decode, then cast."""
+    return _linear_weight(packed,state,state.dtype).to(dtype)
+
+
 def _uses_native_custom_gemm(A, state):
     from bitsandbytes.backends.cuda import ops
 
@@ -140,7 +166,7 @@ def _linear_forward(A, packed, bias, state):
     """Shared non-autograd forward for MatMulNF4 and frozen MLP4bit."""
     if _uses_native_custom_gemm(A, state):
         return _native_forward(A, packed, bias, state)
-    return torch.nn.functional.linear(A, _decode(packed, state, A.dtype), bias)
+    return torch.nn.functional.linear(A, _linear_weight(packed, state, A.dtype), bias)
 
 
 class MatMulNF4(torch.autograd.Function):
@@ -158,7 +184,7 @@ class MatMulNF4(torch.autograd.Function):
         grad_A = grad_bias = None
         if ctx.needs_input_grad[0]:
             grad_A = torch.matmul(grad_output,
-                                  dequantize_nf4(packed, ctx.state, grad_output.dtype))
+                                  _readonly_weight(packed, ctx.state, grad_output.dtype))
         if ctx.needs_input_grad[2]:
             grad_bias = grad_output.reshape(-1, grad_output.shape[-1]).sum(0, dtype=ctx.bias_dtype)
         return grad_A, None, grad_bias, None
