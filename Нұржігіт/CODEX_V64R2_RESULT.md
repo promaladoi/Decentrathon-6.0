@@ -22,3 +22,5 @@ Current public selection stays measured v45 until an explicit evidence-backed co
 [Source/result proof](03_validation/reports/codex_v64r2/collection_proof.json). [User limits](03_validation/reports/codex_v64r2/user_constraints.json). [Candidate description](CODEX_V64R2_EXPERIMENT.md).
 
 [Completed same-session comparison and selection decision](CODEX_V64_COMPARISON.md).
+
+[Four original ZIPs and checksum manifest](https://github.com/promaladoi/Decentrathon-6.0/releases/tag/nurzhigit-evidence-through-v64r2-20261031): failed v64, failed v64r1, admitted v64r2 and the exact same-session v45 control. Five release assets have verified server SHA-256 digests and public download links. [Publication receipt](04_submission/v64_revisions_publication.json). [Protected-file/source audit](04_submission/v64_revisions_source_audit.json). [Selection and source verification](04_submission/v64_revisions_selection.json).
