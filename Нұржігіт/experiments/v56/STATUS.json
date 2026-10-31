@@ -1,10 +1,58 @@
 {
   "version": "v56",
   "source_commit": "1dc91c6a7cf7ed73baf42c1519ea393757a03bef",
-  "status": "prepared; awaiting serial GPU validation after v55",
+  "status": "not selected; original admission or stricter user requirement failed",
   "production_selection": "verified v45",
   "starting_source": "7a3db8fd5e24bbcb58affb475007a5cf93c56f07",
   "target_total_seconds": 27,
   "memory_limit_mib": 7151,
-  "reported_eval_loss_may_increase": false
+  "reported_eval_loss_may_increase": false,
+  "collection_proof": {
+    "version": "v56",
+    "source_commit": "1dc91c6a7cf7ed73baf42c1519ea393757a03bef",
+    "source_files_verified": 49,
+    "solution_sha256": "d4d6a8b08fec6d3334a77dd64468f19d9e0170bcb5f0b7c438b9c29f73f8ffb9",
+    "status": "accepted",
+    "checks_passed": 10,
+    "accepted": true,
+    "summary": {
+      "base": {
+        "ok": true,
+        "runs": 2,
+        "wall_s": 85.69,
+        "gpu_peak_mib": 14345,
+        "train_loop_s": 63.25,
+        "eval_loss": 2.0496
+      },
+      "solution": {
+        "ok": true,
+        "runs": 2,
+        "wall_s": 49.69,
+        "gpu_peak_mib": 4135,
+        "train_loop_s": 30.02,
+        "eval_loss": 2.04968
+      },
+      "ratios": {
+        "speedup": 1.7245,
+        "memory_ratio": 3.4692,
+        "quality_delta_pct": 0.004
+      }
+    },
+    "archive_sha256": "3204193eddf117b527e82049e0bdfc291981607680e63fd724c65e1def77c100"
+  },
+  "user_constraints": {
+    "original_ten_passed": true,
+    "max_solution_peak_mib": 4135,
+    "memory_limit_mib": 7151,
+    "every_run_within_memory_limit": true,
+    "reported_eval_loss_nonincreasing": false,
+    "base_eval_loss": 2.0496,
+    "solution_eval_loss": 2.04968,
+    "median_total_seconds": 49.69,
+    "target_total_seconds": 27,
+    "target_met": false,
+    "eligible_within_memory_and_quality": false,
+    "all_requested_constraints_met": false,
+    "quality_note": "Compares the reported rounded evaluation loss; original loss-curve checks remain required."
+  }
 }
