@@ -17,6 +17,10 @@ v50 native batched gate/up research was rejected before integration: 12/14
 shape/seed cases changed FP16 values; the two exact cases were slower.
 [Unmodified T4 evidence](03_validation/reports/v50_research/README.md).
 
+v51 moves stable causal-target partitions into the existing metadata kernel.
+Its first 70 target/metadata GPU tests passed; complete validation is running.
+[Candidate and pending status](experiments/v51). No v51 speed or admission is claimed yet.
+
 [Latest decisions and evidence](CODEX_OPTIMIZATION_RESULTS.md).
 [Selected result](CODEX_V45_RESULT.md). [Selected source proof](PUBLICATION_PROOF.json).
 Pinned reproducible notebook: `templates/codex_v45.ipynb`.

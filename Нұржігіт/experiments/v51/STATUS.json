@@ -1,0 +1,10 @@
+{
+  "version": "v51",
+  "source_commit": "10b8f2a71a85de2863399d351f043c92073ca305",
+  "status": "GPU validation running; not selected",
+  "target_total_seconds": 27,
+  "memory_limit_mib": 7151,
+  "reported_eval_loss_may_increase": false,
+  "required_original_checks": 10,
+  "production_selection": "verified v45"
+}

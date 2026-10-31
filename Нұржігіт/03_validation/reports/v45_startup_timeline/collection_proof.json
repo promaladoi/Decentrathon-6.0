@@ -1,0 +1,8 @@
+{
+  "archive_sha256": "594d6dca1b3099525f78f46b5a9f4652456927b94d37dd50633d380b49e2d3c2",
+  "diagnostic_source_verified": true,
+  "selected_source_commit": "7a3db8fd5e24bbcb58affb475007a5cf93c56f07",
+  "kind": "instrumented main-thread diagnostic; not a contest score",
+  "diagnostic_outer_wall_s": 82.42,
+  "admitted_as_competition_result": false
+}
