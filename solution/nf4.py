@@ -6,11 +6,9 @@ b7c406dea7dbdc379149910efe044dccf155d083. The two original contributions are
 combined here; neither is presented as third-party code written by somebody else.
 
 Pinned bitsandbytes 0.50.2 selects custom GEMM for some small-M shapes and
-dequantize+F.linear for the rest. v56 additionally qualifies its existing
-fused backend for narrow/tall SM75 projections; other shapes retain the v45
-choice and decode. Backward first rounds to QuantState.dtype, as its Python
-dequantize_4bit does, before converting to grad_output.dtype. Forward MMA
-reduction rounding is qualified separately; see CODEX_V56_EXPERIMENT.md.
+dequantize+F.linear for the rest. Preserve that choice, replacing only the
+fallback's decode. Backward first rounds to QuantState.dtype, as its Python
+dequantize_4bit does, before converting to grad_output.dtype.
 """
 
 import functools
@@ -142,36 +140,7 @@ def _linear_forward(A, packed, bias, state):
     """Shared non-autograd forward for MatMulNF4 and frozen MLP4bit."""
     if _uses_native_custom_gemm(A, state):
         return _native_forward(A, packed, bias, state)
-    # v56 isolated dispatch candidate. This calls a vendor kernel that already
-    # belongs to the pinned baseline; it is never credited as a team kernel.
-    # The inactive v54 screen found a possible win only for narrow outputs.
-    # Keep the expensive MLP / square projections and unsupported inputs on
-    # their v45 path. This is a geometry/hardware policy, not a step/test flag.
-    if _narrow_fused_supported(A, bias, state):
-        from bitsandbytes.backends.cuda import ops
-        if state.nested:
-            return ops._gemm_4bit_kernel_impl(A, packed, state.shape,
-                state.state2.absmax, state.blocksize, state.quant_type, bias=bias,
-                absmax_8bit=state.absmax, absmax_code=state.state2.code,
-                absmax_offset=state.offset)
-        return ops._gemm_4bit_kernel_impl(A, packed, state.shape, state.absmax,
-            state.blocksize, state.quant_type, bias=bias)
     return torch.nn.functional.linear(A, _decode(packed, state, A.dtype), bias)
-
-
-def _narrow_fused_supported(A, bias, state):
-    if (A.dtype != torch.float16 or state.dtype != torch.float16
-            or not A.is_contiguous() or not 64 <= state.shape[0] <= 256
-            or state.shape[1] < 4 * state.shape[0]
-            or A.shape[-1] % state.blocksize
-            or (bias is not None and (bias.dtype != A.dtype
-                or bias.ndim != 1 or not bias.is_contiguous()))):
-        return False
-    import bitsandbytes
-    from bitsandbytes.backends.cuda import ops
-    return (bitsandbytes.__version__ == '0.50.2'
-            and A.numel() // A.shape[-1] <= ops._gemm_4bit_custom_max_m
-            and ops._gpu_dispatch_props(A.device.index)[1:] == (7, 5))
 
 
 class MatMulNF4(torch.autograd.Function):
