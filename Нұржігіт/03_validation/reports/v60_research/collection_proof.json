@@ -1,0 +1,12 @@
+{
+  "version": "v60",
+  "source_commit": "c4cbc6b50c8e2756b79482bf9cb51f3f3b22d5db",
+  "source_files_verified": 2,
+  "archive_sha256": "6565948099819e1a6415251fdf949af0e0d2dd13e641868b733f37f5b28474b0",
+  "status": "research_rejected_performance",
+  "production_selection": "verified v45",
+  "full_task_admission": false,
+  "target_27_seconds_claimed": false,
+  "numerical_cases": 12,
+  "timing_cases": 12
+}
