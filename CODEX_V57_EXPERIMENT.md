@@ -1,25 +1,32 @@
-# v57 shared-memory Tensor Core research
+# v57-v62 inactive research, selected v45 preserved
 
-Selected runtime remains exact measured v45. A profile of that implementation
-places most GPU time in native dense GEMMs; the v52 global-load prototype was
-slower. This next original prototype stages FP16 A/W tiles in shared memory,
-uses an XOR word layout and explicit SM75 m16n8k8 FP32 accumulation. Matrix
-dimensions are dynamic, avoiding per-batch shape compilation.
+No prototype here is installed in solution.apply. The selected runtime is the
+exact measured v45. No complete-task speedup or <=27-second result is claimed.
 
-The first two compilation failures are retained with exact sources under
-`03_validation/reports/v57_research` and `v57r1_research`. The next revision
-uses explicit 64-bit addresses and packed b32 MMA fragments. A finite GPU
-screen is pending: partial-row/column numerical cases first, then alternating
-native/prototype timings. This code is not installed in solution.apply.
+The first two v57 revisions stopped at compilation. Exact failed sources and
+errors were retained. The corrected v57r2 then passed eight numerical cases.
+Subsequent prefetch, ldmatrix, address and warp/tile changes remained numerically
+correct on the sampled cases, but slower than native GEMM.
 
-No full-task speed, memory, original 10/10 or <=27-second result is claimed.
-Any training integration still needs complete native-gradient tests, all
-original checks, <=7151 MiB and nonincreasing reported eval loss.
+| Screen | Numerical cases | Representative M=512 prototype/native |
+|---|---:|---:|
+| v57r2 | 8 | 1.682 / 0.748 ms |
+| v58 | 8 | 1.469 / 0.751 ms |
+| v59 | 16 | 1.226 / 0.711 ms |
+| v60 | 12 | 1.289 / 0.749 ms |
 
-## Measured progress, still inactive
+These are separate microbenchmarks with their own paired native timings, not
+training measurements or a comparable cross-screen hardware clock. None beats
+its native control. All unmodified samples, exact source commits, and raw ZIPs
+are in the respective `03_validation/reports/v*_research` folders.
 
-v57r2: eight numerical and eight timing cases passed numerical gates, including exact sampled native FP16 outputs. The 128x64 tile measured 1.682 vs native 0.748 ms for 512 rows; it was not selected.
+v61 removes most Python launch gaps only for an isolated diagnostic by using
+warmed graph replay for BOTH implementations. GPU time remains worse: at M=512,
+1.101 vs 0.644 ms; at M=832, 1.715 vs 1.150 ms. Graphs were not added to training
+or used to bypass any original observer. This rules out launch overhead as the
+main explanation for the current dense-MMA prototype's gap.
 
-v58: register prefetch and warp matrix loads also passed all eight numerical cases, but remained slower (1.469 vs 0.751 ms for 512 rows). No training integration.
-
-v59: shared-address arithmetic is hoisted; 128x128/eight-warp and other geometries are being screened. This is not a complete-task score or a change to selected v45.
+v62 now screens the unchanged exact v45 NF4 decoder across block/warp geometries.
+Every screen output must match native bitsandbytes exactly. Production remains
+unchanged until a worthwhile launch choice passes the full original task,
+regressions, <=7151 MiB and nonincreasing reported eval loss.

@@ -36,3 +36,7 @@ and were not integrated. See `03_validation/reports/v52r1_research/README.md`.
 [v56 measured outcome](CODEX_V56_RESULT.md): not selected; original admission or stricter user requirement failed. The 27-second target remains unmet.
 
 [All five new original ZIPs and checksum index](https://github.com/promaladoi/Decentrathon-6.0/releases/tag/nurzhigit-evidence-through-v56-20261031). [Selected-source and protected-file audit](04_submission/v53_v56_source_audit.json). All tested new runtime candidates failed the stricter nonincreasing reported-loss rule. Both the active development runtime and public selected solution are restored/verified as exact v45. The <=27-second whole-command target has not been achieved.
+
+[v57-v61 measured inactive research](CODEX_V57_EXPERIMENT.md): sampled numerical cases passed, but native GEMM stayed faster. v62 completed 36 native-exact shape/launch checks and motivates a small decoder launch candidate. No new complete-task result; selected v45 unchanged.
+
+[v63 exact launch/lifetime candidate](CODEX_V63_EXPERIMENT.md): complete original validation running; measured v45 remains selected until a justified result. The 27-second whole-command goal is not claimed.
