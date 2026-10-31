@@ -31,6 +31,26 @@ def _weight(layer, dtype):
     return dequantize_nf4(layer.weight, layer.weight.quant_state, dtype)
 
 
+def _up_snapshot(layer):
+    """Frozen values required to reproduce an up projection, without copying.
+
+    A recomputation must never silently observe changed weights/quantization.
+    Tensor references and their mutation versions also keep all referenced
+    storage alive. Only activations go through saved-tensor hooks, as before.
+    """
+    state = layer.weight.quant_state
+    tensors = [layer.weight, state.absmax, state.code]
+    second = getattr(state, 'state2', None)
+    if state.nested:
+        tensors.extend((second.absmax, second.code, state.offset))
+    signature = (id(layer.weight), id(state), tuple(state.shape), state.dtype,
+                 state.blocksize, state.quant_type, bool(state.nested),
+                 id(second), getattr(second, 'blocksize', None),
+                 getattr(second, 'dtype', None),
+                 tuple((id(tensor), tensor._version) for tensor in tensors))
+    return signature, tuple(tensors)
+
+
 class MLP4bit(torch.autograd.Function):
     """down(silu(gate(x)) * up(x)) for three bias-free bitsandbytes Linear4bit layers."""
 
@@ -39,22 +59,30 @@ class MLP4bit(torch.autograd.Function):
         x16 = x.to(dtype)
         g = _linear_forward(x16, gate.weight, None, gate.weight.quant_state)
         u = _linear_forward(x16, up.weight, None, up.weight.quant_state)
-        del x16
+        # v55: save the much narrower input rather than the up activation.
+        # A half input aliases the caller; freeze its forward value as the
+        # original saved up activation did. FP32->half already owns storage.
+        recompute_x = x16.clone() if x16 is x else x16
         h = torch.empty_like(g)
         n = g.numel()
         example_swiglu_fwd_kernel[(triton.cdiv(n, SWIGLU_BLOCK),)](g, u, h, n, BLOCK=SWIGLU_BLOCK)
         out = _linear_forward(h, down.weight, None, down.weight.quant_state)
         ctx.layers, ctx.dtype, ctx.x_dtype = (gate, up, down), dtype, x.dtype
+        ctx.up_signature, ctx.up_tensors = _up_snapshot(up)
         # Saved tensors preserve version checking, saved-tensor hooks and a
         # second backward when the caller explicitly retains this graph.
-        ctx.save_for_backward(g, u)
+        ctx.save_for_backward(g, recompute_x)
         return out
 
     @staticmethod
     def backward(ctx, grad_out):
         gate, up, down = ctx.layers
         dtype = ctx.dtype
-        g, u = ctx.saved_tensors
+        g, recompute_x = ctx.saved_tensors
+        current_signature, _ = _up_snapshot(up)
+        if current_signature != ctx.up_signature:
+            raise RuntimeError('frozen up projection changed after forward; cannot recompute its activation')
+        u = _linear_forward(recompute_x, up.weight, None, up.weight.quant_state)
         # MatMul4Bit.backward: grad @ dequantized weight, in the gradient's dtype
         dh = torch.matmul(grad_out.to(dtype), _weight(down, dtype)).contiguous()
         dg, du = torch.empty_like(g), torch.empty_like(u)

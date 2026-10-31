@@ -43,9 +43,7 @@ from .backward_sums import sum_half_gradients
 
 # Static candidate configuration: no harness/test/environment-dependent switch.
 REAL_ROW_DROPOUT = True
-# v53: retain the existing exact native-RNG bit-packed mask path at every
-# supported size. Unsupported modules/layouts keep all existing fallbacks.
-REAL_ROW_DROPOUT_MIN_PADDED_ELEMENTS = 0
+REAL_ROW_DROPOUT_MIN_PADDED_ELEMENTS = 4 * 384 * 1536
 _NATIVE_DROPOUT_FORWARD = torch.nn.Dropout.forward
 
 

@@ -63,6 +63,9 @@ def main():
         if active:
             raise RuntimeError('Another GPU process is active. Stop it before measurement.')
         outcome['status'] = 'testing'
+        if (repo/'solution/test_mlp_recompute.py').is_file():
+            run([sys.executable, '-m', 'pytest', 'solution/test_mlp_recompute.py', '-q'],
+                'mlp_recompute_tests.log')
         if (repo/'solution/test_small_dropout_dispatch.py').is_file():
             run([sys.executable, '-m', 'pytest', 'solution/test_small_dropout_dispatch.py', '-q'],
                 'small_dropout_dispatch_tests.log')
