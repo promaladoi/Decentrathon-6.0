@@ -1,0 +1,40 @@
+{
+  "archive_sha256": "d7bd395f9f6ab6468d4496382252c5a4fa5109818d93e94da17bd28ed1c68cb3",
+  "result_sha256": "d46c413335adf4d51889825848247a9b531dc231b14f8af4dc37a273bf9186d5",
+  "solution_sha256": "a73756b138f85ab6febe52614a8175aa92eea741ea7e2ab8cdf71d0d904e37fd",
+  "summary": {
+    "base": {
+      "ok": true,
+      "runs": 2,
+      "wall_s": 83.43,
+      "gpu_peak_mib": 14506,
+      "train_loop_s": 61.88,
+      "eval_loss": 2.04963
+    },
+    "solution": {
+      "ok": true,
+      "runs": 2,
+      "wall_s": 44.7,
+      "gpu_peak_mib": 7040,
+      "train_loop_s": 25.94,
+      "eval_loss": 2.04963
+    },
+    "ratios": {
+      "speedup": 1.8664,
+      "memory_ratio": 2.0605,
+      "quality_delta_pct": 0.0
+    }
+  },
+  "original_checks_passed": 10,
+  "target_seconds": [
+    20,
+    30
+  ],
+  "target_met": false,
+  "source_bytes_match_measured_solution": true,
+  "complete_evidence_sha256": "87bd5d954fea8c7e4c9ad3adb3744ae3f5e671df064d7f448cbf934b0adeba70",
+  "native_metadata_parity": "1 passed, 13 deselected",
+  "published_runtime_commit": "705f50b",
+  "published_runtime_matches_measured_bytes": true,
+  "own_commit_paths_only_anais": true
+}

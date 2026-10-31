@@ -1,0 +1,91 @@
+{
+  "name": "Anais V7 candidate",
+  "status": "GPU QUALIFIED: original 10/10; 20–30 second target NOT MET",
+  "source_repository_commit": "735187a88975867781d40104bb2bc91d9b582fce",
+  "team_source": "Нұржігіт/solution (selected v45)",
+  "changes": [
+    "Anais run-local NF4 decode cache with source/version invalidation",
+    "Retain v45 per-kernel launcher warmup and all source attribution"
+  ],
+  "target_whole_command_s": [
+    20,
+    30
+  ],
+  "solution_sha256": {
+    "attention_rows.py": "ded6a0e15c3631e7c44974801ef181283db38c9250e7a03a2ee8c2d69ce266a7",
+    "backward_sums.py": "53a0f8f55b6d0037e56492530122a5fc4424c4fe0fc59fd78acf390baff0cf37",
+    "batch_metadata.py": "837bbe5ed5a0b4efab49dfb17eeaef8a1494fc0e5bdc74fe55d527f8b70db270",
+    "benchmark_attention_rows.py": "854aa4c9adc90d73b1e306a506578b9d80887f399cd7361df42d3c73fd4796d6",
+    "benchmark_dropout.py": "68490156dd8fd5119d4c2e7ee44a1bec520ef61ba7ec53888de74dcb26bb5cd6",
+    "benchmark_packed_integration.py": "9ad4c6863d08c7b226b161ef38a9e6c80fb5f4f53c360cd61df06572ac98d5c0",
+    "dropout.py": "455cdbbaa230d9d17b814836a5c21ce4fb8915df64f2b13da9ac2693e7aa33a1",
+    "frozen_storage.py": "45985ac13bb789ea20aededa10499ac2957d8946a7802c69dd8c89e348b8930d",
+    "frozen_storage_kernel.py": "2bec6fffec0c0f30ec97d42e10e51c648e7363a59127a6f7c99338c8fc8dbaed",
+    "head_weight_cache.py": "a29749cb6a3a48c37236bab486553a6081c117f80e303acc8a48a8a9d2a83298",
+    "layer.py": "661437b77bf45f44f96c23369de28704ea5762556de44f58b38f36d790e07f4c",
+    "lmhead.py": "66c805a9818111e74068e6d5025f11584a745d4bd9fb3c56100c5872f09baecd",
+    "mlp.py": "234e78cabd61988ec595615a423747b445b8da14b5d7e323c3dd0ed4acb74238",
+    "nf4.py": "7b7bcc08448b0c42b739e4724384c1539ca1169174ea1eac20617fdc454c98e0",
+    "package_metadata_snapshot.py": "c4f97fef3502db7b8ac8727882a62a9494a64fb1a70506d707d41e3d70c1cd06",
+    "private_scope.py": "d8a16c3dda6d7e999f1e54ef8736d0c5d965a9a9a62c9a1b4d3cb1c6d35fef58",
+    "rmsnorm.py": "e9b41e15f7f67d1e26d7a96223adfc25d99228b6a0944769cfc9a52672473b78",
+    "rope.py": "62d5367f4cd231b0e6033b3a630e2eb186108571c613f2e4bace9a13dd4e6c64",
+    "run_diagnostics.py": "7dedcf5243e96a79f34dd70c7cab9910bf0c11f86dca4315baa1f00a6e7ef1e2",
+    "swiglu.py": "249aeef5d691062e609b8445194165071c1f1690280131395a74fc38d216c346",
+    "test_anais_cache.py": "6762d9868973b9f3af6b7b16b4809ff0fcd975a8680a4e1dd8d93761482e1644",
+    "test_attention_rows.py": "e9cd424c3f0a0a3fef3a415fa170f7228fb48479951d8f62b7f20e778dcd3d32",
+    "test_backward_sums.py": "cf03f4e1030c8e7782c70712e3cc626e660026a24e5eb220400398032ebac88b",
+    "test_batch_metadata.py": "43191d9afe5fbfc5fa41b342922ffb13b5d54cd8f1cb104111d63d94b826734f",
+    "test_dropout.py": "f9ebcba19ca1a79b1d3e74fa0fa9db064225bef9da5f0b7716966ed8388baa79",
+    "test_dropout_integration.py": "98363f13b9132d4c12a0a6309d86c4e56dc50194c22f9f89dd33b2363da0e522",
+    "test_dropout_packed.py": "de37510ae37cf1c06ed99f7353eb391b25e1235a4bf661695702dc1f3775b5c6",
+    "test_frozen_storage.py": "3f8291fde953a6eb7420308ce0214caf5d4699d51ef50e40e38e481ef0b742f7",
+    "test_head_lifetime.py": "a290c967e3306fc517c41504afaab8bca38a6a365233ae6d6eb5cd5f78e669ad",
+    "test_head_weight_cache.py": "2a1f001b7849acce4dae4d972fcfb1b1260a2ec84b1f734075e490d8e8605c63",
+    "test_kernels.py": "f24ce3929885569ffa5fffe9a0d9651cee140107002d4b8e72be85417035c2a0",
+    "test_layer.py": "8758fe3b87a79904b87329ee4ce4267906df0adde4a94a126012ca76da2c501f",
+    "test_lmhead_scaled.py": "76d99e5f9623abf131119c3c463ac178d82048ae0651d739d2882bddf7a637ff",
+    "test_lmhead_scatter.py": "a11a3133b143908887e525075c42bc5c6b48faa877c8b9aa7fbbf188c23182cf",
+    "test_lora_scaling.py": "7c76c169ee1827c5884357d00c0f6900657b4ddd8d358bf4184a5a6689f976f0",
+    "test_numerics.py": "94174f8b6b3cd0335f77000a1701ec27a3cad4089c56195eb9e310c6c885fd9f",
+    "test_package_metadata_snapshot.py": "2fe0cf483c019820faddc666fd87a6c918861daa613e83ac1c1ea042b6d19fda",
+    "test_packed_integration.py": "759cfaebd2128234811a820a631ddc40f1b2789e0f3ac00e7e4e68eac6a2479d",
+    "test_private_streaming.py": "0f2c5306ca3fe0163888ef2cf44957fac8c519f9aab99590434544db9079dfb7",
+    "test_qkv_backward_sums.py": "b994e14a7df3459f874b7d2e1567193d7b4f15fb1c4c79d5bd94381e4a55549e",
+    "test_speedups.py": "d482990abeb533fd44b79b4554bbd50196e41144aa3ab680c22b4e7f047d5f1f",
+    "test_storage_integration.py": "623be272dcfeacb728f9cf0069350bcf4c1a85e32aa929ae07b2b9d8622198a5",
+    "test_tokenization_map.py": "490316e9096da99ae39df14cb859e7fddb470ffeaa37eb80a7fcb4c656ae5489",
+    "test_unpad.py": "e568ce1fffb7093e202bf4439e5afe6f7e75f9493f97bb347b5d32e5196dd40b",
+    "test_warmup_handles.py": "6b4308822139eec36b435205c72e18a3ab65493ae98905c657d47619bd42aa9e",
+    "timeline.py": "0b52e54e39e628c55f37dff46b0d794eb2f764827f3e111b5eb4391353939e03",
+    "tokenization_map.py": "2ca77a1e12c40211b04c0f765a9555c0efd8f1f74b4fd76cddd99d432e5dedb7",
+    "unpad.py": "6054934c94a1be050208fe7ac220a8bd0de35c776ca26f32e82c06982991545f",
+    "warmup.py": "288c2c3cfa2824a6034923e6df81671bf4b24ff5b159005a0b77edc4717b44ae",
+    "__init__.py": "4524a1f9042ba526c4d7d822a10a2aa7ec35e87180232abe6a4df5e437038500",
+    "diagnostics/hash_tokenization.py": "0d6c107b177b274b51b476555a33fd588291e32415b47a471aa2d47c180f329f"
+  },
+  "measured_solution_sha256": "a73756b138f85ab6febe52614a8175aa92eea741ea7e2ab8cdf71d0d904e37fd",
+  "summary": {
+    "base": {
+      "ok": true,
+      "runs": 2,
+      "wall_s": 83.43,
+      "gpu_peak_mib": 14506,
+      "train_loop_s": 61.88,
+      "eval_loss": 2.04963
+    },
+    "solution": {
+      "ok": true,
+      "runs": 2,
+      "wall_s": 44.7,
+      "gpu_peak_mib": 7040,
+      "train_loop_s": 25.94,
+      "eval_loss": 2.04963
+    },
+    "ratios": {
+      "speedup": 1.8664,
+      "memory_ratio": 2.0605,
+      "quality_delta_pct": 0.0
+    }
+  }
+}
