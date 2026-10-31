@@ -1,0 +1,90 @@
+Loading config from 
+/kaggle/working/codex_dispatch_diagnosis_f00a2d0c/diagnosis.yaml...
+╭─────────────────────────────── Training Setup ───────────────────────────────╮
+│ Device:  Tesla T4                                                            │
+│ Memory:  14.6 GB                                                             │
+│ Model:   Qwen/Qwen2.5-1.5B-Instruct                                          │
+│ Task:    sft                                                                 │
+│ Backend: transformers                                                        │
+│ LoRA:    r=16, alpha=32                                                      │
+│ Quant:   4bit                                                                │
+│ Seed:    1                                                                   │
+╰──────────────────────────────────────────────────────────────────────────────╯
+Loading dataset...
+Loaded: 256 train samples
+Run ID: run_20261031_144026_970d6b13
+Setting up model + trainer...
+Loading tokenizer: Qwen/Qwen2.5-1.5B-Instruct
+Loading model: Qwen/Qwen2.5-1.5B-Instruct
+[transformers] `torch_dtype` is deprecated! Use `dtype` instead!
+
+Loading weights:   0%|          | 0/338 [00:00<?, ?it/s]
+Loading weights:   0%|          | 1/338 [00:00<03:03,  1.83it/s]
+Loading weights:   1%|          | 4/338 [00:00<00:45,  7.38it/s]
+Loading weights:   5%|▌         | 17/338 [00:00<00:09, 33.67it/s]
+Loading weights:   9%|▊         | 29/338 [00:00<00:06, 47.20it/s]
+Loading weights:  15%|█▌        | 51/338 [00:01<00:03, 82.04it/s]
+Loading weights:  19%|█▉        | 64/338 [00:01<00:02, 91.71it/s]
+Loading weights:  23%|██▎       | 77/338 [00:01<00:02, 100.36it/s]
+Loading weights:  29%|██▉       | 99/338 [00:01<00:01, 123.52it/s]
+Loading weights:  33%|███▎      | 113/338 [00:01<00:01, 119.58it/s]
+Loading weights:  40%|███▉      | 135/338 [00:01<00:01, 140.26it/s]
+Loading weights:  44%|████▍     | 150/338 [00:01<00:01, 133.47it/s]
+Loading weights:  51%|█████     | 171/338 [00:01<00:01, 147.61it/s]
+Loading weights:  55%|█████▌    | 187/338 [00:02<00:01, 141.87it/s]
+Loading weights:  61%|██████    | 207/338 [00:02<00:00, 151.58it/s]
+Loading weights:  66%|██████▌   | 223/338 [00:02<00:00, 142.64it/s]
+Loading weights:  72%|███████▏  | 243/338 [00:02<00:00, 148.48it/s]
+Loading weights:  77%|███████▋  | 259/338 [00:02<00:00, 142.65it/s]
+Loading weights:  81%|████████  | 274/338 [00:02<00:00, 142.48it/s]
+Loading weights:  86%|████████▌ | 291/338 [00:02<00:00, 147.49it/s]
+Loading weights:  91%|█████████ | 306/338 [00:02<00:00, 139.98it/s]
+Loading weights:  97%|█████████▋| 327/338 [00:03<00:00, 127.95it/s]
+Loading weights: 100%|██████████| 338/338 [00:03<00:00, 110.08it/s]
+LoRA applied: 2,179,072 trainable / 1,545,893,376 total (0.14%)
+
+Map:   0%|          | 0/256 [00:00<?, ? examples/s][transformers] return_assistant_tokens_mask==True but chat template does not contain `{% generation %}` keyword.
+
+Map:  15%|█▍        | 38/256 [00:00<00:00, 374.91 examples/s]
+Map:  35%|███▍      | 89/256 [00:00<00:00, 447.74 examples/s]
+Map:  60%|█████▉    | 153/256 [00:00<00:00, 531.68 examples/s]solution: warm-up thread compiled the kernels by 10.9 s after apply()
+
+Map:  91%|█████████▏| 234/256 [00:00<00:00, 530.91 examples/s]
+Map: 100%|██████████| 256/256 [00:00<00:00, 479.01 examples/s]
+
+Map:   0%|          | 0/256 [00:00<?, ? examples/s]
+Map: 100%|██████████| 256/256 [00:00<00:00, 4931.05 examples/s]
+
+Truncating train dataset:   0%|          | 0/256 [00:00<?, ? examples/s]
+Truncating train dataset: 100%|██████████| 256/256 [00:00<00:00, 51113.53 examples/s]
+Rewind log: 
+/kaggle/working/codex_dispatch_diagnosis_f00a2d0c/diagnostic_adapter/rewind.json
+l
+Base revision: unknown (existing loading behavior preserved)
+Training started!
+
+[transformers] The tokenizer has new PAD/BOS/EOS tokens that differ from the model config and generation config. The model config and generation config were aligned accordingly, being updated with the tokenizer's values. Updated tokens: {'bos_token_id': None, 'pad_token_id': 151643}.
+
+  0%|          | 0/64 [00:00<?, ?it/s]solution: lossless frozen tied storage saved 466747392 bytes
+solution: step 1 waited 0.00 s for the warm-up thread (11.8 s after apply())
+
+  2%|▏         | 1/64 [00:00<00:57,  1.10it/s]
+                                              
+{'loss': '2.059', 'grad_norm': '1.532', 'learning_rate': '0', 'entropy': '1.838', 'num_tokens': '701', 'mean_token_accuracy': '0.5714', 'epoch': '0.01562'}
+
+  2%|▏         | 1/64 [00:00<00:57,  1.10it/s]
+  3%|▎         | 2/64 [00:01<00:33,  1.82it/s]
+                                              
+{'loss': '2.63', 'grad_norm': '1.69', 'learning_rate': '0.0001', 'entropy': '2.119', 'num_tokens': '1319', 'mean_token_accuracy': '0.4515', 'epoch': '0.03125'}
+
+  3%|▎         | 2/64 [00:01<00:33,  1.82it/s]FIRST_FORWARD_DIAGNOSIS {"kind": "intentionally interrupted first-forward dispatch and memory diagnosis", "full_task_admission": false, "completed_training": false, "mandatory_harness_context_nvml_mib": 107, "scope_present": true, "loss_scale_available": true, "width": 1536, "real_rows": 838, "batch": 4, "sequence": 509, "p": 0.05, "torch": "2.11.0+cu128", "triton": "3.6.0", "known_rng_threads": false, "threads": [{"name": "MainThread", "class_module": "threading", "class_name": "_MainThread", "target_module": null, "target_name": null}, {"name": "Thread-1", "class_module": "tqdm._monitor", "class_name": "TMonitor", "target_module": null, "target_name": null}, {"name": "Thread-2", "class_module": "rich.live", "class_name": "_RefreshThread", "target_module": null, "target_name": null}], "capturing": false, "first_projection_nvml_mib": 2961, "torch_allocated_mib": 1191.3291015625, "torch_reserved_mib": 2818.0, "generator_offset": 4928, "registered_cuda_parameter_storage_bytes_by_dtype": {"torch.float16": 466747392, "torch.uint8": 655097856, "torch.float32": 9295872}, "registered_cuda_parameter_storage_total_mib": 1078.740234375, "config_dimensions": {"hidden": 1536, "intermediate": 8960, "layers": 28, "vocabulary": 151936, "heads": 12, "kv_heads": 2, "head_dim": 128}, "matrix_nf4_plus_fp16_embedding_payload_lower_bound_mib": 1069.875, "all_matrix_and_embedding_4bit_payload_lower_bound_mib": 736.03125, "fast_gather_selected": false}
+Crash bundle written: 
+/kaggle/working/codex_dispatch_diagnosis_f00a2d0c/.soup-crashes/crash_20261031T1
+44033Z_78d70a05.crash
+Attach this file when reporting the failure.
+
+Error: RuntimeError: private unpadded forward failed; not replaying dropout
+Run with --verbose for the full traceback.
+DIAGNOSTIC_STOP_CONFIRMED_NO_ADMISSION
+
+  3%|▎         | 2/64 [00:01<00:49,  1.25it/s]

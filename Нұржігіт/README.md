@@ -1,3 +1,5 @@
+Current verified implementation: **v69**. [Measured outcome and reproduction](CODEX_20_MINUTE_RESULT.md). The 20 s / 500 MiB objective **was not met**.
+
 # Нұржігіт: проверенный командный v45
 
 [Все результаты и исходные ZIP-архивы](ALL_RESULTS.md)

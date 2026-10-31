@@ -1,0 +1,17 @@
+{
+  "kind": "same-session solution-only performance control; not ten-check admission",
+  "source_commit": "6d91d6430f88b5786ba905fc931ff7a9de164c2d",
+  "summary": {
+    "solution": {
+      "ok": true,
+      "runs": 2,
+      "wall_s": 43.2,
+      "gpu_peak_mib": 3959,
+      "train_loop_s": 24.08,
+      "eval_loss": 2.04963
+    }
+  },
+  "immutable_files_verified": 15,
+  "full_task_admission": false,
+  "comparison_context": "same Kaggle session as v72"
+}

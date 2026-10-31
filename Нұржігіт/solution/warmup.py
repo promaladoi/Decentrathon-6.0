@@ -35,6 +35,7 @@ def _steps(unpad):
     from . import frozen_storage_kernel, lmhead, mlp, nf4, rmsnorm, rope
     from . import unpad as fast
     from . import dropout as compact_dropout
+    from . import lora_remat
 
     if unpad:  # the unpadded training step, in order of first use
         # The exact frozen-storage proof runs at the first model forward,
@@ -52,6 +53,7 @@ def _steps(unpad):
             # After QKV projection, before RoPEPad: compile arithmetic only.
             # This callback never invokes native_dropout or consumes RNG.
             steps.insert(3, compact_dropout.warmup)
+            steps.insert(4, lora_remat.warmup)
         return steps
     return [nf4.warmup, rmsnorm.warmup, rope.warmup, mlp.warmup]
 

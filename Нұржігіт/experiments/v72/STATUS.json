@@ -1,13 +1,61 @@
 {
   "version": "v72",
   "source_commit": "1683602834721b809a5983bb096714705c66f719",
-  "status": "GPU qualification then full original paired validation running; not selected",
+  "status": "not selected; archived original outcome",
   "python_source_count": 56,
   "starting_source": "7a3db8fd5e24bbcb58affb475007a5cf93c56f07",
-  "production_selection": "verified v45",
+  "production_selection": "v69",
   "target_total_seconds": 25,
   "memory_limit_mib": 7151,
   "reported_eval_loss_may_increase": false,
   "original_checks_required": 10,
-  "priority": "whole-command time"
+  "priority": "whole-command time",
+  "collection_proof": {
+    "version": "v72",
+    "source_commit": "1683602834721b809a5983bb096714705c66f719",
+    "source_files_verified": 56,
+    "solution_sha256": "73f5f8fb5d929d78db4a1abedcbae99de36d1e65804df142da1f0339e97853d8",
+    "status": "accepted",
+    "checks_passed": 10,
+    "accepted": true,
+    "summary": {
+      "base": {
+        "ok": true,
+        "runs": 2,
+        "wall_s": 84.0,
+        "gpu_peak_mib": 14345,
+        "train_loop_s": 62.21,
+        "eval_loss": 2.04966
+      },
+      "solution": {
+        "ok": true,
+        "runs": 2,
+        "wall_s": 48.61,
+        "gpu_peak_mib": 3959,
+        "train_loop_s": 29.34,
+        "eval_loss": 2.04964
+      },
+      "ratios": {
+        "speedup": 1.728,
+        "memory_ratio": 3.6234,
+        "quality_delta_pct": -0.001
+      }
+    },
+    "archive_sha256": "259dc00e74f45b501eec818e6239fddc4b7f2f432508d45990cc9d20fe70e3dd"
+  },
+  "user_constraints": {
+    "original_ten_passed": true,
+    "max_solution_peak_mib": 3959,
+    "memory_limit_mib": 7151,
+    "every_run_within_memory_limit": true,
+    "reported_eval_loss_nonincreasing": true,
+    "base_eval_loss": 2.04966,
+    "solution_eval_loss": 2.04964,
+    "median_total_seconds": 48.61,
+    "target_total_seconds": 25,
+    "target_met": false,
+    "eligible_within_memory_and_quality": true,
+    "all_requested_constraints_met": false,
+    "quality_note": "Compares the reported rounded evaluation loss; original loss-curve checks remain required."
+  }
 }

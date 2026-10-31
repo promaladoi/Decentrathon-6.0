@@ -1,0 +1,33 @@
+{
+  "version": "v72",
+  "source_commit": "1683602834721b809a5983bb096714705c66f719",
+  "source_files_verified": 56,
+  "solution_sha256": "73f5f8fb5d929d78db4a1abedcbae99de36d1e65804df142da1f0339e97853d8",
+  "status": "accepted",
+  "checks_passed": 10,
+  "accepted": true,
+  "summary": {
+    "base": {
+      "ok": true,
+      "runs": 2,
+      "wall_s": 84.0,
+      "gpu_peak_mib": 14345,
+      "train_loop_s": 62.21,
+      "eval_loss": 2.04966
+    },
+    "solution": {
+      "ok": true,
+      "runs": 2,
+      "wall_s": 48.61,
+      "gpu_peak_mib": 3959,
+      "train_loop_s": 29.34,
+      "eval_loss": 2.04964
+    },
+    "ratios": {
+      "speedup": 1.728,
+      "memory_ratio": 3.6234,
+      "quality_delta_pct": -0.001
+    }
+  },
+  "archive_sha256": "259dc00e74f45b501eec818e6239fddc4b7f2f432508d45990cc9d20fe70e3dd"
+}

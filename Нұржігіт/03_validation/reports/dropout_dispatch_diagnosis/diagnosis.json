@@ -1,0 +1,62 @@
+{
+  "kind": "intentionally interrupted first-forward dispatch and memory diagnosis",
+  "full_task_admission": false,
+  "completed_training": false,
+  "mandatory_harness_context_nvml_mib": 107,
+  "scope_present": true,
+  "loss_scale_available": true,
+  "width": 1536,
+  "real_rows": 838,
+  "batch": 4,
+  "sequence": 509,
+  "p": 0.05,
+  "torch": "2.11.0+cu128",
+  "triton": "3.6.0",
+  "known_rng_threads": false,
+  "threads": [
+    {
+      "name": "MainThread",
+      "class_module": "threading",
+      "class_name": "_MainThread",
+      "target_module": null,
+      "target_name": null
+    },
+    {
+      "name": "Thread-1",
+      "class_module": "tqdm._monitor",
+      "class_name": "TMonitor",
+      "target_module": null,
+      "target_name": null
+    },
+    {
+      "name": "Thread-2",
+      "class_module": "rich.live",
+      "class_name": "_RefreshThread",
+      "target_module": null,
+      "target_name": null
+    }
+  ],
+  "capturing": false,
+  "first_projection_nvml_mib": 2961,
+  "torch_allocated_mib": 1191.3291015625,
+  "torch_reserved_mib": 2818.0,
+  "generator_offset": 4928,
+  "registered_cuda_parameter_storage_bytes_by_dtype": {
+    "torch.float16": 466747392,
+    "torch.uint8": 655097856,
+    "torch.float32": 9295872
+  },
+  "registered_cuda_parameter_storage_total_mib": 1078.740234375,
+  "config_dimensions": {
+    "hidden": 1536,
+    "intermediate": 8960,
+    "layers": 28,
+    "vocabulary": 151936,
+    "heads": 12,
+    "kv_heads": 2,
+    "head_dim": 128
+  },
+  "matrix_nf4_plus_fp16_embedding_payload_lower_bound_mib": 1069.875,
+  "all_matrix_and_embedding_4bit_payload_lower_bound_mib": 736.03125,
+  "fast_gather_selected": false
+}
