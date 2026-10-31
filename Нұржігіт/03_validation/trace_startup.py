@@ -1,9 +1,12 @@
-"""Coarse monotonic startup timeline around the unchanged original training script.
+"""Monotonic startup timeline around the unchanged original training script.
 
 Diagnostic only: Python profiling adds overhead. Intervals are inclusive and
 may overlap; never sum them or present this runtime as a contest score.
-Only the main thread is observed, avoiding background compiler attribution.
+The default statements mode adds just main-body statement boundary timestamps
+to an in-memory diagnostic AST; the original file and native callees stay intact.
+The optional profile mode observes only the main thread but adds large overhead.
 """
+import ast
 import argparse
 import hashlib
 import json
@@ -17,7 +20,7 @@ import uuid
 import zipfile
 
 
-def child(repo, config, metrics, timeline):
+def child(repo, config, metrics, timeline, mode):
     start = time.perf_counter()
     active, intervals = {}, []
     modules = {'torch', 'transformers', 'peft', 'trl', 'bitsandbytes', 'triton',
@@ -54,12 +57,40 @@ def child(repo, config, metrics, timeline):
     sys.path.insert(0, str(repo))
     sys.argv = [str(repo/'harness/_train.py'), '--config', str(config),
                 '--metrics', str(metrics), '--solution']
-    sys.setprofile(profile)
     try:
-        runpy.run_path(str(repo/'harness/_train.py'), run_name='__main__')
+        if mode == 'profile':
+            sys.setprofile(profile)
+            runpy.run_path(str(repo/'harness/_train.py'), run_name='__main__')
+        else:
+            original = repo/'harness/_train.py'
+            source = original.read_text()
+            tree = ast.parse(source, filename=str(original))
+            main_fn, = (node for node in tree.body
+                        if isinstance(node, ast.FunctionDef) and node.name == 'main')
+            marked = []
+            def mark(label, beginning):
+                if beginning:
+                    active[label] = time.perf_counter()-start
+                else:
+                    began = active.pop(label)
+                    ended = time.perf_counter()-start
+                    intervals.append(dict(module='harness._train', function=label,
+                                          start_s=began, end_s=ended, duration_s=ended-began))
+            for index, statement in enumerate(main_fn.body):
+                label = str(index)+': '+ast.get_source_segment(source, statement).splitlines()[0]
+                before = ast.Expr(ast.Call(ast.Name('_codex_mark', ast.Load()),
+                                           [ast.Constant(label), ast.Constant(True)], []))
+                after = ast.Expr(ast.Call(ast.Name('_codex_mark', ast.Load()),
+                                          [ast.Constant(label), ast.Constant(False)], []))
+                marked.extend((ast.copy_location(before, statement), statement,
+                               ast.copy_location(after, statement)))
+            main_fn.body = marked
+            ast.fix_missing_locations(tree)
+            namespace = dict(__name__='__main__', __file__=str(original), _codex_mark=mark)
+            exec(compile(tree, str(original), 'exec'), namespace)
     finally:
         sys.setprofile(None)
-        report = dict(kind='instrumented main-thread timeline; not a contest score',
+        report = dict(kind='instrumented startup timeline; not a contest score', mode=mode,
                       total_instrumented_seconds=time.perf_counter() - start,
                       intervals_are_inclusive=True, intervals_must_not_be_summed=True,
                       intervals=sorted(intervals, key=lambda row: row['start_s']))
@@ -73,10 +104,11 @@ def main():
     parser.add_argument('--config', type=Path)
     parser.add_argument('--metrics', type=Path)
     parser.add_argument('--timeline', type=Path)
+    parser.add_argument('--mode', choices=('statements','profile'), default='statements')
     args = parser.parse_args()
     repo = args.repo.resolve()
     if args.child:
-        return child(repo, args.config, args.metrics, args.timeline)
+        return child(repo, args.config, args.metrics, args.timeline, args.mode)
     if not Path('/kaggle/working').is_dir():
         raise RuntimeError('This diagnostic requires the user Kaggle session')
     if subprocess.check_output(['nvidia-smi', '--query-compute-apps=pid',
@@ -101,7 +133,8 @@ def main():
                TORCHINDUCTOR_CACHE_DIR=str(output/'inductor_cache'))
     rc, wall, peak, gpu_start = run_logged(
         [sys.executable, str(Path(__file__).resolve()), '--child', '--repo', str(repo),
-         '--config', str(config), '--metrics', str(metrics), '--timeline', str(timeline)],
+         '--config', str(config), '--metrics', str(metrics), '--timeline', str(timeline),
+         '--mode', args.mode],
         output/'train.log', 900, env)
     report = json.loads(timeline.read_text())
     report.update(source_commit=source_commit, exit_code=rc,
