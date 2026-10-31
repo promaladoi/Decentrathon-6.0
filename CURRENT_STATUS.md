@@ -56,3 +56,5 @@ The v57-v63 investigation is complete. Both the active development implementatio
 [v64r2 original measured outcome](CODEX_V64R2_RESULT.md): verified lower-memory alternative; no speed improvement established; v45 selected.
 
 [v64 revisions completed comparison](CODEX_V64_COMPARISON.md): v64r2 is a verified lower-memory alternative; selected v45 remains exact. No 25-second claim.
+
+[Four original ZIPs and checksum manifest](https://github.com/promaladoi/Decentrathon-6.0/releases/tag/nurzhigit-evidence-through-v64r2-20261031): failed v64, failed v64r1, admitted v64r2 and the exact same-session v45 control. Five release assets have verified server SHA-256 digests and public download links. [Publication receipt](04_submission/v64_revisions_publication.json). [Protected-file/source audit](04_submission/v64_revisions_source_audit.json). [Selection and source verification](04_submission/v64_revisions_selection.json).

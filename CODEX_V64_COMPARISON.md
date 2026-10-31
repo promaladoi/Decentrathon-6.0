@@ -14,3 +14,5 @@ Individual v45 control times: **45.87 and 48.68 s**. Individual v64r2 times: **4
 **Decision:** retain exact measured v45 as the selected implementation. Keep the fully verified v64r2 under `experiments/v64r2` as the lower-memory alternative. The **<=25-second whole-command target is unmet**. The historical 45.03-second v45 paired report belongs to an earlier session.
 
 [Original paired v64r2 proof](03_validation/reports/codex_v64r2/collection_proof.json). [Same-session v45 control](03_validation/reports/v45_control_after_v64r2/README.md). [Selection/source comparison](04_submission/v64_revisions_selection.json).
+
+[Four original ZIPs and checksum manifest](https://github.com/promaladoi/Decentrathon-6.0/releases/tag/nurzhigit-evidence-through-v64r2-20261031): failed v64, failed v64r1, admitted v64r2 and the exact same-session v45 control. Five release assets have verified server SHA-256 digests and public download links. [Publication receipt](04_submission/v64_revisions_publication.json). [Protected-file/source audit](04_submission/v64_revisions_source_audit.json). [Selection and source verification](04_submission/v64_revisions_selection.json).

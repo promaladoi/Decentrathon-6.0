@@ -1,0 +1,117 @@
+{
+  "selected_version": "v45",
+  "target_total_seconds": 25,
+  "target_met": false,
+  "source_collection_proofs": {
+    "v64": {
+      "version": "v64",
+      "source_commit": "155972c13b59f8955a2eb8dd7651b0f2cc5c8b9f",
+      "source_files_verified": 50,
+      "solution_sha256": "ee5da72860c87bd2bd87862cd00fb449e1cff33e8af25c311bef062973af840f",
+      "status": "failed",
+      "checks_passed": null,
+      "accepted": false,
+      "summary": null,
+      "archive_sha256": "1d96d1398bbd6e08a640c064b92df8464e5df70c6ab8103e0ee41fb4e4ce3280"
+    },
+    "v64r1": {
+      "version": "v64r1",
+      "source_commit": "9bb910edea7b3cf8967e93888d3b69cd84511707",
+      "source_files_verified": 50,
+      "solution_sha256": "4307914cfafa31fecfd84bc2f6e2bf7d154b0891039f2024119397ca36dc886e",
+      "status": "failed",
+      "checks_passed": null,
+      "accepted": false,
+      "summary": null,
+      "archive_sha256": "4b2d4b890e237b185a9b89c90848ee71a05d9098f8a1b741b29792b9e965a5af"
+    },
+    "v64r2": {
+      "version": "v64r2",
+      "source_commit": "5c36601c8302da8e0910b7697637fea4b3a0393d",
+      "source_files_verified": 50,
+      "solution_sha256": "a2b40323a6f8e8a9967bd73cdbda7dc1d0a67ffe1827865e5150ec89a5ef7a35",
+      "status": "accepted",
+      "checks_passed": 10,
+      "accepted": true,
+      "summary": {
+        "base": {
+          "ok": true,
+          "runs": 2,
+          "wall_s": 86.33,
+          "gpu_peak_mib": 14345,
+          "train_loop_s": 60.54,
+          "eval_loss": 2.04966
+        },
+        "solution": {
+          "ok": true,
+          "runs": 2,
+          "wall_s": 47.61,
+          "gpu_peak_mib": 3915,
+          "train_loop_s": 28.36,
+          "eval_loss": 2.04963
+        },
+        "ratios": {
+          "speedup": 1.8133,
+          "memory_ratio": 3.6641,
+          "quality_delta_pct": -0.001
+        }
+      },
+      "archive_sha256": "2c55b74f30533a61e63f480d349a8b14d23b9f7b81b51d880d457ec61275904d"
+    }
+  },
+  "same_session_control_proof": {
+    "source_commit": "7a3db8fd5e24bbcb58affb475007a5cf93c56f07",
+    "source_files_verified": 48,
+    "archive_sha256": "e937018b73a3a523bc4ea7d8044e1da7973b2905307abfc4745c92564f72e593",
+    "result_sha256": "29ba5ff89859e49642544c2619efa8963e1fbc16d39ec953093798710efa1bdb",
+    "summary": {
+      "solution": {
+        "ok": true,
+        "runs": 2,
+        "wall_s": 47.27,
+        "gpu_peak_mib": 4135,
+        "train_loop_s": 28.03,
+        "eval_loss": 2.04967
+      }
+    },
+    "original_ten_asserted": false,
+    "kind": "same-session solution-only performance control; not ten-check admission"
+  },
+  "user_constraints": {
+    "original_ten_passed": true,
+    "max_solution_peak_mib": 3915,
+    "memory_limit_mib": 7151,
+    "every_run_within_memory_limit": true,
+    "reported_eval_loss_nonincreasing": true,
+    "base_eval_loss": 2.04966,
+    "solution_eval_loss": 2.04963,
+    "median_total_seconds": 47.61,
+    "target_total_seconds": 25,
+    "target_met": false,
+    "eligible_within_memory_and_quality": true,
+    "all_requested_constraints_met": false,
+    "quality_note": "Compares the reported rounded evaluation loss; original loss-curve checks remain required."
+  },
+  "files": {
+    "codex_v64.zip": {
+      "bytes": 129426,
+      "sha256": "1d96d1398bbd6e08a640c064b92df8464e5df70c6ab8103e0ee41fb4e4ce3280",
+      "kind": "exact original source and qualification failure"
+    },
+    "codex_v64r1.zip": {
+      "bytes": 131232,
+      "sha256": "4b2d4b890e237b185a9b89c90848ee71a05d9098f8a1b741b29792b9e965a5af",
+      "kind": "exact original source, tests and available complete-task evidence"
+    },
+    "codex_v64r2.zip": {
+      "bytes": 8239338,
+      "sha256": "2c55b74f30533a61e63f480d349a8b14d23b9f7b81b51d880d457ec61275904d",
+      "kind": "exact original source, tests and available complete-task evidence"
+    },
+    "codex_v45_control_f86205c1.zip": {
+      "bytes": 156008,
+      "sha256": "e937018b73a3a523bc4ea7d8044e1da7973b2905307abfc4745c92564f72e593",
+      "kind": "exact original v45 solution-only same-session performance control; no new ten-check claim"
+    }
+  }
+}
