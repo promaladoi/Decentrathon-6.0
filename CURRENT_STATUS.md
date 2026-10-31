@@ -18,6 +18,7 @@ Current speed selection: **v45**, source `7a3db8fd5e24bbcb58affb475007a5cf93c56f
 | v66 | 82.67 | 46.20 | 7039 | 2.04965 → 2.04964 | 10/10 | pass |
 | v67 | 84.38 | 48.50 | 4135 | 2.04966 → 2.04968 | 10/10 | FAIL: user limits |
 | v68 | 84.17 | 46.20 | 6879 | 2.04967 → 2.04963 | 10/10 | pass |
+| v69 | 82.05 | 46.73 | 3959 | 2.04964 → 2.04962 | 10/10 | pass |
 
 Public main: selected v45, 45.03 seconds / 4135 MiB / original 10/10.
 v48 and v49 are measured memory alternatives (4115 MiB), not replacements.
@@ -77,6 +78,7 @@ The v57-v63 investigation is complete. Both the active development implementatio
 
 [v68 original measured outcome](CODEX_V68_RESULT.md): original admission and user memory/quality passed; speed comparison pending.
 
-[v69 speed-priority candidate](CODEX_V69_EXPERIMENT.md): GPU qualification then full original paired validation running; not selected; selected v45 unchanged. No new elapsed-time claim.
 
 [Verified public original v65-v68 archives and same-session v45 control](https://github.com/promaladoi/Decentrathon-6.0/releases/tag/nurzhigit-speed-through-v68-20261031). Six assets verified by SHA-256 and public download.
+
+[v69 original measured outcome](CODEX_V69_RESULT.md): original admission and user memory/quality passed; speed comparison pending.

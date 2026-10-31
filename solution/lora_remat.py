@@ -1,7 +1,8 @@
 """Rematerialize the LoRA-A input from a shared RMS residual and dropout bits.
 
-Only the private, guarded packed training path calls this operation. Native
-full-shape dropout draws exactly the original random bits. The saved FP16
+Only the private, guarded packed training path calls this operation. Qualified
+single GPU-RNG-thread calls reproduce native full-shape Philox coordinates;
+all other consumers draw through native dropout. The saved FP16
 LoRA input is replaced by references to the RMS producer's existing residual,
 weight and inverse RMS. Reconstructing it adds no GEMM and draws no RNG.
 Native FP16 matrix multiplications and all FP32 rounding boundaries are kept.
@@ -68,18 +69,23 @@ class _LoRAInputProjection(torch.autograd.Function):
     @staticmethod
     def forward(ctx, x, a_weight, descriptor, rows, batch, sequence, p):
         forward_scale, backward_scale = _scales(p)
-        dummy = torch.empty((batch, sequence, x.shape[1]), device=x.device,
-                            dtype=torch.float32, memory_format=torch.contiguous_format)
-        if dummy.data_ptr() % 16:
-            raise RuntimeError('native dropout requires aligned CUDA allocation')
-        discarded, full_mask = torch.ops.aten.native_dropout.default(dummy, float(p), True)
-        del discarded, dummy
         n = x.numel()
-        dropped_half = torch.empty(x.shape, device=x.device, dtype=torch.float16)
-        mask = torch.empty((triton.cdiv(n,8),), device=x.device, dtype=torch.uint8)
-        real_dropout_gather_kernel[(triton.cdiv(n,BLOCK),)](
-            x, full_mask, rows, dropped_half, mask, n, batch*sequence,
-            x.shape[1], forward_scale, BLOCK, num_warps=4, enable_fp_fusion=False)
+        from .direct_dropout import try_gather
+        direct = try_gather(x,rows,batch,sequence,p)
+        if direct is None:
+            dummy = torch.empty((batch, sequence, x.shape[1]), device=x.device,
+                                dtype=torch.float32, memory_format=torch.contiguous_format)
+            if dummy.data_ptr() % 16:
+                raise RuntimeError('native dropout requires aligned CUDA allocation')
+            discarded, full_mask = torch.ops.aten.native_dropout.default(dummy, float(p), True)
+            del discarded, dummy
+            dropped_half = torch.empty(x.shape, device=x.device, dtype=torch.float16)
+            mask = torch.empty((triton.cdiv(n,8),), device=x.device, dtype=torch.uint8)
+            real_dropout_gather_kernel[(triton.cdiv(n,BLOCK),)](
+                x, full_mask, rows, dropped_half, mask, n, batch*sequence,
+                x.shape[1], forward_scale, BLOCK, num_warps=4, enable_fp_fusion=False)
+        else:
+            dropped_half,mask = direct
         a_half = a_weight.to(torch.float16)
         output = F.linear(dropped_half, a_half)
         h, weight, rstd = descriptor
@@ -120,6 +126,8 @@ def lora_input_projection(x, a_weight, descriptor, rows, batch, sequence, p):
 def warmup(width=1536, p=0.05):
     """Compile arithmetic only, inside this measured command; no RNG draws."""
     from .warmup import load_compiled
+    from .direct_dropout import warmup as warmup_direct
+    warmup_direct(width,p)
     forward,backward = _scales(p)
     load_compiled(real_dropout_gather_kernel.warmup(
         torch.float32,torch.bool,torch.int64,torch.float16,torch.uint8,

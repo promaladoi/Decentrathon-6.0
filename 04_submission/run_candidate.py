@@ -63,6 +63,9 @@ def main():
         if active:
             raise RuntimeError('Another GPU process is active. Stop it before measurement.')
         outcome['status'] = 'testing'
+        if (repo/'solution/test_direct_dropout.py').is_file():
+            run([sys.executable, '-m', 'pytest', 'solution/test_direct_dropout.py', '-q'],
+                'direct_dropout_tests.log')
         if (repo/'solution/test_lazy_train_cli.py').is_file():
             run([sys.executable, '-m', 'pytest', 'solution/test_lazy_train_cli.py', '-q'],
                 'lazy_cli_tests.log')
