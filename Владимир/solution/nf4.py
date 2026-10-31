@@ -18,7 +18,9 @@ import torch
 import triton
 import triton.language as tl
 
+
 BLOCK = 1024
+_bnb_ops = None
 
 
 @triton.jit
@@ -36,8 +38,8 @@ def nf4_dequant_kernel(Packed, Absmax, Code4, Absmax2, Code8, Offset, Out,
         scale_code = tl.load(Code8 + scale_index).to(tl.float32)
         scale_max = tl.load(Absmax2 + quant_block // SCALE_BLOCK,
                             valid, other=0).to(tl.float32)
-        scale = scale_code * scale_max
-        scale = scale + tl.load(Offset).to(tl.float32)
+        offset_val = tl.load(Offset).to(tl.float32)
+        scale = scale_code * scale_max + offset_val
     else:
         scale = tl.load(Absmax + quant_block, valid, other=0).to(tl.float32)
     tl.store(Out + position, value * scale, valid)
@@ -87,10 +89,8 @@ def _packed_supported(packed, state):
             and not packed.requires_grad)
 
 
-def _decode(packed, state, dtype):
-    """Raw decode to the destination dtype, as CUDA forward fallback does."""
-    if not _packed_supported(packed, state) or dtype not in (torch.float16, torch.float32):
-        raise ValueError('unsupported CUDA NF4 input')
+def _decode_fast(packed, state, dtype):
+    """Fast decode path when packed and state have already been validated."""
     dense = torch.empty(state.shape, dtype=dtype, device=packed.device)
     nested = bool(state.nested)
     if nested:
@@ -105,22 +105,31 @@ def _decode(packed, state, dtype):
     return dense
 
 
+def _decode(packed, state, dtype):
+    """Raw decode to the destination dtype, as CUDA forward fallback does."""
+    if not _packed_supported(packed, state) or dtype not in (torch.float16, torch.float32):
+        raise ValueError('unsupported CUDA NF4 input')
+    return _decode_fast(packed, state, dtype)
+
+
 def dequantize_nf4(packed, state, dtype):
     """Canonical [N,K], with native functional-decode then cast semantics.
 
     Unlike functional.dequantize_4bit's compatibility transpose convention,
     this team's existing API always returns the canonical weight orientation.
     """
-    return _decode(packed, state, state.dtype).to(dtype)
+    out = _decode(packed, state, state.dtype)
+    return out if out.dtype == dtype else out.to(dtype)
 
 
 def _uses_native_custom_gemm(A, state):
-    from bitsandbytes.backends.cuda import ops
-
+    global _bnb_ops
+    if _bnb_ops is None:
+        from bitsandbytes.backends.cuda import ops as _bnb_ops
     rows = A.numel() // A.shape[-1]
-    if rows > ops._gemm_4bit_custom_max_m or A.shape[-1] % state.blocksize:
+    if rows > _bnb_ops._gemm_4bit_custom_max_m or A.shape[-1] % state.blocksize:
         return False
-    return bool(ops._gemm_4bit_use_custom_fn(
+    return bool(_bnb_ops._gemm_4bit_use_custom_fn(
         A.device.index, A.dtype, rows, state.shape[0], state.shape[1]))
 
 
@@ -136,6 +145,13 @@ def _native_forward(A, packed, bias, state):
         state.quant_type, bias=bias)
 
 
+def _linear_forward_fast(A, packed, bias, state):
+    """Validated non-autograd forward for MatMulNF4 and frozen MLP4bit."""
+    if _uses_native_custom_gemm(A, state):
+        return _native_forward(A, packed, bias, state)
+    return torch.nn.functional.linear(A, _decode_fast(packed, state, A.dtype), bias)
+
+
 def _linear_forward(A, packed, bias, state):
     """Shared non-autograd forward for MatMulNF4 and frozen MLP4bit."""
     if _uses_native_custom_gemm(A, state):
@@ -146,7 +162,7 @@ def _linear_forward(A, packed, bias, state):
 class MatMulNF4(torch.autograd.Function):
     @staticmethod
     def forward(ctx, A, packed, bias, state):
-        out = _linear_forward(A, packed, bias, state)
+        out = _linear_forward_fast(A, packed, bias, state)
         ctx.state = state
         ctx.save_for_backward(packed)
         ctx.bias_dtype = None if bias is None else bias.dtype
@@ -157,8 +173,10 @@ class MatMulNF4(torch.autograd.Function):
         packed, = ctx.saved_tensors
         grad_A = grad_bias = None
         if ctx.needs_input_grad[0]:
-            grad_A = torch.matmul(grad_output,
-                                  dequantize_nf4(packed, ctx.state, grad_output.dtype))
+            w = _decode_fast(packed, ctx.state, ctx.state.dtype)
+            if w.dtype != grad_output.dtype:
+                w = w.to(grad_output.dtype)
+            grad_A = torch.matmul(grad_output, w)
         if ctx.needs_input_grad[2]:
             grad_bias = grad_output.reshape(-1, grad_output.shape[-1]).sum(0, dtype=ctx.bias_dtype)
         return grad_A, None, grad_bias, None
@@ -188,6 +206,5 @@ def warmup():
     from .warmup import load_compiled
 
     f32, u8 = torch.float32, torch.uint8
-    load_compiled(nf4_dequant_kernel.warmup(u8, u8, f32, f32, f32, f32, torch.float16,
-                              16 * 1536, 64, True, 256, BLOCK, grid=(1,),
-                              num_warps=4, enable_fp_fusion=False))
+    load_compiled(nf4_dequant_kernel.warmup(u8, u8, f32, u8, f32, f32, torch.float16,
+                                           16 * 1536, 64, True, 256, BLOCK, grid=(1,)))
