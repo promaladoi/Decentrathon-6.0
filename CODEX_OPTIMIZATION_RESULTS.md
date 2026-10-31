@@ -1,4 +1,4 @@
-# Verified optimization results: v45 through v49
+# Verified optimization results: v45 through v51
 
 Selected public `Нұржігіт/solution/` remains exact v45. The development branch
 contains later experimental source; its moving HEAD is not the selected result.
@@ -11,8 +11,9 @@ and a locally verified archive/source/checksum chain.
 | v46 | 79.69 | 45.75 | 4135 | 2.04963 → 2.04967 | 10/10 | FAIL: loss increased |
 | v48 | 81.01 | 46.59 | 4115 | 2.04968 → 2.04964 | 10/10 | pass |
 | v49 | 80.08 | 45.69 | 4115 | 2.04967 → 2.04966 | 10/10 | pass |
+| v51 | 84.20 | 49.03 | 4135 | 2.04964 → 2.04963 | 10/10 | pass |
 
-The <=30-second whole-command target is not met. The best observed memory among
+The current <=27-second whole-command target is not met. Historical reports keep their original target. The best observed memory among
 these candidates is 4115 MiB (v48/v49), only 20 MiB below v45's 4135 MiB. Their
 observed total times did not improve on v45. Separate runs are not a simultaneous
 candidate-to-candidate A/B test, and differences this small may include noise.
@@ -36,3 +37,6 @@ For exact measured source, see `03_validation/reports/codex_VERSION/collection_p
 and each `CODEX_VERSION_RESULT.md`. Historical alternatives (including v34)
 remain archived. `PUBLICATION_PROOF.json` identifies selected source. Final
 platform submission and a public saved executed Kaggle notebook are separate.
+
+- v50: native BMM research rejected before integration (12/14 numerical cases failed).
+- v51: exact target partitions passed original 10/10 and strict user memory/quality, but measured 49.03 s / 4135 MiB. v45 control in the same session is pending.
