@@ -1,0 +1,21 @@
+base: Qwen/Qwen2.5-1.5B-Instruct
+data:
+  format: alpaca
+  max_length: 512
+  train: /kaggle/working/codex_dispatch_diagnosis_f00a2d0c/data/train.jsonl
+  val_split: 0.0
+output: /kaggle/working/codex_dispatch_diagnosis_f00a2d0c/diagnostic_adapter
+task: sft
+training:
+  batch_size: 4
+  epochs: 1
+  gradient_accumulation_steps: 1
+  logging_steps: 1
+  lora:
+    alpha: 32
+    r: 16
+    target_modules: auto
+  lr: 0.0002
+  quantization: 4bit
+  save_steps: 1000
+  seed: 1

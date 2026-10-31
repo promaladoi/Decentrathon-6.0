@@ -1,0 +1,15 @@
+{
+  "original_result_sha256": "a7f0f9b982868e3c9e6339a5faa8415d908fc17a3fbb0e76baa6d4e48bc34964",
+  "runs": [
+    {
+      "run": "solution_1",
+      "launches_including_warmup": 1457,
+      "timed_kernel_ms_steps_3_plus": 89.791
+    },
+    {
+      "run": "solution_2",
+      "launches_including_warmup": 1457,
+      "timed_kernel_ms_steps_3_plus": 82.0
+    }
+  ]
+}

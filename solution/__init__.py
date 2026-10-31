@@ -20,8 +20,6 @@ def apply():
     from .unpad import patch_qwen2_causal_lm
     from .frozen_storage import patch_frozen_storage
     _applied = True
-    from .synchronous_display import install as install_synchronous_display
-    install_synchronous_display()
     # Retain only small frozen K/V matrices. All decoding/allocation is timed;
     # LoRA input rematerialization offsets this bounded retained storage.
     enable_resident_weights()
