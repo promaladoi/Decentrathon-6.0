@@ -7,6 +7,7 @@
 | v48 | 81.01 | 46.59 | 4115 | 2.04968 → 2.04964 | 10/10 | pass |
 | v49 | 80.08 | 45.69 | 4115 | 2.04967 → 2.04966 | 10/10 | pass |
 | v51 | 84.20 | 49.03 | 4135 | 2.04964 → 2.04963 | 10/10 | pass |
+| v53r1 | 83.14 | 47.51 | 4109 | 2.04961 → 2.04965 | 10/10 | FAIL: loss increased |
 
 Public main: selected v45, 45.03 seconds / 4135 MiB / original 10/10.
 v48 and v49 are measured memory alternatives (4115 MiB), not replacements.
@@ -23,3 +24,7 @@ Development HEAD may contain experimental code; use the exact measured commit.
 Same-session v45 solution-only control: 48.55 s / 4135 MiB; v51: 49.03 s.
 v52/v52r1 explicit-MMA prototypes matched sampled native values but were slower
 and were not integrated. See `03_validation/reports/v52r1_research/README.md`.
+
+[v53/v53r1 verified outcome](CODEX_V53_RESULT.md): not selected; user quality requirement failed.
+
+[v54 native NF4 screen](03_validation/reports/v54_research): large MLP projections were slower; limited narrow-projection opportunity remains unintegrated. No new full-task score.

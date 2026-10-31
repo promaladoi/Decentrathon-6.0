@@ -1,0 +1,11 @@
+{
+  "version": "v53",
+  "source_commit": "373c904735bc5061c7ea06dd3cad553ee695be4c",
+  "source_files_verified": 49,
+  "solution_sha256": "f9d986086d9b7bec2eca541ef3520619341e5eddbf2f63512cf974099385d353",
+  "status": "failed",
+  "checks_passed": null,
+  "accepted": false,
+  "summary": null,
+  "archive_sha256": "03341d0a5fa592e6cb2dbad1f4a8cf65edf50da98f48fd6c0f1673cd80a70c06"
+}

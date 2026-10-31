@@ -1,0 +1,8 @@
+{
+  "source_commit": "4517a791b44aac5a9d3aad4b0700de255cfa017e",
+  "archive_sha256": "d5ba77bbb30c6978eb2829620035d6ecf59896744a5899e09ac512e719e19043",
+  "source_files_verified": 1,
+  "full_task_admission": false,
+  "production_solution_changed": false,
+  "decision": "large MLP cases slower; narrow projection has a limited microbenchmark opportunity, not integrated"
+}
