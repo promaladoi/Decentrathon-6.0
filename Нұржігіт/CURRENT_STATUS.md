@@ -10,7 +10,12 @@
 Public main: selected v45, 45.03 seconds / 4135 MiB / original 10/10.
 v48 and v49 are measured memory alternatives (4115 MiB), not replacements.
 v46 failed the stricter nonincreasing-loss rule; v47 was unmeasured.
-The whole-command <=30-second target remains unmet.
+The current whole-command target is <=27 seconds and remains unmet.
+Historical reports retain their original <=30-second target.
+
+v50 native batched gate/up research was rejected before integration: 12/14
+shape/seed cases changed FP16 values; the two exact cases were slower.
+[Unmodified T4 evidence](03_validation/reports/v50_research/README.md).
 
 [Latest decisions and evidence](CODEX_OPTIMIZATION_RESULTS.md).
 [Selected result](CODEX_V45_RESULT.md). [Selected source proof](PUBLICATION_PROOF.json).
