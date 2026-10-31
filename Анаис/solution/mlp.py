@@ -24,6 +24,7 @@ import triton
 
 from .nf4 import _linear_forward, dequantize_nf4, supported as nf4_supported
 from .swiglu import BLOCK as SWIGLU_BLOCK, example_swiglu_bwd_kernel, example_swiglu_fwd_kernel
+from .backward_sums import sum_half_gradients
 
 
 def _weight(layer, dtype):
@@ -61,9 +62,12 @@ class MLP4bit(torch.autograd.Function):
         example_swiglu_bwd_kernel[(triton.cdiv(n, SWIGLU_BLOCK),)](dh, g, u, dg, du, n,
                                                                    BLOCK=SWIGLU_BLOCK)
         del dh, g, u
-        dx = torch.matmul(dg, _weight(gate, dtype)).float()
+        gate_dx = torch.matmul(dg, _weight(gate, dtype))
         del dg
-        dx += torch.matmul(du, _weight(up, dtype)).float()  # autograd sums the two casts in fp32
+        up_dx = torch.matmul(du, _weight(up, dtype))
+        del du
+        dx = sum_half_gradients((gate_dx, up_dx))
+        del gate_dx, up_dx
         return dx.to(ctx.x_dtype), None, None, None, None
 
 
@@ -140,10 +144,14 @@ def patch_qwen2_mlp_4bit():
 
 def warmup(parts=("fwd", "bwd")):
     """Compile the fp16 variants of the example SwiGLU kernels this MLP launches; see warmup.py."""
+    from .warmup import load_compiled
+
     f16 = torch.float16
     n = 16 * 8960  # tokens x 8960 is always a multiple of 16
     if "fwd" in parts:
-        example_swiglu_fwd_kernel.warmup(f16, f16, f16, n, grid=(1,), BLOCK=SWIGLU_BLOCK)
+        load_compiled(example_swiglu_fwd_kernel.warmup(f16, f16, f16, n, grid=(1,), BLOCK=SWIGLU_BLOCK))
     if "bwd" in parts:
-        example_swiglu_bwd_kernel.warmup(f16, f16, f16, f16, f16, n, grid=(1,),
-                                         BLOCK=SWIGLU_BLOCK)
+        from .backward_sums import warmup as warmup_backward_sums
+        warmup_backward_sums()
+        load_compiled(example_swiglu_bwd_kernel.warmup(f16, f16, f16, f16, f16, n, grid=(1,),
+                                         BLOCK=SWIGLU_BLOCK))
