@@ -117,7 +117,8 @@ def main():
             outcome['status'] = 'accepted' if accepted else 'rejected'
             outcome['checks_passed'] = sum(bool(c['ok']) for c in checks)
             outcome['eligible_within_memory_and_quality'] = limits['eligible_within_memory_and_quality']
-            outcome['target_30_seconds_met'] = limits['target_met']
+            outcome['target_total_seconds'] = limits['target_total_seconds']
+            outcome['target_met'] = limits['target_met']
             rc = 0 if accepted and limits['eligible_within_memory_and_quality'] else 1
         else:
             rc = 0
