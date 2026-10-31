@@ -80,11 +80,12 @@ def test_nf4_forward_preserves_native_dispatch_and_exact_input_gradient(monkeypa
     expected = native_matmul(x, packed, state)
     expected_dx, = torch.autograd.grad(expected, (x,), upstream)
     decodes = []
-    original_decode = nf4._decode
+    # Count kernel decodes: validated callers go straight to _decode_fast.
+    original_decode = nf4._decode_fast
     def decode(*args):
         decodes.append(args[2])
         return original_decode(*args)
-    monkeypatch.setattr(nf4, '_decode', decode)
+    monkeypatch.setattr(nf4, '_decode_fast', decode)
     native_custom = nf4._uses_native_custom_gemm(x, state)
     actual = nf4.MatMulNF4.apply(x, packed, None, state)
     assert len(decodes) == (0 if native_custom else 1)

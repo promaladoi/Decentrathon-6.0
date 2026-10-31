@@ -206,5 +206,7 @@ def warmup():
     from .warmup import load_compiled
 
     f32, u8 = torch.float32, torch.uint8
-    load_compiled(nf4_dequant_kernel.warmup(u8, u8, f32, u8, f32, f32, torch.float16,
-                                           16 * 1536, 64, True, 256, BLOCK, grid=(1,)))
+    # Same argument types and options as the launch in _decode_fast: state2.absmax is fp32.
+    load_compiled(nf4_dequant_kernel.warmup(u8, u8, f32, f32, f32, f32, torch.float16,
+                                           16 * 1536, 64, True, 256, BLOCK, grid=(1,),
+                                           num_warps=4, enable_fp_fusion=False))

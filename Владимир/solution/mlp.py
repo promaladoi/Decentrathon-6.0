@@ -107,7 +107,7 @@ def _compute_dtype(layers):
     native_forward = bnb.nn.Linear4bit.forward
     if (getattr(native_forward, '__module__', None) != 'bitsandbytes.nn.modules'
             or getattr(native_forward, '__qualname__', None) != 'Linear4bit.forward'
-            or hasattr(native_forward, '_wrapped_')):
+            or hasattr(native_forward, '__wrapped__')):
         return None
     dtype = None
     fix = getattr(bnb_modules, "fix_4bit_weight_quant_state_from_module", None)
@@ -144,7 +144,13 @@ def make_mlp_forward(previous):
         dtype = _compute_dtype(layers)
         if dtype is None:
             return previous(self, x)
-        return MLP4bit.apply(x, layers[0], layers[1], layers[2], dtype)
+        if (x.device != self.gate_proj.weight.device
+                or any(x.device != layer.weight.device for layer in
+                       (self.up_proj, self.down_proj))
+                or x.shape[-1] != self.gate_proj.in_features
+                or x.shape[-1] != self.up_proj.in_features):
+            return previous(self, x)
+        return MLP4bit.apply(x, layers[0], layers[1], layers[2], dtype).to(x.dtype)
     forward._soup_team_mlp = True
     return forward
 
