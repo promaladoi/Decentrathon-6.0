@@ -160,10 +160,6 @@ class AddRMSNorm(torch.autograd.Function):
 
     @staticmethod
     def forward(ctx, residual, delta, weight, eps):
-        return AddRMSNorm._forward(ctx, residual, delta, weight, eps)[:2]
-
-    @staticmethod
-    def _forward(ctx, residual, delta, weight, eps):
         shape, n = residual.shape, residual.shape[-1]
         r2, d2 = _rows(residual, n), _rows(delta, n)
         weight = weight.contiguous()
@@ -177,7 +173,7 @@ class AddRMSNorm(torch.autograd.Function):
                                                num_warps=warps, enable_fp_fusion=False)
         ctx.save_for_backward(h, weight, rstd)
         ctx.shape, ctx.dtypes = shape, (residual.dtype, delta.dtype)
-        return h.view(shape), y.view(shape), rstd
+        return h.view(shape), y.view(shape)
 
     @staticmethod
     def backward(ctx, dh, dy):
@@ -209,28 +205,6 @@ def rmsnorm(x, weight, eps):
 
 def add_rmsnorm(residual, delta, weight, eps):
     return AddRMSNorm.apply(residual, delta, weight, eps)
-
-
-class AddRMSNormWithStats(torch.autograd.Function):
-    """Private training producer: expose the already-computed inverse RMS.
-
-    The extra output is nondifferentiable. The original two outputs and all
-    backward arithmetic still use AddRMSNorm's implementation.
-    """
-
-    @staticmethod
-    def forward(ctx, residual, delta, weight, eps):
-        h, y, rstd = AddRMSNorm._forward(ctx, residual, delta, weight, eps)
-        ctx.mark_non_differentiable(rstd)
-        return h, y, rstd
-
-    @staticmethod
-    def backward(ctx, dh, dy, unused_statistics_gradient):
-        return AddRMSNorm.backward(ctx, dh, dy)
-
-
-def add_rmsnorm_with_stats(residual, delta, weight, eps):
-    return AddRMSNormWithStats.apply(residual, delta, weight, eps)
 
 
 def make_rmsnorm_forward(original):

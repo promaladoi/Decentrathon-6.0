@@ -1,0 +1,18 @@
+{
+  "source_commit": "7a3db8fd5e24bbcb58affb475007a5cf93c56f07",
+  "source_files_verified": 48,
+  "archive_sha256": "e937018b73a3a523bc4ea7d8044e1da7973b2905307abfc4745c92564f72e593",
+  "result_sha256": "29ba5ff89859e49642544c2619efa8963e1fbc16d39ec953093798710efa1bdb",
+  "summary": {
+    "solution": {
+      "ok": true,
+      "runs": 2,
+      "wall_s": 47.27,
+      "gpu_peak_mib": 4135,
+      "train_loop_s": 28.03,
+      "eval_loss": 2.04967
+    }
+  },
+  "original_ten_asserted": false,
+  "kind": "same-session solution-only performance control; not ten-check admission"
+}

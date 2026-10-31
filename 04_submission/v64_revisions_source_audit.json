@@ -1,0 +1,23 @@
+{
+  "selected_version": "v45",
+  "candidates": {
+    "v64": {
+      "source_commit": "155972c13b59f8955a2eb8dd7651b0f2cc5c8b9f",
+      "protected_organizer_files_unchanged": 15,
+      "source_files_verified": 50,
+      "archive_sha256": "1d96d1398bbd6e08a640c064b92df8464e5df70c6ab8103e0ee41fb4e4ce3280"
+    },
+    "v64r1": {
+      "source_commit": "9bb910edea7b3cf8967e93888d3b69cd84511707",
+      "protected_organizer_files_unchanged": 15,
+      "source_files_verified": 50,
+      "archive_sha256": "4b2d4b890e237b185a9b89c90848ee71a05d9098f8a1b741b29792b9e965a5af"
+    },
+    "v64r2": {
+      "source_commit": "5c36601c8302da8e0910b7697637fea4b3a0393d",
+      "protected_organizer_files_unchanged": 15,
+      "source_files_verified": 50,
+      "archive_sha256": "2c55b74f30533a61e63f480d349a8b14d23b9f7b81b51d880d457ec61275904d"
+    }
+  }
+}
