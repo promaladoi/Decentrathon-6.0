@@ -107,32 +107,6 @@ def install_frozen_storage(embedding, head):
     return state
 
 
-def prepare_trainer_storage(trainer):
-    """Pack an already-prepared native Qwen pair before later setup allocations.
-
-    Called only after the native private trainer was successfully wrapped.
-    The existing value proof and public output wrappers are unchanged.
-    """
-    from peft import PeftModelForCausalLM
-    from transformers.models.qwen2.modeling_qwen2 import Qwen2ForCausalLM
-    model = getattr(trainer, 'model', None)
-    if not isinstance(model, nn.Module) or not _unobserved(model):
-        return None
-    if type(model) is PeftModelForCausalLM:
-        model = model.get_base_model()
-    if type(model) is not Qwen2ForCausalLM or not _unobserved(model):
-        return None
-    embedding, head = model.model.embed_tokens, model.lm_head
-    if not embedding.weight.is_cuda:
-        return None
-    state = install_frozen_storage(embedding, head)
-    if state is not None:
-        model.__dict__['_solution_storage_attempted'] = True
-        print('solution: early lossless frozen tied storage saved '
-              f"{state['storage_bytes_saved']} bytes", flush=True)
-    return state
-
-
 def patch_frozen_storage():
     """Wrap the final Qwen forward after the team's unpadding patch is installed."""
     from transformers.models.qwen2 import modeling_qwen2

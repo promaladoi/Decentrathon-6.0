@@ -200,8 +200,18 @@ class LMHeadLoss(torch.autograd.Function):
         argmax = torch.empty(tokens, device=x.device, dtype=torch.int64)
         ce = torch.zeros(tokens, device=x.device, dtype=torch.float32)
         valid = targets != -100
-        labelled = valid.nonzero().squeeze(1)
-        prompt = (~valid).nonzero().squeeze(1)
+        partitions = stats.pop('_partition_indices', None)
+        if partitions is None:
+            labelled = valid.nonzero().squeeze(1)
+            prompt = (~valid).nonzero().squeeze(1)
+        else:
+            # The private fused metadata builder already produced the exact
+            # stable partitions before model arithmetic, avoiding late syncs.
+            labelled, prompt = partitions
+            if (not all(isinstance(t, torch.Tensor) and t.device == x.device
+                        and t.dtype == torch.int64 and t.ndim == 1 for t in partitions)
+                    or labelled.numel() + prompt.numel() != tokens):
+                raise ValueError('invalid private target partition layout')
         chunks = []
         ctx.precomputed = expected is not None
         if ctx.precomputed:
@@ -271,14 +281,14 @@ class LMHeadLoss(torch.autograd.Function):
         return grad_x, None, None, None, None
 
 
-def lm_head_loss(x, weight, targets, num_items_in_batch):
+def lm_head_loss(x, weight, targets, num_items_in_batch, *, _partition_indices=None):
     if num_items_in_batch is None:
         denom = (targets != -100).sum().float()
     elif torch.is_tensor(num_items_in_batch):
         denom = num_items_in_batch.to(x.device)
     else:
         denom = torch.tensor(num_items_in_batch, device=x.device)
-    stats = {}
+    stats = {} if _partition_indices is None else {'_partition_indices': _partition_indices}
     loss = LMHeadLoss.apply(x, weight, targets, denom, stats)
     return loss, stats
 
