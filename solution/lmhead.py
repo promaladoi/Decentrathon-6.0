@@ -19,7 +19,7 @@ import torch
 import triton
 import triton.language as tl
 
-CHUNK = 512
+CHUNK = 1024
 BLOCK_V = 4096
 GRAD_BLOCK = 1024
 

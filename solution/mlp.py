@@ -14,8 +14,9 @@ fp32 exactly as autograd adds the two casts' gradients. Every value equals trans
 with Linear4bit, while the saved activations of the MLP take half the memory and the fp32 casts
 around the three matmuls disappear.
 
-The weights are unpacked by our NF4 kernel (nf4.py) right before each matmul and dropped after it,
-as bitsandbytes does. silu(gate) * up runs on the organizers' example SwiGLU kernels, unchanged;
+Our NF4 kernel (nf4.py) preserves exact decoded weights. Internal read-only matmuls may reuse
+them within the enabled per-process byte budget; overflow uses fresh decode. Public decoder
+calls still return fresh tensors. silu(gate) * up uses the unchanged organizers' example kernels;
 they are theirs and do not count as ours.
 """
 

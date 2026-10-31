@@ -8,7 +8,7 @@ allocation and validation all remain inside the measured training command.
 import weakref
 import torch
 
-MAX_BYTES = 2_400_000_000
+MAX_BYTES = 2_800_000_000
 
 
 def _stream(packed):

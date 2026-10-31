@@ -115,7 +115,7 @@ def dequantize_nf4(packed, state, dtype):
     return _decode(packed, state, state.dtype).to(dtype)
 
 
-def enable_resident_weights(max_bytes=2_400_000_000):
+def enable_resident_weights(max_bytes=2_800_000_000):
     """Enable bounded, per-process storage for internal frozen consumers."""
     global _resident_cache
     from .resident_nf4 import FrozenWeightCache

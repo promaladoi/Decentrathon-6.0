@@ -18,6 +18,7 @@ and a locally verified archive/source/checksum chain.
 | v56 | 85.69 | 49.69 | 4135 | 2.04960 → 2.04968 | 10/10 | FAIL: user limits |
 | v63 | 83.68 | 48.69 | 4115 | 2.04962 → 2.04963 | 10/10 | FAIL: user limits |
 | v64r2 | 86.33 | 47.61 | 3915 | 2.04966 → 2.04963 | 10/10 | pass |
+| v65 | 81.69 | 43.77 | 6659 | 2.04965 → 2.04966 | 10/10 | FAIL: user limits |
 
 The current <=25-second whole-command target is not met. Historical reports keep their original target. The lowest observed memory among these candidates satisfying original admission and the strict user loss requirement is now 3915 MiB (v64r2), 220 MiB below v45. No speed improvement was established in its same-session control. Separate runs are not a simultaneous
 candidate-to-candidate A/B test, and differences this small may include noise.
@@ -74,3 +75,5 @@ The v57-v63 investigation is complete. Both the active development implementatio
 [v64 revisions completed comparison](CODEX_V64_COMPARISON.md): v64r2 is a verified lower-memory alternative; selected v45 remains exact. No 25-second claim.
 
 [Four original ZIPs and checksum manifest](https://github.com/promaladoi/Decentrathon-6.0/releases/tag/nurzhigit-evidence-through-v64r2-20261031): failed v64, failed v64r1, admitted v64r2 and the exact same-session v45 control. Five release assets have verified server SHA-256 digests and public download links. [Publication receipt](04_submission/v64_revisions_publication.json). [Protected-file/source audit](04_submission/v64_revisions_source_audit.json). [Selection and source verification](04_submission/v64_revisions_selection.json).
+
+[v65 original measured outcome](CODEX_V65_RESULT.md): not selected; original admission or user requirements failed.
