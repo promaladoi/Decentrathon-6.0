@@ -1,0 +1,93 @@
+{
+  "kind": "official_upstream_source_identity",
+  "repository": "BAITC-Hacks/hack-a5a4072f-wither-ai",
+  "ref": "main",
+  "commit": "fc44fd2d2bf23f624e95cef655f03fecbd87ec46",
+  "retrieved_date": "2026-10-31",
+  "requested_urls": [
+    "https://github.com/BAITC-Hacks/hack-a5a4072f-wither-ai/blob/main/harness/run_task.py",
+    "https://github.com/BAITC-Hacks/hack-a5a4072f-wither-ai/tree/main/tests"
+  ],
+  "trees": {
+    "harness": "6c8e1b84d0965673aeca8b39c312adfdc78fb562",
+    "task": "52af8441d2ed87ab137296a5d6a5983835edb57e",
+    "tests": "1822b0872025982b3baa0e5b66db4bbfe622d5b7"
+  },
+  "files": [
+    {
+      "path": "harness/_train.py",
+      "git_blob_sha": "eca91deffd7daf9649f5f8c768072584232b1181",
+      "bytes": 9646
+    },
+    {
+      "path": "harness/check_rules.py",
+      "git_blob_sha": "2553beed6adf89d87786344f1c5907170ef44464",
+      "bytes": 23060
+    },
+    {
+      "path": "harness/common.py",
+      "git_blob_sha": "be5281d4c9decf68404ce5916f2dbe97bc26638c",
+      "bytes": 6438
+    },
+    {
+      "path": "harness/eval_adapter.py",
+      "git_blob_sha": "7c18b6541ce6eefcc5be2555c888c9f44ca8d34a",
+      "bytes": 3787
+    },
+    {
+      "path": "harness/example_reference.py",
+      "git_blob_sha": "80f9edc86b18b68092e23ec08bb061dd5207bae2",
+      "bytes": 1484
+    },
+    {
+      "path": "harness/run_task.py",
+      "git_blob_sha": "5ff91c4f4249e38d8f17d0b6541900ca9089dea5",
+      "bytes": 11281
+    },
+    {
+      "path": "harness/score.py",
+      "git_blob_sha": "d6947bfd255419773df9869711301953cafeba3c",
+      "bytes": 4794
+    },
+    {
+      "path": "task/prepare_data.py",
+      "git_blob_sha": "2a1378e968de7b6af53f08c14059894773498206",
+      "bytes": 1586
+    },
+    {
+      "path": "task/task.yaml",
+      "git_blob_sha": "776da4e827a57091bd2413f87851db087cccab82",
+      "bytes": 512
+    },
+    {
+      "path": "tests/conftest.py",
+      "git_blob_sha": "253de23f006edaade62c6d1a87fa2eca8af027d0",
+      "bytes": 2284
+    },
+    {
+      "path": "tests/test_callback.py",
+      "git_blob_sha": "ab81fd19e83a9c33a04ba1f355ab61e934b596db",
+      "bytes": 5581
+    },
+    {
+      "path": "tests/test_config.py",
+      "git_blob_sha": "4b8352d6d5da54250201ddd29b475bcd6c450587",
+      "bytes": 2260
+    },
+    {
+      "path": "tests/test_formats.py",
+      "git_blob_sha": "087656deb4bdae0abd484ea1988ec2a5b1e9830b",
+      "bytes": 5861
+    },
+    {
+      "path": "tests/test_loader.py",
+      "git_blob_sha": "1a3738a8b0c0b57e55bdd63d958bb436b0d412d4",
+      "bytes": 5468
+    },
+    {
+      "path": "tests/test_trainer_init.py",
+      "git_blob_sha": "ee675a2b52ecf0bcaa03b371b0017dfece4a939c",
+      "bytes": 40164
+    }
+  ]
+}

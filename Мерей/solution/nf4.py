@@ -136,7 +136,9 @@ def supported(state):
             or not all(isinstance(size, int) and size > 0 for size in shape)
             or dtype not in (torch.float16, torch.float32)
             or block not in (32, 64, 128, 256, 512, 1024, 2048, 4096)
-            or not isinstance(code, torch.Tensor) or not code.is_cuda):
+            or not isinstance(code, torch.Tensor)
+            or not (code.is_cuda or (code.device.type == 'cpu'
+                    and getattr(state, '_solution_cpu_streamed', False)))):
         return False
     device = code.device
     scales = triton.cdiv(math.prod(shape), block)
@@ -158,7 +160,9 @@ def supported(state):
 
 def _packed_supported(packed, state):
     return (supported(state) and isinstance(packed, torch.Tensor)
-            and packed.is_cuda and packed.device == state.code.device
+            and (packed.is_cuda or (packed.device.type == 'cpu'
+                 and getattr(state, '_solution_cpu_streamed', False)))
+            and packed.device == state.code.device
             and packed.dtype == torch.uint8 and packed.is_contiguous()
             and packed.numel() == triton.cdiv(math.prod(state.shape), 2)
             and not packed.requires_grad)
@@ -173,6 +177,10 @@ def _decode(packed, state, dtype):
     accounts for bytes without extending the model or QuantState lifetime.
     """
     global _decode_cache_bytes
+    # Streamed sources are fresh bounded GPU transfers, not resident cache
+    # candidates. Preserve the original public cache for ordinary GPU models.
+    if getattr(state, '_solution_cpu_streamed', False):
+        return _decode_uncached(packed, state, dtype)
     category = _cache_category(state, dtype)
     if category is None:
         # Ordinary unsupported shapes do not need a cache lock. A state
@@ -258,6 +266,10 @@ def dequantize_nf4(packed, state, dtype):
     Unlike functional.dequantize_4bit's compatibility transpose convention,
     this team's existing API always returns the canonical weight orientation.
     """
+    from .cpu_streaming import streamed, transfer_nf4
+    if streamed(packed, state):
+        live_packed, live_state = transfer_nf4(packed, state)
+        return _decode_uncached(live_packed, live_state, state.dtype).to(dtype)
     return _decode(packed, state, state.dtype).to(dtype)
 
 
@@ -285,6 +297,10 @@ def _native_forward(A, packed, bias, state):
 
 def _linear_forward(A, packed, bias, state):
     """Shared non-autograd forward for MatMulNF4 and frozen MLP4bit."""
+    from .cpu_streaming import streamed, transfer_nf4
+    if streamed(packed, state):
+        live_packed, live_state = transfer_nf4(packed, state, A.device)
+        return _linear_forward(A, live_packed, bias, live_state)
     if _uses_native_custom_gemm(A, state):
         return _native_forward(A, packed, bias, state)
     return torch.nn.functional.linear(A, _decode(packed, state, A.dtype), bias)
@@ -318,7 +334,9 @@ def make_matmul_4bit(original):
                 or A.numel() == 0 or A.dtype != torch.float16
                 or not _packed_supported(B, quant_state)
                 or quant_state.dtype != torch.float16
-                or A.device != B.device or A.shape[-1] != quant_state.shape[1]):
+                or (A.device != B.device
+                    and not getattr(quant_state, '_solution_cpu_streamed', False))
+                or A.shape[-1] != quant_state.shape[1]):
             return original(A, B, quant_state, out=out, bias=bias)
         return MatMulNF4.apply(A, B, bias, quant_state)
     matmul_4bit._soup_team_nf4 = True

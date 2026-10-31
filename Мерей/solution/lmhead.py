@@ -133,11 +133,11 @@ def _gradient_mm(logits, lse, targets, scale, weight, overwrite=False):
 
 
 def _stats(x16, w16, idx, targets, entropy, argmax, ce, saved_chunks=None,
-           precompute=None):
+           precompute=None, chunk_size=CHUNK):
     if idx.numel() == 0:
         return
     vocabulary = w16.shape[0]
-    for chunk in idx.split(CHUNK):
+    for chunk in idx.split(chunk_size):
         count = chunk.numel()
         logits = torch.mm(x16.index_select(0, chunk), w16.t())
         # Each index occurs once. Scatter the statistics in the same launch
@@ -178,10 +178,12 @@ class LMHeadLoss(torch.autograd.Function):
     def forward(ctx, x, weight, targets, denom, stats):
         if weight.requires_grad:
             raise ValueError("chunked lm_head requires frozen weight")
+        cpu_stream = (weight.device.type == 'cpu'
+                      and getattr(weight, '_solution_cpu_streamed', False))
         if (x.ndim != 2 or weight.ndim != 2 or targets.ndim != 1
                 or x.shape[1] != weight.shape[1] or targets.numel() != x.shape[0]
                 or targets.dtype != torch.int64 or targets.device != x.device
-                or weight.device != x.device or not x.is_cuda):
+                or (weight.device != x.device and not cpu_stream) or not x.is_cuda):
             raise ValueError("unsupported chunked lm_head input shape/device/dtype")
         torch._assert_async(_targets_in_bounds(targets, weight.shape[0]),
                             "cross_entropy target out of bounds")
@@ -189,13 +191,18 @@ class LMHeadLoss(torch.autograd.Function):
         x16 = x.to(torch.float16)
         expected = (_private_expected_loss_scale()
                     if ctx.needs_input_grad[0] and x.dtype == torch.float32 else None)
-        if expected is not None:
+        if cpu_stream:
+            w16 = weight.to(device=x.device, dtype=torch.float16, non_blocking=True)
+        elif expected is not None:
             # Only the already-qualified private training scope reuses this
             # exact cast. Public/general calls keep their ordinary lifetime.
             from .head_weight_cache import get_half_weight
             w16 = get_half_weight(weight)
         else:
             w16 = weight.to(torch.float16)
+        # Only our owned CPU-streamed private path uses a smaller live logits
+        # buffer. Ordinary GPU/public callers keep their existing chunk size.
+        chunk_size = 256 if cpu_stream and expected is not None else CHUNK
         entropy = torch.empty(tokens, device=x.device, dtype=torch.float32)
         argmax = torch.empty(tokens, device=x.device, dtype=torch.int64)
         ce = torch.zeros(tokens, device=x.device, dtype=torch.float32)
@@ -204,6 +211,14 @@ class LMHeadLoss(torch.autograd.Function):
         prompt = (~valid).nonzero().squeeze(1)
         chunks = []
         ctx.precomputed = expected is not None
+        ctx.weight_on_cpu, ctx.device = cpu_stream, x.device
+        if cpu_stream:
+            # Standard saved-tensor CPU hooks omit native version validation;
+            # explicitly retain the frozen leaf's counter for this contract.
+            ctx.cpu_weight, ctx.cpu_weight_version = weight, weight._version
+        # Keep the original frozen CPU Parameter for autograd version checks.
+        # The ephemeral GPU head is not copied back to a second CPU buffer.
+        saved_weight = weight if cpu_stream else w16
         if ctx.precomputed:
             expected = torch.tensor(expected, device=x.device, dtype=torch.float32)
             hidden_gradient = torch.zeros((tokens, hidden), device=x.device,
@@ -214,19 +229,19 @@ class LMHeadLoss(torch.autograd.Function):
             precompute = None
         _stats(x16, w16, labelled, targets, entropy, argmax, ce,
                chunks if ctx.needs_input_grad[0] and not ctx.precomputed else None,
-               precompute=precompute)
-        _stats(x16, w16, prompt, targets, entropy, argmax, None)
+               precompute=precompute, chunk_size=chunk_size)
+        _stats(x16, w16, prompt, targets, entropy, argmax, None, chunk_size=chunk_size)
         stats.update(entropy=entropy, argmax=argmax, ce=ce, valid=valid)
         labelled_targets = targets.index_select(0, labelled)
         if ctx.precomputed:
             # FP32 x guarantees x16 is an owned copy, so a later mutation of
             # the public input cannot corrupt the mismatch recomputation.
             ctx.num_chunks = len(lse_chunks)
-            ctx.save_for_backward(w16, labelled, labelled_targets, denom,
+            ctx.save_for_backward(saved_weight, labelled, labelled_targets, denom,
                                   x16, expected, hidden_gradient, *lse_chunks)
         else:
             ctx.num_chunks = len(chunks)
-            ctx.save_for_backward(w16, labelled, labelled_targets, denom,
+            ctx.save_for_backward(saved_weight, labelled, labelled_targets, denom,
                                   *(value[0] for value in chunks),
                                   *(value[1] for value in chunks))
         ctx.x_dtype, ctx.shape = x.dtype, (tokens, hidden)
@@ -234,10 +249,12 @@ class LMHeadLoss(torch.autograd.Function):
 
     @staticmethod
     def backward(ctx, grad_loss):
+        if ctx.weight_on_cpu and ctx.cpu_weight._version != ctx.cpu_weight_version:
+            raise RuntimeError('a frozen head weight saved for backward was modified inplace')
         w16, labelled, labelled_targets, denom, *buffers = ctx.saved_tensors
         # Ignore-index derivatives stay zero even at NaN/Inf loss/upstream.
         if labelled.numel() == 0:
-            return (torch.zeros(ctx.shape, device=w16.device, dtype=ctx.x_dtype),
+            return (torch.zeros(ctx.shape, device=ctx.device, dtype=ctx.x_dtype),
                     None, None, None, None)
         if ctx.precomputed:
             x16, expected, hidden_gradient, *lse_chunks = buffers
@@ -249,7 +266,9 @@ class LMHeadLoss(torch.autograd.Function):
         else:
             logits_chunks = buffers[:ctx.num_chunks]
             lse_chunks = buffers[ctx.num_chunks:]
-        grad_x = torch.zeros(ctx.shape, device=w16.device, dtype=ctx.x_dtype)
+        if ctx.weight_on_cpu:
+            w16 = w16.to(device=ctx.device, dtype=torch.float16)
+        grad_x = torch.zeros(ctx.shape, device=ctx.device, dtype=ctx.x_dtype)
         scale = grad_loss.float() / denom.float()
         offset = 0
         for position, lse in enumerate(lse_chunks):

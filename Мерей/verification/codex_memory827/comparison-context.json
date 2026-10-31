@@ -1,0 +1,30 @@
+{
+  "baseline_label": "Первый вариант при 827 MiB",
+  "candidate_label": "Оптимизированный вариант при 827 MiB",
+  "baseline_commit": "31d02f87b577395cffc7cabf54b311ae83761097",
+  "candidate_commit": "28f8a3426582444fb493e74574caf74eea719c9b",
+  "baseline_solution_git_tree": "0fe091fd37bcf6815d527bf74439ca64c2896658",
+  "baseline_solution_sha256": "91173fffaf5694367bbe827c80c04adbe8576b4cfcdae9d93447893a4fb57d38",
+  "baseline_source_root_in_archive": "sources/comparison_baseline/solution",
+  "published_version_context": {
+    "commit": "bcbe3e82e1c9483b8d24b77a166e39b9cd787b0e",
+    "measurement_count": 1,
+    "original_measurement_records": [
+      "evidence/current_screen1-result.json"
+    ],
+    "original_source_records": [
+      "evidence/current-source.json"
+    ],
+    "metrics": {
+      "wall_s": 44.07,
+      "train_loop_s": 23.42,
+      "steps_3plus_s": 21.561,
+      "gpu_peak_mib": 5039
+    },
+    "selected_comparison_runs": 4,
+    "selected_steps_time_ratio": 1.987546959788507,
+    "selected_steps_time_change_pct": 98.75469597885069,
+    "selected_gpu_peak_change_pct": -83.58801349474102,
+    "comparison_scope": "Single published-version control versus selected-version median; separate from fixed-memory ABBA."
+  }
+}

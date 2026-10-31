@@ -1,0 +1,9 @@
+{
+  "exit_code": 0,
+  "mean_loss": 2.04963,
+  "adapter": "/kaggle/working/merey-memory900-current-bcbe3e82e1c9/\u041c\u0435\u0440\u0435\u0439/runs_memory900_screen/current_screen1/adapter",
+  "eval_file": "/kaggle/working/merey-memory900-current-bcbe3e82e1c9/\u041c\u0435\u0440\u0435\u0439/data/eval_public.jsonl",
+  "rows": 256,
+  "skipped_rows": 0,
+  "tokens": 38109
+}

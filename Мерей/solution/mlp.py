@@ -14,21 +14,57 @@ fp32 exactly as autograd adds the two casts' gradients. Every value equals trans
 with Linear4bit, while the saved activations of the MLP take half the memory and the fp32 casts
 around the three matmuls disappear.
 
-The weights are unpacked by our NF4 kernel (nf4.py) right before each matmul and dropped after it,
-as bitsandbytes does. silu(gate) * up runs on the organizers' example SwiGLU kernels, unchanged;
+Gate/up recomputation adapts Nurzhigit v55 (1569729553dd219249cf95c17ca37c865917fac7),
+with the team's frozen-storage/layout guards.
+
+During backward, the exact ordinary GEMM path keeps each decoded gate/up
+weight only until its matching input-gradient GEMM, avoiding a second NF4
+transfer/decode within that backward. The native custom GEMM keeps its original
+dispatch. No dense weight is saved in the autograd context or cached across
+backwards. silu(gate) * up runs on the organizers' example SwiGLU kernels, unchanged;
 they are theirs and do not count as ours.
 """
 
 import torch
 import triton
 
-from .nf4 import _linear_forward, dequantize_nf4, supported as nf4_supported
+from .nf4 import _linear_forward, _tensor_signature, dequantize_nf4, supported as nf4_supported
 from .swiglu import BLOCK as SWIGLU_BLOCK, example_swiglu_bwd_kernel, example_swiglu_fwd_kernel
 from .backward_sums import sum_half_gradients
 
 
 def _weight(layer, dtype):
     return dequantize_nf4(layer.weight, layer.weight.quant_state, dtype)
+
+
+def _recompute_projection(x, layer, dtype):
+    """Reuse one exact decode when native forward already uses dense GEMM."""
+    from .nf4 import _uses_native_custom_gemm
+    state = layer.weight.quant_state
+    if state.dtype == dtype and not _uses_native_custom_gemm(x, state):
+        weight = _weight(layer, dtype)
+        return torch.nn.functional.linear(x, weight, None), weight
+    return _linear_forward(x, layer.weight, None, state), None
+
+
+def _projection_snapshot(layer):
+    """Frozen values required to reproduce a projection, without copying.
+
+    A recomputation must never silently observe changed weights/quantization.
+    Tensor references and their mutation versions also keep all referenced
+    storage alive. Only activations go through saved-tensor hooks, as before.
+    """
+    state = layer.weight.quant_state
+    tensors = [layer.weight, state.absmax, state.code]
+    second = getattr(state, 'state2', None)
+    if state.nested:
+        tensors.extend((second.absmax, second.code, state.offset))
+    signature = (id(layer.weight), id(state), tuple(state.shape), state.dtype,
+                 state.blocksize, state.quant_type, bool(state.nested),
+                 id(second), getattr(second, 'blocksize', None),
+                 getattr(second, 'dtype', None),
+                 tuple(_tensor_signature(tensor) for tensor in tensors))
+    return signature, tuple(tensors)
 
 
 class MLP4bit(torch.autograd.Function):
@@ -39,22 +75,35 @@ class MLP4bit(torch.autograd.Function):
         x16 = x.to(dtype)
         g = _linear_forward(x16, gate.weight, None, gate.weight.quant_state)
         u = _linear_forward(x16, up.weight, None, up.weight.quant_state)
-        del x16
+        # Retain only the narrow input and reproduce both frozen projections.
+        # A half input aliases the caller; freeze its forward value as the
+        # original saved activations did. FP32->half already owns storage.
+        recompute_x = x16.clone() if x16 is x and ctx.needs_input_grad[0] else x16
         h = torch.empty_like(g)
         n = g.numel()
         example_swiglu_fwd_kernel[(triton.cdiv(n, SWIGLU_BLOCK),)](g, u, h, n, BLOCK=SWIGLU_BLOCK)
         out = _linear_forward(h, down.weight, None, down.weight.quant_state)
         ctx.layers, ctx.dtype, ctx.x_dtype = (gate, up, down), dtype, x.dtype
+        ctx.gate_signature, ctx.gate_tensors = _projection_snapshot(gate)
+        ctx.up_signature, ctx.up_tensors = _projection_snapshot(up)
         # Saved tensors preserve version checking, saved-tensor hooks and a
         # second backward when the caller explicitly retains this graph.
-        ctx.save_for_backward(g, u)
+        ctx.save_for_backward(recompute_x)
         return out
 
     @staticmethod
     def backward(ctx, grad_out):
         gate, up, down = ctx.layers
         dtype = ctx.dtype
-        g, u = ctx.saved_tensors
+        recompute_x, = ctx.saved_tensors
+        for layer, saved_signature, name in (
+                (gate, ctx.gate_signature, 'gate'), (up, ctx.up_signature, 'up')):
+            current_signature, _ = _projection_snapshot(layer)
+            if current_signature != saved_signature:
+                raise RuntimeError(f'frozen {name} projection changed after forward; '
+                                   'cannot recompute its activation')
+        g, gate_weight = _recompute_projection(recompute_x, gate, dtype)
+        u, up_weight = _recompute_projection(recompute_x, up, dtype)
         # MatMul4Bit.backward: grad @ dequantized weight, in the gradient's dtype
         dh = torch.matmul(grad_out.to(dtype), _weight(down, dtype)).contiguous()
         dg, du = torch.empty_like(g), torch.empty_like(u)
@@ -62,10 +111,10 @@ class MLP4bit(torch.autograd.Function):
         example_swiglu_bwd_kernel[(triton.cdiv(n, SWIGLU_BLOCK),)](dh, g, u, dg, du, n,
                                                                    BLOCK=SWIGLU_BLOCK)
         del dh, g, u
-        gate_dx = torch.matmul(dg, _weight(gate, dtype))
-        del dg
-        up_dx = torch.matmul(du, _weight(up, dtype))
-        del du
+        gate_dx = torch.matmul(dg, gate_weight if gate_weight is not None else _weight(gate, dtype))
+        del dg, gate_weight
+        up_dx = torch.matmul(du, up_weight if up_weight is not None else _weight(up, dtype))
+        del du, up_weight
         dx = sum_half_gradients((gate_dx, up_dx))
         del gate_dx, up_dx
         return dx.to(ctx.x_dtype), None, None, None, None
@@ -102,7 +151,8 @@ def _compute_dtype(layers):
         if fix is not None:
             fix(layer)
         state = getattr(layer.weight, "quant_state", None)
-        if (not layer.weight.is_cuda or layer.weight.dtype != torch.uint8
+        if (not (layer.weight.is_cuda or getattr(state, '_solution_cpu_streamed', False))
+                or layer.weight.dtype != torch.uint8
                 or not nf4_supported(state) or state.dtype != torch.float16
                 or layer.weight.device != state.code.device):
             return None
@@ -122,8 +172,11 @@ def make_mlp_forward(previous):
         dtype = _compute_dtype((self.gate_proj, self.up_proj, self.down_proj))
         if dtype is None:
             return previous(self, x)
-        if (x.device != self.gate_proj.weight.device
-                or any(x.device != layer.weight.device for layer in
+        from .cpu_streaming import streamed
+        if ((x.device != self.gate_proj.weight.device
+                and not streamed(self.gate_proj.weight, self.gate_proj.weight.quant_state))
+                or any(x.device != layer.weight.device
+                       and not streamed(layer.weight, layer.weight.quant_state) for layer in
                        (self.up_proj, self.down_proj))
                 or x.shape[-1] != self.gate_proj.in_features
                 or x.shape[-1] != self.up_proj.in_features):
