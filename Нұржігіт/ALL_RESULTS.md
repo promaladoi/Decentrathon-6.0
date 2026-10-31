@@ -174,3 +174,5 @@
 [v70 original evidence](CODEX_V70_RESULT.md).
 
 [v71 original evidence](CODEX_V71_RESULT.md).
+
+[v72 original evidence](CODEX_V72_RESULT.md).
