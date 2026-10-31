@@ -65,4 +65,7 @@ The v57-v63 investigation is complete. Both the active development implementatio
 
 [Original v57-v63 evidence release](https://github.com/promaladoi/Decentrathon-6.0/releases/tag/nurzhigit-evidence-through-v63-20261031): eight exact research ZIPs inside a bundle, the original full v63 ZIP, and a source/checksum manifest. All three release assets have verified public download links and server SHA-256 digests. [Publication receipt](04_submission/v57_v63_publication.json). [Selected-source and protected-file audit](04_submission/v57_v63_source_audit.json).
 
-[v64 original failure](CODEX_V64_RESULT.md): test-fixture closure error; no model training. [v64r1 correction](CODEX_V64R1_EXPERIMENT.md): complete original validation running, selected v45 unchanged. Latest requested whole-command target: <=25 seconds; no claim that it is achieved.
+
+[v64 original fixture failure](CODEX_V64_RESULT.md). [v64r1 measured outcome](CODEX_V64R1_RESULT.md): failed before complete original admission; not selected.
+
+[v64r2 compatibility correction](CODEX_V64R2_EXPERIMENT.md): qualification then full original paired validation running; selected v45 unchanged. No new performance claim.

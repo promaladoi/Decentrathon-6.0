@@ -1,11 +1,23 @@
 {
   "version": "v64r1",
   "source_commit": "9bb910edea7b3cf8967e93888d3b69cd84511707",
-  "status": "original qualification then full paired validation running; not selected",
+  "status": "failed before complete original admission; not selected",
   "production_selection": "verified v45",
   "production_modules_unchanged_from": "155972c13b59f8955a2eb8dd7651b0f2cc5c8b9f",
   "target_total_seconds": 25,
   "memory_limit_mib": 7151,
   "reported_eval_loss_may_increase": false,
-  "original_checks_required": 10
+  "original_checks_required": 10,
+  "collection_proof": {
+    "version": "v64r1",
+    "source_commit": "9bb910edea7b3cf8967e93888d3b69cd84511707",
+    "source_files_verified": 50,
+    "solution_sha256": "4307914cfafa31fecfd84bc2f6e2bf7d154b0891039f2024119397ca36dc886e",
+    "status": "failed",
+    "checks_passed": null,
+    "accepted": false,
+    "summary": null,
+    "archive_sha256": "4b2d4b890e237b185a9b89c90848ee71a05d9098f8a1b741b29792b9e965a5af"
+  },
+  "user_constraints": null
 }

@@ -1,0 +1,100 @@
+........................................................................ [ 18%]
+........................................................................ [ 36%]
+........................................................................ [ 54%]
+........................................................................ [ 73%]
+.........................F................................s............. [ 91%]
+..................................                                       [100%]
+=================================== FAILURES ===================================
+_ test_unexpected_raw_dtype_uses_legacy_producer_without_replaying_projection __
+
+monkeypatch = <_pytest.monkeypatch.MonkeyPatch object at 0x7ef0a93d83d0>
+
+    def test_unexpected_raw_dtype_uses_legacy_producer_without_replaying_projection(monkeypatch):
+        import solution.unpad as unpad
+    
+        tokens, width = 3, 16
+        x = torch.randn((tokens, width), device="cuda")
+        weight = torch.empty((width, width), device="cuda", dtype=torch.float16)
+        weight.quant_state = None
+        base = SimpleNamespace(weight=weight)
+        q_parts = (base, object(), object(), None, 2.0)
+        k_parts = (base, None, None, None, None)
+        v_parts = (base, object(), object(), None, 2.0)
+        o_parts = (base, None, None, None, None)
+        raw_q, raw_v = torch.ones_like(x), torch.full_like(x, 3.0)
+        calls = []
+        producers = []
+    
+        def projection(*args):
+            calls.append("qkv")
+            return tuple(torch.zeros_like(x, dtype=torch.float16) for _ in range(3))
+    
+        def lora(parts, values, step, *, apply_scale=True):
+            calls.append(("q" if parts is q_parts else "v" if parts is v_parts
+                          else "k" if parts is k_parts else "o", apply_scale))
+            return raw_q if parts is q_parts else raw_v if parts is v_parts else None
+    
+        def legacy(q, lq, k, lk, v, lv, *args):
+            producers.append("legacy")
+            _same_bits(lq, raw_q * 2.0)
+            _same_bits(lv, raw_v * 2.0)
+            return tuple(torch.zeros((1, 1, tokens, width), device="cuda",
+                                     dtype=torch.float16) for _ in range(3))
+    
+        def forbidden(*args):
+            raise AssertionError("nonhalf output must keep the old packed producer")
+    
+        monkeypatch.setattr(unpad, "QKV4bit", SimpleNamespace(apply=projection))
+        monkeypatch.setattr(unpad, "_lora_out", lora)
+        monkeypatch.setattr(unpad, "_can_fuse_lora_scaling", lambda *args: True)
+        monkeypatch.setattr(unpad, "RoPEPacked", SimpleNamespace(apply=legacy))
+        monkeypatch.setattr(unpad, "RoPEPackedScaled", SimpleNamespace(apply=forbidden))
+        monkeypatch.setattr(unpad, "MatMulNF4", SimpleNamespace(apply=lambda values, *args: values))
+        monkeypatch.setattr(torch.ops.aten._efficient_attention_forward, "default",
+                            lambda q, k, v, *args, **kwargs: (q,))
+        step = SimpleNamespace(rows=torch.arange(tokens, device="cuda"), batch=1,
+                               seq_len=tokens, done_with=lambda value: None,
+                               packed_metadata={"cumulative": torch.tensor([0, tokens], device="cuda",
+                                                                            dtype=torch.int32),
+                                                "maximum": tokens})
+        meta = {"hq": 1, "hk": 1, "dim": width, "rep": 1}
+        layer = SimpleNamespace(self_attn=SimpleNamespace(scaling=0.25))
+>       output = unpad._attention(layer, (q_parts, k_parts, v_parts, o_parts), x,
+                                  None, None, None, step, meta)
+
+solution/test_lora_scaling.py:203: 
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ 
+
+layer = namespace(self_attn=namespace(scaling=0.25))
+projections = ((namespace(weight=tensor([[-1.1952e+04,  1.3262e+00,  5.0962e-05,  1.8447e+00,  5.9605e-04,
+          1.7002e+00, -2....-03,  1.3516e+00,  2.1064e-04,
+          1.7021e+00]], device='cuda:0', dtype=torch.float16)), None, None, None, None))
+x = tensor([[-2.1578, -0.0233,  0.4038,  2.3206,  0.4803, -0.3978, -0.3877, -0.3214,
+         -1.3488,  0.3578, -0.6319, -...56, -0.3479,
+         -0.5578, -0.0760, -0.2645, -0.2095, -0.1994,  0.4114,  0.1907,  1.9511]],
+       device='cuda:0')
+cos = None, sin = None, mask = None
+step = namespace(rows=tensor([0, 1, 2], device='cuda:0'), batch=1, seq_len=3, done_with=<function test_unexpected_raw_dtype_u...> at 0x7eefc5a39080>, packed_metadata={'cumulative': tensor([0, 3], device='cuda:0', dtype=torch.int32), 'maximum': 3})
+meta = {'dim': 16, 'hk': 1, 'hq': 1, 'rep': 1}, norm_descriptor = None
+
+    def _attention(layer, projections, x, cos, sin, mask, step, meta, norm_descriptor=None):
+        attn = layer.self_attn
+        q_parts, k_parts, v_parts, o_parts = projections
+        q, k, v = QKV4bit.apply(x, q_parts[0], k_parts[0], v_parts[0], torch.float16)
+        # the LoRA branches in the base order (q, k, v): same dropout draws
+        fuse_scaling = (k_parts[1] is None
+                        and _can_fuse_lora_scaling(q_parts, v_parts, x, step))
+>       lq = _lora_out(q_parts, x, step, apply_scale=not fuse_scaling, norm_descriptor=norm_descriptor)
+             ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+E       TypeError: test_unexpected_raw_dtype_uses_legacy_producer_without_replaying_projection.<locals>.lora() got an unexpected keyword argument 'norm_descriptor'
+
+solution/unpad.py:676: TypeError
+=============================== warnings summary ===============================
+solution/test_kernels.py: 14 warnings
+  /usr/local/lib/python3.13/dist-packages/torch/jit/_script.py:365: DeprecationWarning: `torch.jit.script_method` is deprecated. Please switch to `torch.compile` or `torch.export`.
+    warnings.warn(
+
+-- Docs: https://docs.pytest.org/en/stable/how-to/capture-warnings.html
+=========================== short test summary info ============================
+FAILED solution/test_lora_scaling.py::test_unexpected_raw_dtype_uses_legacy_producer_without_replaying_projection
+1 failed, 392 passed, 1 skipped, 14 warnings in 33.11s
