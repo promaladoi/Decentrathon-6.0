@@ -17,8 +17,11 @@ around the three matmuls disappear.
 Gate/up recomputation adapts Nurzhigit v55 (1569729553dd219249cf95c17ca37c865917fac7),
 with the team's frozen-storage/layout guards.
 
-The weights are unpacked by our NF4 kernel (nf4.py) right before each matmul and dropped after it,
-as bitsandbytes does. silu(gate) * up runs on the organizers' example SwiGLU kernels, unchanged;
+During backward, the exact ordinary GEMM path keeps each decoded gate/up
+weight only until its matching input-gradient GEMM, avoiding a second NF4
+transfer/decode within that backward. The native custom GEMM keeps its original
+dispatch. No dense weight is saved in the autograd context or cached across
+backwards. silu(gate) * up runs on the organizers' example SwiGLU kernels, unchanged;
 they are theirs and do not count as ours.
 """
 
@@ -32,6 +35,16 @@ from .backward_sums import sum_half_gradients
 
 def _weight(layer, dtype):
     return dequantize_nf4(layer.weight, layer.weight.quant_state, dtype)
+
+
+def _recompute_projection(x, layer, dtype):
+    """Reuse one exact decode when native forward already uses dense GEMM."""
+    from .nf4 import _uses_native_custom_gemm
+    state = layer.weight.quant_state
+    if state.dtype == dtype and not _uses_native_custom_gemm(x, state):
+        weight = _weight(layer, dtype)
+        return torch.nn.functional.linear(x, weight, None), weight
+    return _linear_forward(x, layer.weight, None, state), None
 
 
 def _projection_snapshot(layer):
@@ -89,8 +102,8 @@ class MLP4bit(torch.autograd.Function):
             if current_signature != saved_signature:
                 raise RuntimeError(f'frozen {name} projection changed after forward; '
                                    'cannot recompute its activation')
-        g = _linear_forward(recompute_x, gate.weight, None, gate.weight.quant_state)
-        u = _linear_forward(recompute_x, up.weight, None, up.weight.quant_state)
+        g, gate_weight = _recompute_projection(recompute_x, gate, dtype)
+        u, up_weight = _recompute_projection(recompute_x, up, dtype)
         # MatMul4Bit.backward: grad @ dequantized weight, in the gradient's dtype
         dh = torch.matmul(grad_out.to(dtype), _weight(down, dtype)).contiguous()
         dg, du = torch.empty_like(g), torch.empty_like(u)
@@ -98,10 +111,10 @@ class MLP4bit(torch.autograd.Function):
         example_swiglu_bwd_kernel[(triton.cdiv(n, SWIGLU_BLOCK),)](dh, g, u, dg, du, n,
                                                                    BLOCK=SWIGLU_BLOCK)
         del dh, g, u
-        gate_dx = torch.matmul(dg, _weight(gate, dtype))
-        del dg
-        up_dx = torch.matmul(du, _weight(up, dtype))
-        del du
+        gate_dx = torch.matmul(dg, gate_weight if gate_weight is not None else _weight(gate, dtype))
+        del dg, gate_weight
+        up_dx = torch.matmul(du, up_weight if up_weight is not None else _weight(up, dtype))
+        del du, up_weight
         dx = sum_half_gradients((gate_dx, up_dx))
         del gate_dx, up_dx
         return dx.to(ctx.x_dtype), None, None, None, None
