@@ -152,3 +152,5 @@
 [v57-v61 exact shared-MMA research, including failed revisions](CODEX_V57_EXPERIMENT.md). All original ZIPs are retained in their report folders.
 
 [v63 measured outcome](CODEX_V63_RESULT.md).
+
+[v57-v63 original archives](https://github.com/promaladoi/Decentrathon-6.0/releases/tag/nurzhigit-evidence-through-v63-20261031).

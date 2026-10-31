@@ -17,3 +17,5 @@ This candidate keeps v45 arithmetic and tunes the same own NF4 kernel from the v
 
 [Source/result collection proof](03_validation/reports/codex_v63/collection_proof.json).
 [User limits](03_validation/reports/codex_v63/user_constraints.json).
+
+[Original v57-v63 evidence release](https://github.com/promaladoi/Decentrathon-6.0/releases/tag/nurzhigit-evidence-through-v63-20261031): eight exact research ZIPs inside a bundle, the original full v63 ZIP, and a source/checksum manifest. All three release assets have verified public download links and server SHA-256 digests. [Publication receipt](04_submission/v57_v63_publication.json). [Selected-source and protected-file audit](04_submission/v57_v63_source_audit.json).
