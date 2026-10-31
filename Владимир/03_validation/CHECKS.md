@@ -27,8 +27,12 @@
 
 10/10 PASS, `all checks passed on this result: True`. Өз кернелдерінің үлесі 5.2%, 5% шегіне өте жақын. Speedup 0.971x (scoring үшін 1.000x), memory base/solution 1.158x. Сандары: `01_launch/BASELINE.md`.
 
-## Ағымдағы solution: commit `410e36b`
+## Алдыңғы solution: commit `410e36b`
 
-Уақыт өлшенді: 2 run орташасы base 79.45 с, solution 52.3 с, шамамен 1.52x. Бұл commit үшін `check_rules.py` output-ы әлі берілген жоқ, сондықтан 10 тексерудің өткенін әзірге растауға болмайды.
+Уақыт өлшенді: 2 run орташасы base 79.45 с, solution 52.3 с, шамамен 1.52x. Бұл commit үшін `check_rules.py` output-ы берілген жоқ.
 
-Келесі әрекет: финалдық commit-ты таңдап, сол SHA бойынша Kaggle-де Run All орындау және осы кестені жаңа output-пен толтыру.
+## Ағымдағы solution: командалық v45
+
+`solution/` Нұржігіттің өлшенген v45 коды (`7a3db8f`)-мен байт бойынша бірдей. Нұржігіт папкасындағы тексеру: 10/10 PASS, өз кернелдерінің үлесі 14.6%, eval loss -0.001%, time x0.566, memory x0.288 of base (`Нұржігіт/03_validation/reports/codex_v45/checks.json`). Владимир папкасынан қайта тексеру әлі жасалған жоқ.
+
+Келесі әрекет: `kaggle_notebook_dev.ipynb` арқылы Run All орындап, осы кестені Владимир папкасындағы жаңа output-пен толтыру.

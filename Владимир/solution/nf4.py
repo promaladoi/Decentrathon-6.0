@@ -185,7 +185,9 @@ def patch_bnb_matmul_4bit():
 
 
 def warmup():
+    from .warmup import load_compiled
+
     f32, u8 = torch.float32, torch.uint8
-    nf4_dequant_kernel.warmup(u8, u8, f32, f32, f32, f32, torch.float16,
+    load_compiled(nf4_dequant_kernel.warmup(u8, u8, f32, f32, f32, f32, torch.float16,
                               16 * 1536, 64, True, 256, BLOCK, grid=(1,),
-                              num_warps=4, enable_fp_fusion=False)
+                              num_warps=4, enable_fp_fusion=False))

@@ -1,9 +1,10 @@
-"""Experimental real-row dropout with native full-shape CUDA RNG.
+"""Real-row dropout with native full-shape CUDA RNG and packed saved masks.
 
-Standalone candidate, NOT installed in unpad.py. RNG remains PyTorch's native
+The existing large-shape dispatch in unpad.py is unchanged. RNG remains PyTorch's native
 dropout on a fresh, contiguous FP32 [batch, sequence, hidden] allocation. Its
 value output is discarded; the used mask is gathered while applying it to the
-actual unpadded values. The backward reads only the saved real-row bool mask.
+actual unpadded values. The backward reads only the saved real-row mask bits,
+eight per byte. Packing shares the gather/apply launch; it does not draw RNG.
 No RNG state is read, reset, or manually advanced by this production path.
 
 The original Triton kernels below implement gather plus two multiplications;
@@ -24,10 +25,8 @@ from torch.autograd.function import once_differentiable
 BLOCK = 1024
 
 
-# batch * seq_len changes every step: not specialized, so the warm-up's compiled variant is
-# the one every step launches (a value not divisible by 16 would otherwise compile a second one)
-@triton.jit(do_not_specialize=["N", "FULL_ROWS"])
-def real_dropout_gather_kernel(X, FullMask, Rows, Out, RealMask, N, FULL_ROWS,
+@triton.jit
+def real_dropout_gather_kernel(X, FullMask, Rows, Out, PackedMask, N, FULL_ROWS,
                                WIDTH: tl.constexpr, SCALE: tl.constexpr,
                                BLOCK: tl.constexpr):
     offset = tl.program_id(0) * BLOCK + tl.arange(0, BLOCK)
@@ -40,15 +39,22 @@ def real_dropout_gather_kernel(X, FullMask, Rows, Out, RealMask, N, FULL_ROWS,
     # change dropped NaN/Inf and signed-zero behavior.
     masked = value * kept.to(tl.float32)
     tl.store(Out + offset, masked * SCALE, valid)
-    tl.store(RealMask + offset, kept, valid)
+    # Consecutive flat elements share a byte, even when WIDTH is odd and a
+    # byte straddles two rows. BLOCK is a multiple of eight: each byte has
+    # exactly one writer. Masked tail elements contribute zero bits.
+    bits = tl.reshape(kept.to(tl.int32), (BLOCK // 8, 8))
+    packed = tl.sum(bits * (1 << tl.arange(0, 8)[None, :]), axis=1)
+    byte = tl.program_id(0) * (BLOCK // 8) + tl.arange(0, BLOCK // 8)
+    tl.store(PackedMask + byte, packed.to(tl.uint8), byte < (N + 7) // 8)
 
 
-@triton.jit(do_not_specialize=["N"])
-def real_dropout_backward_kernel(Grad, RealMask, DX, N, SCALE: tl.constexpr,
+@triton.jit
+def real_dropout_backward_kernel(Grad, PackedMask, DX, N, SCALE: tl.constexpr,
                                  BLOCK: tl.constexpr):
     offset = tl.program_id(0) * BLOCK + tl.arange(0, BLOCK)
     valid = offset < N
-    kept = tl.load(RealMask + offset, valid, other=False).to(tl.float32)
+    byte = tl.load(PackedMask + offset // 8, valid, other=0).to(tl.int32)
+    kept = ((byte >> (offset % 8)) & 1).to(tl.float32)
     grad = tl.load(Grad + offset, valid, other=0.0).to(tl.float32)
     # The original index_select backward first index_adds into positive zeros.
     # With unique rows this changes only an incoming negative zero's sign.
@@ -102,24 +108,24 @@ class _RealRowDropout(torch.autograd.Function):
         discarded, full_mask = torch.ops.aten.native_dropout.default(dummy, float(p), True)
         del discarded, dummy
         output = torch.empty_like(x)
-        real_mask = torch.empty(x.shape, dtype=torch.bool, device=x.device)
         n = x.numel()
+        packed_mask = torch.empty((triton.cdiv(n, 8),), dtype=torch.uint8, device=x.device)
         real_dropout_gather_kernel[(triton.cdiv(n, BLOCK),)](
-            x, full_mask, rows, output, real_mask, n, batch * seq_len,
+            x, full_mask, rows, output, packed_mask, n, batch * seq_len,
             x.shape[1], forward_scale, BLOCK, num_warps=4, enable_fp_fusion=False)
-        ctx.save_for_backward(real_mask)
+        ctx.save_for_backward(packed_mask)
         ctx.backward_scale = backward_scale
         return output
 
     @staticmethod
     @once_differentiable
     def backward(ctx, grad_output):
-        real_mask, = ctx.saved_tensors
+        packed_mask, = ctx.saved_tensors
         grad_output = grad_output.contiguous()
         dx = torch.empty_like(grad_output)
         n = grad_output.numel()
         real_dropout_backward_kernel[(triton.cdiv(n, BLOCK),)](
-            grad_output, real_mask, dx, n, ctx.backward_scale, BLOCK,
+            grad_output, packed_mask, dx, n, ctx.backward_scale, BLOCK,
             num_warps=4, enable_fp_fusion=False)
         return dx, None, None, None, None
 
@@ -140,11 +146,13 @@ def real_row_dropout(x, rows, batch, seq_len, p=0.05, training=True, *, rows_fro
 
 def warmup(width=1536, p=0.05):
     """Compile only the original gather/apply kernels; never draw random bits."""
+    from .warmup import load_compiled
+
     forward, backward = _scales(p)
-    real_dropout_gather_kernel.warmup(
-        torch.float32, torch.bool, torch.int64, torch.float32, torch.bool,
+    load_compiled(real_dropout_gather_kernel.warmup(
+        torch.float32, torch.bool, torch.int64, torch.float32, torch.uint8,
         16 * width, 16, width, forward, BLOCK, grid=(1,),
-        num_warps=4, enable_fp_fusion=False)
-    real_dropout_backward_kernel.warmup(
-        torch.float32, torch.bool, torch.float32, 16 * width, backward, BLOCK,
-        grid=(1,), num_warps=4, enable_fp_fusion=False)
+        num_warps=4, enable_fp_fusion=False))
+    load_compiled(real_dropout_backward_kernel.warmup(
+        torch.float32, torch.uint8, torch.float32, 16 * width, backward, BLOCK,
+        grid=(1,), num_warps=4, enable_fp_fusion=False))
