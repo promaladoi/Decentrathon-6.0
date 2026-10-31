@@ -1,12 +1,60 @@
 {
   "version": "v66",
   "source_commit": "507d468e40bd6dc52cd92cdba6ce00d6f1771df4",
-  "status": "GPU qualification then full original paired validation running; not selected",
+  "status": "original admission and user memory/quality passed; speed comparison pending",
   "starting_source": "7a3db8fd5e24bbcb58affb475007a5cf93c56f07",
   "production_selection": "verified v45",
   "target_total_seconds": 25,
   "memory_limit_mib": 7151,
   "reported_eval_loss_may_increase": false,
   "original_checks_required": 10,
-  "priority": "whole-command time"
+  "priority": "whole-command time",
+  "collection_proof": {
+    "version": "v66",
+    "source_commit": "507d468e40bd6dc52cd92cdba6ce00d6f1771df4",
+    "source_files_verified": 50,
+    "solution_sha256": "f288e2acdf989de96e60f2587e2316d1b081fa582e5db0bbfde59c2e20053bb4",
+    "status": "accepted",
+    "checks_passed": 10,
+    "accepted": true,
+    "summary": {
+      "base": {
+        "ok": true,
+        "runs": 2,
+        "wall_s": 82.67,
+        "gpu_peak_mib": 14345,
+        "train_loop_s": 60.97,
+        "eval_loss": 2.04965
+      },
+      "solution": {
+        "ok": true,
+        "runs": 2,
+        "wall_s": 46.2,
+        "gpu_peak_mib": 7039,
+        "train_loop_s": 27.33,
+        "eval_loss": 2.04964
+      },
+      "ratios": {
+        "speedup": 1.7894,
+        "memory_ratio": 2.0379,
+        "quality_delta_pct": -0.0
+      }
+    },
+    "archive_sha256": "9754ff45bc56c74542f691b2841c3060db6e2fae4b280fb2a484ba20a7c754da"
+  },
+  "user_constraints": {
+    "original_ten_passed": true,
+    "max_solution_peak_mib": 7039,
+    "memory_limit_mib": 7151,
+    "every_run_within_memory_limit": true,
+    "reported_eval_loss_nonincreasing": true,
+    "base_eval_loss": 2.04965,
+    "solution_eval_loss": 2.04964,
+    "median_total_seconds": 46.2,
+    "target_total_seconds": 25,
+    "target_met": false,
+    "eligible_within_memory_and_quality": true,
+    "all_requested_constraints_met": false,
+    "quality_note": "Compares the reported rounded evaluation loss; original loss-curve checks remain required."
+  }
 }
