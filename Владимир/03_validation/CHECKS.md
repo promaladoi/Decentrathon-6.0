@@ -35,8 +35,25 @@
 
 Осы commit-тағы `solution/` Нұржігіттің өлшенген v45 коды (`7a3db8f`)-мен байт бойынша бірдей. Нұржігіт папкасындағы тексеру: 10/10 PASS, өз кернелдерінің үлесі 14.6%, eval loss -0.001%, time x0.566, memory x0.288 of base (`Нұржігіт/03_validation/reports/codex_v45/checks.json`).
 
-## Ағымдағы solution: v45 + түзетілген GitHub өзгерістері
+## Ағымдағы solution: commit `d799818` (v45 + түзетілген GitHub өзгерістері)
 
-`solution/` енді v45-пен байт бойынша бірдей емес: MLP backward буфері қайта пайдаланылады, ал `mlp.py` мен `nf4.py`-дағы GitHub өзгерістерінің қателері түзетілді (толығырақ: `01_launch/BASELINE.md`, 5-бөлім). 10 тексеру бұл нұсқа үшін әлі жүргізілген жоқ.
+`solution/` v45-пен байт бойынша бірдей емес: MLP backward буфері қайта пайдаланылады, ал `mlp.py` мен `nf4.py`-дағы GitHub өзгерістерінің қателері түзетілді (толығырақ: `01_launch/BASELINE.md`, 5-бөлім).
 
-Келесі әрекет: `kaggle_notebook_dev.ipynb` арқылы Run All орындап, осы бөлімді Владимир папкасындағы жаңа output-пен толтыру.
+Дерек көзі: қатысушы чатқа жіберген Kaggle output, Владимир папкасы, `--repeats 2` (base, solution, solution, base). Output-та commit жолы жоқ, бірақ `d799818`-ден кейін `main`-де `Владимир/` өзгерген жоқ.
+
+| № | Тексеру | Нәтиже | Output / түсіндірме |
+|---|---|---|---|
+| 1 | Base және solution аяқталды | PASS | 2 base және 2 solution |
+| 2 | Тыйым салынған кітапханалар жоқ | PASS | loaded: none; imported: none; packages changed: none |
+| 3 | Өз Triton кернелдері іске қосылды | PASS | add_rmsnorm_fwd/bwd, compact_batch_metadata, frozen_half_copy_checked, lm_ce_scatter, lm_scale_gradient, nf4_dequant, real_dropout_gather/backward, rope_pad_fwd/bwd, sum_half_gradients |
+| 4 | Өз кернелдері ≥5% training уақытын алады | PASS | 13.8%, steps 3+, ең төменгі run |
+| 5 | Сол тапсырма және Soup outputs сақталған | PASS | identical within tolerance |
+| 6 | Training loss базамен сәйкес | PASS | first step ≤0.01%, mean 0.01%; шектер 1% және 3% |
+| 7 | Eval loss шегінде | PASS | base-пен салыстырғанда -0.001% |
+| 8 | Уақыт пен жады шегінде | PASS | time x0.575; memory x0.288 of base |
+| 9 | T4 және таза өлшеу | PASS | clean |
+| 10 | Patched Soup regression тесттері | PASS | 79 passed, 14 warnings in 0.46s |
+
+Қорытынды: ALL CHECKS PASSED; `all checks passed on this result: True`. Speedup 1.738x, memory base/solution 3.469x, eval loss vs base -0.001%.
+
+v45-пен салыстыру: жады бірдей (3.469x), яғни `dh` буферін қайта пайдалану жадтың шыңын төмендеткен жоқ. Жылдамдық 1.738x, v45-те 1.767x (басқа сессия); айырма сессиялар арасындағы шамамен ±2% ауытқу шегінде.
