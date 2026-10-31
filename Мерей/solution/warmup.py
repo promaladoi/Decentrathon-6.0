@@ -32,12 +32,15 @@ def load_compiled(compiled):
 
 
 def _steps(unpad):
-    from . import lmhead, mlp, nf4, rmsnorm, rope
+    from . import frozen_storage_kernel, lmhead, mlp, nf4, rmsnorm, rope
     from . import unpad as fast
     from . import dropout as compact_dropout
 
     if unpad:  # the unpadded training step, in order of first use
-        steps = [nf4.warmup,
+        # The exact frozen-storage proof runs at the first model forward,
+        # before the unpadded training path waits for the compilation thread.
+        # Compile it first during native model loading, within this timed run.
+        steps = [frozen_storage_kernel.warmup, nf4.warmup,
                 lambda: rmsnorm.warmup(parts=("add_fwd",)),
                 lambda: fast.warmup(parts=("fwd",)),
                 lambda: mlp.warmup(parts=("fwd",)),
@@ -48,7 +51,7 @@ def _steps(unpad):
         if fast.REAL_ROW_DROPOUT:
             # After QKV projection, before RoPEPad: compile arithmetic only.
             # This callback never invokes native_dropout or consumes RNG.
-            steps.insert(2, compact_dropout.warmup)
+            steps.insert(3, compact_dropout.warmup)
         return steps
     return [nf4.warmup, rmsnorm.warmup, rope.warmup, mlp.warmup]
 
@@ -90,3 +93,31 @@ def wait(timeout=60.0):
     thread.join(timeout)
     print(f"solution: step 1 waited {time.perf_counter() - began:.2f} s for the warm-up thread "
           f"({began - _state['started']:.1f} s after apply())", file=sys.stderr, flush=True)
+
+
+# Anais compatibility: explicit diagnostic scan; production uses load_compiled.
+def _load_compiled():
+    """Build the launcher and load the GPU module of every kernel compiled so far, as its first
+    launch would. Triton 3.6 does both lazily at the first launch (CompiledKernel._init_handles):
+    it compiles a small C launcher per signature with the system C compiler, which the
+    harness's fresh per-run cache cannot reuse, and loads the kernel binary into the CUDA
+    context. Measured, that was about 2.3 s of step 1. Done here, step 1 only launches."""
+    from triton.runtime.jit import JITFunction
+
+    from . import dropout, lmhead, mlp, nf4, rmsnorm, rope, swiglu, unpad
+
+    count = 0
+    for module in (nf4, rmsnorm, unpad, lmhead, dropout, swiglu, rope, mlp):
+        for fn in list(vars(module).values()):
+            if not isinstance(fn, JITFunction):
+                continue
+            for entry in list(getattr(fn, "device_caches", {}).values()):
+                kernels = entry[0] if isinstance(entry, tuple) else entry
+                for kernel in list(kernels.values()):
+                    init = getattr(kernel, "_init_handles", None)
+                    if init is not None:
+                        init()
+                        count += 1
+    return count
+
+

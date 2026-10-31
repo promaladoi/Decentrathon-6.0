@@ -13,12 +13,70 @@ dequantize_4bit does, before converting to grad_output.dtype.
 
 import functools
 import math
+import threading
+import weakref
+from dataclasses import dataclass
 
 import torch
 import triton
 import triton.language as tl
 
 BLOCK = 1024
+
+# Merey: retain Anais's exact run-local decode, but only for attention-sized
+# matrices. The fixed 28-layer model needs 294 MiB for q/k/v/o together. The
+# all-weight cache is deliberately excluded: its multi-GiB retention exceeded
+# this solution's existing memory ceiling. This is an allocation bound, not a
+# measurement-dependent policy; there are no driver/memory/benchmark queries.
+DECODE_CACHE_MAX_BYTES = 294 * 1024 * 1024
+DECODE_CACHE_MAX_DIM = 1536
+
+
+@dataclass(eq=False)
+class _DecodeEntry:
+    signature: tuple
+    sources: tuple
+    dense: torch.Tensor
+    dense_signature: tuple
+
+
+_decode_cache_lock = threading.RLock()
+_decode_cache_entries = {}
+_decode_cache_bytes = 0
+
+
+def _tensor_signature(tensor):
+    return (id(tensor), tensor._version, tensor.data_ptr(), tensor.dtype,
+            tensor.device, tuple(tensor.shape), tuple(tensor.stride()),
+            tensor.storage_offset(), tensor.requires_grad)
+
+
+def _entry_expired(key, reference):
+    global _decode_cache_bytes
+    with _decode_cache_lock:
+        registered = _decode_cache_entries.get(key)
+        if registered is not None and registered[0] is reference:
+            _decode_cache_bytes -= registered[1]
+            del _decode_cache_entries[key]
+
+
+def _discard_decode_cache(state):
+    """Forget one slot before replacement, keeping old user-held tensors valid."""
+    global _decode_cache_bytes
+    entry = getattr(state, '_anais_decode_cache', None)
+    if entry is None:
+        return
+    state._anais_decode_cache = None
+    registered = _decode_cache_entries.pop(id(entry), None)
+    if registered is not None:
+        _decode_cache_bytes -= registered[1]
+
+
+def _cache_shape_supported(state, dtype):
+    shape = getattr(state, 'shape', None)
+    return (dtype == torch.float16 and getattr(state, 'dtype', None) == torch.float16
+            and isinstance(shape, (tuple, list, torch.Size)) and len(shape) == 2
+            and all(isinstance(n, int) and 0 < n <= DECODE_CACHE_MAX_DIM for n in shape))
 
 
 @triton.jit
@@ -88,6 +146,61 @@ def _packed_supported(packed, state):
 
 
 def _decode(packed, state, dtype):
+    """Anais cache, bounded by Merey to attention-sized FP16 frozen weights.
+
+    Raw forward decoding and functional backward decoding keep their original
+    dtype/rounding semantics. Sources and returned values are version checked;
+    another CUDA stream gets a fresh decode on that stream. The weak registry
+    accounts for bytes without extending the model or QuantState lifetime.
+    """
+    global _decode_cache_bytes
+    with _decode_cache_lock:
+        if not _cache_shape_supported(state, dtype):
+            _discard_decode_cache(state)
+            return _decode_uncached(packed, state, dtype)
+        try:
+            tensors = [packed, state.absmax, state.code]
+            nested = bool(state.nested)
+            second_meta = None
+            if nested:
+                second = state.state2
+                tensors += [second.absmax, second.code, state.offset]
+                second_meta = (second.blocksize, second.dtype, bool(second.nested))
+            stream = (torch.cuda.current_stream(packed.device).cuda_stream
+                      if packed.is_cuda else None)
+            signature = (dtype, state.quant_type, state.dtype, tuple(state.shape),
+                         state.blocksize, nested, second_meta, stream,
+                         tuple(_tensor_signature(t) for t in tensors))
+            cached = getattr(state, '_anais_decode_cache', None)
+            if (isinstance(cached, _DecodeEntry) and cached.signature == signature
+                    and all(ref() is tensor for ref, tensor in zip(cached.sources, tensors))
+                    and _tensor_signature(cached.dense) == cached.dense_signature):
+                return cached.dense
+        except (AttributeError, TypeError, RuntimeError, ValueError):
+            _discard_decode_cache(state)
+            return _decode_uncached(packed, state, dtype)
+        # Invalidation must not retain a dead dense copy during the next decode.
+        _discard_decode_cache(state)
+        del cached
+        size = math.prod(state.shape) * 2
+        if _decode_cache_bytes + size > DECODE_CACHE_MAX_BYTES:
+            return _decode_uncached(packed, state, dtype)
+        # A caller's inference_mode must not poison a later training graph.
+        with torch.inference_mode(False), torch.no_grad():
+            dense = _decode_uncached(packed, state, dtype)
+        # Identity-checked weak source refs prevent address/id reuse (ABA),
+        # without a Params4bit -> QuantState -> entry -> Params4bit cycle.
+        entry = _DecodeEntry(signature, tuple(weakref.ref(t) for t in tensors),
+                             dense, _tensor_signature(dense))
+        key = id(entry)
+        reference = weakref.ref(entry, lambda ref: _entry_expired(key, ref))
+        state._anais_decode_cache = entry
+        _decode_cache_entries[key] = (reference, size)
+        _decode_cache_bytes += size
+        return dense
+
+
+def _decode_uncached(packed, state, dtype):
     """Raw decode to the destination dtype, as CUDA forward fallback does."""
     if not _packed_supported(packed, state) or dtype not in (torch.float16, torch.float32):
         raise ValueError('unsupported CUDA NF4 input')

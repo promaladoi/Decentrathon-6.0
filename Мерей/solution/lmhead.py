@@ -164,6 +164,11 @@ def _stats(x16, w16, idx, targets, entropy, argmax, ce, saved_chunks=None,
             dx = _gradient_mm(logits, lse, target, scale, w16, overwrite=True)
             hidden_gradient.index_copy_(0, chunk, dx)
             saved_lse.append(lse)
+            del dx, target
+        # Release the previous chunk BEFORE the next GEMM allocates its output.
+        # Private/precomputed and prompt chunks have no later consumer. General
+        # autograd retains its exact original tensor through saved_chunks.
+        del logits
 
 
 class LMHeadLoss(torch.autograd.Function):
@@ -259,6 +264,10 @@ class LMHeadLoss(torch.autograd.Function):
                               overwrite=ctx.precomputed)
             grad_x.index_copy_(0, indices, dx.to(ctx.x_dtype))
             offset += count
+            # The scale-mismatch path recomputes each chunk. Do not overlap
+            # its dead logits with the next one. General saved graphs still
+            # own their original logits through ctx.saved_tensors.
+            del logits, dx
         return grad_x, None, None, None, None
 
 
@@ -382,3 +391,7 @@ def warmup(vocab=151936):
         grid=(1,), BLOCK_V=BLOCK_V, num_warps=8))
     load_compiled(lm_scale_gradient_kernel.warmup(f16, f32, i64, f32, f16, vocab, vocab,
                                     grid=(1, 1), BLOCK=GRAD_BLOCK, num_warps=4))
+
+
+# Anais compatibility alias for existing callers and cache regression tests.
+from .head_weight_cache import get_half_weight as _half_weight
