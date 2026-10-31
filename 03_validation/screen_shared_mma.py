@@ -29,15 +29,16 @@ def main():
         gpu=torch.cuda.get_device_name(0),torch=torch.__version__,cases=[],timing=[])
     try:
         torch.manual_seed(5701)
-        for bm in (64,128):
+        configurations=((64,64,4),(128,64,4),(128,128,8),(64,128,4))
+        for bm,bn,warps in configurations:
             for m,n,k in ((1,1,32),(17,9,64),(63,65,96),(129,137,256)):
                 x=torch.randn(m,k,device='cuda',dtype=torch.float16)*.1
                 w=torch.randn(n,k,device='cuda',dtype=torch.float16)*.03
-                actual,compiled=shared_linear(x,w,block_m=bm,fp32_output=True)
+                actual,compiled=shared_linear(x,w,block_m=bm,block_n=bn,warps=warps,fp32_output=True)
                 reference=F.linear(x.double(),w.double()).float()
                 native=F.linear(x,w)
                 ptx=compiled.asm['ptx']
-                row=dict(m=m,n=n,k=k,block_m=bm,
+                row=dict(m=m,n=n,k=k,block_m=bm,block_n=bn,warps=warps,
                     tensor_core_mma_found=bool(re.search(r'\bmma\.sync\.aligned\.m16n8k8\.',ptx)),
                     static_shared_declared=bool(re.search(r'\.shared\s+\.align\s+16\s+\.b8',ptx)),
                     registers=getattr(compiled,'n_regs',None),spills=getattr(compiled,'n_spills',None),
@@ -53,12 +54,12 @@ def main():
             x=torch.randn(m,1536,device='cuda',dtype=torch.float16)*.1
             w=torch.randn(8960,1536,device='cuda',dtype=torch.float16)*.03
             native=F.linear(x,w)
-            for bm in (64,128):
+            for bm,bn,warps in configurations:
                 for gm in (1,8):
-                    actual,compiled=shared_linear(x,w,block_m=bm,group_m=gm)
+                    actual,compiled=shared_linear(x,w,block_m=bm,block_n=bn,warps=warps,group_m=gm)
                     error=(actual-native).abs()
                     samples={'native':[],'prototype':[]}
-                    functions=dict(native=lambda:F.linear(x,w),prototype=lambda:shared_linear(x,w,block_m=bm,group_m=gm))
+                    functions=dict(native=lambda:F.linear(x,w),prototype=lambda:shared_linear(x,w,block_m=bm,block_n=bn,warps=warps,group_m=gm))
                     for _ in range(3):
                         for fn in functions.values(): fn()
                     for repeat in range(6):
@@ -68,7 +69,7 @@ def main():
                             for _ in range(3): functions[name]()
                             end.record();end.synchronize()
                             samples[name].append(start.elapsed_time(end)/3)
-                    row=dict(m=m,block_m=bm,group_m=gm,
+                    row=dict(m=m,block_m=bm,block_n=bn,warps=warps,group_m=gm,
                         native_close=bool(torch.allclose(actual,native,rtol=2e-3,atol=3e-5)),
                         max_abs_vs_native=float(error.max()),
                         registers=getattr(compiled,'n_regs',None),spills=getattr(compiled,'n_spills',None),
