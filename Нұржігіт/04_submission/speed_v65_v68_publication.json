@@ -1,0 +1,56 @@
+{
+  "tag": "nurzhigit-speed-through-v68-20261031",
+  "target_commit": "9f58c7495bfb17779b931b9bbb026d8a363d85b6",
+  "release_url": "https://github.com/promaladoi/Decentrathon-6.0/releases/tag/nurzhigit-speed-through-v68-20261031",
+  "public_verified": true,
+  "download_links_public_verified": true,
+  "verified_assets": 6,
+  "assets": [
+    {
+      "name": "codex_v65.zip",
+      "bytes": 8237792,
+      "sha256": "d1ea3e13aea0b58ba3bbd3abf66271c11f9f19ddeb16bfc3169f37c254018441",
+      "kind": "exact original v65 source, tests, task/check evidence and adapter when available",
+      "url": "https://github.com/promaladoi/Decentrathon-6.0/releases/download/nurzhigit-speed-through-v68-20261031/codex_v65.zip"
+    },
+    {
+      "name": "codex_v66.zip",
+      "bytes": 8238091,
+      "sha256": "9754ff45bc56c74542f691b2841c3060db6e2fae4b280fb2a484ba20a7c754da",
+      "kind": "exact original v66 source, tests, task/check evidence and adapter when available",
+      "url": "https://github.com/promaladoi/Decentrathon-6.0/releases/download/nurzhigit-speed-through-v68-20261031/codex_v66.zip"
+    },
+    {
+      "name": "codex_v67.zip",
+      "bytes": 8237052,
+      "sha256": "2f02b2d144f1a3be4be2b02b14e9fc0e27566fdbf3774e0a695a667132d39118",
+      "kind": "exact original v67 source, tests, task/check evidence and adapter when available",
+      "url": "https://github.com/promaladoi/Decentrathon-6.0/releases/download/nurzhigit-speed-through-v68-20261031/codex_v67.zip"
+    },
+    {
+      "name": "codex_v68.zip",
+      "bytes": 8241468,
+      "sha256": "56b92bede9f1d77aa10f48cac755aa4d645cf996cc04e08684a265c457fe56be",
+      "kind": "exact original v68 source, tests, task/check evidence and adapter when available",
+      "url": "https://github.com/promaladoi/Decentrathon-6.0/releases/download/nurzhigit-speed-through-v68-20261031/codex_v68.zip"
+    },
+    {
+      "name": "codex_v45_control_1b7ef6dc.zip",
+      "bytes": 156006,
+      "sha256": "f5a9fa474c21a611d5f0b9b20c3baf45bd4c1894e509c451ae410612c01f2c2c",
+      "kind": "exact v45 solution-only timing control; not a new ten-check admission",
+      "url": "https://github.com/promaladoi/Decentrathon-6.0/releases/download/nurzhigit-speed-through-v68-20261031/codex_v45_control_1b7ef6dc.zip"
+    },
+    {
+      "name": "speed_v65_v68_evidence_manifest.json",
+      "bytes": 15112,
+      "sha256": "52dccac35cef89f22de72e953d23b281bb3aeb3921b9b38dc308aee4b1a71893",
+      "kind": "selection, source and original checksum index",
+      "url": "https://github.com/promaladoi/Decentrathon-6.0/releases/download/nurzhigit-speed-through-v68-20261031/speed_v65_v68_evidence_manifest.json"
+    }
+  ],
+  "selected_version": "v45",
+  "selected_source_commit": "7a3db8fd5e24bbcb58affb475007a5cf93c56f07",
+  "target_total_seconds": 25,
+  "target_met": false
+}
