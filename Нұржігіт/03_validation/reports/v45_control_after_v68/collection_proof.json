@@ -1,0 +1,19 @@
+{
+  "source_commit": "7a3db8fd5e24bbcb58affb475007a5cf93c56f07",
+  "source_files_verified": 48,
+  "archive_sha256": "f5a9fa474c21a611d5f0b9b20c3baf45bd4c1894e509c451ae410612c01f2c2c",
+  "result_sha256": "421226365f2b3b816e3eb9829463f61494ecee1c0766178c220a66bb4ae9cd39",
+  "summary": {
+    "solution": {
+      "ok": true,
+      "runs": 2,
+      "wall_s": 48.23,
+      "gpu_peak_mib": 4135,
+      "train_loop_s": 28.98,
+      "eval_loss": 2.0497
+    }
+  },
+  "original_ten_asserted": false,
+  "kind": "same-session solution-only performance control; not ten-check admission",
+  "comparison_context": "same Kaggle session as v68"
+}

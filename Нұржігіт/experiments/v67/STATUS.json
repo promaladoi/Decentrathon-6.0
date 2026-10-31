@@ -1,9 +1,9 @@
 {
   "version": "v67",
   "source_commit": "4f205475601503bd2467f5785c5483bd58bbb3c5",
-  "status": "not selected; original admission or user requirements failed",
+  "status": "not selected; user constraints failed",
   "starting_source": "7a3db8fd5e24bbcb58affb475007a5cf93c56f07",
-  "production_selection": "verified v45",
+  "production_selection": "v45",
   "target_total_seconds": 25,
   "memory_limit_mib": 7151,
   "reported_eval_loss_may_increase": false,

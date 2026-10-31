@@ -1,9 +1,9 @@
 {
   "version": "v66",
   "source_commit": "507d468e40bd6dc52cd92cdba6ce00d6f1771df4",
-  "status": "original admission and user memory/quality passed; speed comparison pending",
+  "status": "verified alternative; not selected after time comparison",
   "starting_source": "7a3db8fd5e24bbcb58affb475007a5cf93c56f07",
-  "production_selection": "verified v45",
+  "production_selection": "v45",
   "target_total_seconds": 25,
   "memory_limit_mib": 7151,
   "reported_eval_loss_may_increase": false,

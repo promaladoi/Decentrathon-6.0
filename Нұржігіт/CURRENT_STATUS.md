@@ -1,3 +1,5 @@
+Current speed selection: **v45**, source `7a3db8fd5e24bbcb58affb475007a5cf93c56f07`. [Completed speed comparison](CODEX_SPEED_V65_V68_COMPARISON.md).
+
 # Current selection and latest measurements
 
 | Version | Paired base, s | Solution, s | Peak MiB | Eval loss, base → solution | Original checks | User memory/quality |
@@ -15,6 +17,7 @@
 | v65 | 81.69 | 43.77 | 6659 | 2.04965 → 2.04966 | 10/10 | FAIL: user limits |
 | v66 | 82.67 | 46.20 | 7039 | 2.04965 → 2.04964 | 10/10 | pass |
 | v67 | 84.38 | 48.50 | 4135 | 2.04966 → 2.04968 | 10/10 | FAIL: user limits |
+| v68 | 84.17 | 46.20 | 6879 | 2.04967 → 2.04963 | 10/10 | pass |
 
 Public main: selected v45, 45.03 seconds / 4135 MiB / original 10/10.
 v48 and v49 are measured memory alternatives (4115 MiB), not replacements.
@@ -80,6 +83,7 @@ The v57-v63 investigation is complete. Both the active development implementatio
 
 [v66 original measured outcome](CODEX_V66_RESULT.md): original admission and user memory/quality passed; speed comparison pending.
 
-[v68 speed-priority candidate](CODEX_V68_EXPERIMENT.md): GPU qualification and full original paired validation running; not selected; selected v45 unchanged. No new elapsed-time claim.
 
 [v67 original measured outcome](CODEX_V67_RESULT.md): not selected; original admission or user requirements failed.
+
+[v68 original measured outcome](CODEX_V68_RESULT.md): original admission and user memory/quality passed; speed comparison pending.
