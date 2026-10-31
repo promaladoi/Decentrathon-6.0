@@ -1,0 +1,33 @@
+{
+  "tag": "nurzhigit-evidence-through-v63-20261031",
+  "target_commit": "0bbb87d63cbdd522acbfd7c5f387e60ae095fde1",
+  "release_url": "https://github.com/promaladoi/Decentrathon-6.0/releases/tag/nurzhigit-evidence-through-v63-20261031",
+  "public_verified": true,
+  "verified_assets": 3,
+  "assets": [
+    {
+      "name": "codex_v57_v62_research_bundle.zip",
+      "bytes": 77375,
+      "sha256": "e32c5d136fb2266fa14bc462c0df79b89a23db7a7c8663c42c989796cc09743f",
+      "kind": "eight byte-preserved inactive research archives and checksums",
+      "url": "https://github.com/promaladoi/Decentrathon-6.0/releases/download/nurzhigit-evidence-through-v63-20261031/codex_v57_v62_research_bundle.zip"
+    },
+    {
+      "name": "codex_v63.zip",
+      "bytes": 8234642,
+      "sha256": "58d25c0e5bc12c4a8d0d6226bce869ebcb74681107653eb950540bc3f3d6fdb7",
+      "kind": "exact original v63 source, paired result/checks, logs and adapter",
+      "url": "https://github.com/promaladoi/Decentrathon-6.0/releases/download/nurzhigit-evidence-through-v63-20261031/codex_v63.zip"
+    },
+    {
+      "name": "v57_v63_evidence_manifest.json",
+      "bytes": 4865,
+      "sha256": "a6e38175fe6702690c14d75819bdb8a32d7a52fb65df2775f6c63da59b8204c8",
+      "kind": "source and original archive checksum index",
+      "url": "https://github.com/promaladoi/Decentrathon-6.0/releases/download/nurzhigit-evidence-through-v63-20261031/v57_v63_evidence_manifest.json"
+    }
+  ],
+  "selected_version": "v45",
+  "target_27_seconds_met": false,
+  "download_links_public_verified": true
+}

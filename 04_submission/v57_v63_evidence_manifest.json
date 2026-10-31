@@ -1,0 +1,133 @@
+{
+  "generated_utc": "2026-10-31T12:02:28.121524+00:00",
+  "selected_version": "v45",
+  "selected_source": "7a3db8fd5e24bbcb58affb475007a5cf93c56f07",
+  "target_total_seconds": 27,
+  "target_met": false,
+  "files": {
+    "codex_v57_v62_research_bundle.zip": {
+      "bytes": 77375,
+      "sha256": "e32c5d136fb2266fa14bc462c0df79b89a23db7a7c8663c42c989796cc09743f",
+      "kind": "eight byte-preserved inactive research archives and checksums"
+    },
+    "codex_v63.zip": {
+      "bytes": 8234642,
+      "sha256": "58d25c0e5bc12c4a8d0d6226bce869ebcb74681107653eb950540bc3f3d6fdb7",
+      "kind": "exact original v63 source, paired result/checks, logs and adapter"
+    }
+  },
+  "research_archives": {
+    "codex_v57_shared.zip": {
+      "bytes": 5925,
+      "sha256": "8718ae60c53dba0c63869e80f270c1f6b6716ec844cf96a29e0860c9177a7c84",
+      "version": "v57",
+      "source_commit": "ec0c5b822dc4e6f67207c1335984b24d28d1140f",
+      "status": "research_rejected",
+      "full_task_admission": false
+    },
+    "codex_v57r1_shared.zip": {
+      "bytes": 6012,
+      "sha256": "c01ac6952c06756429e7180369073ac100aa26a16ba4918e1c57702dea935d75",
+      "version": "v57r1",
+      "source_commit": "cf6efa174aaa5d3c035a937ce7daa65ff1bf4fc0",
+      "status": "research_rejected",
+      "full_task_admission": false
+    },
+    "codex_v57r2_shared.zip": {
+      "bytes": 11399,
+      "sha256": "b54ab509507d2ac39f2f304b364f0290fb6b8cafd2798746840235faabc927f8",
+      "version": "v57r2",
+      "source_commit": "06d0c8ae93812ace8ec0030037b68e9c5022a5e2",
+      "status": "research_rejected_performance",
+      "full_task_admission": false
+    },
+    "codex_v58_shared.zip": {
+      "bytes": 11885,
+      "sha256": "d307e6b94a7a14a2c3c248b584a72ea47cdddf6d8726fd60adb173ecca00a69e",
+      "version": "v58",
+      "source_commit": "4e9d8dd511ab067862297d2681c5e1e82b8a689f",
+      "status": "research_rejected_performance",
+      "full_task_admission": false
+    },
+    "codex_v59_shared.zip": {
+      "bytes": 13615,
+      "sha256": "17a17069dfee1b477f5189e70513b9cd73a03d2e3670b6183cbc7d24e4628e61",
+      "version": "v59",
+      "source_commit": "3ce18628790835638d9ef1ed4cbee60a43a8d6e6",
+      "status": "research_rejected_performance",
+      "full_task_admission": false
+    },
+    "codex_v60_shared.zip": {
+      "bytes": 12837,
+      "sha256": "6565948099819e1a6415251fdf949af0e0d2dd13e641868b733f37f5b28474b0",
+      "version": "v60",
+      "source_commit": "c4cbc6b50c8e2756b79482bf9cb51f3f3b22d5db",
+      "status": "research_rejected_performance",
+      "full_task_admission": false
+    },
+    "codex_v61_launch.zip": {
+      "bytes": 6949,
+      "sha256": "5588e5a94e56293a237eec4c206ae6c2f09f7af49174e6b22b5b9de459d4ad53",
+      "version": "v61",
+      "source_commit": "ba1b399df1da67433c80fa391a4cbaf1acfb2aaa",
+      "status": "diagnostic_complete_not_integrated",
+      "full_task_admission": false
+    },
+    "codex_v62_launch.zip": {
+      "bytes": 8861,
+      "sha256": "260b878a1b219065dd34a6f18693499898a33a975d0801d2c0da36d43c2b705b",
+      "version": "v62",
+      "source_commit": "beba70f021e37ab4ae3036b76c69fc02c6fe1fae",
+      "status": "screen_complete_not_integrated",
+      "full_task_admission": false
+    }
+  },
+  "full_task_collection_proof": {
+    "version": "v63",
+    "source_commit": "48cef7c3fe1993ef699b96b7f2336ca795fb5a4d",
+    "source_files_verified": 49,
+    "solution_sha256": "c5be93144b19ccf7898c88fdb04796a149a3f2a1f13e864b751c42ea6d683ae2",
+    "status": "accepted",
+    "checks_passed": 10,
+    "accepted": true,
+    "summary": {
+      "base": {
+        "ok": true,
+        "runs": 2,
+        "wall_s": 83.68,
+        "gpu_peak_mib": 14345,
+        "train_loop_s": 60.81,
+        "eval_loss": 2.04962
+      },
+      "solution": {
+        "ok": true,
+        "runs": 2,
+        "wall_s": 48.69,
+        "gpu_peak_mib": 4115,
+        "train_loop_s": 28.63,
+        "eval_loss": 2.04963
+      },
+      "ratios": {
+        "speedup": 1.7186,
+        "memory_ratio": 3.486,
+        "quality_delta_pct": 0.0
+      }
+    },
+    "archive_sha256": "58d25c0e5bc12c4a8d0d6226bce869ebcb74681107653eb950540bc3f3d6fdb7"
+  },
+  "user_constraints": {
+    "original_ten_passed": true,
+    "max_solution_peak_mib": 4115,
+    "memory_limit_mib": 7151,
+    "every_run_within_memory_limit": true,
+    "reported_eval_loss_nonincreasing": false,
+    "base_eval_loss": 2.04962,
+    "solution_eval_loss": 2.04963,
+    "median_total_seconds": 48.69,
+    "target_total_seconds": 27,
+    "target_met": false,
+    "eligible_within_memory_and_quality": false,
+    "all_requested_constraints_met": false,
+    "quality_note": "Compares the reported rounded evaluation loss; original loss-curve checks remain required."
+  }
+}
