@@ -1,10 +1,10 @@
-"""The measured large-shape dispatch keeps the dense path for small batches."""
+"""All qualified sizes use packed masks with exact dense-native values and RNG."""
 import pytest
 import torch
 pytestmark=pytest.mark.skipif(not torch.cuda.is_available(),reason='requires Kaggle T4 CUDA')
 
 
-@pytest.mark.parametrize('sequence',[128,384,512])
+@pytest.mark.parametrize('sequence',[127,128,256,383,384,512])
 def test_batch_dropout_dispatch_preserves_values_gradients_and_rng(monkeypatch,sequence):
     from solution import unpad
     batch,width=4,1536
@@ -38,4 +38,7 @@ def test_batch_dropout_dispatch_preserves_values_gradients_and_rng(monkeypatch,s
     for a,b in zip(actual,expected):torch.testing.assert_close(a,b,rtol=0,atol=0)
     torch.testing.assert_close(actual_dx,expected_dx,rtol=0,atol=0)
     assert torch.equal(actual_state,expected_state)
-    assert len(calls)==(2 if sequence>=384 else 0)
+    # v53 intentionally extends dispatch below the previous 384-token cutoff.
+    # Both Q/V calls must use the qualified path. Numerical/RNG assertions
+    # above keep their original exact (zero-tolerance) requirements.
+    assert len(calls)==2
