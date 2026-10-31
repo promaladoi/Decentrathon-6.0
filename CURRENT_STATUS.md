@@ -14,6 +14,7 @@
 | v64r2 | 86.33 | 47.61 | 3915 | 2.04966 → 2.04963 | 10/10 | pass |
 | v65 | 81.69 | 43.77 | 6659 | 2.04965 → 2.04966 | 10/10 | FAIL: user limits |
 | v66 | 82.67 | 46.20 | 7039 | 2.04965 → 2.04964 | 10/10 | pass |
+| v67 | 84.38 | 48.50 | 4135 | 2.04966 → 2.04968 | 10/10 | FAIL: user limits |
 
 Public main: selected v45, 45.03 seconds / 4135 MiB / original 10/10.
 v48 and v49 are measured memory alternatives (4115 MiB), not replacements.
@@ -65,6 +66,9 @@ The v57-v63 investigation is complete. Both the active development implementatio
 [v65 original measured outcome](CODEX_V65_RESULT.md): not selected; original admission or user requirements failed.
 
 
-[v67 speed-priority candidate](CODEX_V67_EXPERIMENT.md): full original validation running; selected v45 unchanged. No new elapsed-time claim.
 
 [v66 original measured outcome](CODEX_V66_RESULT.md): original admission and user memory/quality passed; speed comparison pending.
+
+[v68 speed-priority candidate](CODEX_V68_EXPERIMENT.md): GPU qualification and full original paired validation running; not selected; selected v45 unchanged. No new elapsed-time claim.
+
+[v67 original measured outcome](CODEX_V67_RESULT.md): not selected; original admission or user requirements failed.
