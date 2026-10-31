@@ -1,7 +1,8 @@
-# Verified optimization results: v45 through v56
+# Verified optimization results: v45 through v64r2
 
-Selected public `Нұржігіт/solution/` remains exact v45. The development branch
-contains later experimental source; its moving HEAD is not the selected result.
+Selected public `Нұржігіт/solution/` and the active development solution remain
+exact v45. Later candidates are preserved with their exact source commits and
+public experiment snapshots; use the source pinned by each measured report.
 Every measured row below has two base and two solution runs, original 10/10,
 and a locally verified archive/source/checksum chain.
 
