@@ -146,3 +146,5 @@
 [v55 measured outcome](CODEX_V55_RESULT.md).
 
 [v56 measured outcome](CODEX_V56_RESULT.md).
+
+[Original archives through v56, six hash-verified release assets](https://github.com/promaladoi/Decentrathon-6.0/releases/tag/nurzhigit-evidence-through-v56-20261031).

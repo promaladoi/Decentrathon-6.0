@@ -1,0 +1,35 @@
+{
+  "public_commit": "fdc4f439ecc3ac0890d161a7dd1824ce80f72f30",
+  "selected_source_commit": "7a3db8fd5e24bbcb58affb475007a5cf93c56f07",
+  "selected_python_files_verified": 48,
+  "selected_v45_unchanged": true,
+  "development_commit": "9b3f57d6885256fb1c75f0cbe139b9a165111f6a",
+  "active_development_v45_restored": true,
+  "protected_organizer_files_per_candidate": 15,
+  "candidates": {
+    "v53": {
+      "source_commit": "373c904735bc5061c7ea06dd3cad553ee695be4c",
+      "source_files_verified": 49,
+      "protected_organizer_files_unchanged": 15,
+      "archive_sha256": "03341d0a5fa592e6cb2dbad1f4a8cf65edf50da98f48fd6c0f1673cd80a70c06"
+    },
+    "v53r1": {
+      "source_commit": "0e32a5a2d0fbf79d7eedf5c2c5730fcc496fc4ab",
+      "source_files_verified": 49,
+      "protected_organizer_files_unchanged": 15,
+      "archive_sha256": "679cdcde038017a43d14557b1615d7d4544c8e57f60a2b6013c4e7b357197dfd"
+    },
+    "v55": {
+      "source_commit": "1569729553dd219249cf95c17ca37c865917fac7",
+      "source_files_verified": 49,
+      "protected_organizer_files_unchanged": 15,
+      "archive_sha256": "3c49490e2ddccb0598fce685ac1ab1e66271783e2fa551bbfeba7a7150983697"
+    },
+    "v56": {
+      "source_commit": "1dc91c6a7cf7ed73baf42c1519ea393757a03bef",
+      "source_files_verified": 49,
+      "protected_organizer_files_unchanged": 15,
+      "archive_sha256": "3204193eddf117b527e82049e0bdfc291981607680e63fd724c65e1def77c100"
+    }
+  }
+}

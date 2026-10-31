@@ -37,10 +37,12 @@ Development HEAD may contain experimental code; use the exact measured commit.
 
 [v53/v53r1 verified outcome](CODEX_V53_RESULT.md): 47.51 s / 4109 MiB, original 10/10; user nonincreasing-loss requirement failed. Not selected.
 
-[v54 native NF4 screen](03_validation/reports/v54_research): large MLP projections were slower; limited narrow-projection opportunity remains unintegrated. No new full-task score.
+[v54 native NF4 screen](03_validation/reports/v54_research): large MLP projections were slower. Its narrow-projection opportunity was subsequently tested as v56, without a confirmed full-task speed benefit; v56 also failed the user loss requirement.
 
 
 
 [v55 measured outcome](CODEX_V55_RESULT.md): not selected; original admission or stricter user requirement failed. The 27-second target remains unmet.
 
 [v56 measured outcome](CODEX_V56_RESULT.md): not selected; original admission or stricter user requirement failed. The 27-second target remains unmet.
+
+[All five new original ZIPs and checksum index](https://github.com/promaladoi/Decentrathon-6.0/releases/tag/nurzhigit-evidence-through-v56-20261031). [Selected-source and protected-file audit](04_submission/v53_v56_source_audit.json). All tested new runtime candidates failed the stricter nonincreasing reported-loss rule. Both the active development runtime and public selected solution are restored/verified as exact v45. The <=27-second whole-command target has not been achieved.

@@ -1,0 +1,53 @@
+{
+  "tag": "nurzhigit-evidence-through-v56-20261031",
+  "target_commit": "fdc4f439ecc3ac0890d161a7dd1824ce80f72f30",
+  "release_url": "https://github.com/promaladoi/Decentrathon-6.0/releases/tag/nurzhigit-evidence-through-v56-20261031",
+  "public_verified": true,
+  "assets": [
+    {
+      "name": "codex_v53_failed.zip",
+      "bytes": 126472,
+      "sha256": "03341d0a5fa592e6cb2dbad1f4a8cf65edf50da98f48fd6c0f1673cd80a70c06",
+      "kind": "v53 stopped before training at an obsolete team routing assertion",
+      "url": "https://github.com/promaladoi/Decentrathon-6.0/releases/download/untagged-331451551b6be3fbbf85/codex_v53_failed.zip"
+    },
+    {
+      "name": "codex_v53r1.zip",
+      "bytes": 8235097,
+      "sha256": "679cdcde038017a43d14557b1615d7d4544c8e57f60a2b6013c4e7b357197dfd",
+      "kind": "v53r1 original 10/10; 47.51 s / 4109 MiB; user loss requirement failed",
+      "url": "https://github.com/promaladoi/Decentrathon-6.0/releases/download/untagged-331451551b6be3fbbf85/codex_v53r1.zip"
+    },
+    {
+      "name": "codex_v54_screen.zip",
+      "bytes": 5584,
+      "sha256": "d5ba77bbb30c6978eb2829620035d6ecf59896744a5899e09ac512e719e19043",
+      "kind": "inactive vendor NF4 geometry screen; not a task score",
+      "url": "https://github.com/promaladoi/Decentrathon-6.0/releases/download/untagged-331451551b6be3fbbf85/codex_v54_screen.zip"
+    },
+    {
+      "name": "codex_v55.zip",
+      "bytes": 8235926,
+      "sha256": "3c49490e2ddccb0598fce685ac1ab1e66271783e2fa551bbfeba7a7150983697",
+      "kind": "v55 exact frozen-activation recomputation; see unchanged original result/checks",
+      "url": "https://github.com/promaladoi/Decentrathon-6.0/releases/download/untagged-331451551b6be3fbbf85/codex_v55.zip"
+    },
+    {
+      "name": "codex_v56.zip",
+      "bytes": 8235482,
+      "sha256": "3204193eddf117b527e82049e0bdfc291981607680e63fd724c65e1def77c100",
+      "kind": "v56 narrow vendor NF4 dispatch; see unchanged original result/checks",
+      "url": "https://github.com/promaladoi/Decentrathon-6.0/releases/download/untagged-331451551b6be3fbbf85/codex_v56.zip"
+    },
+    {
+      "name": "v53_v56_evidence_manifest.json",
+      "bytes": 6840,
+      "sha256": "99bc25cb14b9b89fc74b4ced9c64091bf3214a3df4d706d8c74aece241c8e4e6",
+      "kind": "original artifact checksum/source index",
+      "url": "https://github.com/promaladoi/Decentrathon-6.0/releases/download/untagged-331451551b6be3fbbf85/v53_v56_evidence_manifest.json"
+    }
+  ],
+  "verified_assets": 6,
+  "selected_version": "v45",
+  "target_27_seconds_met": false
+}
