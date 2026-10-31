@@ -1,0 +1,67 @@
+{
+  "tag": "nurzhigit-evidence-through-v52r1-20261031",
+  "target_commit": "8eb2b3fa12bf9689120ef0653285e7f76a7d7b0c",
+  "release_url": "https://github.com/promaladoi/Decentrathon-6.0/releases/tag/nurzhigit-evidence-through-v52r1-20261031",
+  "public_verified": true,
+  "assets": [
+    {
+      "name": "codex_v50_screen.zip",
+      "bytes": 6322,
+      "sha256": "d9e1bc9788a1301d6fc6a4b015265fd8a54b2964be1fc6cd1c5a498d81c41550",
+      "url": "https://github.com/promaladoi/Decentrathon-6.0/releases/download/untagged-1c160fc2bcd8f3b94960/codex_v50_screen.zip",
+      "kind": "inactive BMM screen, rejected numerical gate"
+    },
+    {
+      "name": "codex_startup_3dbce898.zip",
+      "bytes": 11395,
+      "sha256": "594d6dca1b3099525f78f46b5a9f4652456927b94d37dd50633d380b49e2d3c2",
+      "url": "https://github.com/promaladoi/Decentrathon-6.0/releases/download/untagged-1c160fc2bcd8f3b94960/codex_startup_3dbce898.zip",
+      "kind": "high-overhead profiling diagnostic, not a score"
+    },
+    {
+      "name": "codex_v51.zip",
+      "bytes": 8235828,
+      "sha256": "05477c02b9e87ed32790bc7724e010781d21088a68c3e33c9f3315496fadf33d",
+      "url": "https://github.com/promaladoi/Decentrathon-6.0/releases/download/untagged-1c160fc2bcd8f3b94960/codex_v51.zip",
+      "kind": "verified original paired result: 10/10, 49.03 s, 4135 MiB; not selected"
+    },
+    {
+      "name": "codex_v45_control_52bb1719.zip",
+      "bytes": 155969,
+      "sha256": "da11af1077dd031cf0955d93f04ba1b68f22665d44a0651375be8898d9b5e2c9",
+      "url": "https://github.com/promaladoi/Decentrathon-6.0/releases/download/untagged-1c160fc2bcd8f3b94960/codex_v45_control_52bb1719.zip",
+      "kind": "same-session solution-only control, not new admission"
+    },
+    {
+      "name": "codex_startup_68f236ab.zip",
+      "bytes": 11938,
+      "sha256": "1af0260bdf8f8f6edb467df0f74c40e0dcb44b409348f88fa6fc298283cafb43",
+      "url": "https://github.com/promaladoi/Decentrathon-6.0/releases/download/untagged-1c160fc2bcd8f3b94960/codex_startup_68f236ab.zip",
+      "kind": "sparse startup diagnostic, not a score"
+    },
+    {
+      "name": "codex_v52_mma.zip",
+      "bytes": 8784,
+      "sha256": "a0b0e508304aeff7e8419d1feb2789e08fd3a72f630a5bc597973283913e9f74",
+      "url": "https://github.com/promaladoi/Decentrathon-6.0/releases/download/untagged-1c160fc2bcd8f3b94960/codex_v52_mma.zip",
+      "kind": "inactive MMA proof, rejected performance"
+    },
+    {
+      "name": "codex_v52r1_mma.zip",
+      "bytes": 9756,
+      "sha256": "f088c7d590598cd6ec558a20a98c2a1aa065dceabd430157b1a1757c00a233e6",
+      "url": "https://github.com/promaladoi/Decentrathon-6.0/releases/download/untagged-1c160fc2bcd8f3b94960/codex_v52r1_mma.zip",
+      "kind": "inactive optimized MMA proof, rejected performance"
+    },
+    {
+      "name": "v50_v52_evidence_manifest.json",
+      "bytes": 2001,
+      "sha256": "ee85a00e261d9ae384aec94012a45782fc90409a79f8b801275b87014c31ccaa",
+      "url": "https://github.com/promaladoi/Decentrathon-6.0/releases/download/untagged-1c160fc2bcd8f3b94960/v50_v52_evidence_manifest.json",
+      "kind": "artifact checksum index"
+    }
+  ],
+  "verified_assets": 8,
+  "selected_version": "v45",
+  "target_27_seconds_met": false
+}

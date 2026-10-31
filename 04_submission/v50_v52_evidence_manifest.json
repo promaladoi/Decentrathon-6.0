@@ -1,0 +1,57 @@
+{
+  "generated_utc": "2026-10-31T10:27:33.116857+00:00",
+  "selected_version": "v45",
+  "historical_selected_result": {
+    "wall_s": 45.03,
+    "peak_mib": 4135,
+    "original_checks": 10
+  },
+  "latest_full_result": {
+    "version": "v51",
+    "wall_s": 49.03,
+    "peak_mib": 4135,
+    "original_checks": 10,
+    "eval_loss_base": 2.04964,
+    "eval_loss_solution": 2.04963,
+    "selected": false
+  },
+  "target_seconds": 27,
+  "target_met": false,
+  "files": {
+    "codex_v50_screen.zip": {
+      "bytes": 6322,
+      "sha256": "d9e1bc9788a1301d6fc6a4b015265fd8a54b2964be1fc6cd1c5a498d81c41550",
+      "kind": "inactive BMM screen, rejected numerical gate"
+    },
+    "codex_startup_3dbce898.zip": {
+      "bytes": 11395,
+      "sha256": "594d6dca1b3099525f78f46b5a9f4652456927b94d37dd50633d380b49e2d3c2",
+      "kind": "high-overhead profiling diagnostic, not a score"
+    },
+    "codex_v51.zip": {
+      "bytes": 8235828,
+      "sha256": "05477c02b9e87ed32790bc7724e010781d21088a68c3e33c9f3315496fadf33d",
+      "kind": "verified original paired result: 10/10, 49.03 s, 4135 MiB; not selected"
+    },
+    "codex_v45_control_52bb1719.zip": {
+      "bytes": 155969,
+      "sha256": "da11af1077dd031cf0955d93f04ba1b68f22665d44a0651375be8898d9b5e2c9",
+      "kind": "same-session solution-only control, not new admission"
+    },
+    "codex_startup_68f236ab.zip": {
+      "bytes": 11938,
+      "sha256": "1af0260bdf8f8f6edb467df0f74c40e0dcb44b409348f88fa6fc298283cafb43",
+      "kind": "sparse startup diagnostic, not a score"
+    },
+    "codex_v52_mma.zip": {
+      "bytes": 8784,
+      "sha256": "a0b0e508304aeff7e8419d1feb2789e08fd3a72f630a5bc597973283913e9f74",
+      "kind": "inactive MMA proof, rejected performance"
+    },
+    "codex_v52r1_mma.zip": {
+      "bytes": 9756,
+      "sha256": "f088c7d590598cd6ec558a20a98c2a1aa065dceabd430157b1a1757c00a233e6",
+      "kind": "inactive optimized MMA proof, rejected performance"
+    }
+  }
+}

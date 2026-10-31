@@ -25,3 +25,4 @@ for v51; timing noise remains. The control is not a new ten-check admission.
 [Exact collection proof](03_validation/reports/codex_v51/collection_proof.json).
 [Original checks](03_validation/reports/codex_v51/checks.json).
 [User constraints](03_validation/reports/codex_v51/user_constraints.json).
+[Original ZIP and related evidence](https://github.com/promaladoi/Decentrathon-6.0/releases/tag/nurzhigit-evidence-through-v52r1-20261031).
